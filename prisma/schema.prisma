@@ -301,10 +301,11 @@ model Booking {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookingAddOns BookingAddOn[]
-  payments      Payment[]
-  documents     Document[]
-  referral      PartnerReferral?
+  bookingAddOns   BookingAddOn[]
+  payments        Payment[]
+  documents       Document[]
+  referral        PartnerReferral?
+  reminderHistory ReminderHistory[]
 
   @@index([userId])
   @@index([packageId])
@@ -520,6 +521,20 @@ model Notification {
   @@index([userId])
   @@index([readAt])
   @@index([createdAt])
+}
+
+model ReminderHistory {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  reminderType String // "30_DAY", "7_DAY", "1_DAY"
+  sentAt       DateTime @default(now())
+  sentBy       String   // Admin user ID who triggered it
+
+  @@index([bookingId])
+  @@index([reminderType])
+  @@index([sentAt])
 }
 
 // ============================================================================
