@@ -1,10 +1,10 @@
 /**
- * Medical Add-Ons Selector Component
+ * Wellness Add-Ons Selector Component
  *
- * Step 4 of booking configurator - allows guests to select medical/cosmetic procedures.
+ * Step 5 of booking configurator - allows guests to select wellness/cultural experiences.
  * Features category filtering, multi-select, and real-time pricing.
  *
- * Used in: /booking/configure/add-ons (E3-S4)
+ * Used in: /booking/configure/wellness (E3-S5)
  */
 
 'use client'
@@ -17,73 +17,72 @@ import AddOnCard, { type AddOnData } from './add-on-card'
 import { AddOnCategory } from '@prisma/client'
 import { AlertCircle, Loader2 } from 'lucide-react'
 
-// Medical add-on categories
-const MEDICAL_CATEGORIES = [
+// Wellness add-on categories
+const WELLNESS_CATEGORIES = [
   {
-    key: AddOnCategory.DENTAL,
-    label: 'Dental',
-    icon: '🦷',
-    color: 'blue',
+    key: AddOnCategory.SPA,
+    label: 'Spa & Wellness',
+    icon: '🧖',
+    color: 'rose',
   },
   {
-    key: AddOnCategory.FACIAL_COSMETIC,
-    label: 'Facial Cosmetic',
-    icon: '✨',
-    color: 'purple',
+    key: AddOnCategory.YOGA_MEDITATION,
+    label: 'Yoga & Meditation',
+    icon: '🧘',
+    color: 'indigo',
   },
   {
-    key: AddOnCategory.BODY,
-    label: 'Body',
-    icon: '💪',
-    color: 'pink',
+    key: AddOnCategory.CULTURAL,
+    label: 'Cultural Experiences',
+    icon: '🏛️',
+    color: 'amber',
   },
   {
-    key: AddOnCategory.HEALTH_SCREENING,
-    label: 'Health Screening',
-    icon: '🏥',
-    color: 'emerald',
+    key: AddOnCategory.PICKLEBALL,
+    label: 'Pickleball Training',
+    icon: '🏓',
+    color: 'green',
   },
 ] as const
 
-type CategoryColor = 'blue' | 'purple' | 'pink' | 'emerald'
+type CategoryColor = 'rose' | 'indigo' | 'amber' | 'green'
 
 const CATEGORY_STYLES: Record<
   CategoryColor,
   { active: string; inactive: string }
 > = {
-  blue: {
-    active: 'bg-blue-600 text-white border-blue-600',
+  rose: {
+    active: 'bg-rose-600 text-white border-rose-600',
     inactive:
-      'bg-white text-blue-700 border-blue-200 hover:border-blue-400 hover:bg-blue-50',
+      'bg-white text-rose-700 border-rose-200 hover:border-rose-400 hover:bg-rose-50',
   },
-  purple: {
-    active: 'bg-purple-600 text-white border-purple-600',
+  indigo: {
+    active: 'bg-indigo-600 text-white border-indigo-600',
     inactive:
-      'bg-white text-purple-700 border-purple-200 hover:border-purple-400 hover:bg-purple-50',
+      'bg-white text-indigo-700 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50',
   },
-  pink: {
-    active: 'bg-pink-600 text-white border-pink-600',
+  amber: {
+    active: 'bg-amber-600 text-white border-amber-600',
     inactive:
-      'bg-white text-pink-700 border-pink-200 hover:border-pink-400 hover:bg-pink-50',
+      'bg-white text-amber-700 border-amber-200 hover:border-amber-400 hover:bg-amber-50',
   },
-  emerald: {
-    active: 'bg-emerald-600 text-white border-emerald-600',
+  green: {
+    active: 'bg-green-600 text-white border-green-600',
     inactive:
-      'bg-white text-emerald-700 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50',
+      'bg-white text-green-700 border-green-200 hover:border-green-400 hover:bg-green-50',
   },
 }
 
-export default function MedicalAddOnsSelector() {
+export default function WellnessAddOnsSelector() {
   const router = useRouter()
 
   // Category filter state (all selected by default)
   const [selectedCategories, setSelectedCategories] = useState<AddOnCategory[]>(
-    MEDICAL_CATEGORIES.map((c) => c.key)
+    WELLNESS_CATEGORIES.map((c) => c.key)
   )
 
   // Zustand booking store
-  const { selectedAddOns, addAddOn, removeAddOn, clearAddOns } =
-    useBookingStore()
+  const { selectedAddOns, addAddOn, removeAddOn } = useBookingStore()
 
   // Fetch add-ons from tRPC
   const { data: addOns, isLoading } = trpc.addOn.getByCategories.useQuery({
@@ -121,28 +120,28 @@ export default function MedicalAddOnsSelector() {
     }
   }
 
-  // Skip add-ons handler
+  // Skip wellness add-ons handler
   const handleSkip = () => {
-    // Clear only medical add-ons
-    const medicalCategories = MEDICAL_CATEGORIES.map((c) => c.key as string)
-    const medicalAddOnIds = selectedAddOns
-      .filter((a) => medicalCategories.includes(a.category))
+    // Clear only wellness add-ons (keep medical add-ons)
+    const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
+    const wellnessAddOnIds = selectedAddOns
+      .filter((a) => wellnessCategories.includes(a.category))
       .map((a) => a.id)
 
-    medicalAddOnIds.forEach((id) => removeAddOn(id))
+    wellnessAddOnIds.forEach((id) => removeAddOn(id))
 
-    // Navigate to wellness add-ons
-    router.push('/booking/configure/wellness')
+    // Navigate to review page
+    router.push('/booking/review')
   }
 
   // Navigation handlers
   const handleBack = () => {
-    router.push('/booking/configure/accommodation')
+    router.push('/booking/configure/add-ons')
   }
 
   const handleNext = () => {
-    // Navigate to wellness add-ons (E3-S5)
-    router.push('/booking/configure/wellness')
+    // Navigate to review page
+    router.push('/booking/review')
   }
 
   // Get add-ons count per category
@@ -151,15 +150,33 @@ export default function MedicalAddOnsSelector() {
     return addOns.filter((a: AddOnData) => a.category === category).length
   }
 
+  // Get count of selected wellness add-ons
+  const getSelectedWellnessCount = () => {
+    const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
+    return selectedAddOns.filter((a) =>
+      wellnessCategories.includes(a.category)
+    ).length
+  }
+
+  // Clear only wellness add-ons
+  const clearWellnessAddOns = () => {
+    const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
+    const wellnessAddOnIds = selectedAddOns
+      .filter((a) => wellnessCategories.includes(a.category))
+      .map((a) => a.id)
+
+    wellnessAddOnIds.forEach((id) => removeAddOn(id))
+  }
+
   return (
     <div className="space-y-8">
-      {/* Skip Add-Ons Button */}
+      {/* Skip Wellness Add-Ons Button */}
       <div className="flex justify-center">
         <button
           onClick={handleSkip}
           className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50"
         >
-          <span>Skip Medical Add-Ons</span>
+          <span>Skip Wellness Add-Ons</span>
           <span className="text-xs text-slate-500">(Optional)</span>
         </button>
       </div>
@@ -170,7 +187,7 @@ export default function MedicalAddOnsSelector() {
           Filter by Category
         </h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {MEDICAL_CATEGORIES.map((category) => {
+          {WELLNESS_CATEGORIES.map((category) => {
             const isActive = selectedCategories.includes(category.key)
             const count = getCategoryCount(category.key)
             const styles = CATEGORY_STYLES[category.color]
@@ -208,14 +225,14 @@ export default function MedicalAddOnsSelector() {
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-slate-900">
-            Available Medical Procedures
+            Available Wellness Experiences
           </h3>
-          {selectedAddOns.length > 0 && (
+          {getSelectedWellnessCount() > 0 && (
             <button
-              onClick={clearAddOns}
+              onClick={clearWellnessAddOns}
               className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
             >
-              Clear all ({selectedAddOns.length})
+              Clear all ({getSelectedWellnessCount()})
             </button>
           )}
         </div>
@@ -228,16 +245,14 @@ export default function MedicalAddOnsSelector() {
         )}
 
         {/* Empty State - No Categories Selected */}
-        {!isLoading &&
-          addOns &&
-          selectedCategories.length === 0 && (
-            <div className="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-12 text-center">
-              <AlertCircle className="mx-auto mb-4 h-12 w-12 text-slate-400" />
-              <p className="text-slate-600">
-                Select at least one category to view add-ons
-              </p>
-            </div>
-          )}
+        {!isLoading && addOns && selectedCategories.length === 0 && (
+          <div className="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-12 text-center">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+            <p className="text-slate-600">
+              Select at least one category to view add-ons
+            </p>
+          </div>
+        )}
 
         {/* Empty State - No Add-Ons Found */}
         {!isLoading &&
@@ -247,11 +262,11 @@ export default function MedicalAddOnsSelector() {
             <div className="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-12 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-slate-400" />
               <h3 className="mb-2 text-lg font-semibold text-slate-900">
-                No add-ons available
+                Wellness add-ons coming soon!
               </h3>
               <p className="text-slate-600">
-                Medical add-ons for the selected categories will appear here
-                once they're added to the system.
+                Wellness and cultural experiences for the selected categories
+                will appear here once they're added to the system.
               </p>
             </div>
           )}
@@ -274,8 +289,8 @@ export default function MedicalAddOnsSelector() {
       {/* Trust Indicator */}
       <div className="rounded-lg bg-emerald-50 p-6 text-center">
         <p className="text-sm font-medium text-emerald-900">
-          🏥 All procedures performed at JCI-accredited hospitals by
-          board-certified specialists
+          🧘 Certified instructors • Authentic cultural experiences • Local
+          partnerships
         </p>
       </div>
 
@@ -285,13 +300,13 @@ export default function MedicalAddOnsSelector() {
           onClick={handleBack}
           className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
         >
-          ← Back to Accommodation
+          ← Back to Medical Add-Ons
         </button>
         <button
           onClick={handleNext}
           className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
         >
-          Next: Wellness Add-Ons →
+          Next: Review Booking →
         </button>
       </div>
     </div>
