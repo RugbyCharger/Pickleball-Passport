@@ -89,7 +89,7 @@ sprint_summary:
     goal: "Booking configurator foundation and Stripe integration"
     target_points: 22
     actual_points: 22
-    completed_points: 11
+    completed_points: 14
     status: "IN_PROGRESS"
     focus_areas:
       - "Booking configurator (package, duration, accommodation)"
@@ -99,10 +99,10 @@ sprint_summary:
       - "E4-S1: Stripe Integration Setup (3 pts) ✅"
       - "E3-S1: Package Selection (5 pts) ✅"
       - "E3-S2: Duration Selection (3 pts) ✅"
-      - "E3-S3: Accommodation Tier (3 pts)"
+      - "E3-S3: Accommodation Tier (3 pts) ✅"
       - "E3-S6: Pricing Summary Sidebar (3 pts)"
       - "E4-S2: Payment Intent Creation (5 pts)"
-    velocity_notes: "Sprint 4 in progress - 11/22 points (50%). Three stories completed: E4-S1 (Stripe), E3-S1 (Package Selection), and E3-S2 (Duration Selection). Booking configurator progressing well with step-by-step flow, dynamic pricing, and sample itineraries. Halfway through sprint! Next: E3-S3 Accommodation Tier Selection."
+    velocity_notes: "Sprint 4 in progress - 14/22 points (64%). Four stories completed: E4-S1 (Stripe), E3-S1 (Package Selection), E3-S2 (Duration Selection), and E3-S3 (Accommodation Tier Selection). Booking configurator flow now includes package selection, duration selection with dynamic pricing and sample itineraries, and accommodation tier selection with 3 luxury tiers (Luxury/Ultra-Luxury/Villa) with +$0/+$3K/+$5K pricing. Strong progress! Next: E3-S6 Pricing Summary Sidebar or E4-S2 Payment Intent Creation."
 
   sprint_5_plus:
     goal: "Complete booking flow and payment processing"
@@ -476,11 +476,12 @@ epic_3_stories:
     title: "Accommodation Tier Selection"
     points: 3
     priority: "P0"
-    status: "not-started"
+    status: "completed"
     assigned_sprint: 4
     dependencies: ["E3-S2"]
     blocked_by: null
-    notes: "Luxury tier selection"
+    notes: "✅ Completed - Accommodation tier selection page at /booking/configure/accommodation with AccommodationSelector component, 3 luxury tier options displayed as responsive card grid: Luxury (Four Seasons - baseline +$0), Ultra-Luxury (Aman - premium +$3,000), Villa (Private Villa - ultimate +$5,000). Features: gradient hero placeholders for each tier, detailed amenities list per tier (6 amenities each), price differential display, 'Most Popular' badge on Ultra-Luxury tier, selection state with visual feedback (ring + checkmark), educational section 'Why Accommodation Tier Matters', Back/Next navigation buttons, current subtotal display with package + duration + tier breakdown, Zustand store integration with setAccommodationTier/calculateSubtotal, Add-ons placeholder page created at /booking/configure/add-ons for next step. Accommodation pricing integrated into total calculation via ACCOMMODATION_TIER_PRICING constant."
+    completed_date: "2025-12-28"
 
   E3-S4:
     title: "Medical Add-Ons Selection"
