@@ -7,11 +7,12 @@
 
 import { router } from './trpc'
 import { userRouter } from './routers/user'
+import { packageRouter } from './routers/package'
 
 export const appRouter = router({
   user: userRouter,
+  package: packageRouter,
   // Future routers will be added here:
-  // package: packageRouter,
   // booking: bookingRouter,
   // payment: paymentRouter,
   // application: applicationRouter,
