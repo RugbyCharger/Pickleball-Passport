@@ -198,6 +198,7 @@ export const bookingRouter = router({
       // 11. Create booking record in database (status: PENDING_PAYMENT)
       const booking = await ctx.db.booking.create({
         data: {
+          bookingReference,
           userId: user.id,
           packageId,
           tripId,
@@ -299,6 +300,105 @@ export const bookingRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create payment intent. Please try again.',
         })
+      }
+    }),
+
+  /**
+   * Get Booking by Reference
+   *
+   * Fetches complete booking details by booking reference for display on confirmation page.
+   * Includes package, add-ons, trip details, and payment status.
+   */
+  getBookingByReference: guestProcedure
+    .input(z.object({ bookingReference: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { bookingReference } = input
+
+      // Find the booking by reference number
+      const booking = await ctx.db.booking.findUnique({
+        where: {
+          bookingReference,
+        },
+        include: {
+          package: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          trip: {
+            select: {
+              id: true,
+              startDate: true,
+              endDate: true,
+              destination: true,
+            },
+          },
+          bookingAddOns: {
+            include: {
+              addOn: {
+                select: {
+                  id: true,
+                  name: true,
+                  category: true,
+                },
+              },
+            },
+          },
+          payments: {
+            select: {
+              id: true,
+              amount: true,
+              status: true,
+              createdAt: true,
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: 1,
+          },
+        },
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        })
+      }
+
+      // Verify ownership
+      const user = ctx.user!
+      if (booking.userId !== user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have access to this booking',
+        })
+      }
+
+      return {
+        id: booking.id,
+        bookingReference,
+        status: booking.status,
+        package: booking.package,
+        trip: booking.trip,
+        duration: booking.duration,
+        accommodationTier: booking.accommodationTier,
+        basePrice: booking.basePrice,
+        accommodationPrice: booking.accommodationPrice,
+        addOnsTotal: booking.addOnsTotal,
+        totalPrice: booking.totalPrice,
+        referredBy: booking.referredBy,
+        createdAt: booking.createdAt,
+        addOns: booking.bookingAddOns.map((ba) => ({
+          id: ba.addOnId,
+          name: ba.addOn.name,
+          category: ba.addOn.category,
+          quantity: ba.quantity,
+          price: ba.price,
+        })),
+        payment: booking.payments[0] || null,
       }
     }),
 })
