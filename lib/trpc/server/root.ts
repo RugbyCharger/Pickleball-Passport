@@ -8,6 +8,7 @@
 import { router } from './trpc'
 import { userRouter } from './routers/user'
 import { packageRouter } from './routers/package'
+import { addOnRouter } from './routers/addon'
 import { emailRouter } from './routers/email'
 import { applicationRouter } from './routers/application'
 import { testimonialRouter } from './routers/testimonial'
@@ -21,6 +22,7 @@ import { analyticsRouter } from './routers/analytics'
 export const appRouter = router({
   user: userRouter,
   package: packageRouter,
+  addOn: addOnRouter,
   email: emailRouter,
   application: applicationRouter,
   testimonial: testimonialRouter,
