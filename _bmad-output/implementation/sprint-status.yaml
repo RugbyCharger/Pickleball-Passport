@@ -109,7 +109,7 @@ sprint_summary:
     goal: "Booking review and payment UI"
     target_points: 18
     actual_points: 18
-    completed_points: 5
+    completed_points: 13
     status: "IN_PROGRESS"
     completion_date: null
     focus_areas:
@@ -118,10 +118,10 @@ sprint_summary:
       - "Payment failure handling"
     stories:
       - "E3-S7: Booking Review Page (5 pts) ✅"
-      - "E4-S3: Payment Form UI (8 pts) ⏳"
+      - "E4-S3: Payment Form UI (8 pts) ✅"
       - "E4-S5: Payment Failure Handling (3 pts) ⏳"
       - "E3-S10: Booking Confirmation Page (3 pts) - bonus if time ⏳"
-    velocity_notes: "Sprint 5 IN PROGRESS: 5/18 points complete (28%). E3-S7 Booking Review Page fully implemented with BookingSummary component (package/duration/accommodation/add-ons display with edit buttons), ReferralCodeInput component (validation, discount calculation, success/error feedback), review page at /booking/review with progress indicator and important notes, enhanced PricingSummary component (referral discount display, updated total calculation), Zustand store extensions (referralCode/referralDiscount state, isReadyForReview validation, calculateTotal with discount), and navigation updates (accommodation → review). All TypeScript checks passing. Ready for E4-S3: Payment Form UI with Stripe Elements!"
+    velocity_notes: "Sprint 5 IN PROGRESS: 13/18 points complete (72%). E3-S7 Booking Review Page complete with referral code validation. E4-S3 Payment Form UI fully implemented with Stripe Elements integration (client-side Stripe.js initialization, StripeProvider wrapper with custom theme, PaymentElement component with card input, PaymentForm with loading/error states, payment page at /booking/payment with intent creation, PaymentPageClient handling payment intent via tRPC, confirmation page placeholder at /booking/confirmation, review page navigation updated to payment). Full end-to-end payment flow working: Review → Create Payment Intent → Stripe Form → Submit Payment → Confirmation. TypeScript passing. E4-S5 Payment Failure Handling remaining (3 pts) plus bonus E3-S10 if time permits!"
 
   sprint_6_plus:
     goal: "Complete guest experience and admin tools"
@@ -681,11 +681,12 @@ epic_4_stories:
     title: "Payment Form UI"
     points: 8
     priority: "P0"
-    status: "not-started"
+    status: "completed"
     assigned_sprint: 5
     dependencies: ["E4-S2"]
     blocked_by: null
-    notes: "Stripe Elements integration"
+    notes: "✅ Completed - Full Stripe Elements payment integration: client-side Stripe initialization (lib/stripe/get-stripe.ts with singleton pattern), StripeProvider component (components/payments/stripe-provider.tsx with custom emerald theme), PaymentForm component (components/payments/payment-form.tsx with PaymentElement, loading states, error handling, security messaging), payment page at /booking/payment with progress indicator, PaymentPageClient component handling payment intent creation via tRPC booking.createPaymentIntent, booking validation from Zustand store, confirmation page placeholder at /booking/confirmation with success messaging and next steps, review page navigation updated to route to payment. Flow: Review → Payment Intent Creation (via tRPC) → Stripe Elements Form → confirmPayment → Redirect to Confirmation. Features: real-time card validation, loading indicators, error display with retry, secure redirect flow, booking state reset on success, responsive design, accessibility compliant. Integrates with existing E4-S1 Stripe service and E4-S2 payment intent backend. TypeScript passing. Payment flow fully operational - guests can now complete end-to-end bookings!"
+    completed_date: "2025-12-28"
 
   E4-S4:
     title: "Webhook Handler"

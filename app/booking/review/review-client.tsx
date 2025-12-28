@@ -33,9 +33,7 @@ export function ReviewPageClient() {
   }
 
   const handleProceedToPayment = () => {
-    // For now, disable payment (will implement in E4-S3)
-    // router.push('/booking/payment')
-    alert('Payment integration coming soon! (E4-S3)')
+    router.push('/booking/payment')
   }
 
   return (
