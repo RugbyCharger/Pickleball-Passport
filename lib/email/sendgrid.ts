@@ -107,3 +107,111 @@ export async function sendBookingConfirmation(
     text,
   });
 }
+
+/**
+ * Send payment receipt email
+ */
+export async function sendPaymentReceipt(
+  to: string,
+  data: import('./templates/payment-receipt').PaymentReceiptData
+): Promise<void> {
+  const { generatePaymentReceiptEmail } = await import('./templates/payment-receipt');
+  const { html, text, subject } = generatePaymentReceiptEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send trip reminder email
+ */
+export async function sendTripReminder(
+  to: string,
+  data: import('./templates/trip-reminder').TripReminderData
+): Promise<void> {
+  const { generateTripReminderEmail } = await import('./templates/trip-reminder');
+  const { html, text, subject } = generateTripReminderEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send document approval email
+ */
+export async function sendDocumentApproval(
+  to: string,
+  data: import('./templates/document-approval').DocumentApprovalData
+): Promise<void> {
+  const { generateDocumentApprovalEmail } = await import('./templates/document-approval');
+  const { html, text, subject } = generateDocumentApprovalEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send document rejection email
+ */
+export async function sendDocumentRejection(
+  to: string,
+  data: import('./templates/document-rejection').DocumentRejectionData
+): Promise<void> {
+  const { generateDocumentRejectionEmail } = await import('./templates/document-rejection');
+  const { html, text, subject } = generateDocumentRejectionEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send welcome email
+ */
+export async function sendWelcomeEmail(
+  to: string,
+  data: import('./templates/welcome').WelcomeEmailData
+): Promise<void> {
+  const { generateWelcomeEmail } = await import('./templates/welcome');
+  const { html, text, subject } = generateWelcomeEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send application confirmation email
+ */
+export async function sendApplicationConfirmation(
+  to: string,
+  data: import('./templates/application-confirmation').ApplicationConfirmationData
+): Promise<void> {
+  const { generateApplicationConfirmationEmail } = await import('./templates/application-confirmation');
+  const { html, text, subject } = generateApplicationConfirmationEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}

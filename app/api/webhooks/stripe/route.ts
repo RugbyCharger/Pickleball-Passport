@@ -161,9 +161,45 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         await awardPartnerPoints(booking.referredBy, booking.id);
       }
 
+      // Get guest name from profile or email
+      const guestFirstName = booking.user.email.split('@')[0]; // Fallback
+
+      // Send payment receipt email
+      const { sendPaymentReceipt } = await import('@/lib/email/sendgrid');
+
+      await sendPaymentReceipt(booking.user.email, {
+        firstName: guestFirstName,
+        email: booking.user.email,
+        receiptNumber: `RCPT-${payment.id.slice(-8).toUpperCase()}`,
+        paymentDate: new Date().toISOString(),
+        paymentMethod: paymentIntent.payment_method_types?.[0]
+          ? `${paymentIntent.payment_method_types[0].charAt(0).toUpperCase()}${paymentIntent.payment_method_types[0].slice(1)}`
+          : 'Card',
+        bookingReference: bookingId.slice(-8).toUpperCase(),
+        packageName: booking.package.name,
+        items: [
+          {
+            description: `${booking.package.name} - ${booking.duration} days`,
+            amount: booking.basePrice,
+          },
+          ...(booking.accommodationPrice > 0 ? [{
+            description: `${booking.accommodationTier} Accommodation`,
+            amount: booking.accommodationPrice,
+          }] : []),
+          ...booking.bookingAddOns.map((ba) => ({
+            description: ba.addOn.name,
+            quantity: ba.quantity,
+            amount: ba.price,
+          })),
+        ],
+        subtotal: booking.totalPrice,
+        totalAmount: booking.totalPrice,
+        receiptUrl: undefined, // Receipt URL would be available from charge.succeeded event if needed
+      });
+
       // Send booking confirmation email
       await sendBookingConfirmation(booking.user.email, {
-        firstName: booking.user.email.split('@')[0], // Will be updated when we have guest profile
+        firstName: guestFirstName,
         email: booking.user.email,
         bookingReference: bookingId.slice(-8).toUpperCase(),
         packageName: booking.package.name,

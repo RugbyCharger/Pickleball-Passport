@@ -13,6 +13,51 @@ import { router, adminProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendEmail } from '@/lib/email/send-email';
 
+/**
+ * Get common issues for document types to help users fix rejections
+ */
+function getCommonDocumentIssues(documentType: string): string[] {
+  const issueMap: Record<string, string[]> = {
+    PASSPORT: [
+      'Shows all pages clearly (photo page, expiration date)',
+      'Is valid for at least 6 months from travel date',
+      'Has no glare or shadows obscuring text',
+      'Shows your full legal name as it appears on flight bookings',
+      'Is a color scan or photo (not black and white)',
+    ],
+    MEDICAL_FORM: [
+      'Is completely filled out with no blank required fields',
+      'Has your signature and date',
+      'Is legible and clearly scanned',
+      'Includes all required medical history information',
+      'Matches the most recent form version',
+    ],
+    INSURANCE: [
+      'Shows your name exactly as it appears on your passport',
+      'Includes coverage dates that span your entire trip',
+      'Clearly shows medical coverage amounts',
+      'Is from a recognized insurance provider',
+      'Is in English or has a certified English translation',
+    ],
+    VISA: [
+      'Is the correct visa type for medical tourism',
+      'Shows valid dates covering your trip',
+      'Has clear, readable text and stamps',
+      'Matches your passport information',
+      'Includes all required pages',
+    ],
+    OTHER: [
+      'Is clearly legible and well-lit',
+      'Shows all required information',
+      'Is the correct document as requested',
+      'Is in an accepted format (PDF, JPG, PNG)',
+      'Has no sensitive information that should be redacted',
+    ],
+  };
+
+  return issueMap[documentType] || issueMap.OTHER;
+}
+
 export const adminRouter = router({
   // ============================================================================
   // DOCUMENT REVIEW
@@ -247,23 +292,26 @@ export const adminRouter = router({
           },
         });
 
-        // Send email notification
+        // Send email notification using professional template
         try {
-          await sendEmail({
-            to: document.booking?.user.email || '',
-            subject: 'Document Approved - Pickleball Passport',
-            text: `Hi ${guestName},\n\nGood news! Your ${document.type
-              .toLowerCase()
-              .replace(
-                '_',
-                ' '
-              )} has been approved.\n\n${notes ? `Admin Note: ${notes}\n\n` : ''}You can view all your documents at: https://pickleballpassport.com/dashboard/documents\n\nBest regards,\nPickleball Passport Team`,
-            html: `<p>Hi ${guestName},</p><p>Good news! Your <strong>${document.type
-              .toLowerCase()
-              .replace(
-                '_',
-                ' '
-              )}</strong> has been approved.</p>${notes ? `<p><strong>Admin Note:</strong> ${notes}</p>` : ''}<p><a href="https://pickleballpassport.com/dashboard/documents">View your documents</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+          const { sendDocumentApproval } = await import('@/lib/email/sendgrid');
+
+          // Format document type for display
+          const documentTypeFriendly = document.type
+            .toLowerCase()
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+
+          await sendDocumentApproval(document.booking?.user.email || '', {
+            firstName: document.booking?.user.guestProfile?.firstName || 'Guest',
+            email: document.booking?.user.email || '',
+            documentType: document.type,
+            documentTypeFriendly,
+            uploadedDate: document.uploadedAt.toISOString(),
+            reviewedDate: new Date().toISOString(),
+            bookingReference: document.bookingId?.slice(-8).toUpperCase(),
+            notes,
           });
         } catch (error) {
           console.error('Failed to send document approval email:', error);
@@ -352,23 +400,30 @@ export const adminRouter = router({
           },
         });
 
-        // Send email notification
+        // Send email notification using professional template
         try {
-          await sendEmail({
-            to: document.booking?.user.email || '',
-            subject: 'Document Update Required - Pickleball Passport',
-            text: `Hi ${guestName},\n\nYour ${document.type
-              .toLowerCase()
-              .replace(
-                '_',
-                ' '
-              )} needs to be re-uploaded.\n\nReason: ${notes}\n\nPlease upload a new document at: https://pickleballpassport.com/dashboard/documents\n\nBest regards,\nPickleball Passport Team`,
-            html: `<p>Hi ${guestName},</p><p>Your <strong>${document.type
-              .toLowerCase()
-              .replace(
-                '_',
-                ' '
-              )}</strong> needs to be re-uploaded.</p><p><strong>Reason:</strong> ${notes}</p><p><a href="https://pickleballpassport.com/dashboard/documents">Upload a new document</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+          const { sendDocumentRejection } = await import('@/lib/email/sendgrid');
+
+          // Format document type for display
+          const documentTypeFriendly = document.type
+            .toLowerCase()
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+
+          // Common issues based on document type
+          const commonIssues = getCommonDocumentIssues(document.type);
+
+          await sendDocumentRejection(document.booking?.user.email || '', {
+            firstName: document.booking?.user.guestProfile?.firstName || 'Guest',
+            email: document.booking?.user.email || '',
+            documentType: document.type,
+            documentTypeFriendly,
+            uploadedDate: document.uploadedAt.toISOString(),
+            reviewedDate: new Date().toISOString(),
+            bookingReference: document.bookingId?.slice(-8).toUpperCase(),
+            reason: notes,
+            commonIssues,
           });
         } catch (error) {
           console.error('Failed to send document rejection email:', error);
