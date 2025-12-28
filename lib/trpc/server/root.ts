@@ -16,6 +16,7 @@ import { bookingRouter } from './routers/booking'
 import { documentRouter } from './routers/document'
 import { notificationRouter } from './routers/notification'
 import { supportRouter } from './routers/support'
+import { partnerRouter } from './routers/partner'
 import { adminRouter } from './routers/admin'
 import { analyticsRouter } from './routers/analytics'
 
@@ -30,6 +31,7 @@ export const appRouter = router({
   document: documentRouter,
   notification: notificationRouter,
   support: supportRouter,
+  partner: partnerRouter,
   admin: adminRouter,
   analytics: analyticsRouter,
   // Future routers will be added here:
