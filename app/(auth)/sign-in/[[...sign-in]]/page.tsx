@@ -36,6 +36,7 @@ export default function SignInPage() {
           }}
           routing="path"
           path="/sign-in"
+          forceRedirectUrl="/redirect"
         />
       </div>
     </div>

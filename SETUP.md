@@ -191,13 +191,13 @@ After completing this setup:
 
 ### Sprint 1 Progress
 
-**Completed (11/33 points):**
+**Completed (14/33 points - 42%):**
 - FOUNDATION-4: tRPC Setup (3 points)
 - E2-S1: Clerk Integration Setup (3 points)
 - E2-S2: User Sign-Up Flow (5 points)
+- E2-S3: User Login Flow (3 points)
 
-**In Progress:**
-- E2-S3: User Login Flow (3 points) - Next up
+**Next Up:**
 - E2-S4: Role-Based Access Control (5 points)
 
 ## Getting Help
