@@ -24,7 +24,7 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 // Define role-specific route patterns
-const isAdminRoute = createRouteMatcher(['/admin(.*)'])
+const isAdminRoute = createRouteMatcher(['/admin(.*)', '/dashboard/admin(.*)'])
 const isPartnerRoute = createRouteMatcher(['/partner(.*)'])
 const isGuestRoute = createRouteMatcher(['/dashboard(.*)'])
 

@@ -132,6 +132,57 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Quick Access */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a
+          href="/dashboard/admin/documents"
+          className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <FileCheck className="h-6 w-6 text-blue-600" />
+            </div>
+            <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
+              ACTIVE
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Document Review</h3>
+          <p className="text-sm text-gray-600">Review and approve guest documents</p>
+        </a>
+
+        <a
+          href="/dashboard/admin/bookings"
+          className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Calendar className="h-6 w-6 text-blue-600" />
+            </div>
+            <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
+              ACTIVE
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Booking Management</h3>
+          <p className="text-sm text-gray-600">Manage booking statuses and assignments</p>
+        </a>
+
+        <a
+          href="/dashboard/admin/guests"
+          className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Users className="h-6 w-6 text-blue-600" />
+            </div>
+            <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
+              ACTIVE
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Guest Management</h3>
+          <p className="text-sm text-gray-600">View and manage guest profiles</p>
+        </a>
+      </div>
+
       {/* Feature Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {adminFeatures.map((feature) => {

@@ -1,0 +1,817 @@
+/**
+ * Admin Router
+ *
+ * tRPC procedures for admin-only operations:
+ * - Document review and approval
+ * - Booking status management
+ * - Guest management
+ * - Trip management
+ */
+
+import { z } from 'zod';
+import { router, adminProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { sendEmail } from '@/lib/email/send-email';
+
+export const adminRouter = router({
+  // ============================================================================
+  // DOCUMENT REVIEW
+  // ============================================================================
+
+  /**
+   * Get all documents for review with filters
+   * Admin can view all documents across all users
+   */
+  documents: router({
+    /**
+     * List all documents with filters
+     */
+    list: adminProcedure
+      .input(
+        z
+          .object({
+            status: z
+              .enum(['PENDING_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED'])
+              .optional(),
+            type: z
+              .enum(['PASSPORT', 'MEDICAL_FORM', 'INSURANCE', 'VISA', 'OTHER'])
+              .optional(),
+            userId: z.string().optional(),
+            bookingId: z.string().optional(),
+            limit: z.number().min(1).max(100).default(50),
+            offset: z.number().min(0).default(0),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.status && { status: input.status }),
+          ...(input?.type && { type: input.type }),
+          ...(input?.userId && { userId: input.userId }),
+          ...(input?.bookingId && { bookingId: input.bookingId }),
+        };
+
+        const [documents, total] = await Promise.all([
+          ctx.db.document.findMany({
+            where,
+            include: {
+              booking: {
+                select: {
+                  id: true,
+                  bookingReference: true,
+                  package: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  user: {
+                    select: {
+                      email: true,
+                      guestProfile: {
+                        select: {
+                          firstName: true,
+                          lastName: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              uploadedAt: 'desc',
+            },
+            take: input?.limit || 50,
+            skip: input?.offset || 0,
+          }),
+          ctx.db.document.count({ where }),
+        ]);
+
+        return {
+          documents,
+          total,
+          hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+        };
+      }),
+
+    /**
+     * Get document counts by status for admin dashboard
+     */
+    getCounts: adminProcedure.query(async ({ ctx }) => {
+      const [total, pending, approved, rejected, expired] = await Promise.all([
+        ctx.db.document.count(),
+        ctx.db.document.count({ where: { status: 'PENDING_REVIEW' } }),
+        ctx.db.document.count({ where: { status: 'APPROVED' } }),
+        ctx.db.document.count({ where: { status: 'REJECTED' } }),
+        ctx.db.document.count({ where: { status: 'EXPIRED' } }),
+      ]);
+
+      return {
+        total,
+        pending,
+        approved,
+        rejected,
+        expired,
+      };
+    }),
+
+    /**
+     * Get single document by ID (admin can view any document)
+     */
+    getById: adminProcedure
+      .input(z.object({ id: z.string() }))
+      .query(async ({ ctx, input }) => {
+        const document = await ctx.db.document.findUnique({
+          where: { id: input.id },
+          include: {
+            booking: {
+              select: {
+                id: true,
+                bookingReference: true,
+                status: true,
+                package: {
+                  select: {
+                    name: true,
+                  },
+                },
+                trip: {
+                  select: {
+                    name: true,
+                    startDate: true,
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    email: true,
+                    guestProfile: {
+                      select: {
+                        firstName: true,
+                        lastName: true,
+                        phone: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!document) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Document not found',
+          });
+        }
+
+        return document;
+      }),
+
+    /**
+     * Approve document
+     */
+    approve: adminProcedure
+      .input(
+        z.object({
+          documentId: z.string(),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { documentId, notes } = input;
+
+        if (!ctx.user) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        // Get document with user info for notification
+        const document = await ctx.db.document.findUnique({
+          where: { id: documentId },
+          include: {
+            booking: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    email: true,
+                    guestProfile: {
+                      select: {
+                        firstName: true,
+                        lastName: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!document) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Document not found',
+          });
+        }
+
+        // Update document status
+        const updatedDocument = await ctx.db.document.update({
+          where: { id: documentId },
+          data: {
+            status: 'APPROVED',
+            reviewedAt: new Date(),
+            reviewedBy: ctx.user.id,
+            notes,
+          },
+        });
+
+        // Create notification for user
+        const guestName = document.booking?.user.guestProfile
+          ? `${document.booking.user.guestProfile.firstName} ${document.booking.user.guestProfile.lastName}`
+          : 'Guest';
+
+        await ctx.db.notification.create({
+          data: {
+            userId: document.userId,
+            type: 'GENERAL',
+            title: 'Document Approved',
+            content: `Your ${document.type.toLowerCase().replace('_', ' ')} has been approved.${
+              notes ? ` Note: ${notes}` : ''
+            }`,
+            linkUrl: '/dashboard/documents',
+            linkText: 'View Documents',
+          },
+        });
+
+        // Send email notification
+        try {
+          await sendEmail({
+            to: document.booking?.user.email || '',
+            subject: 'Document Approved - Pickleball Passport',
+            text: `Hi ${guestName},\n\nGood news! Your ${document.type
+              .toLowerCase()
+              .replace(
+                '_',
+                ' '
+              )} has been approved.\n\n${notes ? `Admin Note: ${notes}\n\n` : ''}You can view all your documents at: https://pickleballpassport.com/dashboard/documents\n\nBest regards,\nPickleball Passport Team`,
+            html: `<p>Hi ${guestName},</p><p>Good news! Your <strong>${document.type
+              .toLowerCase()
+              .replace(
+                '_',
+                ' '
+              )}</strong> has been approved.</p>${notes ? `<p><strong>Admin Note:</strong> ${notes}</p>` : ''}<p><a href="https://pickleballpassport.com/dashboard/documents">View your documents</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+          });
+        } catch (error) {
+          console.error('Failed to send document approval email:', error);
+          // Don't fail the operation if email fails
+        }
+
+        return updatedDocument;
+      }),
+
+    /**
+     * Reject document
+     */
+    reject: adminProcedure
+      .input(
+        z.object({
+          documentId: z.string(),
+          notes: z.string().min(1, 'Please provide a reason for rejection'),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { documentId, notes } = input;
+
+        if (!ctx.user) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        // Get document with user info for notification
+        const document = await ctx.db.document.findUnique({
+          where: { id: documentId },
+          include: {
+            booking: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    email: true,
+                    guestProfile: {
+                      select: {
+                        firstName: true,
+                        lastName: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!document) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Document not found',
+          });
+        }
+
+        // Update document status
+        const updatedDocument = await ctx.db.document.update({
+          where: { id: documentId },
+          data: {
+            status: 'REJECTED',
+            reviewedAt: new Date(),
+            reviewedBy: ctx.user.id,
+            notes,
+          },
+        });
+
+        // Create notification for user
+        const guestName = document.booking?.user.guestProfile
+          ? `${document.booking.user.guestProfile.firstName} ${document.booking.user.guestProfile.lastName}`
+          : 'Guest';
+
+        await ctx.db.notification.create({
+          data: {
+            userId: document.userId,
+            type: 'GENERAL',
+            title: 'Document Needs Attention',
+            content: `Your ${document.type
+              .toLowerCase()
+              .replace('_', ' ')} needs to be re-uploaded. Reason: ${notes}`,
+            linkUrl: '/dashboard/documents',
+            linkText: 'Upload New Document',
+          },
+        });
+
+        // Send email notification
+        try {
+          await sendEmail({
+            to: document.booking?.user.email || '',
+            subject: 'Document Update Required - Pickleball Passport',
+            text: `Hi ${guestName},\n\nYour ${document.type
+              .toLowerCase()
+              .replace(
+                '_',
+                ' '
+              )} needs to be re-uploaded.\n\nReason: ${notes}\n\nPlease upload a new document at: https://pickleballpassport.com/dashboard/documents\n\nBest regards,\nPickleball Passport Team`,
+            html: `<p>Hi ${guestName},</p><p>Your <strong>${document.type
+              .toLowerCase()
+              .replace(
+                '_',
+                ' '
+              )}</strong> needs to be re-uploaded.</p><p><strong>Reason:</strong> ${notes}</p><p><a href="https://pickleballpassport.com/dashboard/documents">Upload a new document</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+          });
+        } catch (error) {
+          console.error('Failed to send document rejection email:', error);
+          // Don't fail the operation if email fails
+        }
+
+        return updatedDocument;
+      }),
+
+    /**
+     * Bulk approve documents
+     */
+    bulkApprove: adminProcedure
+      .input(
+        z.object({
+          documentIds: z.array(z.string()).min(1).max(50),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { documentIds, notes } = input;
+
+        if (!ctx.user) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          });
+        }
+
+        // Get all documents with user info
+        const documents = await ctx.db.document.findMany({
+          where: { id: { in: documentIds } },
+          include: {
+            booking: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    email: true,
+                    guestProfile: {
+                      select: {
+                        firstName: true,
+                        lastName: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Update all documents
+        await ctx.db.document.updateMany({
+          where: { id: { in: documentIds } },
+          data: {
+            status: 'APPROVED',
+            reviewedAt: new Date(),
+            reviewedBy: ctx.user.id,
+            notes,
+          },
+        });
+
+        // Create notifications for each user
+        const notifications = documents.map((doc) => ({
+          userId: doc.userId,
+          type: 'GENERAL' as const,
+          title: 'Document Approved',
+          content: `Your ${doc.type.toLowerCase().replace('_', ' ')} has been approved.${
+            notes ? ` Note: ${notes}` : ''
+          }`,
+          linkUrl: '/dashboard/documents',
+          linkText: 'View Documents',
+        }));
+
+        await ctx.db.notification.createMany({
+          data: notifications,
+        });
+
+        // Send email notifications (async, don't wait)
+        documents.forEach(async (doc) => {
+          const guestName = doc.booking?.user.guestProfile
+            ? `${doc.booking.user.guestProfile.firstName} ${doc.booking.user.guestProfile.lastName}`
+            : 'Guest';
+
+          try {
+            await sendEmail({
+              to: doc.booking?.user.email || '',
+              subject: 'Document Approved - Pickleball Passport',
+              text: `Hi ${guestName},\n\nGood news! Your ${doc.type
+                .toLowerCase()
+                .replace(
+                  '_',
+                  ' '
+                )} has been approved.\n\n${notes ? `Admin Note: ${notes}\n\n` : ''}Best regards,\nPickleball Passport Team`,
+              html: `<p>Hi ${guestName},</p><p>Good news! Your <strong>${doc.type
+                .toLowerCase()
+                .replace('_', ' ')}</strong> has been approved.</p>${
+                notes ? `<p><strong>Admin Note:</strong> ${notes}</p>` : ''
+              }<p>Best regards,<br/>Pickleball Passport Team</p>`,
+            });
+          } catch (error) {
+            console.error('Failed to send bulk approval email:', error);
+          }
+        });
+
+        return {
+          success: true,
+          count: documentIds.length,
+        };
+      }),
+  }),
+
+  // ============================================================================
+  // BOOKING MANAGEMENT
+  // ============================================================================
+
+  bookings: router({
+    /**
+     * Get all bookings with filters
+     */
+    list: adminProcedure
+      .input(
+        z
+          .object({
+            status: z
+              .enum(['DRAFT', 'PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'COMPLETED'])
+              .optional(),
+            userId: z.string().optional(),
+            packageId: z.string().optional(),
+            tripId: z.string().optional(),
+            limit: z.number().min(1).max(100).default(50),
+            offset: z.number().min(0).default(0),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.status && { status: input.status }),
+          ...(input?.userId && { userId: input.userId }),
+          ...(input?.packageId && { packageId: input.packageId }),
+          ...(input?.tripId && { tripId: input.tripId }),
+        };
+
+        const [bookings, total] = await Promise.all([
+          ctx.db.booking.findMany({
+            where,
+            include: {
+              user: {
+                select: {
+                  email: true,
+                  guestProfile: {
+                    select: {
+                      firstName: true,
+                      lastName: true,
+                      phone: true,
+                    },
+                  },
+                },
+              },
+              package: {
+                select: {
+                  name: true,
+                  slug: true,
+                },
+              },
+              trip: {
+                select: {
+                  name: true,
+                  destination: true,
+                  startDate: true,
+                  endDate: true,
+                },
+              },
+              payments: {
+                orderBy: {
+                  createdAt: 'desc',
+                },
+                take: 1,
+              },
+              documents: {
+                select: {
+                  id: true,
+                  type: true,
+                  status: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: input?.limit || 50,
+            skip: input?.offset || 0,
+          }),
+          ctx.db.booking.count({ where }),
+        ]);
+
+        return {
+          bookings,
+          total,
+          hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+        };
+      }),
+
+    /**
+     * Get booking counts by status
+     */
+    getCounts: adminProcedure.query(async ({ ctx }) => {
+      const [total, draft, pendingPayment, confirmed, cancelled, completed] =
+        await Promise.all([
+          ctx.db.booking.count(),
+          ctx.db.booking.count({ where: { status: 'DRAFT' } }),
+          ctx.db.booking.count({ where: { status: 'PENDING_PAYMENT' } }),
+          ctx.db.booking.count({ where: { status: 'CONFIRMED' } }),
+          ctx.db.booking.count({ where: { status: 'CANCELLED' } }),
+          ctx.db.booking.count({ where: { status: 'COMPLETED' } }),
+        ]);
+
+      return {
+        total,
+        draft,
+        pendingPayment,
+        confirmed,
+        cancelled,
+        completed,
+      };
+    }),
+
+    /**
+     * Update booking status
+     */
+    updateStatus: adminProcedure
+      .input(
+        z.object({
+          bookingId: z.string(),
+          status: z.enum(['DRAFT', 'PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'COMPLETED']),
+          notes: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { bookingId, status, notes } = input;
+
+        // Get booking with user info
+        const booking = await ctx.db.booking.findUnique({
+          where: { id: bookingId },
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                guestProfile: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+            package: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        });
+
+        if (!booking) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Booking not found',
+          });
+        }
+
+        // Validate status transition
+        const validTransitions: Record<string, string[]> = {
+          DRAFT: ['PENDING_PAYMENT', 'CANCELLED'],
+          PENDING_PAYMENT: ['CONFIRMED', 'CANCELLED'],
+          CONFIRMED: ['COMPLETED', 'CANCELLED'],
+          CANCELLED: [], // Cannot transition from cancelled
+          COMPLETED: [], // Cannot transition from completed
+        };
+
+        const allowedStatuses = validTransitions[booking.status] || [];
+        if (!allowedStatuses.includes(status)) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Cannot transition from ${booking.status} to ${status}`,
+          });
+        }
+
+        // Update booking status
+        const updatedBooking = await ctx.db.booking.update({
+          where: { id: bookingId },
+          data: { status },
+        });
+
+        // Create notification for user
+        const guestName = booking.user.guestProfile
+          ? `${booking.user.guestProfile.firstName} ${booking.user.guestProfile.lastName}`
+          : 'Guest';
+
+        const statusMessages: Record<string, { title: string; content: string }> = {
+          CONFIRMED: {
+            title: 'Booking Confirmed',
+            content: `Your booking ${booking.bookingReference} for ${booking.package.name} has been confirmed!`,
+          },
+          CANCELLED: {
+            title: 'Booking Cancelled',
+            content: `Your booking ${booking.bookingReference} has been cancelled.${
+              notes ? ` Reason: ${notes}` : ''
+            }`,
+          },
+          COMPLETED: {
+            title: 'Trip Completed',
+            content: `Your trip has been completed! We hope you had an amazing experience.`,
+          },
+        };
+
+        const message = statusMessages[status];
+        if (message) {
+          await ctx.db.notification.create({
+            data: {
+              userId: booking.userId,
+              type: 'BOOKING_CONFIRMATION',
+              title: message.title,
+              content: message.content,
+              linkUrl: `/dashboard/bookings/${booking.id}`,
+              linkText: 'View Booking',
+            },
+          });
+
+          // Send email notification
+          try {
+            await sendEmail({
+              to: booking.user.email,
+              subject: `${message.title} - Pickleball Passport`,
+              text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nPickleball Passport Team`,
+              html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+            });
+          } catch (error) {
+            console.error('Failed to send booking status update email:', error);
+          }
+        }
+
+        return updatedBooking;
+      }),
+  }),
+
+  // ============================================================================
+  // GUEST MANAGEMENT
+  // ============================================================================
+
+  guests: router({
+    /**
+     * List all guests
+     */
+    list: adminProcedure
+      .input(
+        z
+          .object({
+            role: z.enum(['GUEST', 'PARTNER', 'ADMIN']).optional(),
+            search: z.string().optional(),
+            limit: z.number().min(1).max(100).default(50),
+            offset: z.number().min(0).default(0),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.role && { role: input.role }),
+          ...(input?.search && {
+            OR: [
+              { email: { contains: input.search, mode: 'insensitive' as const } },
+              {
+                guestProfile: {
+                  OR: [
+                    { firstName: { contains: input.search, mode: 'insensitive' as const } },
+                    { lastName: { contains: input.search, mode: 'insensitive' as const } },
+                  ],
+                },
+              },
+            ],
+          }),
+        };
+
+        const [users, total] = await Promise.all([
+          ctx.db.user.findMany({
+            where,
+            include: {
+              guestProfile: true,
+              partnerProfile: true,
+              bookings: {
+                select: {
+                  id: true,
+                  bookingReference: true,
+                  status: true,
+                  createdAt: true,
+                },
+                orderBy: {
+                  createdAt: 'desc',
+                },
+                take: 5,
+              },
+              _count: {
+                select: {
+                  bookings: true,
+                  notifications: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: input?.limit || 50,
+            skip: input?.offset || 0,
+          }),
+          ctx.db.user.count({ where }),
+        ]);
+
+        return {
+          users,
+          total,
+          hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+        };
+      }),
+
+    /**
+     * Get guest counts
+     */
+    getCounts: adminProcedure.query(async ({ ctx }) => {
+      const [total, guests, partners, admins] = await Promise.all([
+        ctx.db.user.count(),
+        ctx.db.user.count({ where: { role: 'GUEST' } }),
+        ctx.db.user.count({ where: { role: 'PARTNER' } }),
+        ctx.db.user.count({ where: { role: 'ADMIN' } }),
+      ]);
+
+      return {
+        total,
+        guests,
+        partners,
+        admins,
+      };
+    }),
+  }),
+});

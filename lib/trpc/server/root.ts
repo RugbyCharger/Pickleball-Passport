@@ -15,6 +15,7 @@ import { bookingRouter } from './routers/booking'
 import { documentRouter } from './routers/document'
 import { notificationRouter } from './routers/notification'
 import { supportRouter } from './routers/support'
+import { adminRouter } from './routers/admin'
 
 export const appRouter = router({
   user: userRouter,
@@ -26,6 +27,7 @@ export const appRouter = router({
   document: documentRouter,
   notification: notificationRouter,
   support: supportRouter,
+  admin: adminRouter,
   // Future routers will be added here:
   // payment: paymentRouter,
 })
