@@ -3,7 +3,7 @@ import { PackageSection } from '@/components/marketing/package-grid';
 
 export default function Home() {
   return (
-    <main>
+    <>
       <HeroSection />
       <PackageSection />
 
@@ -12,6 +12,6 @@ export default function Home() {
         - How it works
         - FAQ preview
       */}
-    </main>
+    </>
   );
 }

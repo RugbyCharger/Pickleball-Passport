@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
+import { Footer } from "@/components/marketing/footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,8 +35,11 @@ export default function RootLayout({
           className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
         >
           <Providers>
-            <Header />
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
           </Providers>
         </body>
       </html>
