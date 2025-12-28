@@ -89,8 +89,9 @@ sprint_summary:
     goal: "Booking configurator foundation and Stripe integration"
     target_points: 22
     actual_points: 22
-    completed_points: 17
-    status: "IN_PROGRESS"
+    completed_points: 22
+    status: "COMPLETED"
+    completion_date: "2025-12-28"
     focus_areas:
       - "Booking configurator (package, duration, accommodation)"
       - "Stripe payment integration"
@@ -101,8 +102,8 @@ sprint_summary:
       - "E3-S2: Duration Selection (3 pts) ✅"
       - "E3-S3: Accommodation Tier (3 pts) ✅"
       - "E3-S6: Pricing Summary Sidebar (3 pts) ✅"
-      - "E4-S2: Payment Intent Creation (5 pts)"
-    velocity_notes: "Sprint 4 in progress - 17/22 points (77%). Five stories completed! E4-S1 (Stripe), E3-S1 (Package Selection), E3-S2 (Duration Selection), E3-S3 (Accommodation Tier), and E3-S6 (Pricing Summary Sidebar). Booking configurator now has complete UI with sticky pricing sidebar showing real-time calculations, progress tracking, price breakdown (package/duration/accommodation/add-ons), and savings vs US prices. Excellent progress - only E4-S2 Payment Intent Creation (5 pts) remaining to complete Sprint 4!"
+      - "E4-S2: Payment Intent Creation (5 pts) ✅"
+    velocity_notes: "Sprint 4 COMPLETED! All 22 points delivered (100%). Six stories fully implemented! E4-S1 (Stripe Integration), E3-S1 (Package Selection), E3-S2 (Duration Selection), E3-S3 (Accommodation Tier), E3-S6 (Pricing Summary Sidebar), and E4-S2 (Payment Intent Creation). Booking configurator foundation complete with full backend integration: Zustand store with persistence, tRPC booking router with createPaymentIntent endpoint, comprehensive business logic (package validation, duration scaling, accommodation tier pricing, add-ons calculation, referral code validation/discount application), Stripe Payment Intent creation, database Booking/BookingAddOn/Payment record creation, partner referral tracking with points awarding, and booking reference generation (PBP-{YEAR}-{6-DIGIT}). Ready for Sprint 5: Payment Form UI with Stripe Elements!"
 
   sprint_5_plus:
     goal: "Complete booking flow and payment processing"
@@ -651,11 +652,12 @@ epic_4_stories:
     title: "Payment Intent Creation"
     points: 5
     priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
+    status: "completed"
+    assigned_sprint: 4
     dependencies: ["E4-S1"]
     blocked_by: null
-    notes: "Backend API"
+    notes: "✅ Completed - Comprehensive booking tRPC router (lib/trpc/server/routers/booking.ts) with createPaymentIntent endpoint. Features: Zod input validation (packageId, duration, accommodationTier, addOnIds, tripId, referralCode), package validation with active status check, trip availability validation (capacity checking), duration-adjusted pricing calculation (basePrice × duration/14), accommodation tier pricing (LUXURY +$0, ULTRA_LUXURY +$3K, VILLA +$5K), add-ons fetching and total calculation, referral code validation against Partner table with tier-based discounts (BRONZE 5%, SILVER 7.5%, GOLD 10%, PLATINUM 15%), booking reference generation (PBP-{YEAR}-{6-DIGIT-RANDOM}), Booking record creation (status: PENDING_PAYMENT), BookingAddOn records creation, Stripe Payment Intent creation with metadata (bookingReference, packageId, userId, duration, accommodationTier, referralCode), Payment record creation, PartnerReferral record creation with points calculation (1 point per $100), automatic partner passportPoints increment, comprehensive error handling with booking rollback on Stripe failure, and full integration with existing stripe-service.ts. Router added to appRouter in lib/trpc/server/root.ts. Ready for E4-S3: Payment Form UI with Stripe Elements!"
+    completed_date: "2025-12-28"
 
   E4-S3:
     title: "Payment Form UI"

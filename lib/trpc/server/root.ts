@@ -11,6 +11,7 @@ import { packageRouter } from './routers/package'
 import { emailRouter } from './routers/email'
 import { applicationRouter } from './routers/application'
 import { testimonialRouter } from './routers/testimonial'
+import { bookingRouter } from './routers/booking'
 
 export const appRouter = router({
   user: userRouter,
@@ -18,8 +19,8 @@ export const appRouter = router({
   email: emailRouter,
   application: applicationRouter,
   testimonial: testimonialRouter,
+  booking: bookingRouter,
   // Future routers will be added here:
-  // booking: bookingRouter,
   // payment: paymentRouter,
 })
 
