@@ -19,6 +19,15 @@ import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if Stripe is configured
+    if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+      console.error('Stripe not configured');
+      return NextResponse.json(
+        { error: 'Stripe integration not configured' },
+        { status: 503 }
+      );
+    }
+
     // Get the raw body for signature verification
     const body = await req.text();
     const headersList = await headers();
@@ -33,7 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify webhook signature
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     let event: Stripe.Event;
 
     try {

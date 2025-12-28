@@ -13,10 +13,28 @@
 import Stripe from 'stripe';
 
 // Initialize Stripe client (server-side only)
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-12-15.clover',
-  typescript: true,
-});
+// Note: During build time, this might not be available
+const getStripeClient = () => {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+
+  if (!apiKey) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+
+  return new Stripe(apiKey, {
+    apiVersion: '2025-12-15.clover',
+    typescript: true,
+  });
+};
+
+// Lazy initialization
+let stripe: Stripe | null = null;
+const getStripe = () => {
+  if (!stripe) {
+    stripe = getStripeClient();
+  }
+  return stripe;
+};
 
 export interface CreatePaymentIntentParams {
   amount: number; // Amount in cents
@@ -43,7 +61,7 @@ export async function createPaymentIntent(
   const { amount, bookingId, guestEmail, guestName, metadata = {} } = params;
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount,
       currency: 'usd',
       automatic_payment_methods: {
@@ -78,7 +96,7 @@ export async function getPaymentIntent(
   paymentIntentId: string
 ): Promise<Stripe.PaymentIntent> {
   try {
-    return await stripe.paymentIntents.retrieve(paymentIntentId);
+    return await getStripe().paymentIntents.retrieve(paymentIntentId);
   } catch (error) {
     console.error('Error retrieving payment intent:', error);
     throw new Error('Failed to retrieve payment intent');
@@ -94,7 +112,7 @@ export async function cancelPaymentIntent(
   paymentIntentId: string
 ): Promise<Stripe.PaymentIntent> {
   try {
-    return await stripe.paymentIntents.cancel(paymentIntentId);
+    return await getStripe().paymentIntents.cancel(paymentIntentId);
   } catch (error) {
     console.error('Error canceling payment intent:', error);
     throw new Error('Failed to cancel payment intent');
@@ -114,7 +132,7 @@ export async function createRefund(params: {
   const { paymentIntentId, amount, reason } = params;
 
   try {
-    return await stripe.refunds.create({
+    return await getStripe().refunds.create({
       payment_intent: paymentIntentId,
       amount,
       reason,
@@ -137,21 +155,14 @@ export function verifyWebhookSignature(
   webhookSecret: string
 ): Stripe.Event {
   try {
-    return stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    return getStripe().webhooks.constructEvent(payload, signature, webhookSecret);
   } catch (error) {
     console.error('Webhook signature verification failed:', error);
     throw new Error('Invalid webhook signature');
   }
 }
 
-/**
- * Get Stripe Instance
- *
- * Returns the configured Stripe instance for direct API calls.
- */
-export function getStripe(): Stripe {
-  return stripe;
-}
+// Note: getStripe() is now defined above for lazy initialization
 
 /**
  * Check if Stripe is Configured

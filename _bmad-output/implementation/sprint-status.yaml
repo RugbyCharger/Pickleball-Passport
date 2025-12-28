@@ -89,20 +89,20 @@ sprint_summary:
     goal: "Booking configurator foundation and Stripe integration"
     target_points: 22
     actual_points: 22
-    completed_points: 0
+    completed_points: 8
     status: "IN_PROGRESS"
     focus_areas:
       - "Booking configurator (package, duration, accommodation)"
       - "Stripe payment integration"
       - "Real-time pricing sidebar"
     stories:
-      - "E4-S1: Stripe Integration Setup (3 pts)"
-      - "E3-S1: Package Selection (5 pts)"
+      - "E4-S1: Stripe Integration Setup (3 pts) ✅"
+      - "E3-S1: Package Selection (5 pts) ✅"
       - "E3-S2: Duration Selection (3 pts)"
       - "E3-S3: Accommodation Tier (3 pts)"
       - "E3-S6: Pricing Summary Sidebar (3 pts)"
       - "E4-S2: Payment Intent Creation (5 pts)"
-    velocity_notes: "Sprint 4 started - Building booking configurator foundation with Stripe integration. Focus on core booking flow (package → duration → accommodation → pricing) and payment infrastructure."
+    velocity_notes: "Sprint 4 in progress - 8/22 points (36%). E4-S1 (Stripe) and E3-S1 (Package Selection) completed. Package configurator foundation established with Zustand store, package selection page with tRPC integration, responsive package cards with selection state, and Next button navigation. Next: E3-S2 Duration Selection."
 
   sprint_5_plus:
     goal: "Complete booking flow and payment processing"
@@ -454,11 +454,12 @@ epic_3_stories:
     title: "Package Selection"
     points: 5
     priority: "P0"
-    status: "not-started"
+    status: "completed"
     assigned_sprint: 4
     dependencies: ["E2-S1", "Database schema"]
     blocked_by: null
-    notes: "Start of booking configurator"
+    notes: "✅ Completed - Package selection page at /booking/configure with protected route authentication, Zustand store (lib/stores/booking-store.ts) for state management with localStorage persistence, PackageSelector component with tRPC package.getAll integration, responsive 2-column grid layout (mobile-first), radio button selection behavior with visual feedback (blue border + checkmark), package cards showing heroImage/name/tagline/price/durations, disabled state for Next button until selection, Next button navigation to /booking/configure/duration, real-time price calculation utilities, FAQ section, and trust indicators. Store includes calculateSubtotal/calculateSavings/calculateTotal methods, step navigation, and canProceedToNextStep validation."
+    completed_date: "2025-12-28"
 
   E3-S2:
     title: "Duration Selection"
@@ -636,11 +637,12 @@ epic_4_stories:
     title: "Stripe Integration Setup"
     points: 3
     priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
+    status: "completed"
+    assigned_sprint: 4
     dependencies: []
     blocked_by: null
-    notes: "Foundation for payments"
+    notes: "✅ Completed - Full Stripe integration: stripe-service.ts with payment intent creation/retrieval/cancellation/refund, webhook handler at /api/webhooks/stripe with signature verification, event handlers for payment_intent.succeeded/failed/canceled, automatic booking confirmation on payment success, partner points awarding, amount formatting utilities, comprehensive README documentation. Dependencies installed: stripe, @stripe/stripe-js, @stripe/react-stripe-js. Ready for E4-S2 (Payment Intent Creation)."
+    completed_date: "2025-12-28"
 
   E4-S2:
     title: "Payment Intent Creation"
