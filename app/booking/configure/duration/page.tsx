@@ -15,6 +15,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import DurationSelector from '@/components/booking/duration-selector'
+import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
   title: 'Select Duration | Pickleball Passport',
@@ -49,8 +50,20 @@ export default async function DurationSelectionPage() {
           </p>
         </div>
 
-        {/* Duration Selector Component */}
-        <DurationSelector />
+        {/* Main Content Grid with Sidebar */}
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Left Column: Duration Selection */}
+          <div className="lg:col-span-2">
+            <DurationSelector />
+          </div>
+
+          {/* Right Column: Pricing Summary (Sticky) */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8">
+              <PricingSummary />
+            </div>
+          </div>
+        </div>
 
         {/* Why Duration Matters */}
         <div className="mt-16 border-t border-slate-200 pt-12">

@@ -15,6 +15,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import PackageSelector from '@/components/booking/package-selector'
+import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
   title: 'Select Your Package | Pickleball Passport',
@@ -49,8 +50,20 @@ export default async function PackageSelectionPage() {
           </p>
         </div>
 
-        {/* Package Selector Component */}
-        <PackageSelector />
+        {/* Main Content Grid with Sidebar */}
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Left Column: Package Selection */}
+          <div className="lg:col-span-2">
+            <PackageSelector />
+          </div>
+
+          {/* Right Column: Pricing Summary (Sticky) */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8">
+              <PricingSummary />
+            </div>
+          </div>
+        </div>
 
         {/* Trust Indicators */}
         <div className="mt-16 border-t border-slate-200 pt-8">

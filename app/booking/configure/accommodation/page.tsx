@@ -13,6 +13,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import { AccommodationSelector } from '@/components/booking/accommodation-selector'
+import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
   title: 'Select Accommodation | Pickleball Passport',
@@ -47,8 +48,20 @@ export default async function AccommodationSelectionPage() {
           </p>
         </div>
 
-        {/* Accommodation Selection Component */}
-        <AccommodationSelector />
+        {/* Main Content Grid with Sidebar */}
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Left Column: Accommodation Selection */}
+          <div className="lg:col-span-2">
+            <AccommodationSelector />
+          </div>
+
+          {/* Right Column: Pricing Summary (Sticky) */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8">
+              <PricingSummary />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
