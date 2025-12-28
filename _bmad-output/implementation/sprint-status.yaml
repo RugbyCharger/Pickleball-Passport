@@ -89,7 +89,7 @@ sprint_summary:
     goal: "Booking configurator foundation and Stripe integration"
     target_points: 22
     actual_points: 22
-    completed_points: 8
+    completed_points: 11
     status: "IN_PROGRESS"
     focus_areas:
       - "Booking configurator (package, duration, accommodation)"
@@ -98,11 +98,11 @@ sprint_summary:
     stories:
       - "E4-S1: Stripe Integration Setup (3 pts) ✅"
       - "E3-S1: Package Selection (5 pts) ✅"
-      - "E3-S2: Duration Selection (3 pts)"
+      - "E3-S2: Duration Selection (3 pts) ✅"
       - "E3-S3: Accommodation Tier (3 pts)"
       - "E3-S6: Pricing Summary Sidebar (3 pts)"
       - "E4-S2: Payment Intent Creation (5 pts)"
-    velocity_notes: "Sprint 4 in progress - 8/22 points (36%). E4-S1 (Stripe) and E3-S1 (Package Selection) completed. Package configurator foundation established with Zustand store, package selection page with tRPC integration, responsive package cards with selection state, and Next button navigation. Next: E3-S2 Duration Selection."
+    velocity_notes: "Sprint 4 in progress - 11/22 points (50%). Three stories completed: E4-S1 (Stripe), E3-S1 (Package Selection), and E3-S2 (Duration Selection). Booking configurator progressing well with step-by-step flow, dynamic pricing, and sample itineraries. Halfway through sprint! Next: E3-S3 Accommodation Tier Selection."
 
   sprint_5_plus:
     goal: "Complete booking flow and payment processing"
@@ -465,11 +465,12 @@ epic_3_stories:
     title: "Duration Selection"
     points: 3
     priority: "P0"
-    status: "not-started"
+    status: "completed"
     assigned_sprint: 4
     dependencies: ["E3-S1"]
     blocked_by: null
-    notes: "Dynamic pricing based on duration"
+    notes: "✅ Completed - Duration selection page at /booking/configure/duration with DurationSelector component, 4 duration options (7, 10, 14, 21 days) displayed as responsive card grid, dynamic price calculation using basePrice × (duration / 14) formula, sample itinerary highlights for each duration (6-12 activity highlights per duration), 'Most Popular' badge on 14-day option, per-day pricing display, Back/Next navigation buttons, disabled states for unavailable durations (checked against selectedPackage.durationOptions), current subtotal display with package name and duration, 'Why Duration Matters' educational section with recovery/pickleball/cultural benefits, pricing information note, and Zustand store integration with previousStep/nextStep methods. Itineraries include pickleball training, medical procedures, cultural excursions, and wellness activities scaled by duration."
+    completed_date: "2025-12-28"
 
   E3-S3:
     title: "Accommodation Tier Selection"
