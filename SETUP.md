@@ -184,21 +184,24 @@ See `.env.example` for all required environment variables.
 After completing this setup:
 
 1. ✅ FOUNDATION-1 through FOUNDATION-4 are complete
-2. ✅ E2-S1: Clerk Integration is complete
-3. ✅ E2-S2: User Sign-Up Flow with webhooks is complete
-4. Next: Implement E2-S3 (User Login Flow with role-based redirects)
-5. Next: Implement E2-S4 (Role-Based Access Control)
+2. ✅ E2: User Authentication Epic - COMPLETE (all P0 stories done!)
+   - E2-S1: Clerk Integration Setup
+   - E2-S2: User Sign-Up Flow with webhooks
+   - E2-S3: User Login Flow with role-based redirects
+   - E2-S4: Role-Based Access Control
 
 ### Sprint 1 Progress
 
-**Completed (14/33 points - 42%):**
+**Completed (19/33 points - 58%):**
 - FOUNDATION-4: tRPC Setup (3 points)
 - E2-S1: Clerk Integration Setup (3 points)
 - E2-S2: User Sign-Up Flow (5 points)
 - E2-S3: User Login Flow (3 points)
-
-**Next Up:**
 - E2-S4: Role-Based Access Control (5 points)
+
+**Remaining for Sprint 1:**
+- Foundation stories (FOUNDATION-1, 2, 3, 5, 6: 14 points total)
+- These are scaffolding and setup tasks
 
 ## Getting Help
 
