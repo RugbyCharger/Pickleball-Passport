@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Header } from "@/components/marketing/header";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,7 +33,10 @@ export default function RootLayout({
         <body
           className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
         >
-          <Providers>{children}</Providers>
+          <Providers>
+            <Header />
+            {children}
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

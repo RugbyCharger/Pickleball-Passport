@@ -51,7 +51,7 @@ sprint_summary:
     goal: "Marketing website core pages"
     target_points: 20
     actual_points: 21
-    completed_points: 19
+    completed_points: 22
     status: "IN_PROGRESS"
     focus_areas:
       - "Homepage hero section"
@@ -62,9 +62,9 @@ sprint_summary:
       - "E1-S1: Homepage Hero Section (5 pts) ✅"
       - "E1-S2: Package Explorer Grid (3 pts) ✅"
       - "E1-S3: Package Detail Pages (8 pts) ✅"
-      - "E1-S12: Mobile Navigation (3 pts)"
+      - "E1-S12: Mobile Navigation (3 pts) ✅"
       - "E1-S14: Footer (2 pts)"
-    velocity_notes: "Completed E1-S3 with dynamic routes, SSG, markdown rendering, collapsible itineraries, and package-specific FAQs. 19/21 points complete (90%)."
+    velocity_notes: "Completed E1-S12 with responsive header, mobile hamburger menu, auth-aware CTAs (Sign In/Dashboard), sticky navigation, and active link highlighting. 22/21 points complete (105%)."
 
   sprint_3:
     goal: "Application flow and testimonials"
@@ -98,9 +98,9 @@ epics:
     total_points: 55
     p0_points: 42
     status: "in-progress"
-    stories_completed: 3
+    stories_completed: 4
     stories_in_progress: 0
-    stories_ready: 3
+    stories_ready: 2
     stories_not_started: 9
     target_completion: "Sprint 1-3"
 
@@ -296,11 +296,12 @@ epic_1_stories:
     title: "Mobile Navigation"
     points: 3
     priority: "P1"
-    status: "ready-for-dev"
+    status: "completed"
     assigned_sprint: 2
     dependencies: []
     blocked_by: null
-    notes: "Build alongside homepage"
+    notes: "✅ Completed - Responsive header component with sticky positioning, desktop navigation links with active state highlighting, mobile hamburger menu with slide-in drawer, auth-aware CTAs (Sign In/Dashboard based on Clerk auth), role-based dashboard routing, and smooth transitions. Integrated into root layout for site-wide navigation."
+    completed_date: "2025-12-28"
 
   E1-S13:
     title: "Contact Form"
