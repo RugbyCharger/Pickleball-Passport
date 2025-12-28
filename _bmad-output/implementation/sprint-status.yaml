@@ -1,0 +1,951 @@
+# Sprint Status Tracking - Pickleball Passport
+# Generated: 2025-12-28
+# Purpose: Track epic and story progress through implementation phase
+
+project: "Pickleball Passport"
+generated: "2025-12-28"
+current_sprint: 1
+sprint_duration: "2 weeks"
+team_size: 1  # Solo developer (Grant)
+estimated_velocity: "15-20 points/sprint"
+
+# STORY STATUS DEFINITIONS
+# =========================
+# not-started: Story not yet begun
+# ready-for-dev: Story is ready to implement (acceptance criteria clear, dependencies met)
+# in-progress: Story currently being developed
+# code-review: Story development complete, awaiting review
+# testing: Story in testing phase
+# blocked: Story blocked by dependency or issue
+# completed: Story fully implemented, tested, and merged
+# deferred: Story moved to future sprint
+
+# Sprint Planning Summary
+sprint_summary:
+  sprint_1:
+    goal: "Project scaffolding, database setup, and basic infrastructure"
+    target_points: 20
+    focus_areas:
+      - "Project initialization (Next.js, TypeScript, tRPC)"
+      - "Database schema design and Prisma setup"
+      - "Authentication foundation (Clerk integration)"
+      - "Basic routing and app structure"
+    stories:
+      - "E2-S1: Clerk Integration Setup"
+      - "E2-S2: User Sign-Up Flow"
+      - "E2-S3: User Login Flow"
+      - "E2-S4: Role-Based Access Control"
+      - "Foundation stories (not in epics): Project scaffolding"
+
+  sprint_2:
+    goal: "Marketing website core pages"
+    target_points: 20
+    focus_areas:
+      - "Homepage hero section"
+      - "Package explorer and detail pages"
+      - "Navigation and footer components"
+    stories:
+      - "E1-S1: Homepage Hero Section"
+      - "E1-S2: Package Explorer Grid"
+      - "E1-S3: Package Detail Pages"
+      - "E1-S12: Mobile Navigation"
+      - "E1-S14: Footer"
+
+  sprint_3:
+    goal: "Application flow and testimonials"
+    target_points: 20
+    focus_areas:
+      - "Multi-step application form"
+      - "Video testimonial gallery"
+      - "Email integrations"
+    stories:
+      - "E1-S4: Testimonial Video Gallery"
+      - "E1-S6: Application Form (Multi-Step)"
+      - "E11-S1: SendGrid Integration"
+      - "E11-S2: Booking Confirmation Email"
+
+  sprint_4_plus:
+    goal: "Booking system and payment integration"
+    target_points: "TBD"
+    focus_areas:
+      - "Booking configurator"
+      - "Stripe payment processing"
+      - "Guest dashboard"
+    notes: "Detailed planning for Sprint 4+ will occur after Sprint 3 completion"
+
+# Epic Status Overview
+epics:
+  E1:
+    name: "Marketing Website"
+    priority: "P0"
+    total_stories: 15
+    p0_stories: 6
+    total_points: 55
+    p0_points: 42
+    status: "in-progress"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 6
+    stories_not_started: 9
+    target_completion: "Sprint 1-3"
+
+  E2:
+    name: "User Authentication"
+    priority: "P0"
+    total_stories: 8
+    p0_stories: 4
+    total_points: 34
+    p0_points: 16
+    status: "in-progress"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 4
+    stories_not_started: 4
+    target_completion: "Sprint 1-2"
+
+  E3:
+    name: "Booking System"
+    priority: "P0"
+    total_stories: 18
+    p0_stories: 8
+    total_points: 89
+    p0_points: 54
+    status: "not-started"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 0
+    stories_not_started: 18
+    target_completion: "Sprint 4-7"
+
+  E4:
+    name: "Payment Processing"
+    priority: "P0"
+    total_stories: 12
+    p0_stories: 7
+    total_points: 55
+    p0_points: 55
+    status: "not-started"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 0
+    stories_not_started: 12
+    target_completion: "Sprint 5-8"
+
+  E5:
+    name: "Admin Dashboard"
+    priority: "P1"
+    total_stories: 10
+    p0_stories: 0
+    total_points: 34
+    p0_points: 0
+    status: "not-started"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 0
+    stories_not_started: 10
+    target_completion: "Sprint 9-11"
+
+  E11:
+    name: "Communication System"
+    priority: "P2"
+    total_stories: 12
+    p0_stories: 2
+    total_points: 55
+    p0_points: 5
+    status: "not-started"
+    stories_completed: 0
+    stories_in_progress: 0
+    stories_ready: 2
+    stories_not_started: 10
+    target_completion: "Sprint 3-4 (P0 only)"
+
+# Detailed Story Status
+# ======================
+
+# EPIC 1: Marketing Website Stories
+epic_1_stories:
+  E1-S1:
+    title: "Homepage Hero Section"
+    points: 5
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 2
+    dependencies: []
+    blocked_by: null
+    notes: "Can start once basic Next.js app is scaffolded"
+
+  E1-S2:
+    title: "Package Explorer Grid"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 2
+    dependencies: ["Database schema", "Package seed data"]
+    blocked_by: null
+    notes: "Requires package table in database"
+
+  E1-S3:
+    title: "Package Detail Pages"
+    points: 8
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 2
+    dependencies: ["E1-S2"]
+    blocked_by: null
+    notes: "Dynamic routing, needs package data"
+
+  E1-S4:
+    title: "Testimonial Video Gallery"
+    points: 8
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 3
+    dependencies: ["Mux account setup", "Database schema"]
+    blocked_by: null
+    notes: "May need Mux trial/account before implementation"
+
+  E1-S5:
+    title: "Medical Tourism Cost Calculator"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Lower priority, can be added later"
+
+  E1-S6:
+    title: "Application Form (Multi-Step)"
+    points: 13
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 3
+    dependencies: ["E2-S1", "Database schema", "SendGrid integration"]
+    blocked_by: null
+    notes: "Large story, may need breakdown"
+
+  E1-S7:
+    title: "Trust & Safety Section"
+    points: 3
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Static content page"
+
+  E1-S8:
+    title: "Partner Program Landing Page"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Phase 2 priority"
+
+  E1-S9:
+    title: "Partner Signup Form"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E1-S8"]
+    blocked_by: null
+    notes: "Phase 2 priority"
+
+  E1-S10:
+    title: "SEO Optimization"
+    points: 3
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["All pages complete"]
+    blocked_by: null
+    notes: "Add after core pages done"
+
+  E1-S11:
+    title: "Email Capture & Newsletter Signup"
+    points: 2
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Nice-to-have"
+
+  E1-S12:
+    title: "Mobile Navigation"
+    points: 3
+    priority: "P1"
+    status: "ready-for-dev"
+    assigned_sprint: 2
+    dependencies: []
+    blocked_by: null
+    notes: "Build alongside homepage"
+
+  E1-S13:
+    title: "Contact Form"
+    points: 3
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Lower priority"
+
+  E1-S14:
+    title: "Footer"
+    points: 2
+    priority: "P1"
+    status: "ready-for-dev"
+    assigned_sprint: 2
+    dependencies: []
+    blocked_by: null
+    notes: "Build alongside homepage"
+
+  E1-S15:
+    title: "Privacy Policy & Terms of Service"
+    points: 2
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Legal content, can be markdown"
+
+# EPIC 2: User Authentication Stories
+epic_2_stories:
+  E2-S1:
+    title: "Clerk Integration Setup"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["Next.js app scaffolding"]
+    blocked_by: null
+    notes: "Foundation for all auth"
+
+  E2-S2:
+    title: "User Sign-Up Flow"
+    points: 5
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Includes webhook setup for user creation"
+
+  E2-S3:
+    title: "User Login Flow"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Role-based redirect after login"
+
+  E2-S4:
+    title: "Role-Based Access Control"
+    points: 5
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["E2-S2", "E2-S3"]
+    blocked_by: null
+    notes: "Middleware + tRPC context"
+
+  E2-S5:
+    title: "Password Reset Flow"
+    points: 3
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Clerk handles this, mostly config"
+
+  E2-S6:
+    title: "Profile Management"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Edit profile page"
+
+  E2-S7:
+    title: "Account Deletion"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "GDPR compliance"
+
+  E2-S8:
+    title: "Session Management"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Handled by Clerk, minimal work"
+
+# EPIC 3: Booking System Stories
+epic_3_stories:
+  E3-S1:
+    title: "Package Selection"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E2-S1", "Database schema"]
+    blocked_by: null
+    notes: "Start of booking configurator"
+
+  E3-S2:
+    title: "Duration Selection"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E3-S1"]
+    blocked_by: null
+    notes: "Dynamic pricing based on duration"
+
+  E3-S3:
+    title: "Accommodation Tier Selection"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E3-S2"]
+    blocked_by: null
+    notes: "Luxury tier selection"
+
+  E3-S4:
+    title: "Medical Add-Ons Selection"
+    points: 8
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E3-S3"]
+    blocked_by: null
+    notes: "Multi-select with pricing"
+
+  E3-S5:
+    title: "Wellness Add-Ons Selection"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E3-S4"]
+    blocked_by: null
+    notes: "Similar to medical add-ons"
+
+  E3-S6:
+    title: "Real-Time Price Calculator"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 4
+    dependencies: ["E3-S1"]
+    blocked_by: null
+    notes: "Sticky sidebar/bottom bar"
+
+  E3-S7:
+    title: "Booking Review Page"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E3-S6"]
+    blocked_by: null
+    notes: "Summary before payment"
+
+  E3-S8:
+    title: "Trip Selection"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E3-S7"]
+    blocked_by: null
+    notes: "Select from available trips"
+
+  E3-S9:
+    title: "Guest Profile Completion"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E2-S1"]
+    blocked_by: null
+    notes: "Collect additional guest info"
+
+  E3-S10:
+    title: "Booking Confirmation Page"
+    points: 8
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 6
+    dependencies: ["E4-S3"]
+    blocked_by: null
+    notes: "After payment success"
+
+  E3-S11:
+    title: "Guest Dashboard - Booking List"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 6
+    dependencies: ["E3-S10"]
+    blocked_by: null
+    notes: "View all bookings"
+
+  E3-S12:
+    title: "Guest Dashboard - Booking Details"
+    points: 8
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 6
+    dependencies: ["E3-S11"]
+    blocked_by: null
+    notes: "Individual booking view"
+
+  E3-S13:
+    title: "Booking Cancellation Flow"
+    points: 8
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S12"]
+    blocked_by: null
+    notes: "With refund calculation"
+
+  E3-S14:
+    title: "Booking Modification"
+    points: 8
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S12"]
+    blocked_by: null
+    notes: "Change dates, add-ons"
+
+  E3-S15:
+    title: "Waitlist System"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S8"]
+    blocked_by: null
+    notes: "Join waitlist if trip full"
+
+  E3-S16:
+    title: "Group Booking (Couples)"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S7"]
+    blocked_by: null
+    notes: "Book for 2+ people"
+
+  E3-S17:
+    title: "Travel Insurance Integration"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S7"]
+    blocked_by: null
+    notes: "Optional insurance purchase"
+
+  E3-S18:
+    title: "Dynamic Itinerary Generation"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E3-S10"]
+    blocked_by: null
+    notes: "Personalized based on selections"
+
+# EPIC 4: Payment Processing Stories
+epic_4_stories:
+  E4-S1:
+    title: "Stripe Integration Setup"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: []
+    blocked_by: null
+    notes: "Foundation for payments"
+
+  E4-S2:
+    title: "Payment Intent Creation"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E4-S1"]
+    blocked_by: null
+    notes: "Backend API"
+
+  E4-S3:
+    title: "Payment Form UI"
+    points: 8
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E4-S2"]
+    blocked_by: null
+    notes: "Stripe Elements integration"
+
+  E4-S4:
+    title: "Webhook Handler"
+    points: 5
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E4-S2"]
+    blocked_by: null
+    notes: "payment_intent.succeeded"
+
+  E4-S5:
+    title: "Payment Failure Handling"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 5
+    dependencies: ["E4-S4"]
+    blocked_by: null
+    notes: "Error handling and retry"
+
+  E4-S6:
+    title: "Installment Payment Plans"
+    points: 8
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 6
+    dependencies: ["E4-S3"]
+    blocked_by: null
+    notes: "4-installment option"
+
+  E4-S7:
+    title: "Scheduled Payment Processing"
+    points: 13
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 6
+    dependencies: ["E4-S6"]
+    blocked_by: null
+    notes: "Background job for installments"
+
+  E4-S8:
+    title: "Receipt Generation"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E4-S4"]
+    blocked_by: null
+    notes: "PDF receipts"
+
+  E4-S9:
+    title: "Refund Processing"
+    points: 8
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E4-S4"]
+    blocked_by: null
+    notes: "Full and partial refunds"
+
+  E4-S10:
+    title: "Payment History View"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E4-S4"]
+    blocked_by: null
+    notes: "Guest can view all payments"
+
+  E4-S11:
+    title: "Multi-Currency Support"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E4-S1"]
+    blocked_by: null
+    notes: "Future enhancement"
+
+  E4-S12:
+    title: "Stripe Connect (Partner Payouts)"
+    points: 13
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E4-S1"]
+    blocked_by: null
+    notes: "Phase 2 feature"
+
+# EPIC 11: Communication System Stories (P0 only)
+epic_11_stories:
+  E11-S1:
+    title: "SendGrid Integration"
+    points: 2
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 3
+    dependencies: []
+    blocked_by: null
+    notes: "Foundation for emails"
+
+  E11-S2:
+    title: "Booking Confirmation Email"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 3
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "Triggered after payment"
+
+  E11-S3:
+    title: "Application Confirmation Email"
+    points: 3
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "After application submission"
+
+  E11-S4:
+    title: "Pre-Trip Email Sequence"
+    points: 8
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "Automated drip campaign"
+
+  E11-S5:
+    title: "Payment Receipt Email"
+    points: 3
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "After each payment"
+
+  E11-S6:
+    title: "SMS Notifications (Twilio)"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Trip reminders"
+
+  E11-S7:
+    title: "In-App Notifications"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Real-time updates"
+
+  E11-S8:
+    title: "Admin Email Alerts"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "New booking, cancellation, etc."
+
+  E11-S9:
+    title: "Partner Notification System"
+    points: 8
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "Referral updates"
+
+  E11-S10:
+    title: "Group Chat Integration (WhatsApp)"
+    points: 13
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "Pre-trip group coordination"
+
+  E11-S11:
+    title: "Email Template Management"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["E11-S1"]
+    blocked_by: null
+    notes: "CMS for email templates"
+
+  E11-S12:
+    title: "Notification Preferences"
+    points: 5
+    priority: "P2"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: []
+    blocked_by: null
+    notes: "User can opt-out of certain emails"
+
+# Foundation Stories (Not in Epics - Infrastructure)
+foundation_stories:
+  FOUNDATION-1:
+    title: "Next.js Project Scaffolding"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: []
+    blocked_by: null
+    notes: "Create Next.js app with TypeScript"
+
+  FOUNDATION-2:
+    title: "Database Schema Design"
+    points: 5
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "Design Prisma schema for all entities"
+
+  FOUNDATION-3:
+    title: "Prisma Setup & Migrations"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["FOUNDATION-2"]
+    blocked_by: null
+    notes: "Initialize Prisma, run migrations"
+
+  FOUNDATION-4:
+    title: "tRPC Setup"
+    points: 3
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "Setup tRPC for type-safe APIs"
+
+  FOUNDATION-5:
+    title: "Tailwind CSS & Component Library Setup"
+    points: 2
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "Tailwind + Shadcn UI or Radix"
+
+  FOUNDATION-6:
+    title: "Environment Variables & Config"
+    points: 1
+    priority: "P0"
+    status: "ready-for-dev"
+    assigned_sprint: 1
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: ".env files, runtime config"
+
+  FOUNDATION-7:
+    title: "Database Seed Data"
+    points: 3
+    priority: "P0"
+    status: "not-started"
+    assigned_sprint: 2
+    dependencies: ["FOUNDATION-3"]
+    blocked_by: null
+    notes: "Seed packages, sample data"
+
+  FOUNDATION-8:
+    title: "CI/CD Pipeline Setup"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "GitHub Actions, Vercel deployment"
+
+  FOUNDATION-9:
+    title: "Error Tracking (Sentry)"
+    points: 2
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "Production error monitoring"
+
+  FOUNDATION-10:
+    title: "Testing Infrastructure"
+    points: 5
+    priority: "P1"
+    status: "not-started"
+    assigned_sprint: null
+    dependencies: ["FOUNDATION-1"]
+    blocked_by: null
+    notes: "Jest, React Testing Library, Playwright"
+
+# Risk Log
+risks:
+  - risk: "Solo developer velocity may be slower than estimated 15-20 points/sprint"
+    mitigation: "Adjust sprint goals after Sprint 1 actual velocity measurement"
+    severity: "medium"
+
+  - risk: "Third-party integrations (Mux, Stripe, Clerk) may have unexpected complexity"
+    mitigation: "Prototype integrations early in development cycle"
+    severity: "medium"
+
+  - risk: "Database schema changes may require migrations mid-sprint"
+    mitigation: "Design comprehensive schema upfront, use Prisma migrations"
+    severity: "low"
+
+  - risk: "Scope creep on complex stories (E1-S6: Application Form)"
+    mitigation: "Break large stories into sub-tasks, timebox implementation"
+    severity: "medium"
+
+# Notes
+notes:
+  - "This is a solo development project - velocity estimates are conservative"
+  - "Sprint 1 focuses on infrastructure and foundation to enable future work"
+  - "P0 stories prioritized; P1/P2 stories deferred until MVP complete"
+  - "Update this file after each sprint retrospective with actual velocity"
+  - "Foundation stories are critical but not tracked in epic point totals"

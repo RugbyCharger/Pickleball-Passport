@@ -1,0 +1,17 @@
+# BMAD Method Configuration
+# Project-specific settings for BMM workflows
+
+# Project Information
+project_name: "Pickleball Passport"
+output_folder: "_bmad-output"
+planning_artifacts: "_bmad-output/planning"
+product_knowledge: "_bmad-output/analysis"
+
+# User Information
+user_name: "Grant"
+communication_language: "en"
+document_output_language: "en"
+user_skill_level: "intermediate"
+
+# Workflow Settings
+date_format: "YYYY-MM-DD"
