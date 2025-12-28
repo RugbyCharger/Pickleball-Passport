@@ -34,7 +34,8 @@ SENDGRID_FROM_EMAIL="hello@pickleballpassport.com"
 
 - **`sendgrid.ts`** - SendGrid client and core email sending functions
 - **`templates/base.ts`** - Base HTML email template with responsive design
-- **`templates/welcome.ts`** - Welcome email template (example)
+- **`templates/welcome.ts`** - Welcome email template
+- **`templates/booking-confirmation.ts`** - Booking confirmation email template
 
 ### tRPC Integration
 
@@ -57,6 +58,31 @@ const welcome = trpc.email.sendWelcome.useMutation();
 await welcome.mutateAsync({
   email: 'newuser@example.com',
   firstName: 'John'
+});
+
+// Send booking confirmation email
+const bookingConfirmation = trpc.email.sendBookingConfirmation.useMutation();
+await bookingConfirmation.mutateAsync({
+  email: 'guest@example.com',
+  firstName: 'Jane',
+  bookingReference: 'PP-2025-001234',
+  packageName: 'Total Transformation Package',
+  duration: 14,
+  accommodationTier: 'Ultra-Luxury',
+  tripStartDate: '2025-03-15',
+  tripEndDate: '2025-03-29',
+  destination: 'Chiang Mai, Thailand',
+  basePrice: 449900, // in cents
+  accommodationPrice: 200000,
+  addOnsTotal: 89900,
+  totalPrice: 739800,
+  addOns: [
+    {
+      name: 'Full Set of Porcelain Veneers',
+      quantity: 1,
+      price: 59900
+    }
+  ]
 });
 ```
 
@@ -140,7 +166,8 @@ export function generateBookingEmail(data: BookingEmailData) {
 Visit `/admin/test-email` to:
 - Check SendGrid configuration status
 - Send test emails to verify delivery
-- Test email formatting and content
+- Test booking confirmation emails with mock data
+- Preview email formatting and content
 
 ### Development Testing
 

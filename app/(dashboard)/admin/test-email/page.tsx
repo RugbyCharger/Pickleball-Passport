@@ -17,9 +17,11 @@ export default function TestEmailPage() {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('Test Email from Pickleball Passport');
   const [message, setMessage] = useState('This is a test email to verify SendGrid integration.');
+  const [bookingEmail, setBookingEmail] = useState('');
 
   const { data: configStatus } = trpc.email.isConfigured.useQuery();
   const sendTestMutation = trpc.email.sendTest.useMutation();
+  const sendBookingConfirmationMutation = trpc.email.sendBookingConfirmation.useMutation();
 
   const handleSendTest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,46 @@ export default function TestEmailPage() {
       setEmail('');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to send test email');
+    }
+  };
+
+  const handleSendBookingConfirmation = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      // Mock booking data
+      const result = await sendBookingConfirmationMutation.mutateAsync({
+        email: bookingEmail,
+        firstName: 'John',
+        bookingReference: 'PP-2025-001234',
+        packageName: 'Total Transformation Package',
+        duration: 14,
+        accommodationTier: 'Ultra-Luxury',
+        tripStartDate: new Date(2025, 2, 15).toISOString(),
+        tripEndDate: new Date(2025, 2, 29).toISOString(),
+        destination: 'Chiang Mai, Thailand',
+        basePrice: 449900, // $4,499.00
+        accommodationPrice: 200000, // $2,000.00
+        addOnsTotal: 89900, // $899.00
+        totalPrice: 739800, // $7,398.00
+        addOns: [
+          {
+            name: 'Full Set of Porcelain Veneers',
+            quantity: 1,
+            price: 59900,
+          },
+          {
+            name: 'Advanced Pickleball Training (3 sessions)',
+            quantity: 1,
+            price: 30000,
+          },
+        ],
+      });
+
+      toast.success(result.message);
+      setBookingEmail('');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to send booking confirmation email');
     }
   };
 
@@ -81,7 +123,7 @@ export default function TestEmailPage() {
       </Card>
 
       {/* Test Email Form */}
-      <Card className="p-6">
+      <Card className="p-6 mb-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Send Test Email</h2>
 
         <form onSubmit={handleSendTest} className="space-y-4">
@@ -131,6 +173,40 @@ export default function TestEmailPage() {
             className="w-full bg-emerald-600 hover:bg-emerald-700"
           >
             {sendTestMutation.isPending ? 'Sending...' : 'Send Test Email'}
+          </Button>
+        </form>
+      </Card>
+
+      {/* Booking Confirmation Email Test */}
+      <Card className="p-6">
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">Test Booking Confirmation Email</h2>
+        <p className="text-sm text-slate-600 mb-4">
+          Send a sample booking confirmation email with mock data
+        </p>
+
+        <form onSubmit={handleSendBookingConfirmation} className="space-y-4">
+          <div>
+            <Label htmlFor="bookingEmail">Recipient Email</Label>
+            <Input
+              id="bookingEmail"
+              type="email"
+              value={bookingEmail}
+              onChange={(e) => setBookingEmail(e.target.value)}
+              placeholder="test@example.com"
+              required
+              disabled={!configStatus?.configured}
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Preview data: Total Transformation Package, 14 days, $7,398.00
+            </p>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={!configStatus?.configured || sendBookingConfirmationMutation.isPending}
+            className="w-full bg-blue-600 hover:bg-blue-700"
+          >
+            {sendBookingConfirmationMutation.isPending ? 'Sending...' : 'Send Booking Confirmation'}
           </Button>
         </form>
       </Card>

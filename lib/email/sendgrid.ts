@@ -89,3 +89,21 @@ export async function sendBatchEmails(emails: SendEmailOptions[]): Promise<void>
 export function isConfigured(): boolean {
   return !!apiKey;
 }
+
+/**
+ * Send booking confirmation email
+ */
+export async function sendBookingConfirmation(
+  to: string,
+  data: import('./templates/booking-confirmation').BookingConfirmationData
+): Promise<void> {
+  const { generateBookingConfirmationEmail } = await import('./templates/booking-confirmation');
+  const { html, text, subject } = generateBookingConfirmationEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}

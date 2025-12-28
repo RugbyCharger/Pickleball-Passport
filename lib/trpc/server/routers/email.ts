@@ -6,7 +6,7 @@
 
 import { z } from 'zod';
 import { publicProcedure, router, adminProcedure } from '../trpc';
-import { sendEmail, isConfigured } from '@/lib/email/sendgrid';
+import { sendEmail, isConfigured, sendBookingConfirmation } from '@/lib/email/sendgrid';
 import { generateWelcomeEmail } from '@/lib/email/templates/welcome';
 import { TRPCError } from '@trpc/server';
 
@@ -100,6 +100,72 @@ export const emailRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to send welcome email',
+        });
+      }
+    }),
+
+  /**
+   * Send booking confirmation email
+   */
+  sendBookingConfirmation: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        firstName: z.string(),
+        bookingReference: z.string(),
+        packageName: z.string(),
+        duration: z.number().positive(),
+        accommodationTier: z.string(),
+        tripStartDate: z.string().optional(),
+        tripEndDate: z.string().optional(),
+        destination: z.string().default('Chiang Mai, Thailand'),
+        basePrice: z.number().nonnegative(),
+        accommodationPrice: z.number().nonnegative(),
+        addOnsTotal: z.number().nonnegative(),
+        totalPrice: z.number().positive(),
+        addOns: z
+          .array(
+            z.object({
+              name: z.string(),
+              quantity: z.number().positive(),
+              price: z.number().nonnegative(),
+            })
+          )
+          .optional(),
+        portalUrl: z.string().url().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      if (!isConfigured()) {
+        console.warn('SendGrid not configured, skipping booking confirmation email');
+        return { success: false, message: 'Email service not configured' };
+      }
+
+      try {
+        await sendBookingConfirmation(input.email, {
+          firstName: input.firstName,
+          email: input.email,
+          bookingReference: input.bookingReference,
+          packageName: input.packageName,
+          duration: input.duration,
+          accommodationTier: input.accommodationTier,
+          tripStartDate: input.tripStartDate,
+          tripEndDate: input.tripEndDate,
+          destination: input.destination,
+          basePrice: input.basePrice,
+          accommodationPrice: input.accommodationPrice,
+          addOnsTotal: input.addOnsTotal,
+          totalPrice: input.totalPrice,
+          addOns: input.addOns,
+          portalUrl: input.portalUrl,
+        });
+
+        return { success: true, message: 'Booking confirmation email sent' };
+      } catch (error) {
+        console.error('Failed to send booking confirmation email:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to send booking confirmation email',
         });
       }
     }),
