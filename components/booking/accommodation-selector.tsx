@@ -114,7 +114,7 @@ export function AccommodationSelector() {
     if (!accommodationTier) return
 
     setIsNavigating(true)
-    router.push('/booking/configure/add-ons')
+    router.push('/booking/review')
   }
 
   const currentSubtotal = calculateSubtotal()

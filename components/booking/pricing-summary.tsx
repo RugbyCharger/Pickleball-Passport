@@ -50,8 +50,10 @@ export function PricingSummary() {
     accommodationTier,
     selectedAddOns,
     currentStep,
+    referralDiscount,
     calculateSubtotal,
     calculateSavings,
+    calculateTotal,
   } = useBookingStore()
 
   // Calculate prices
@@ -226,9 +228,31 @@ export function PricingSummary() {
           </div>
         </div>
 
+        {/* Referral Discount */}
+        {referralDiscount > 0 && (
+          <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+            <p className="text-sm font-medium text-emerald-700">Referral Discount</p>
+            <p className="text-lg font-bold text-emerald-700">
+              -{formatPrice(referralDiscount)}
+            </p>
+          </div>
+        )}
+
+        {/* Total (if referral applied) */}
+        {referralDiscount > 0 && (
+          <div className="border-t-2 border-slate-300 pt-4">
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-bold text-slate-900">Total</p>
+              <p className="text-3xl font-bold text-emerald-600">
+                {formatPrice(calculateTotal())}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Savings */}
         {savings > 0 && (
-          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-4">
+          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-4 mt-4">
             <div className="flex items-center justify-between mb-1">
               <p className="text-sm font-semibold text-emerald-900">
                 You Save vs US Prices

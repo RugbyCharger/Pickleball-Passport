@@ -59,6 +59,10 @@ export interface BookingState {
   // Step 5: Trip Selection (optional - if user wants specific dates)
   selectedTripId: string | null
 
+  // Referral Code (applied at review step)
+  referralCode: string | null
+  referralDiscount: number // in cents
+
   // Actions
   setCurrentStep: (step: number) => void
   nextStep: () => void
@@ -74,6 +78,9 @@ export interface BookingState {
 
   setSelectedTripId: (tripId: string | null) => void
 
+  setReferralCode: (code: string | null) => void
+  setReferralDiscount: (discount: number) => void
+
   // Pricing calculations
   calculateSubtotal: () => number
   calculateSavings: () => number
@@ -82,6 +89,7 @@ export interface BookingState {
   // Utility
   reset: () => void
   canProceedToNextStep: () => boolean
+  isReadyForReview: () => boolean
 }
 
 // Accommodation tier pricing (additional cost per tier)
@@ -99,6 +107,8 @@ const initialState = {
   accommodationTier: null,
   selectedAddOns: [],
   selectedTripId: null,
+  referralCode: null,
+  referralDiscount: 0,
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -145,6 +155,10 @@ export const useBookingStore = create<BookingState>()(
 
       // Step 5: Trip Selection
       setSelectedTripId: (tripId) => set({ selectedTripId: tripId }),
+
+      // Referral Code
+      setReferralCode: (code) => set({ referralCode: code }),
+      setReferralDiscount: (discount) => set({ referralDiscount: discount }),
 
       // Pricing calculations
       calculateSubtotal: () => {
@@ -203,7 +217,19 @@ export const useBookingStore = create<BookingState>()(
       },
 
       calculateTotal: () => {
-        return get().calculateSubtotal()
+        const subtotal = get().calculateSubtotal()
+        const discount = get().referralDiscount || 0
+        return Math.max(0, subtotal - discount)
+      },
+
+      // Validation for review step
+      isReadyForReview: () => {
+        const state = get()
+        return (
+          state.selectedPackage !== null &&
+          state.duration !== null &&
+          state.accommodationTier !== null
+        )
       },
 
       // Validation for step progression
@@ -239,6 +265,8 @@ export const useBookingStore = create<BookingState>()(
         accommodationTier: state.accommodationTier,
         selectedAddOns: state.selectedAddOns,
         selectedTripId: state.selectedTripId,
+        referralCode: state.referralCode,
+        referralDiscount: state.referralDiscount,
         currentStep: state.currentStep,
       }),
     }

@@ -4,7 +4,7 @@
 
 project: "Pickleball Passport"
 generated: "2025-12-28"
-current_sprint: 4
+current_sprint: 5
 sprint_duration: "2 weeks"
 team_size: 1  # Solo developer (Grant)
 estimated_velocity: "15-20 points/sprint"
@@ -105,15 +105,32 @@ sprint_summary:
       - "E4-S2: Payment Intent Creation (5 pts) ✅"
     velocity_notes: "Sprint 4 COMPLETED! All 22 points delivered (100%). Six stories fully implemented! E4-S1 (Stripe Integration), E3-S1 (Package Selection), E3-S2 (Duration Selection), E3-S3 (Accommodation Tier), E3-S6 (Pricing Summary Sidebar), and E4-S2 (Payment Intent Creation). Booking configurator foundation complete with full backend integration: Zustand store with persistence, tRPC booking router with createPaymentIntent endpoint, comprehensive business logic (package validation, duration scaling, accommodation tier pricing, add-ons calculation, referral code validation/discount application), Stripe Payment Intent creation, database Booking/BookingAddOn/Payment record creation, partner referral tracking with points awarding, and booking reference generation (PBP-{YEAR}-{6-DIGIT}). Ready for Sprint 5: Payment Form UI with Stripe Elements!"
 
-  sprint_5_plus:
-    goal: "Complete booking flow and payment processing"
+  sprint_5:
+    goal: "Booking review and payment UI"
+    target_points: 18
+    actual_points: 18
+    completed_points: 5
+    status: "IN_PROGRESS"
+    completion_date: null
+    focus_areas:
+      - "Booking review page with referral codes"
+      - "Payment form UI with Stripe Elements"
+      - "Payment failure handling"
+    stories:
+      - "E3-S7: Booking Review Page (5 pts) ✅"
+      - "E4-S3: Payment Form UI (8 pts) ⏳"
+      - "E4-S5: Payment Failure Handling (3 pts) ⏳"
+      - "E3-S10: Booking Confirmation Page (3 pts) - bonus if time ⏳"
+    velocity_notes: "Sprint 5 IN PROGRESS: 5/18 points complete (28%). E3-S7 Booking Review Page fully implemented with BookingSummary component (package/duration/accommodation/add-ons display with edit buttons), ReferralCodeInput component (validation, discount calculation, success/error feedback), review page at /booking/review with progress indicator and important notes, enhanced PricingSummary component (referral discount display, updated total calculation), Zustand store extensions (referralCode/referralDiscount state, isReadyForReview validation, calculateTotal with discount), and navigation updates (accommodation → review). All TypeScript checks passing. Ready for E4-S3: Payment Form UI with Stripe Elements!"
+
+  sprint_6_plus:
+    goal: "Complete guest experience and admin tools"
     target_points: "TBD"
     focus_areas:
-      - "Add-ons selection"
-      - "Booking review and confirmation"
-      - "Payment form UI"
       - "Guest dashboard"
-    notes: "Detailed planning after Sprint 4"
+      - "Booking management"
+      - "Admin tools"
+    notes: "Detailed planning after Sprint 5"
 
 # Epic Status Overview
 epics:
@@ -519,11 +536,12 @@ epic_3_stories:
     title: "Booking Review Page"
     points: 5
     priority: "P0"
-    status: "not-started"
+    status: "completed"
     assigned_sprint: 5
     dependencies: ["E3-S6"]
     blocked_by: null
-    notes: "Summary before payment"
+    notes: "✅ Completed - Comprehensive review page at /booking/review with BookingSummary component showing complete booking details (package card with image, duration with itinerary details, accommodation tier with amenities, add-ons list with empty state), edit functionality for each section (navigation back to respective pages), ReferralCodeInput component with client-side validation (format check: CODE-NAME-YEAR pattern, 5% demo discount calculation, loading/success/error states, apply/remove functionality), enhanced PricingSummary sidebar (referral discount display, updated total calculation with discount applied), Zustand store extensions (referralCode/referralDiscount state properties, setReferralCode/setReferralDiscount actions, isReadyForReview validation method, calculateTotal now subtracts referral discount), ReviewPageClient component for navigation (Back to Accommodation button, Proceed to Payment button with disabled state, redirect to configure if not ready), important notes section (deposit, payment plans, consultation, trip dates), responsive layout (2-col desktop, stacked mobile), progress indicator (Step 5 of 5), and accommodation page navigation update (now routes to /booking/review instead of /booking/configure/add-ons). All acceptance criteria met: complete summary display, detailed pricing breakdown with referral, edit functionality for all sections, referral code input/validation, validation before proceeding, responsive design. TypeScript checks passing. Ready for payment form!"
+    completed_date: "2025-12-28"
 
   E3-S8:
     title: "Trip Selection"
