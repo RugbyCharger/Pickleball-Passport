@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Quick Access */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <a
           href="/dashboard/admin/documents"
           className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
@@ -180,6 +180,22 @@ export default async function AdminDashboardPage() {
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Guest Management</h3>
           <p className="text-sm text-gray-600">View and manage guest profiles</p>
+        </a>
+
+        <a
+          href="/dashboard/admin/trips"
+          className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Calendar className="h-6 w-6 text-blue-600" />
+            </div>
+            <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
+              ACTIVE
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Trip Management</h3>
+          <p className="text-sm text-gray-600">Create and manage trips</p>
         </a>
       </div>
 

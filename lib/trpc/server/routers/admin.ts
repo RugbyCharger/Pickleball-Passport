@@ -718,6 +718,276 @@ export const adminRouter = router({
   }),
 
   // ============================================================================
+  // TRIP MANAGEMENT
+  // ============================================================================
+
+  trips: router({
+    /**
+     * List all trips
+     */
+    list: adminProcedure
+      .input(
+        z
+          .object({
+            isActive: z.boolean().optional(),
+            limit: z.number().min(1).max(100).default(50),
+            offset: z.number().min(0).default(0),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.isActive !== undefined && { isActive: input.isActive }),
+        };
+
+        const [trips, total] = await Promise.all([
+          ctx.db.trip.findMany({
+            where,
+            include: {
+              bookings: {
+                select: {
+                  id: true,
+                  bookingReference: true,
+                  status: true,
+                  user: {
+                    select: {
+                      email: true,
+                      guestProfile: {
+                        select: {
+                          firstName: true,
+                          lastName: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              startDate: 'desc',
+            },
+            take: input?.limit || 50,
+            skip: input?.offset || 0,
+          }),
+          ctx.db.trip.count({ where }),
+        ]);
+
+        return {
+          trips,
+          total,
+          hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+        };
+      }),
+
+    /**
+     * Get trip counts
+     */
+    getCounts: adminProcedure.query(async ({ ctx }) => {
+      const now = new Date();
+
+      const [total, active, upcoming, past] = await Promise.all([
+        ctx.db.trip.count(),
+        ctx.db.trip.count({ where: { isActive: true } }),
+        ctx.db.trip.count({
+          where: {
+            isActive: true,
+            startDate: { gte: now },
+          },
+        }),
+        ctx.db.trip.count({
+          where: {
+            endDate: { lt: now },
+          },
+        }),
+      ]);
+
+      return {
+        total,
+        active,
+        upcoming,
+        past,
+      };
+    }),
+
+    /**
+     * Get single trip by ID
+     */
+    getById: adminProcedure
+      .input(z.object({ id: z.string() }))
+      .query(async ({ ctx, input }) => {
+        const trip = await ctx.db.trip.findUnique({
+          where: { id: input.id },
+          include: {
+            bookings: {
+              include: {
+                user: {
+                  select: {
+                    email: true,
+                    guestProfile: {
+                      select: {
+                        firstName: true,
+                        lastName: true,
+                        phone: true,
+                      },
+                    },
+                  },
+                },
+                package: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!trip) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Trip not found',
+          });
+        }
+
+        return trip;
+      }),
+
+    /**
+     * Create new trip
+     */
+    create: adminProcedure
+      .input(
+        z.object({
+          name: z.string().min(1),
+          destination: z.string().min(1),
+          startDate: z.date(),
+          endDate: z.date(),
+          capacity: z.number().int().positive(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        // Validate dates
+        if (input.endDate <= input.startDate) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'End date must be after start date',
+          });
+        }
+
+        const trip = await ctx.db.trip.create({
+          data: {
+            name: input.name,
+            destination: input.destination,
+            startDate: input.startDate,
+            endDate: input.endDate,
+            capacity: input.capacity,
+            currentBookings: 0,
+            isActive: true,
+          },
+        });
+
+        return trip;
+      }),
+
+    /**
+     * Update trip
+     */
+    update: adminProcedure
+      .input(
+        z.object({
+          id: z.string(),
+          name: z.string().min(1).optional(),
+          destination: z.string().min(1).optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          capacity: z.number().int().positive().optional(),
+          isActive: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { id, ...data } = input;
+
+        // Get existing trip to validate
+        const existingTrip = await ctx.db.trip.findUnique({
+          where: { id },
+          select: {
+            currentBookings: true,
+            startDate: true,
+            endDate: true,
+          },
+        });
+
+        if (!existingTrip) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Trip not found',
+          });
+        }
+
+        // Validate capacity isn't reduced below current bookings
+        if (data.capacity && data.capacity < existingTrip.currentBookings) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Cannot reduce capacity below current bookings (${existingTrip.currentBookings})`,
+          });
+        }
+
+        // Validate dates if both provided
+        const startDate = data.startDate || existingTrip.startDate;
+        const endDate = data.endDate || existingTrip.endDate;
+
+        if (endDate <= startDate) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'End date must be after start date',
+          });
+        }
+
+        const trip = await ctx.db.trip.update({
+          where: { id },
+          data,
+        });
+
+        return trip;
+      }),
+
+    /**
+     * Delete trip
+     */
+    delete: adminProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        // Check if trip has any bookings
+        const trip = await ctx.db.trip.findUnique({
+          where: { id: input.id },
+          select: {
+            currentBookings: true,
+          },
+        });
+
+        if (!trip) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Trip not found',
+          });
+        }
+
+        if (trip.currentBookings > 0) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Cannot delete trip with existing bookings. Set to inactive instead.',
+          });
+        }
+
+        await ctx.db.trip.delete({
+          where: { id: input.id },
+        });
+
+        return { success: true };
+      }),
+  }),
+
+  // ============================================================================
   // GUEST MANAGEMENT
   // ============================================================================
 
