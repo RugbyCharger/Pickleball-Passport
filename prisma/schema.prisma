@@ -1,0 +1,513 @@
+// Pickleball Passport Database Schema
+// Generated: 2025-12-28
+// Database: PostgreSQL (Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum Role {
+  GUEST
+  PARTNER
+  ADMIN
+}
+
+enum BookingStatus {
+  DRAFT           // User is configuring package
+  PENDING_PAYMENT // Booking created, awaiting payment
+  CONFIRMED       // Payment received, booking confirmed
+  CANCELLED       // Booking cancelled
+  COMPLETED       // Trip completed
+}
+
+enum PaymentStatus {
+  PENDING   // Payment not yet processed
+  SUCCEEDED // Payment successful
+  FAILED    // Payment failed
+  REFUNDED  // Payment refunded
+}
+
+enum ApplicationStatus {
+  SUBMITTED // Application submitted by guest
+  REVIEWING // Admin is reviewing
+  APPROVED  // Application approved
+  REJECTED  // Application rejected
+}
+
+enum PartnerTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  PAYMENT_RECEIPT
+  TRIP_REMINDER
+  GENERAL
+}
+
+enum AddOnCategory {
+  DENTAL
+  FACIAL_COSMETIC
+  BODY
+  HEALTH_SCREENING
+  SPA
+  YOGA_MEDITATION
+  CULTURAL
+  PICKLEBALL
+}
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id        String   @id // Clerk user ID
+  email     String   @unique
+  role      Role     @default(GUEST)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  guestProfile   GuestProfile?
+  partnerProfile PartnerProfile?
+  applications   Application[]
+  bookings       Booking[]
+  notifications  Notification[]
+  testimonials   Testimonial[]
+
+  @@index([email])
+  @@index([role])
+}
+
+// ============================================================================
+// GUEST PROFILE
+// ============================================================================
+
+model GuestProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Personal Information
+  firstName String
+  lastName  String
+  phone     String?
+  age       Int?
+  location  String? // City, Country
+
+  // Pickleball Background
+  pickleballSkillLevel String? // Recreational, Intermediate, Advanced
+  pickleballFrequency  String? // e.g., "3x per week"
+  homeClub             String?
+
+  // Health & Dietary
+  dietaryRestrictions String[] // Array of restrictions
+  allergies           String?
+  medicalNotes        String? // Private medical info
+
+  // Emergency Contact
+  emergencyContactName         String?
+  emergencyContactPhone        String?
+  emergencyContactRelationship String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ============================================================================
+// PARTNER PROFILE
+// ============================================================================
+
+model PartnerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Club Information
+  clubName     String
+  clubLocation String
+  jobTitle     String?
+
+  // Partner Program
+  referralCode  String        @unique // e.g., "VILLAGES-JEN-2025"
+  tier          PartnerTier   @default(BRONZE)
+  passportPoints Int          @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  referrals PartnerReferral[]
+
+  @@index([userId])
+  @@index([referralCode])
+  @@index([tier])
+}
+
+// ============================================================================
+// PACKAGES & TRIPS
+// ============================================================================
+
+model Package {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL-friendly name
+  name        String   // e.g., "Pure Play", "Smile Makeover"
+  tagline     String?
+  description String   @db.Text // Markdown content
+
+  // Pricing
+  basePrice Int // Base price in USD cents (e.g., 1500000 = $15,000)
+
+  // Duration Options
+  durationOptions Int[] // Array of days: [7, 10, 14, 21]
+
+  // Media
+  heroImageUrl String?
+  imageUrls    String[] // Gallery images
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  bookings    Booking[]
+  itineraries Itinerary[]
+
+  @@index([slug])
+  @@index([isActive])
+}
+
+model Itinerary {
+  id        String @id @default(cuid())
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  duration Int // Number of days (7, 10, 14, 21)
+
+  // Day-by-day content (JSON or separate ItineraryDay model)
+  content String @db.Text // JSON: [{ day: 1, title: "Arrival", activities: [...] }]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([packageId])
+  @@index([duration])
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "Phuket January 2026"
+  destination String   // Thailand location
+
+  // Dates
+  startDate DateTime
+  endDate   DateTime
+
+  // Capacity
+  capacity        Int // Max guests (e.g., 12)
+  currentBookings Int @default(0)
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  bookings Booking[]
+
+  @@index([startDate])
+  @@index([isActive])
+}
+
+// ============================================================================
+// BOOKINGS
+// ============================================================================
+
+model Booking {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  packageId String
+  package   Package       @relation(fields: [packageId], references: [id])
+  tripId    String?
+  trip      Trip?         @relation(fields: [tripId], references: [id])
+
+  status BookingStatus @default(DRAFT)
+
+  // Configuration
+  duration           Int    // Days selected (7, 10, 14, 21)
+  accommodationTier  String // Luxury, Ultra-Luxury, Villa
+
+  // Pricing
+  basePrice          Int // Snapshot of package base price
+  accommodationPrice Int // Additional cost for tier
+  addOnsTotal        Int // Sum of all add-ons
+  totalPrice         Int // Final total price in cents
+
+  // Referral
+  referredBy String? // Partner referral code
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  bookingAddOns BookingAddOn[]
+  payments      Payment[]
+  referral      PartnerReferral?
+
+  @@index([userId])
+  @@index([packageId])
+  @@index([tripId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AddOn {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  category    AddOnCategory
+
+  // Pricing (Thailand vs US comparison)
+  thPrice Int // Thailand price in USD cents
+  usPrice Int // US price in USD cents (for comparison)
+
+  imageUrl String?
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  bookingAddOns BookingAddOn[]
+
+  @@index([category])
+  @@index([isActive])
+}
+
+model BookingAddOn {
+  id        String @id @default(cuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  addOnId   String
+  addOn     AddOn   @relation(fields: [addOnId], references: [id])
+
+  quantity Int     @default(1) // For things like veneers (multiple teeth)
+  price    Int     // Snapshot of price at booking time
+
+  createdAt DateTime @default(now())
+
+  @@unique([bookingId, addOnId])
+  @@index([bookingId])
+  @@index([addOnId])
+}
+
+// ============================================================================
+// PAYMENTS
+// ============================================================================
+
+model Payment {
+  id        String        @id @default(cuid())
+  bookingId String
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  amount Int // Amount in cents
+  status PaymentStatus @default(PENDING)
+
+  // Stripe Integration
+  stripePaymentIntentId String? @unique
+  stripeCustomerId      String?
+
+  // Installment Plan
+  isInstallment   Boolean   @default(false)
+  installmentNumber Int?    // 1 of 4, 2 of 4, etc.
+  scheduledDate   DateTime? // When installment is due
+
+  // Metadata
+  failureReason String? // Error message if payment failed
+  receiptUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([scheduledDate])
+  @@index([stripePaymentIntentId])
+}
+
+// ============================================================================
+// APPLICATIONS
+// ============================================================================
+
+model Application {
+  id     String            @id @default(cuid())
+  userId String
+  user   User              @relation(fields: [userId], references: [id])
+
+  status ApplicationStatus @default(SUBMITTED)
+
+  // Step 1: Basic Info
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  location  String
+
+  // Step 2: Pickleball Background
+  pickleballSkillLevel String
+  pickleballFrequency  String
+  homeClub             String?
+
+  // Step 3: Transformation Interests
+  interests String[] // dental, cosmetic, wellness, spiritual, pure_play
+
+  // Step 4: Travel Preferences
+  preferredDuration  String   // 7, 10, 14, 21 days
+  preferredDates     String?  // Rough timeframe
+  travelingAlone     Boolean
+  budgetRange        String?  // e.g., "$10-15K"
+
+  // Step 5: Discovery
+  referralSource String // How did you hear about us?
+
+  // Admin Notes
+  adminNotes String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// TESTIMONIALS
+// ============================================================================
+
+model Testimonial {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Guest Info (snapshot for display)
+  guestName    String
+  guestAge     Int?
+  guestLocation String?
+  packageType  String // Which package they booked
+  tripDate     DateTime?
+
+  // Video (Mux integration)
+  muxAssetId    String? @unique
+  muxPlaybackId String? @unique
+  thumbnailUrl  String?
+
+  // Text Testimonial
+  quote String? @db.Text
+
+  // Metadata
+  isFeatured Boolean  @default(false)
+  isApproved Boolean  @default(false)
+  viewCount  Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isFeatured])
+  @@index([isApproved])
+}
+
+// ============================================================================
+// PARTNER REFERRALS
+// ============================================================================
+
+model PartnerReferral {
+  id        String @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+  bookingId String         @unique
+  booking   Booking        @relation(fields: [bookingId], references: [id])
+
+  // Points awarded
+  pointsEarned Int // Based on booking value
+
+  // Status
+  isRedeemed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([bookingId])
+}
+
+// ============================================================================
+// COMMUNICATIONS
+// ============================================================================
+
+model Notification {
+  id     String           @id @default(cuid())
+  userId String
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type    NotificationType
+  title   String
+  content String           @db.Text
+
+  // Metadata
+  readAt DateTime?
+
+  // Optional link
+  linkUrl  String?
+  linkText String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// ADMIN / CMS
+// ============================================================================
+
+model Message {
+  id String @id @default(cuid())
+
+  // Contact Form Data
+  name    String
+  email   String
+  phone   String?
+  message String @db.Text
+
+  // Status
+  isRead    Boolean   @default(false)
+  repliedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
+  @@index([createdAt])
+}
