@@ -401,4 +401,174 @@ export const bookingRouter = router({
         payment: booking.payments[0] || null,
       }
     }),
+
+  /**
+   * Get Available Trips
+   *
+   * Returns all available trips that the guest can select.
+   * Filters by:
+   * - Active trips only
+   * - Future trips only
+   * - Trips with available capacity
+   */
+  getAvailableTrips: guestProcedure
+    .input(z.object({
+      packageId: z.string().cuid().optional(),
+    }))
+    .query(async ({ ctx }) => {
+      // Get all active future trips with available capacity
+      const now = new Date()
+      const trips = await ctx.db.trip.findMany({
+        where: {
+          isActive: true,
+          startDate: {
+            gte: now,
+          },
+        },
+        select: {
+          id: true,
+          startDate: true,
+          endDate: true,
+          destination: true,
+          capacity: true,
+          currentBookings: true,
+        },
+        orderBy: {
+          startDate: 'asc',
+        },
+      })
+
+      // Filter trips with available capacity and format response
+      return trips
+        .filter((trip) => trip.currentBookings < trip.capacity)
+        .map((trip) => ({
+          id: trip.id,
+          startDate: trip.startDate,
+          endDate: trip.endDate,
+          destination: trip.destination,
+          capacity: trip.capacity,
+          currentBookings: trip.currentBookings,
+          spotsRemaining: trip.capacity - trip.currentBookings,
+        }))
+    }),
+
+  /**
+   * Assign Trip to Booking
+   *
+   * Assigns a selected trip to an existing booking.
+   * Validates:
+   * - Booking ownership
+   * - Trip availability and capacity
+   * - Booking status (must be CONFIRMED or PENDING_PAYMENT)
+   */
+  assignTrip: guestProcedure
+    .input(z.object({
+      bookingId: z.string().cuid(),
+      tripId: z.string().cuid(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { bookingId, tripId } = input
+      const user = ctx.user!
+
+      // 1. Verify booking exists and belongs to user
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: bookingId },
+        select: {
+          id: true,
+          userId: true,
+          packageId: true,
+          tripId: true,
+          status: true,
+        },
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        })
+      }
+
+      if (booking.userId !== user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have access to this booking',
+        })
+      }
+
+      // 2. Check if booking already has a trip assigned
+      if (booking.tripId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This booking already has a trip assigned',
+        })
+      }
+
+      // 3. Validate booking status
+      if (booking.status !== 'CONFIRMED' && booking.status !== 'PENDING_PAYMENT') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Trip can only be assigned to confirmed or pending bookings',
+        })
+      }
+
+      // 4. Verify trip exists, is active, and has capacity
+      const trip = await ctx.db.trip.findUnique({
+        where: { id: tripId },
+        select: {
+          id: true,
+          startDate: true,
+          capacity: true,
+          currentBookings: true,
+          isActive: true,
+        },
+      })
+
+      if (!trip || !trip.isActive) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Trip not found or is no longer available',
+        })
+      }
+
+      // 5. Check trip capacity
+      if (trip.currentBookings >= trip.capacity) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This trip is fully booked',
+        })
+      }
+
+      // 6. Check if trip is in the future
+      if (new Date(trip.startDate) < new Date()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This trip has already started',
+        })
+      }
+
+      // 7. Assign trip to booking and increment trip bookings
+      const [updatedBooking] = await ctx.db.$transaction([
+        ctx.db.booking.update({
+          where: { id: bookingId },
+          data: { tripId },
+        }),
+        ctx.db.trip.update({
+          where: { id: tripId },
+          data: {
+            currentBookings: {
+              increment: 1,
+            },
+          },
+        }),
+      ])
+
+      return {
+        success: true,
+        booking: {
+          id: updatedBooking.id,
+          tripId: updatedBooking.tripId,
+        },
+      }
+    }),
 })
