@@ -58,6 +58,35 @@ enum NotificationType {
   GENERAL
 }
 
+enum DocumentType {
+  PASSPORT
+  MEDICAL_FORM
+  INSURANCE
+  VISA
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
 enum AddOnCategory {
   DENTAL
   FACIAL_COSMETIC
@@ -274,6 +303,7 @@ model Booking {
   // Relationships
   bookingAddOns BookingAddOn[]
   payments      Payment[]
+  documents     Document[]
   referral      PartnerReferral?
 
   @@index([userId])
@@ -489,6 +519,52 @@ model Notification {
 
   @@index([userId])
   @@index([readAt])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// DOCUMENTS
+// ============================================================================
+
+model Document {
+  id         String         @id @default(cuid())
+  userId     String         // Clerk user ID
+  bookingId  String?        // Optional link to booking
+  type       DocumentType
+  fileName   String
+  fileUrl    String         // Supabase Storage URL
+  fileSize   Int            // Bytes
+  mimeType   String
+  status     DocumentStatus @default(PENDING_REVIEW)
+  uploadedAt DateTime       @default(now())
+  reviewedAt DateTime?
+  reviewedBy String?        // Admin user ID
+  notes      String?        // Admin notes
+
+  booking Booking? @relation(fields: [bookingId], references: [id])
+
+  @@index([userId])
+  @@index([bookingId])
+  @@index([status])
+  @@index([uploadedAt])
+}
+
+// ============================================================================
+// SUPPORT
+// ============================================================================
+
+model SupportTicket {
+  id        String         @id @default(cuid())
+  userId    String
+  subject   String
+  message   String         @db.Text
+  status    TicketStatus   @default(OPEN)
+  priority  TicketPriority @default(NORMAL)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([status])
   @@index([createdAt])
 }
 

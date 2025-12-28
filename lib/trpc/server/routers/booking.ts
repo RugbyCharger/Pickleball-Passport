@@ -571,4 +571,43 @@ export const bookingRouter = router({
         },
       }
     }),
+
+  /**
+   * List all bookings for current user
+   */
+  list: guestProcedure.query(async ({ ctx }) => {
+    const user = ctx.user!
+
+    const bookings = await ctx.db.booking.findMany({
+      where: {
+        userId: user.id,
+      },
+      include: {
+        package: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        trip: {
+          select: {
+            name: true,
+            destination: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+        payments: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return bookings
+  }),
 })

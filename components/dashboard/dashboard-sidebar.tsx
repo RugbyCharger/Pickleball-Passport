@@ -23,6 +23,7 @@ import {
   Settings,
   FileText,
   Bell,
+  HelpCircle,
   Menu,
   X
 } from 'lucide-react'
@@ -58,6 +59,11 @@ const navigationItems = [
     name: 'Notifications',
     href: '/dashboard/notifications',
     icon: Bell,
+  },
+  {
+    name: 'Support',
+    href: '/dashboard/support',
+    icon: HelpCircle,
   },
   {
     name: 'Settings',

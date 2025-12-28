@@ -12,6 +12,9 @@ import { emailRouter } from './routers/email'
 import { applicationRouter } from './routers/application'
 import { testimonialRouter } from './routers/testimonial'
 import { bookingRouter } from './routers/booking'
+import { documentRouter } from './routers/document'
+import { notificationRouter } from './routers/notification'
+import { supportRouter } from './routers/support'
 
 export const appRouter = router({
   user: userRouter,
@@ -20,6 +23,9 @@ export const appRouter = router({
   application: applicationRouter,
   testimonial: testimonialRouter,
   booking: bookingRouter,
+  document: documentRouter,
+  notification: notificationRouter,
+  support: supportRouter,
   // Future routers will be added here:
   // payment: paymentRouter,
 })
