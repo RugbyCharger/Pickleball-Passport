@@ -75,7 +75,7 @@ development_status:
   3-2-package-configurator-duration-selection: done
   3-3-package-configurator-accommodation-tier: done
   3-4-package-configurator-medical-cosmetic-add-ons: done
-  3-5-package-configurator-wellness-and-cultural-add-ons: backlog
+  3-5-package-configurator-wellness-and-cultural-add-ons: ready-for-dev
   3-6-package-configurator-pricing-summary-sticky: done
   3-7-booking-review-page: done
   3-8-trip-selection-choose-departure-date: backlog
