@@ -71,7 +71,7 @@ sprint_summary:
     goal: "Application flow and testimonials"
     target_points: 20
     actual_points: 26
-    completed_points: 5
+    completed_points: 18
     status: "IN_PROGRESS"
     focus_areas:
       - "Multi-step application form"
@@ -80,9 +80,9 @@ sprint_summary:
     stories:
       - "E11-S1: SendGrid Integration (2 pts) ✅"
       - "E11-S2: Booking Confirmation Email (3 pts) ✅"
+      - "E1-S6: Application Form (Multi-Step) (13 pts) ✅"
       - "E1-S4: Testimonial Video Gallery (8 pts)"
-      - "E1-S6: Application Form (Multi-Step) (13 pts)"
-    velocity_notes: "Sprint 3 Progress: 5/26 points (19%). E11-S1 and E11-S2 complete - full email infrastructure ready with SendGrid integration and booking confirmation emails. Comprehensive template with pricing breakdown, trip details, next steps checklist, and admin test page."
+    velocity_notes: "Sprint 3 Progress: 18/26 points (69%). Email system complete (E11-S1, E11-S2) with SendGrid and booking/application confirmation emails. Multi-step application form complete (E1-S6) with 5 steps, localStorage persistence, Zod validation, success page, and email integration. Only E1-S4 (Testimonial Gallery) remaining."
 
   sprint_4_plus:
     goal: "Booking system and payment integration"
@@ -241,11 +241,12 @@ epic_1_stories:
     title: "Application Form (Multi-Step)"
     points: 13
     priority: "P0"
-    status: "ready-for-dev"
+    status: "completed"
     assigned_sprint: 3
     dependencies: ["E2-S1", "Database schema", "SendGrid integration"]
     blocked_by: null
-    notes: "Large story, may need breakdown"
+    notes: "✅ Completed - Comprehensive 5-step application form: (1) Basic Info, (2) Pickleball Background, (3) Transformation Interests checkboxes, (4) Travel Preferences, (5) Discovery/Referral Source. Features: progress indicator with percentage, Back/Next navigation, inline validation with Zod schemas, Save & Resume Later with localStorage, application summary review, success page with next steps and Calendly placeholder, application confirmation email template, tRPC application router with create/list/getById endpoints, full authentication integration with Clerk. Form persists to localStorage, validates per-step, creates Application record, sends confirmation email, redirects to /apply/success."
+    completed_date: "2025-12-28"
 
   E1-S7:
     title: "Trust & Safety Section"
