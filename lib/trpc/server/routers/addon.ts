@@ -71,6 +71,46 @@ export const addOnRouter = router({
       return addOns
     }),
 
+  /**
+   * Get add-ons by multiple categories
+   * Public endpoint for medical add-ons step (E3-S4) and wellness add-ons step (E3-S5)
+   */
+  getByCategories: publicProcedure
+    .input(
+      z.object({
+        categories: z.array(z.nativeEnum(AddOnCategory)).optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const addOns = await ctx.db.addOn.findMany({
+        where: {
+          isActive: true,
+          ...(input.categories && input.categories.length > 0
+            ? { category: { in: input.categories } }
+            : {}),
+        },
+        orderBy: [
+          {
+            category: 'asc',
+          },
+          {
+            name: 'asc',
+          },
+        ],
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          category: true,
+          thPrice: true,
+          usPrice: true,
+          imageUrl: true,
+        },
+      })
+
+      return addOns
+    }),
+
   // ============================================================================
   // ADMIN OPERATIONS
   // ============================================================================

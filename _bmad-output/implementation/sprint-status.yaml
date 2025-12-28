@@ -1,1039 +1,249 @@
-# Sprint Status Tracking - Pickleball Passport
-# Generated: 2025-12-28
+# Sprint Status - Pickleball Passport
+# Generated: 2025-12-29
 # Purpose: Track epic and story progress through implementation phase
 
-project: "Pickleball Passport"
-generated: "2025-12-28"
-current_sprint: 5
-sprint_duration: "2 weeks"
-team_size: 1  # Solo developer (Grant)
-estimated_velocity: "15-20 points/sprint"
-
-# STORY STATUS DEFINITIONS
-# =========================
-# not-started: Story not yet begun
-# ready-for-dev: Story is ready to implement (acceptance criteria clear, dependencies met)
-# in-progress: Story currently being developed
-# code-review: Story development complete, awaiting review
-# testing: Story in testing phase
-# blocked: Story blocked by dependency or issue
-# completed: Story fully implemented, tested, and merged
-# deferred: Story moved to future sprint
-
-# Sprint Planning Summary
-sprint_summary:
-  sprint_1:
-    goal: "Project scaffolding, database setup, and basic infrastructure"
-    target_points: 20
-    actual_points: 33
-    completed_points: 33
-    status: "COMPLETED"
-    completion_date: "2025-12-28"
-    focus_areas:
-      - "Project initialization (Next.js, TypeScript, tRPC)"
-      - "Database schema design and Prisma setup"
-      - "Authentication foundation (Clerk integration)"
-      - "Basic routing and app structure"
-    stories:
-      - "E2-S1: Clerk Integration Setup (3 pts) ✅"
-      - "E2-S2: User Sign-Up Flow (5 pts) ✅"
-      - "E2-S3: User Login Flow (3 pts) ✅"
-      - "E2-S4: Role-Based Access Control (5 pts) ✅"
-      - "FOUNDATION-1: Next.js Project Scaffolding (3 pts) ✅"
-      - "FOUNDATION-2: Database Schema Design (5 pts) ✅"
-      - "FOUNDATION-3: Prisma Setup & Migrations (3 pts) ✅"
-      - "FOUNDATION-4: tRPC Setup (3 pts) ✅"
-      - "FOUNDATION-5: Tailwind CSS & Component Library (2 pts) ✅"
-      - "FOUNDATION-6: Environment Variables & Config (1 pt) ✅"
-    velocity_notes: "Completed 33 points vs 20 target - excellent velocity! Foundation is solid for Sprint 2."
-
-  sprint_2:
-    goal: "Marketing website core pages"
-    target_points: 20
-    actual_points: 21
-    completed_points: 21
-    status: "COMPLETED"
-    completion_date: "2025-12-28"
-    focus_areas:
-      - "Homepage hero section"
-      - "Package explorer and detail pages"
-      - "Navigation and footer components"
-    stories:
-      - "FOUNDATION-7: Database Seed Data (3 pts) ✅"
-      - "E1-S1: Homepage Hero Section (5 pts) ✅"
-      - "E1-S2: Package Explorer Grid (3 pts) ✅"
-      - "E1-S3: Package Detail Pages (8 pts) ✅"
-      - "E1-S12: Mobile Navigation (3 pts) ✅"
-      - "E1-S14: Footer (2 pts) ✅"
-    velocity_notes: "Sprint 2 COMPLETED! All 21 points delivered (100%). Comprehensive footer with 5-column grid, contact info, social links, responsive design, and sticky header/footer layout. Marketing website foundation is now complete with navigation, pages, and footer."
-
-  sprint_3:
-    goal: "Application flow and testimonials"
-    target_points: 20
-    actual_points: 26
-    completed_points: 26
-    status: "COMPLETED"
-    completion_date: "2025-12-28"
-    focus_areas:
-      - "Multi-step application form"
-      - "Video testimonial gallery"
-      - "Email integrations"
-    stories:
-      - "E11-S1: SendGrid Integration (2 pts) ✅"
-      - "E11-S2: Booking Confirmation Email (3 pts) ✅"
-      - "E1-S6: Application Form (Multi-Step) (13 pts) ✅"
-      - "E1-S4: Testimonial Video Gallery (8 pts) ✅"
-    velocity_notes: "Sprint 3 COMPLETED! All 26 points delivered (100% - 130% of target). Full Mux video integration with direct upload, admin testimonial management, public video gallery with modal player, filter/sort by package type, keyboard navigation, and homepage integration. Email system complete with SendGrid. Multi-step application form complete with all features. Sprint 3 demonstrates strong velocity continuation from Sprints 1 & 2."
-
-  sprint_4:
-    goal: "Booking configurator foundation and Stripe integration"
-    target_points: 22
-    actual_points: 22
-    completed_points: 22
-    status: "COMPLETED"
-    completion_date: "2025-12-28"
-    focus_areas:
-      - "Booking configurator (package, duration, accommodation)"
-      - "Stripe payment integration"
-      - "Real-time pricing sidebar"
-    stories:
-      - "E4-S1: Stripe Integration Setup (3 pts) ✅"
-      - "E3-S1: Package Selection (5 pts) ✅"
-      - "E3-S2: Duration Selection (3 pts) ✅"
-      - "E3-S3: Accommodation Tier (3 pts) ✅"
-      - "E3-S6: Pricing Summary Sidebar (3 pts) ✅"
-      - "E4-S2: Payment Intent Creation (5 pts) ✅"
-    velocity_notes: "Sprint 4 COMPLETED! All 22 points delivered (100%). Six stories fully implemented! E4-S1 (Stripe Integration), E3-S1 (Package Selection), E3-S2 (Duration Selection), E3-S3 (Accommodation Tier), E3-S6 (Pricing Summary Sidebar), and E4-S2 (Payment Intent Creation). Booking configurator foundation complete with full backend integration: Zustand store with persistence, tRPC booking router with createPaymentIntent endpoint, comprehensive business logic (package validation, duration scaling, accommodation tier pricing, add-ons calculation, referral code validation/discount application), Stripe Payment Intent creation, database Booking/BookingAddOn/Payment record creation, partner referral tracking with points awarding, and booking reference generation (PBP-{YEAR}-{6-DIGIT}). Ready for Sprint 5: Payment Form UI with Stripe Elements!"
-
-  sprint_5:
-    goal: "Booking review and payment UI"
-    target_points: 18
-    actual_points: 18
-    completed_points: 18
-    status: "COMPLETED"
-    completion_date: "2025-12-28"
-    focus_areas:
-      - "Booking review page with referral codes"
-      - "Payment form UI with Stripe Elements"
-      - "Payment failure handling"
-      - "Booking confirmation page"
-    stories:
-      - "E3-S7: Booking Review Page (5 pts) ✅"
-      - "E4-S3: Payment Form UI (8 pts) ✅"
-      - "E4-S5: Payment Failure Handling (3 pts) ✅"
-      - "E3-S10: Booking Confirmation Page (3 pts) ✅"
-    velocity_notes: "Sprint 5 COMPLETED! All 18 points delivered (100%). E3-S7 Booking Review Page complete with referral code validation and discount application. E4-S3 Payment Form UI fully implemented with Stripe Elements integration (client-side Stripe.js, StripeProvider wrapper, PaymentElement, PaymentForm with loading/error states, payment intent creation via tRPC). E4-S5 Payment Failure Handling complete with comprehensive error categorization (20+ Stripe error mappings across card/validation/network/generic categories), user-friendly messaging, retry functionality with state preservation, alternative payment suggestions, error logging, progressive support escalation (contact link after 2+ retries). E3-S10 Booking Confirmation Page complete with full booking details display (package/duration/accommodation/add-ons/trip dates/pricing breakdown), tRPC getBookingByReference procedure, database schema update (bookingReference field), loading/error states, next steps checklist, dashboard integration, email confirmation trigger placeholder. Complete end-to-end booking flow: Configure → Review (with referral) → Payment (with error handling) → Confirmation (full details). TypeScript passing. Database migration successful. Sprint 5 demonstrates continued high velocity (100% target achieved)!"
-
-  sprint_6_plus:
-    goal: "Complete guest experience and admin tools"
-    target_points: "TBD"
-    focus_areas:
-      - "Guest dashboard"
-      - "Booking management"
-      - "Admin tools"
-    notes: "Detailed planning after Sprint 5"
-
-# Epic Status Overview
-epics:
-  E1:
-    name: "Marketing Website"
-    priority: "P0"
-    total_stories: 15
-    p0_stories: 6
-    total_points: 55
-    p0_points: 42
-    status: "in-progress"
-    stories_completed: 6
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 9
-    target_completion: "Sprint 1-3"
-
-  E2:
-    name: "User Authentication"
-    priority: "P0"
-    total_stories: 8
-    p0_stories: 4
-    total_points: 34
-    p0_points: 16
-    status: "completed"
-    stories_completed: 4
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 4
-    target_completion: "Sprint 1-2"
-
-  E3:
-    name: "Booking System"
-    priority: "P0"
-    total_stories: 18
-    p0_stories: 8
-    total_points: 89
-    p0_points: 54
-    status: "not-started"
-    stories_completed: 0
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 18
-    target_completion: "Sprint 4-7"
-
-  E4:
-    name: "Payment Processing"
-    priority: "P0"
-    total_stories: 12
-    p0_stories: 7
-    total_points: 55
-    p0_points: 55
-    status: "not-started"
-    stories_completed: 0
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 12
-    target_completion: "Sprint 5-8"
-
-  E5:
-    name: "Admin Dashboard"
-    priority: "P1"
-    total_stories: 10
-    p0_stories: 0
-    total_points: 34
-    p0_points: 0
-    status: "not-started"
-    stories_completed: 0
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 10
-    target_completion: "Sprint 9-11"
-
-  E11:
-    name: "Communication System"
-    priority: "P2"
-    total_stories: 12
-    p0_stories: 2
-    total_points: 55
-    p0_points: 5
-    status: "completed"
-    stories_completed: 2
-    stories_in_progress: 0
-    stories_ready: 0
-    stories_not_started: 10
-    target_completion: "Sprint 3-4 (P0 only)"
-
-# Detailed Story Status
-# ======================
-
-# EPIC 1: Marketing Website Stories
-epic_1_stories:
-  E1-S1:
-    title: "Homepage Hero Section"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Beautiful hero section with gradient animations, CTAs, and trust indicators"
-    completed_date: "2025-12-28"
-
-  E1-S2:
-    title: "Package Explorer Grid"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: ["Database schema", "Package seed data"]
-    blocked_by: null
-    notes: "✅ Completed - Responsive 2-column grid with PackageCard components, tRPC integration, framer-motion animations, skeleton loading states. Displays all 4 packages from database with pricing, durations, and hero images."
-    completed_date: "2025-12-28"
-
-  E1-S3:
-    title: "Package Detail Pages"
-    points: 8
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: ["E1-S2"]
-    blocked_by: null
-    notes: "✅ Completed - Dynamic /packages/[slug] routes with SSG via generateStaticParams, full-width hero images, markdown rendering with react-markdown, collapsible itinerary accordion with duration selector, package-specific FAQ section, sticky pricing sidebar with duration options and what's included, image gallery, and multiple CTAs. All 4 packages now have beautiful detail pages."
-    completed_date: "2025-12-28"
-
-  E1-S4:
-    title: "Testimonial Video Gallery"
-    points: 8
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 3
-    dependencies: ["Mux account setup", "Database schema"]
-    blocked_by: null
-    notes: "✅ Completed - Full Mux integration: video upload service with direct upload URLs, asset management (create/retrieve/delete), testimonial tRPC router with admin role checks, admin upload interface with progress tracking and metadata forms, admin testimonials list with approve/feature/delete actions, public video gallery component with thumbnail grid (3 cols desktop, 1 mobile), modal video player using @mux/mux-player-react, filter by package type, sort by recent/popular, keyboard navigation (ESC to close), view count tracking, homepage testimonial section integration, and responsive UI components (Badge, Switch, Textarea). Videos stored in Mux with automatic transcoding and thumbnail generation."
-    completed_date: "2025-12-28"
-
-  E1-S5:
-    title: "Medical Tourism Cost Calculator"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Lower priority, can be added later"
-
-  E1-S6:
-    title: "Application Form (Multi-Step)"
-    points: 13
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 3
-    dependencies: ["E2-S1", "Database schema", "SendGrid integration"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive 5-step application form: (1) Basic Info, (2) Pickleball Background, (3) Transformation Interests checkboxes, (4) Travel Preferences, (5) Discovery/Referral Source. Features: progress indicator with percentage, Back/Next navigation, inline validation with Zod schemas, Save & Resume Later with localStorage, application summary review, success page with next steps and Calendly placeholder, application confirmation email template, tRPC application router with create/list/getById endpoints, full authentication integration with Clerk. Form persists to localStorage, validates per-step, creates Application record, sends confirmation email, redirects to /apply/success."
-    completed_date: "2025-12-28"
-
-  E1-S7:
-    title: "Trust & Safety Section"
-    points: 3
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Static content page"
-
-  E1-S8:
-    title: "Partner Program Landing Page"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Phase 2 priority"
-
-  E1-S9:
-    title: "Partner Signup Form"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E1-S8"]
-    blocked_by: null
-    notes: "Phase 2 priority"
-
-  E1-S10:
-    title: "SEO Optimization"
-    points: 3
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["All pages complete"]
-    blocked_by: null
-    notes: "Add after core pages done"
-
-  E1-S11:
-    title: "Email Capture & Newsletter Signup"
-    points: 2
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Nice-to-have"
-
-  E1-S12:
-    title: "Mobile Navigation"
-    points: 3
-    priority: "P1"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Responsive header component with sticky positioning, desktop navigation links with active state highlighting, mobile hamburger menu with slide-in drawer, auth-aware CTAs (Sign In/Dashboard based on Clerk auth), role-based dashboard routing, and smooth transitions. Integrated into root layout for site-wide navigation."
-    completed_date: "2025-12-28"
-
-  E1-S13:
-    title: "Contact Form"
-    points: 3
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Lower priority"
-
-  E1-S14:
-    title: "Footer"
-    points: 2
-    priority: "P1"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive footer component with 5-column responsive grid (brand/contact, explore, company, legal sections), social media links (Facebook, Instagram, YouTube), contact information (email, phone, location), dynamic copyright year, bottom bar with accreditation badges, and full flexbox layout integration for sticky footer. Matches header design with emerald/blue gradient branding."
-    completed_date: "2025-12-28"
-
-  E1-S15:
-    title: "Privacy Policy & Terms of Service"
-    points: 2
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Legal content, can be markdown"
-
-# EPIC 2: User Authentication Stories
-epic_2_stories:
-  E2-S1:
-    title: "Clerk Integration Setup"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["Next.js app scaffolding"]
-    blocked_by: null
-    notes: "✅ Completed - ClerkProvider, middleware, sign-in/sign-up pages, SETUP.md"
-    completed_date: "2025-12-28"
-
-  E2-S2:
-    title: "User Sign-Up Flow"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "✅ Completed - Clerk webhooks, user creation, onboarding flow with role selection, dashboard placeholders"
-    completed_date: "2025-12-28"
-
-  E2-S3:
-    title: "User Login Flow"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "✅ Completed - Sign-in with role-based redirect, /redirect handler, partner/admin dashboards"
-    completed_date: "2025-12-28"
-
-  E2-S4:
-    title: "Role-Based Access Control"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["E2-S2", "E2-S3"]
-    blocked_by: null
-    notes: "✅ Completed - Enhanced middleware with role checking, tRPC role-based procedures (guestProcedure, partnerProcedure, adminProcedure)"
-    completed_date: "2025-12-28"
-
-  E2-S5:
-    title: "Password Reset Flow"
-    points: 3
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "Clerk handles this, mostly config"
-
-  E2-S6:
-    title: "Profile Management"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "Edit profile page"
-
-  E2-S7:
-    title: "Account Deletion"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "GDPR compliance"
-
-  E2-S8:
-    title: "Session Management"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "Handled by Clerk, minimal work"
-
-# EPIC 3: Booking System Stories
-epic_3_stories:
-  E3-S1:
-    title: "Package Selection"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: ["E2-S1", "Database schema"]
-    blocked_by: null
-    notes: "✅ Completed - Package selection page at /booking/configure with protected route authentication, Zustand store (lib/stores/booking-store.ts) for state management with localStorage persistence, PackageSelector component with tRPC package.getAll integration, responsive 2-column grid layout (mobile-first), radio button selection behavior with visual feedback (blue border + checkmark), package cards showing heroImage/name/tagline/price/durations, disabled state for Next button until selection, Next button navigation to /booking/configure/duration, real-time price calculation utilities, FAQ section, and trust indicators. Store includes calculateSubtotal/calculateSavings/calculateTotal methods, step navigation, and canProceedToNextStep validation."
-    completed_date: "2025-12-28"
-
-  E3-S2:
-    title: "Duration Selection"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: ["E3-S1"]
-    blocked_by: null
-    notes: "✅ Completed - Duration selection page at /booking/configure/duration with DurationSelector component, 4 duration options (7, 10, 14, 21 days) displayed as responsive card grid, dynamic price calculation using basePrice × (duration / 14) formula, sample itinerary highlights for each duration (6-12 activity highlights per duration), 'Most Popular' badge on 14-day option, per-day pricing display, Back/Next navigation buttons, disabled states for unavailable durations (checked against selectedPackage.durationOptions), current subtotal display with package name and duration, 'Why Duration Matters' educational section with recovery/pickleball/cultural benefits, pricing information note, and Zustand store integration with previousStep/nextStep methods. Itineraries include pickleball training, medical procedures, cultural excursions, and wellness activities scaled by duration."
-    completed_date: "2025-12-28"
-
-  E3-S3:
-    title: "Accommodation Tier Selection"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: ["E3-S2"]
-    blocked_by: null
-    notes: "✅ Completed - Accommodation tier selection page at /booking/configure/accommodation with AccommodationSelector component, 3 luxury tier options displayed as responsive card grid: Luxury (Four Seasons - baseline +$0), Ultra-Luxury (Aman - premium +$3,000), Villa (Private Villa - ultimate +$5,000). Features: gradient hero placeholders for each tier, detailed amenities list per tier (6 amenities each), price differential display, 'Most Popular' badge on Ultra-Luxury tier, selection state with visual feedback (ring + checkmark), educational section 'Why Accommodation Tier Matters', Back/Next navigation buttons, current subtotal display with package + duration + tier breakdown, Zustand store integration with setAccommodationTier/calculateSubtotal, Add-ons placeholder page created at /booking/configure/add-ons for next step. Accommodation pricing integrated into total calculation via ACCOMMODATION_TIER_PRICING constant."
-    completed_date: "2025-12-28"
-
-  E3-S4:
-    title: "Medical Add-Ons Selection"
-    points: 8
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 4
-    dependencies: ["E3-S3"]
-    blocked_by: null
-    notes: "Multi-select with pricing"
-
-  E3-S5:
-    title: "Wellness Add-Ons Selection"
-    points: 5
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 4
-    dependencies: ["E3-S4"]
-    blocked_by: null
-    notes: "Similar to medical add-ons"
-
-  E3-S6:
-    title: "Real-Time Price Calculator"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: ["E3-S1"]
-    blocked_by: null
-    notes: "✅ Completed - PricingSummary component integrated as sticky sidebar across all booking configurator pages (package, duration, accommodation). Features: real-time price updates using Zustand calculateSubtotal/calculateSavings, detailed price breakdown showing package + duration + accommodation tier + add-ons, progress tracker with step indicators (Package/Duration/Accommodation/Add-Ons) with completion checkmarks, savings calculator showing estimated savings vs US prices in emerald highlight box, sticky positioning on desktop (lg:sticky lg:top-8), responsive design adapting to mobile, gradient header (emerald-to-blue), what's included note, and final price disclaimer. Component uses useMemo for performance optimization, displays accommodation tier names (Luxury/Ultra-Luxury/Villa), formats all prices with Intl.NumberFormat, and provides minimal state when no package selected. Integrated into /booking/configure, /booking/configure/duration, and /booking/configure/accommodation pages with 3-column grid layout (2 cols content, 1 col sidebar)."
-    completed_date: "2025-12-28"
-
-  E3-S7:
-    title: "Booking Review Page"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 5
-    dependencies: ["E3-S6"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive review page at /booking/review with BookingSummary component showing complete booking details (package card with image, duration with itinerary details, accommodation tier with amenities, add-ons list with empty state), edit functionality for each section (navigation back to respective pages), ReferralCodeInput component with client-side validation (format check: CODE-NAME-YEAR pattern, 5% demo discount calculation, loading/success/error states, apply/remove functionality), enhanced PricingSummary sidebar (referral discount display, updated total calculation with discount applied), Zustand store extensions (referralCode/referralDiscount state properties, setReferralCode/setReferralDiscount actions, isReadyForReview validation method, calculateTotal now subtracts referral discount), ReviewPageClient component for navigation (Back to Accommodation button, Proceed to Payment button with disabled state, redirect to configure if not ready), important notes section (deposit, payment plans, consultation, trip dates), responsive layout (2-col desktop, stacked mobile), progress indicator (Step 5 of 5), and accommodation page navigation update (now routes to /booking/review instead of /booking/configure/add-ons). All acceptance criteria met: complete summary display, detailed pricing breakdown with referral, edit functionality for all sections, referral code input/validation, validation before proceeding, responsive design. TypeScript checks passing. Ready for payment form!"
-    completed_date: "2025-12-28"
-
-  E3-S8:
-    title: "Trip Selection"
-    points: 5
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
-    dependencies: ["E3-S7"]
-    blocked_by: null
-    notes: "Select from available trips"
-
-  E3-S9:
-    title: "Guest Profile Completion"
-    points: 5
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
-    dependencies: ["E2-S1"]
-    blocked_by: null
-    notes: "Collect additional guest info"
-
-  E3-S10:
-    title: "Booking Confirmation Page"
-    points: 8
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 6
-    dependencies: ["E4-S3"]
-    blocked_by: null
-    notes: "After payment success"
-
-  E3-S11:
-    title: "Guest Dashboard - Booking List"
-    points: 5
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 6
-    dependencies: ["E3-S10"]
-    blocked_by: null
-    notes: "View all bookings"
-
-  E3-S12:
-    title: "Guest Dashboard - Booking Details"
-    points: 8
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 6
-    dependencies: ["E3-S11"]
-    blocked_by: null
-    notes: "Individual booking view"
-
-  E3-S13:
-    title: "Booking Cancellation Flow"
-    points: 8
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S12"]
-    blocked_by: null
-    notes: "With refund calculation"
-
-  E3-S14:
-    title: "Booking Modification"
-    points: 8
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S12"]
-    blocked_by: null
-    notes: "Change dates, add-ons"
-
-  E3-S15:
-    title: "Waitlist System"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S8"]
-    blocked_by: null
-    notes: "Join waitlist if trip full"
-
-  E3-S16:
-    title: "Group Booking (Couples)"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S7"]
-    blocked_by: null
-    notes: "Book for 2+ people"
-
-  E3-S17:
-    title: "Travel Insurance Integration"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S7"]
-    blocked_by: null
-    notes: "Optional insurance purchase"
-
-  E3-S18:
-    title: "Dynamic Itinerary Generation"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E3-S10"]
-    blocked_by: null
-    notes: "Personalized based on selections"
-
-# EPIC 4: Payment Processing Stories
-epic_4_stories:
-  E4-S1:
-    title: "Stripe Integration Setup"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Full Stripe integration: stripe-service.ts with payment intent creation/retrieval/cancellation/refund, webhook handler at /api/webhooks/stripe with signature verification, event handlers for payment_intent.succeeded/failed/canceled, automatic booking confirmation on payment success, partner points awarding, amount formatting utilities, comprehensive README documentation. Dependencies installed: stripe, @stripe/stripe-js, @stripe/react-stripe-js. Ready for E4-S2 (Payment Intent Creation)."
-    completed_date: "2025-12-28"
-
-  E4-S2:
-    title: "Payment Intent Creation"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 4
-    dependencies: ["E4-S1"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive booking tRPC router (lib/trpc/server/routers/booking.ts) with createPaymentIntent endpoint. Features: Zod input validation (packageId, duration, accommodationTier, addOnIds, tripId, referralCode), package validation with active status check, trip availability validation (capacity checking), duration-adjusted pricing calculation (basePrice × duration/14), accommodation tier pricing (LUXURY +$0, ULTRA_LUXURY +$3K, VILLA +$5K), add-ons fetching and total calculation, referral code validation against Partner table with tier-based discounts (BRONZE 5%, SILVER 7.5%, GOLD 10%, PLATINUM 15%), booking reference generation (PBP-{YEAR}-{6-DIGIT-RANDOM}), Booking record creation (status: PENDING_PAYMENT), BookingAddOn records creation, Stripe Payment Intent creation with metadata (bookingReference, packageId, userId, duration, accommodationTier, referralCode), Payment record creation, PartnerReferral record creation with points calculation (1 point per $100), automatic partner passportPoints increment, comprehensive error handling with booking rollback on Stripe failure, and full integration with existing stripe-service.ts. Router added to appRouter in lib/trpc/server/root.ts. Ready for E4-S3: Payment Form UI with Stripe Elements!"
-    completed_date: "2025-12-28"
-
-  E4-S3:
-    title: "Payment Form UI"
-    points: 8
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 5
-    dependencies: ["E4-S2"]
-    blocked_by: null
-    notes: "✅ Completed - Full Stripe Elements payment integration: client-side Stripe initialization (lib/stripe/get-stripe.ts with singleton pattern), StripeProvider component (components/payments/stripe-provider.tsx with custom emerald theme), PaymentForm component (components/payments/payment-form.tsx with PaymentElement, loading states, error handling, security messaging), payment page at /booking/payment with progress indicator, PaymentPageClient component handling payment intent creation via tRPC booking.createPaymentIntent, booking validation from Zustand store, confirmation page placeholder at /booking/confirmation with success messaging and next steps, review page navigation updated to route to payment. Flow: Review → Payment Intent Creation (via tRPC) → Stripe Elements Form → confirmPayment → Redirect to Confirmation. Features: real-time card validation, loading indicators, error display with retry, secure redirect flow, booking state reset on success, responsive design, accessibility compliant. Integrates with existing E4-S1 Stripe service and E4-S2 payment intent backend. TypeScript passing. Payment flow fully operational - guests can now complete end-to-end bookings!"
-    completed_date: "2025-12-28"
-
-  E4-S4:
-    title: "Webhook Handler"
-    points: 5
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
-    dependencies: ["E4-S2"]
-    blocked_by: null
-    notes: "payment_intent.succeeded"
-
-  E4-S5:
-    title: "Payment Failure Handling"
-    points: 3
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 5
-    dependencies: ["E4-S4"]
-    blocked_by: null
-    notes: "Error handling and retry"
-
-  E4-S6:
-    title: "Installment Payment Plans"
-    points: 8
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 6
-    dependencies: ["E4-S3"]
-    blocked_by: null
-    notes: "4-installment option"
-
-  E4-S7:
-    title: "Scheduled Payment Processing"
-    points: 13
-    priority: "P0"
-    status: "not-started"
-    assigned_sprint: 6
-    dependencies: ["E4-S6"]
-    blocked_by: null
-    notes: "Background job for installments"
-
-  E4-S8:
-    title: "Receipt Generation"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E4-S4"]
-    blocked_by: null
-    notes: "PDF receipts"
-
-  E4-S9:
-    title: "Refund Processing"
-    points: 8
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E4-S4"]
-    blocked_by: null
-    notes: "Full and partial refunds"
-
-  E4-S10:
-    title: "Payment History View"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E4-S4"]
-    blocked_by: null
-    notes: "Guest can view all payments"
-
-  E4-S11:
-    title: "Multi-Currency Support"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E4-S1"]
-    blocked_by: null
-    notes: "Future enhancement"
-
-  E4-S12:
-    title: "Stripe Connect (Partner Payouts)"
-    points: 13
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E4-S1"]
-    blocked_by: null
-    notes: "Phase 2 feature"
-
-# EPIC 11: Communication System Stories (P0 only)
-epic_11_stories:
-  E11-S1:
-    title: "SendGrid Integration"
-    points: 2
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 3
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Full SendGrid integration with @sendgrid/mail package, email service utilities (sendEmail, sendBatchEmails, isConfigured), responsive HTML email templates (base template with brand colors), welcome email template, tRPC email router (isConfigured, sendTest, sendWelcome endpoints), admin test page at /admin/test-email, and comprehensive README documentation. Email foundation ready for all transactional emails."
-    completed_date: "2025-12-28"
-
-  E11-S2:
-    title: "Booking Confirmation Email"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 3
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive booking confirmation email template with booking reference, package details, pricing breakdown, trip dates, add-ons display, next steps checklist, important reminders, and responsive HTML design. Includes sendBookingConfirmation() service function, tRPC endpoint with full Zod validation, admin test page integration with mock data, and updated documentation. Ready to trigger after payment_intent.succeeded webhook."
-    completed_date: "2025-12-28"
-
-  E11-S3:
-    title: "Application Confirmation Email"
-    points: 3
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "After application submission"
-
-  E11-S4:
-    title: "Pre-Trip Email Sequence"
-    points: 8
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "Automated drip campaign"
-
-  E11-S5:
-    title: "Payment Receipt Email"
-    points: 3
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "After each payment"
-
-  E11-S6:
-    title: "SMS Notifications (Twilio)"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Trip reminders"
-
-  E11-S7:
-    title: "In-App Notifications"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Real-time updates"
-
-  E11-S8:
-    title: "Admin Email Alerts"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "New booking, cancellation, etc."
-
-  E11-S9:
-    title: "Partner Notification System"
-    points: 8
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "Referral updates"
-
-  E11-S10:
-    title: "Group Chat Integration (WhatsApp)"
-    points: 13
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "Pre-trip group coordination"
-
-  E11-S11:
-    title: "Email Template Management"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["E11-S1"]
-    blocked_by: null
-    notes: "CMS for email templates"
-
-  E11-S12:
-    title: "Notification Preferences"
-    points: 5
-    priority: "P2"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: []
-    blocked_by: null
-    notes: "User can opt-out of certain emails"
-
-# Foundation Stories (Not in Epics - Infrastructure)
-foundation_stories:
-  FOUNDATION-1:
-    title: "Next.js Project Scaffolding"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: []
-    blocked_by: null
-    notes: "✅ Completed - Next.js 16.1.1 with TypeScript, App Router, ESLint configured"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-2:
-    title: "Database Schema Design"
-    points: 5
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive Prisma schema with all entities (User, Booking, Payment, Package, Trip, AddOn, Application, Testimonial, Partner, Notification, Message)"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-3:
-    title: "Prisma Setup & Migrations"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["FOUNDATION-2"]
-    blocked_by: null
-    notes: "✅ Completed - Prisma 5.22.0 configured, schema validated, TypeScript types generated"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-4:
-    title: "tRPC Setup"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "✅ Completed - tRPC with React Query, Clerk auth, role-based procedures"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-5:
-    title: "Tailwind CSS & Component Library Setup"
-    points: 2
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "✅ Completed - Tailwind CSS 4, Radix UI components, Shadcn UI setup with 8 base components (Button, Card, Dialog, Dropdown, Form, Input, Label, Sonner)"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-6:
-    title: "Environment Variables & Config"
-    points: 1
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 1
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "✅ Completed - .env and .env.example files configured for all integrations (Database, Clerk, Stripe, SendGrid, Mux)"
-    completed_date: "2025-12-28"
-
-  FOUNDATION-7:
-    title: "Database Seed Data"
-    points: 3
-    priority: "P0"
-    status: "completed"
-    assigned_sprint: 2
-    dependencies: ["FOUNDATION-3"]
-    blocked_by: null
-    notes: "✅ Completed - Comprehensive seed script with 4 packages (Pure Play, Smile Makeover, Total Transformation, Spiritual Journey), 2 itineraries, 5 scheduled trips, and 18 add-ons across all categories. Database successfully populated via Supabase."
-    completed_date: "2025-12-28"
-
-  FOUNDATION-8:
-    title: "CI/CD Pipeline Setup"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "GitHub Actions, Vercel deployment"
-
-  FOUNDATION-9:
-    title: "Error Tracking (Sentry)"
-    points: 2
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "Production error monitoring"
-
-  FOUNDATION-10:
-    title: "Testing Infrastructure"
-    points: 5
-    priority: "P1"
-    status: "not-started"
-    assigned_sprint: null
-    dependencies: ["FOUNDATION-1"]
-    blocked_by: null
-    notes: "Jest, React Testing Library, Playwright"
-
-# Risk Log
-risks:
-  - risk: "Solo developer velocity may be slower than estimated 15-20 points/sprint"
-    mitigation: "Adjust sprint goals after Sprint 1 actual velocity measurement"
-    severity: "medium"
-
-  - risk: "Third-party integrations (Mux, Stripe, Clerk) may have unexpected complexity"
-    mitigation: "Prototype integrations early in development cycle"
-    severity: "medium"
-
-  - risk: "Database schema changes may require migrations mid-sprint"
-    mitigation: "Design comprehensive schema upfront, use Prisma migrations"
-    severity: "low"
-
-  - risk: "Scope creep on complex stories (E1-S6: Application Form)"
-    mitigation: "Break large stories into sub-tasks, timebox implementation"
-    severity: "medium"
-
-# Notes
-notes:
-  - "This is a solo development project - velocity estimates are conservative"
-  - "Sprint 1 focuses on infrastructure and foundation to enable future work"
-  - "P0 stories prioritized; P1/P2 stories deferred until MVP complete"
-  - "Update this file after each sprint retrospective with actual velocity"
-  - "Foundation stories are critical but not tracked in epic point totals"
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2025-12-29
+project: Pickleball Passport
+project_key: PBP
+tracking_system: file-system
+story_location: _bmad-output/implementation
+
+development_status:
+  # EPIC 1: Marketing Website
+  epic-1: in-progress
+  1-1-homepage-hero-section: done
+  1-2-package-explorer-grid: done
+  1-3-package-detail-pages: done
+  1-4-testimonial-video-gallery: done
+  1-5-medical-tourism-cost-calculator: backlog
+  1-6-application-form-multi-step: done
+  1-7-trust-and-safety-section: backlog
+  1-8-partner-program-landing-page: backlog
+  1-9-partner-signup-form: backlog
+  1-10-seo-optimization: backlog
+  1-11-email-capture-and-newsletter-signup: backlog
+  1-12-mobile-navigation: done
+  1-13-contact-form: backlog
+  1-14-footer: done
+  1-15-privacy-policy-and-terms-of-service: backlog
+  epic-1-retrospective: optional
+
+  # EPIC 2: User Authentication
+  epic-2: done
+  2-1-clerk-integration-setup: done
+  2-2-user-signup-flow: done
+  2-3-user-login-flow: done
+  2-4-role-based-access-control: done
+  2-5-password-reset-flow: backlog
+  2-6-profile-management: backlog
+  2-7-account-deletion: backlog
+  2-8-session-management: backlog
+  epic-2-retrospective: optional
+
+  # EPIC 3: Booking System
+  epic-3: in-progress
+  3-1-package-configurator-base-package-selection: done
+  3-2-package-configurator-duration-selection: done
+  3-3-package-configurator-accommodation-tier: done
+  3-4-package-configurator-medical-cosmetic-add-ons: done
+  3-5-package-configurator-wellness-and-cultural-add-ons: backlog
+  3-6-package-configurator-pricing-summary-sticky: done
+  3-7-booking-review-page: done
+  3-8-trip-selection-choose-departure-date: backlog
+  3-9-guest-profile-completion-before-booking: backlog
+  3-10-booking-confirmation-page: done
+  3-11-guest-dashboard-my-bookings: done
+  3-12-booking-details-page: done
+  3-13-booking-cancellation-flow: backlog
+  3-14-booking-rescheduling: backlog
+  3-15-referral-code-application-at-booking: backlog
+  3-16-booking-modification-change-add-ons: backlog
+  3-17-companion-booking-bring-a-friend-spouse: backlog
+  3-18-gift-booking-purchase-for-someone-else: backlog
+  epic-3-retrospective: optional
+
+  # EPIC 4: Payment Processing
+  epic-4: in-progress
+  4-1-stripe-integration-setup: done
+  4-2-payment-intent-creation: done
+  4-3-payment-form-ui: done
+  4-4-webhook-handler: backlog
+  4-5-payment-failure-handling: done
+  4-6-installment-payment-plans: backlog
+  4-7-scheduled-payment-processing: backlog
+  4-8-receipt-generation: backlog
+  4-9-refund-processing: backlog
+  4-10-payment-history-view: backlog
+  4-11-multi-currency-support: backlog
+  4-12-stripe-connect-partner-payouts: backlog
+  epic-4-retrospective: optional
+
+  # EPIC 5: Admin Dashboard
+  epic-5: in-progress
+  5-1-admin-authentication: done
+  5-2-booking-management-view: done
+  5-3-guest-management: done
+  5-4-trip-management: done
+  5-5-package-and-add-on-management: done
+  5-6-analytics-dashboard: done
+  5-7-email-template-management: done
+  5-8-scheduled-trip-reminders: done
+  5-9-bulk-notifications: done
+  5-10-testing-and-polish: done
+  epic-5-retrospective: optional
+
+  # EPIC 6: Mobile App - Pre-Trip
+  epic-6: backlog
+  6-1-mobile-app-setup: backlog
+  6-2-authentication-flow: backlog
+  6-3-trip-countdown-widget: backlog
+  6-4-pre-trip-checklist: backlog
+  6-5-document-upload: backlog
+  6-6-medical-consultation-scheduling: backlog
+  6-7-flight-booking-integration: backlog
+  6-8-pre-trip-group-chat: backlog
+  6-9-packing-list: backlog
+  6-10-travel-tips-and-faqs: backlog
+  6-11-emergency-contacts: backlog
+  6-12-trip-insurance-info: backlog
+  epic-6-retrospective: optional
+
+  # EPIC 7: Mobile App - During Trip
+  epic-7: backlog
+  7-1-daily-itinerary-view: backlog
+  7-2-location-based-notifications: backlog
+  7-3-concierge-chat: backlog
+  7-4-medical-appointment-reminders: backlog
+  7-5-pickleball-session-tracking: backlog
+  7-6-photo-sharing: backlog
+  7-7-group-activities-rsvp: backlog
+  7-8-wellness-metrics-tracking: backlog
+  7-9-dining-reservations: backlog
+  7-10-transportation-booking: backlog
+  7-11-emergency-sos: backlog
+  7-12-local-recommendations: backlog
+  7-13-expense-tracking: backlog
+  7-14-souvenir-ordering: backlog
+  7-15-trip-journal: backlog
+  epic-7-retrospective: optional
+
+  # EPIC 8: Mobile App - Alumni
+  epic-8: backlog
+  8-1-alumni-community-feed: backlog
+  8-2-success-stories-sharing: backlog
+  8-3-before-after-photo-comparison: backlog
+  8-4-wellness-goal-tracking: backlog
+  8-5-alumni-events: backlog
+  8-6-referral-program-mobile: backlog
+  8-7-re-booking-offers: backlog
+  8-8-alumni-exclusive-content: backlog
+  epic-8-retrospective: optional
+
+  # EPIC 9: Partner Portal
+  epic-9: in-progress
+  9-1-partner-dashboard: done
+  9-2-referral-tracking: backlog
+  9-3-points-and-rewards-system: backlog
+  9-4-marketing-materials-library: backlog
+  9-5-commission-reports: backlog
+  9-6-lead-management: backlog
+  9-7-partner-training-resources: backlog
+  9-8-co-branded-landing-pages: backlog
+  9-9-referral-link-generator: backlog
+  9-10-performance-analytics: backlog
+  9-11-payout-management: backlog
+  9-12-partner-tiers-and-benefits: backlog
+  9-13-partner-community-forum: backlog
+  9-14-partner-onboarding-flow: backlog
+  9-15-partner-agreement-e-signature: backlog
+  9-16-partner-support-ticketing: backlog
+  9-17-partner-event-calendar: backlog
+  9-18-partner-testimonials: backlog
+  9-19-partner-leaderboard: backlog
+  9-20-partner-mobile-app: backlog
+  epic-9-retrospective: optional
+
+  # EPIC 10: Referral System
+  epic-10: backlog
+  10-1-referral-code-generation: backlog
+  10-2-referral-tracking: backlog
+  10-3-referral-rewards: backlog
+  10-4-referral-notifications: backlog
+  10-5-referral-analytics: backlog
+  10-6-referral-landing-pages: backlog
+  10-7-social-media-sharing: backlog
+  10-8-email-referral-invites: backlog
+  10-9-referral-leaderboard: backlog
+  10-10-referral-program-terms: backlog
+  epic-10-retrospective: optional
+
+  # EPIC 11: Communication System
+  epic-11: in-progress
+  11-1-sendgrid-integration: done
+  11-2-booking-confirmation-email: done
+  11-3-application-confirmation-email: backlog
+  11-4-pre-trip-email-sequence: backlog
+  11-5-payment-receipt-email: backlog
+  11-6-sms-notifications-twilio: backlog
+  11-7-in-app-notifications: backlog
+  11-8-admin-email-alerts: backlog
+  11-9-partner-notification-system: backlog
+  11-10-group-chat-integration-whatsapp: backlog
+  11-11-email-template-management: backlog
+  11-12-notification-preferences: backlog
+  epic-11-retrospective: optional
+
+  # EPIC 12: Content Management
+  epic-12: backlog
+  12-1-cms-setup: backlog
+  12-2-package-content-editing: backlog
+  12-3-blog-posts: backlog
+  12-4-faq-management: backlog
+  12-5-testimonial-moderation: backlog
+  12-6-media-library: backlog
+  12-7-itinerary-templates: backlog
+  12-8-email-template-editor: backlog
+  epic-12-retrospective: optional
+
+  # EPIC 13: Analytics & Reporting
+  epic-13: backlog
+  13-1-analytics-integration-setup: backlog
+  13-2-booking-funnel-analytics: backlog
+  13-3-conversion-tracking: backlog
+  13-4-revenue-reports: backlog
+  13-5-guest-demographics: backlog
+  13-6-package-performance: backlog
+  13-7-partner-performance: backlog
+  13-8-email-campaign-analytics: backlog
+  13-9-mobile-app-analytics: backlog
+  13-10-custom-report-builder: backlog
+  epic-13-retrospective: optional
