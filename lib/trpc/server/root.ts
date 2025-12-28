@@ -9,15 +9,16 @@ import { router } from './trpc'
 import { userRouter } from './routers/user'
 import { packageRouter } from './routers/package'
 import { emailRouter } from './routers/email'
+import { applicationRouter } from './routers/application'
 
 export const appRouter = router({
   user: userRouter,
   package: packageRouter,
   email: emailRouter,
+  application: applicationRouter,
   // Future routers will be added here:
   // booking: bookingRouter,
   // payment: paymentRouter,
-  // application: applicationRouter,
 })
 
 // Export type definition for the router
