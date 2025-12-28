@@ -117,10 +117,27 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Step 5: Test Authentication
 
-1. Navigate to [http://localhost:3000/sign-up](http://localhost:3000/sign-up)
-2. Create a new account
-3. Verify your email (if email verification is enabled)
-4. You should be redirected to `/onboarding` (to be implemented in E2-S2)
+1. Start the development server: `npm run dev`
+2. Navigate to [http://localhost:3000/sign-up](http://localhost:3000/sign-up)
+3. Create a new account (email/password or OAuth)
+4. Verify your email (if email verification is enabled in Clerk)
+5. You should be automatically redirected to `/onboarding`
+6. Select your role (Guest or Partner)
+7. Click "Continue" to be redirected to your dashboard
+
+### Testing Webhooks Locally
+
+To test the Clerk webhook integration locally, you'll need to use ngrok:
+
+1. Install ngrok: `npm install -g ngrok`
+2. Start your dev server: `npm run dev`
+3. In a separate terminal, run: `ngrok http 3000`
+4. Copy the ngrok URL (e.g., `https://abc123.ngrok.io`)
+5. In Clerk Dashboard → Webhooks, add endpoint: `https://abc123.ngrok.io/api/webhooks/clerk`
+6. Subscribe to: `user.created`, `user.updated`, `user.deleted`
+7. Copy the webhook signing secret to your `.env` as `CLERK_WEBHOOK_SECRET`
+8. Restart your dev server
+9. Create a new user account to test the webhook
 
 ## Environment Variables Reference
 
@@ -168,9 +185,20 @@ After completing this setup:
 
 1. ✅ FOUNDATION-1 through FOUNDATION-4 are complete
 2. ✅ E2-S1: Clerk Integration is complete
-3. Next: Implement E2-S2 (User Sign-Up Flow with webhooks)
+3. ✅ E2-S2: User Sign-Up Flow with webhooks is complete
 4. Next: Implement E2-S3 (User Login Flow with role-based redirects)
 5. Next: Implement E2-S4 (Role-Based Access Control)
+
+### Sprint 1 Progress
+
+**Completed (11/33 points):**
+- FOUNDATION-4: tRPC Setup (3 points)
+- E2-S1: Clerk Integration Setup (3 points)
+- E2-S2: User Sign-Up Flow (5 points)
+
+**In Progress:**
+- E2-S3: User Login Flow (3 points) - Next up
+- E2-S4: Role-Based Access Control (5 points)
 
 ## Getting Help
 
