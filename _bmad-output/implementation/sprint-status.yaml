@@ -4,7 +4,7 @@
 
 project: "Pickleball Passport"
 generated: "2025-12-28"
-current_sprint: 1
+current_sprint: 4
 sprint_duration: "2 weeks"
 team_size: 1  # Solo developer (Grant)
 estimated_velocity: "15-20 points/sprint"
@@ -85,14 +85,34 @@ sprint_summary:
       - "E1-S4: Testimonial Video Gallery (8 pts) ✅"
     velocity_notes: "Sprint 3 COMPLETED! All 26 points delivered (100% - 130% of target). Full Mux video integration with direct upload, admin testimonial management, public video gallery with modal player, filter/sort by package type, keyboard navigation, and homepage integration. Email system complete with SendGrid. Multi-step application form complete with all features. Sprint 3 demonstrates strong velocity continuation from Sprints 1 & 2."
 
-  sprint_4_plus:
-    goal: "Booking system and payment integration"
+  sprint_4:
+    goal: "Booking configurator foundation and Stripe integration"
+    target_points: 22
+    actual_points: 22
+    completed_points: 0
+    status: "IN_PROGRESS"
+    focus_areas:
+      - "Booking configurator (package, duration, accommodation)"
+      - "Stripe payment integration"
+      - "Real-time pricing sidebar"
+    stories:
+      - "E4-S1: Stripe Integration Setup (3 pts)"
+      - "E3-S1: Package Selection (5 pts)"
+      - "E3-S2: Duration Selection (3 pts)"
+      - "E3-S3: Accommodation Tier (3 pts)"
+      - "E3-S6: Pricing Summary Sidebar (3 pts)"
+      - "E4-S2: Payment Intent Creation (5 pts)"
+    velocity_notes: "Sprint 4 started - Building booking configurator foundation with Stripe integration. Focus on core booking flow (package → duration → accommodation → pricing) and payment infrastructure."
+
+  sprint_5_plus:
+    goal: "Complete booking flow and payment processing"
     target_points: "TBD"
     focus_areas:
-      - "Booking configurator"
-      - "Stripe payment processing"
+      - "Add-ons selection"
+      - "Booking review and confirmation"
+      - "Payment form UI"
       - "Guest dashboard"
-    notes: "Detailed planning for Sprint 4+ will occur after Sprint 3 completion"
+    notes: "Detailed planning after Sprint 4"
 
 # Epic Status Overview
 epics:
