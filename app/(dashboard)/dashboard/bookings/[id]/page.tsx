@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { BookingStatus } from '@prisma/client'
+import { BookingStatusTimeline } from '@/components/bookings/booking-status-timeline'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -92,6 +93,14 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
           createdAt: 'desc',
         },
       },
+      documents: {
+        select: {
+          id: true,
+          type: true,
+          status: true,
+          uploadedAt: true,
+        },
+      },
     },
   })
 
@@ -103,6 +112,26 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
   if (booking.userId !== user.id) {
     redirect('/dashboard/bookings')
   }
+
+  // Calculate timeline data
+  const hasRequiredDocuments = (() => {
+    const requiredTypes = ['PASSPORT', 'MEDICAL_FORM', 'INSURANCE'] as const
+    const uploadedTypes = new Set(
+      booking.documents
+        .filter((doc) => doc.status === 'APPROVED' || doc.status === 'PENDING_REVIEW')
+        .map((doc) => doc.type)
+    )
+    return requiredTypes.every((type) => uploadedTypes.has(type))
+  })()
+
+  const paymentDate = booking.payments.find((p) => p.status === 'SUCCEEDED')?.createdAt
+  const documentsSubmittedDate = booking.documents.length > 0
+    ? booking.documents.sort(
+        (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+      )[0]?.uploadedAt
+    : undefined
+  const tripConfirmedDate = booking.trip ? booking.createdAt : undefined
+  const completedDate = booking.status === 'COMPLETED' ? booking.updatedAt : undefined
 
   return (
     <div className="space-y-6">
@@ -145,6 +174,22 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
           </Button>
         </div>
       </div>
+
+      {/* Booking Status Timeline */}
+      <Card>
+        <CardContent className="pt-6">
+          <BookingStatusTimeline
+            bookingStatus={booking.status}
+            createdAt={booking.createdAt}
+            paymentDate={paymentDate}
+            documentsSubmittedDate={documentsSubmittedDate}
+            tripConfirmedDate={tripConfirmedDate}
+            completedDate={completedDate}
+            hasRequiredDocuments={hasRequiredDocuments}
+            tripAssigned={!!booking.trip}
+          />
+        </CardContent>
+      </Card>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Main Content - Left Column */}
