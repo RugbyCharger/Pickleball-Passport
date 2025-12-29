@@ -266,6 +266,7 @@ model Trip {
 
   @@index([startDate])
   @@index([isActive])
+  @@index([isActive, startDate, currentBookings]) // Composite index for getAvailable query
 }
 
 // ============================================================================

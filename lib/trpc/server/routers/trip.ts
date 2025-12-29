@@ -29,14 +29,13 @@ export const tripRouter = router({
   getAvailable: publicProcedure.query(async ({ ctx }) => {
     const now = new Date()
 
-    const trips = await ctx.db.trip.findMany({
+    // Fetch all active, future trips and filter in-memory
+    // Note: Prisma doesn't support field-to-field comparisons in where clauses
+    const allTrips = await ctx.db.trip.findMany({
       where: {
         isActive: true,
         startDate: {
           gte: now,
-        },
-        currentBookings: {
-          lt: ctx.db.trip.fields.capacity,
         },
       },
       orderBy: {
@@ -57,6 +56,9 @@ export const tripRouter = router({
         },
       },
     })
+
+    // Filter to only trips with available capacity
+    const trips = allTrips.filter((trip) => trip.currentBookings < trip.capacity)
 
     return trips
   }),
@@ -232,14 +234,15 @@ export const tripRouter = router({
         })
       }
 
-      // Validate dates if both are being updated
-      if (updateData.startDate && updateData.endDate) {
-        if (updateData.endDate <= updateData.startDate) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'End date must be after start date',
-          })
-        }
+      // Validate dates - check final state, not just what's being updated
+      const finalStartDate = updateData.startDate ?? existing.startDate
+      const finalEndDate = updateData.endDate ?? existing.endDate
+
+      if (finalEndDate <= finalStartDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be after start date',
+        })
       }
 
       // Cannot reduce capacity below current bookings

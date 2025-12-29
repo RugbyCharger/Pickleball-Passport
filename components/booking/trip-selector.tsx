@@ -21,8 +21,12 @@ export default function TripSelector() {
   // Zustand booking store
   const { selectedTripId, setSelectedTripId } = useBookingStore()
 
-  // Fetch available trips from tRPC
-  const { data: trips, isLoading, error } = trpc.trip.getAvailable.useQuery()
+  // Fetch available trips from tRPC with refetch to prevent stale data
+  const { data: trips, isLoading, error } = trpc.trip.getAvailable.useQuery(undefined, {
+    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    staleTime: 10000, // Consider data stale after 10 seconds
+  })
 
   // Check if a trip is selected
   const isSelected = (tripId: string) => {
@@ -122,7 +126,11 @@ export default function TripSelector() {
           </div>
 
           {/* Grid */}
-          <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+          <div
+            role="radiogroup"
+            aria-label="Select trip departure date"
+            className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2"
+          >
             {trips.map((trip) => (
               <TripCard
                 key={trip.id}

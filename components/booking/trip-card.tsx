@@ -15,6 +15,7 @@
 
 'use client'
 
+import { useState } from 'react'
 import { CheckCircle2, MapPin, Calendar, Users } from 'lucide-react'
 import { format, differenceInDays } from 'date-fns'
 
@@ -63,6 +64,7 @@ export default function TripCard({
   isSelected,
   onSelect,
 }: TripCardProps) {
+  const [showWaitlistMessage, setShowWaitlistMessage] = useState(false)
   const duration = calculateDuration(trip.startDate, trip.endDate)
   const spotsRemaining = getSpotsRemaining(trip.capacity, trip.currentBookings)
   const fullyBooked = isFullyBooked(trip.capacity, trip.currentBookings)
@@ -168,16 +170,26 @@ export default function TripCard({
       {/* Fully Booked Action */}
       {fullyBooked && (
         <div className="mt-4 pt-4 border-t border-slate-200">
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              // TODO: Implement waitlist functionality in future story
-              alert('Waitlist feature coming soon!')
-            }}
-            className="w-full rounded-md bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200"
-          >
-            Join Waitlist
-          </button>
+          {!showWaitlistMessage ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowWaitlistMessage(true)
+                // Auto-hide after 5 seconds
+                setTimeout(() => setShowWaitlistMessage(false), 5000)
+              }}
+              className="w-full rounded-md bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200"
+            >
+              Join Waitlist
+            </button>
+          ) : (
+            <div className="rounded-md bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-700">
+              <p className="font-medium">Waitlist feature coming soon!</p>
+              <p className="mt-1 text-xs text-blue-600">
+                Contact us at support@pickleballpassport.com to be notified when spots open up.
+              </p>
+            </div>
+          )}
         </div>
       )}
 
