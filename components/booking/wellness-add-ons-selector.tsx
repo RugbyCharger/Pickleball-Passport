@@ -130,8 +130,8 @@ export default function WellnessAddOnsSelector() {
 
     wellnessAddOnIds.forEach((id) => removeAddOn(id))
 
-    // Navigate to review page
-    router.push('/booking/review')
+    // Navigate to trip selection page
+    router.push('/booking/configure/trip')
   }
 
   // Navigation handlers
@@ -140,8 +140,8 @@ export default function WellnessAddOnsSelector() {
   }
 
   const handleNext = () => {
-    // Navigate to review page
-    router.push('/booking/review')
+    // Navigate to trip selection page
+    router.push('/booking/configure/trip')
   }
 
   // Get add-ons count per category
@@ -306,7 +306,7 @@ export default function WellnessAddOnsSelector() {
           onClick={handleNext}
           className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
         >
-          Next: Review Booking →
+          Next: Choose Departure Date →
         </button>
       </div>
     </div>

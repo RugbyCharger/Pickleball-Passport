@@ -20,6 +20,7 @@ import { partnerRouter } from './routers/partner'
 import { adminRouter } from './routers/admin'
 import { analyticsRouter } from './routers/analytics'
 import { reminderRouter } from './routers/reminder'
+import { tripRouter } from './routers/trip'
 
 export const appRouter = router({
   user: userRouter,
@@ -36,6 +37,7 @@ export const appRouter = router({
   admin: adminRouter,
   analytics: analyticsRouter,
   reminder: reminderRouter,
+  trip: tripRouter,
   // Future routers will be added here:
   // payment: paymentRouter,
 })
