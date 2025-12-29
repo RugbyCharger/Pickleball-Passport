@@ -98,6 +98,12 @@ enum AddOnCategory {
   PICKLEBALL
 }
 
+enum PickleballSkillLevel {
+  RECREATIONAL
+  INTERMEDIATE
+  ADVANCED
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -138,7 +144,7 @@ model GuestProfile {
   location  String? // City, Country
 
   // Pickleball Background
-  pickleballSkillLevel String? // Recreational, Intermediate, Advanced
+  pickleballSkillLevel PickleballSkillLevel? // Enum: RECREATIONAL, INTERMEDIATE, ADVANCED
   pickleballFrequency  String? // e.g., "3x per week"
   homeClub             String?
 
@@ -151,6 +157,9 @@ model GuestProfile {
   emergencyContactName         String?
   emergencyContactPhone        String?
   emergencyContactRelationship String?
+
+  // Profile Completion Status
+  profileCompleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -38,6 +38,9 @@ export default function TripSelector() {
     setSelectedTripId(trip.id)
   }
 
+  // Check profile completion status
+  const { data: profileStatus } = trpc.user.checkProfileComplete.useQuery()
+
   // Navigation handlers
   const handleBack = () => {
     router.push('/booking/configure/wellness')
@@ -46,8 +49,14 @@ export default function TripSelector() {
   const handleNext = () => {
     if (!selectedTripId) return
 
-    // Navigate to review page
-    router.push('/booking/review')
+    // Check if profile is complete
+    if (profileStatus?.profileCompleted) {
+      // Profile complete - go to payment
+      router.push('/booking/payment')
+    } else {
+      // Profile incomplete - go to profile completion
+      router.push('/booking/configure/profile')
+    }
   }
 
   // Retry handler for error state
@@ -187,7 +196,7 @@ export default function TripSelector() {
             }
           `}
         >
-          Next: Review Booking →
+          {profileStatus?.profileCompleted ? 'Next: Payment →' : 'Next: Complete Profile →'}
         </button>
       </div>
     </div>
