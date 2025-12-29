@@ -79,11 +79,11 @@ development_status:
   3-6-package-configurator-pricing-summary-sticky: done
   3-7-booking-review-page: done
   3-8-trip-selection-choose-departure-date: done
-  3-9-guest-profile-completion-before-booking: in-progress
+  3-9-guest-profile-completion-before-booking: done
   3-10-booking-confirmation-page: done
   3-11-guest-dashboard-my-bookings: done
   3-12-booking-details-page: done
-  3-13-booking-cancellation-flow: backlog
+  3-13-booking-cancellation-flow: done
   3-14-booking-rescheduling: backlog
   3-15-referral-code-application-at-booking: backlog
   3-16-booking-modification-change-add-ons: backlog

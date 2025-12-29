@@ -4,14 +4,32 @@
  * Provides utilities for sending emails via SendGrid API
  */
 
-import sgMail from '@sendgrid/mail';
+import type { MailService } from '@sendgrid/mail';
 
 // Initialize SendGrid with API key
 const apiKey = process.env.SENDGRID_API_KEY;
-if (!apiKey) {
+const isConfiguredFlag = !!(apiKey && apiKey.length > 0);
+
+let sgMailPromise: Promise<MailService> | null = null;
+
+// Lazy initialization of SendGrid
+async function getSgMail(): Promise<MailService> {
+  if (!isConfiguredFlag) {
+    throw new Error('SendGrid API key is not configured');
+  }
+
+  if (!sgMailPromise) {
+    sgMailPromise = import('@sendgrid/mail').then(({ default: mail }) => {
+      mail.setApiKey(apiKey);
+      return mail;
+    });
+  }
+
+  return sgMailPromise;
+}
+
+if (!isConfiguredFlag) {
   console.warn('SENDGRID_API_KEY is not set. Email functionality will be disabled.');
-} else {
-  sgMail.setApiKey(apiKey);
 }
 
 const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'hello@pickleballpassport.com';
@@ -29,9 +47,7 @@ export interface SendEmailOptions {
  * Send an email using SendGrid
  */
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
-  if (!apiKey) {
-    throw new Error('SendGrid API key is not configured');
-  }
+  const sgMail = await getSgMail();
 
   const msg = {
     to: options.to,
@@ -58,9 +74,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
  * Send multiple emails in batch
  */
 export async function sendBatchEmails(emails: SendEmailOptions[]): Promise<void> {
-  if (!apiKey) {
-    throw new Error('SendGrid API key is not configured');
-  }
+  const sgMail = await getSgMail();
 
   const messages = emails.map((email) => ({
     to: email.to,
@@ -87,7 +101,7 @@ export async function sendBatchEmails(emails: SendEmailOptions[]): Promise<void>
  * Verify SendGrid configuration
  */
 export function isConfigured(): boolean {
-  return !!apiKey;
+  return isConfiguredFlag;
 }
 
 /**

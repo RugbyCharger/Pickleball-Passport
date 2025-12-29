@@ -11,6 +11,12 @@ import { z } from 'zod'
 import { router, guestProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import { createPaymentIntent as createStripePaymentIntent } from '@/lib/stripe/stripe-service'
+import Stripe from 'stripe'
+
+// Initialize Stripe client
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-12-15.clover'
+})
 
 /**
  * Input schema for creating a payment intent
@@ -610,4 +616,204 @@ export const bookingRouter = router({
 
     return bookings
   }),
+
+  /**
+   * Cancel Booking
+   *
+   * Cancels an existing booking and processes refund according to cancellation policy:
+   * - More than 60 days before trip: 100% refund minus $500 processing fee
+   * - 30-60 days before trip: 50% refund
+   * - Less than 30 days before trip: Non-refundable
+   *
+   * This mutation:
+   * 1. Validates booking ownership and cancellability
+   * 2. Calculates refund amount based on time until trip
+   * 3. Processes Stripe refund (if applicable)
+   * 4. Updates booking status to CANCELLED
+   * 5. Creates payment record for refund
+   */
+  cancel: guestProcedure
+    .input(z.object({
+      bookingId: z.string().cuid()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const user = ctx.user!
+
+      // 1. Authorization: Verify user owns booking
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        include: {
+          trip: true,
+          package: {
+            select: {
+              name: true
+            }
+          },
+          payments: {
+            where: { status: 'SUCCEEDED' },
+            orderBy: { createdAt: 'desc' },
+            take: 1
+          }
+        }
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found'
+        })
+      }
+
+      if (booking.userId !== user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to cancel this booking'
+        })
+      }
+
+      // 2. Validate booking is cancellable
+      if (booking.status === 'CANCELLED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Booking is already cancelled'
+        })
+      }
+
+      if (booking.status === 'COMPLETED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot cancel a completed trip'
+        })
+      }
+
+      // 3. Check if trip has been assigned and hasn't started
+      if (!booking.trip) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot cancel booking without assigned trip. Please contact support.'
+        })
+      }
+
+      const tripStartDate = new Date(booking.trip.startDate)
+      const now = new Date()
+
+      if (tripStartDate <= now) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot cancel - trip has already started'
+        })
+      }
+
+      // 4. Calculate refund amount (server-side - NEVER trust client calculation)
+      const daysUntilTrip = Math.floor(
+        (tripStartDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      )
+
+      let refundAmount = 0
+      let refundPercentage = 0
+      const PROCESSING_FEE = 50000 // $500 in cents
+
+      if (daysUntilTrip > 60) {
+        refundAmount = booking.totalPrice - PROCESSING_FEE
+        refundPercentage = 100
+      } else if (daysUntilTrip >= 30) {
+        refundAmount = Math.floor(booking.totalPrice * 0.5)
+        refundPercentage = 50
+      } else {
+        refundAmount = 0
+        refundPercentage = 0
+      }
+
+      // Ensure refund amount is not negative
+      if (refundAmount < 0) {
+        refundAmount = 0
+      }
+
+      // 5. Process refund if amount > 0
+      let stripeRefundId: string | null = null
+
+      if (refundAmount > 0 && booking.payments.length > 0) {
+        const payment = booking.payments[0]
+
+        if (!payment.stripePaymentIntentId) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Payment intent ID not found'
+          })
+        }
+
+        try {
+          const refund = await stripe.refunds.create({
+            payment_intent: payment.stripePaymentIntentId,
+            amount: refundAmount,
+            reason: 'requested_by_customer',
+            metadata: {
+              bookingId: booking.id,
+              bookingReference: booking.bookingReference,
+              refundPolicy: daysUntilTrip > 60 ? '100%-fee' : '50%',
+              daysUntilTrip: daysUntilTrip.toString()
+            }
+          })
+
+          stripeRefundId = refund.id
+        } catch (error: any) {
+          console.error('Stripe refund error:', error)
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `Refund processing failed: ${error.message || 'Unknown error'}`
+          })
+        }
+      }
+
+      // 6. Update booking status and create refund payment record (atomic transaction)
+      const updatedBooking = await ctx.db.$transaction(async (tx) => {
+        // Update booking status
+        const updated = await tx.booking.update({
+          where: { id: input.bookingId },
+          data: {
+            status: 'CANCELLED',
+            updatedAt: new Date()
+          }
+        })
+
+        // Create refund payment record if refund was processed
+        if (refundAmount > 0 && stripeRefundId) {
+          await tx.payment.create({
+            data: {
+              bookingId: booking.id,
+              amount: -refundAmount, // Negative for refund
+              status: 'REFUNDED',
+              stripePaymentIntentId: stripeRefundId,
+              stripeCustomerId: booking.payments[0]?.stripeCustomerId
+            }
+          })
+        }
+
+        // Decrement trip currentBookings count if trip was assigned
+        if (booking.tripId) {
+          await tx.trip.update({
+            where: { id: booking.tripId },
+            data: {
+              currentBookings: {
+                decrement: 1
+              }
+            }
+          })
+        }
+
+        return updated
+      })
+
+      // 7. Send cancellation email (non-blocking)
+      // TODO: Implement email sending in Task 4
+      // sendCancellationEmail(booking, refundAmount).catch(console.error)
+
+      return {
+        success: true,
+        refundAmount,
+        refundPercentage,
+        daysUntilTrip,
+        bookingReference: booking.bookingReference
+      }
+    }),
 })

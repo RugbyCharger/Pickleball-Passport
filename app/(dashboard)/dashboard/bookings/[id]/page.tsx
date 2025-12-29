@@ -29,6 +29,7 @@ import {
 import { prisma } from '@/lib/db'
 import { BookingStatus } from '@prisma/client'
 import { BookingStatusTimeline } from '@/components/bookings/booking-status-timeline'
+import CancelBookingButton from '@/components/booking/cancel-booking-button'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -167,7 +168,17 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
+          {booking.trip && (
+            <CancelBookingButton
+              bookingId={booking.id}
+              bookingReference={booking.bookingReference}
+              bookingStatus={booking.status}
+              tripName={booking.trip.destination}
+              tripStartDate={booking.trip.startDate}
+              totalPrice={booking.totalPrice}
+            />
+          )}
           <Button variant="outline" size="sm" disabled>
             <Download className="mr-2 h-4 w-4" />
             Download PDF
