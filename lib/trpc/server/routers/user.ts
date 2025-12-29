@@ -84,6 +84,7 @@ export const userRouter = router({
   /**
    * Complete guest profile (create or update)
    * Sets profileCompleted to true after successful save
+   * Updates Clerk user metadata
    */
   completeGuestProfile: protectedProcedure
     .input(
@@ -126,6 +127,20 @@ export const userRouter = router({
             profileCompleted: true,
           },
         })
+      }
+
+      // Update Clerk user metadata to reflect profile completion
+      try {
+        const { clerkClient } = await import('@clerk/nextjs/server')
+        const client = await clerkClient()
+        await client.users.updateUserMetadata(ctx.user.id, {
+          publicMetadata: {
+            profileCompleted: true,
+          },
+        })
+      } catch (error) {
+        // Log error but don't fail the mutation
+        console.error('Failed to update Clerk metadata:', error)
       }
 
       return { success: true, guestProfile }

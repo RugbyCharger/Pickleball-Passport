@@ -6,9 +6,11 @@ import { trpc } from '@/lib/trpc/client'
 import GuestProfileForm from '@/components/booking/guest-profile-form'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 import { Loader2 } from 'lucide-react'
+import { useBookingProgress } from '@/lib/hooks/use-booking-progress'
 
 export default function ProfileCompletionClient() {
   const router = useRouter()
+  const progress = useBookingProgress()
 
   // Check if profile is already complete
   const { data: profileStatus, isLoading } = trpc.user.checkProfileComplete.useQuery()
@@ -52,17 +54,24 @@ export default function ProfileCompletionClient() {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Progress Indicator */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between max-w-3xl mx-auto">
-            <div className="text-sm text-gray-600">Step 7 of 7</div>
-            <div className="flex-1 mx-4">
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-600 rounded-full" style={{ width: '100%' }} />
+        {progress && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between max-w-3xl mx-auto">
+              <div className="text-sm text-gray-600">
+                Step {progress.step} of {progress.totalSteps}
               </div>
+              <div className="flex-1 mx-4">
+                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-600 rounded-full transition-all duration-300"
+                    style={{ width: `${(progress.step / progress.totalSteps) * 100}%` }}
+                  />
+                </div>
+              </div>
+              <div className="text-sm font-medium text-emerald-600">Almost there!</div>
             </div>
-            <div className="text-sm font-medium text-emerald-600">Almost there!</div>
           </div>
-        </div>
+        )}
 
         {/* Page Header */}
         <div className="text-center mb-12 max-w-3xl mx-auto">

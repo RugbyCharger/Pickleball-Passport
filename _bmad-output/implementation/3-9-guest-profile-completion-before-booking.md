@@ -24,6 +24,19 @@ So that my booking has all necessary information.
 
 ### AC-2: Form Fields & Structure
 
+- [ ] First Name field:
+  - Text input
+  - Required with validation message
+  - Minimum 2 characters
+  - Label: "First Name"
+  - Shows green checkmark on valid input
+
+- [ ] Last Name field:
+  - Text input
+  - Required with validation message
+  - Minimum 2 characters
+  - Label: "Last Name"
+
 - [ ] Age field:
   - Number input
   - Minimum: 18, Maximum: 120

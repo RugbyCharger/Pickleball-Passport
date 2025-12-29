@@ -5,9 +5,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { trpc } from '@/lib/trpc/client'
 import { useRouter } from 'next/navigation'
-import { PickleballSkillLevel } from '@prisma/client'
 import { useState } from 'react'
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { toast } from 'sonner'
+
+// Enum definition matching Prisma schema
+enum PickleballSkillLevel {
+  RECREATIONAL = 'RECREATIONAL',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+}
 
 // Validation schema
 const profileSchema = z.object({
@@ -15,7 +22,7 @@ const profileSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   age: z.coerce.number().int().min(18, 'Must be at least 18 years old').max(120, 'Please enter a valid age'),
   location: z.string().min(2, 'Location is required'),
-  pickleballSkillLevel: z.nativeEnum(PickleballSkillLevel),
+  pickleballSkillLevel: z.enum(['RECREATIONAL', 'INTERMEDIATE', 'ADVANCED']),
   pickleballFrequency: z.string().min(1, 'Please tell us how often you play'),
   dietaryRestrictions: z.array(z.string()).default([]),
   emergencyContactName: z.string().min(2, 'Emergency contact name is required'),
@@ -43,34 +50,33 @@ export default function GuestProfileForm({ existingProfile }: GuestProfileFormPr
   const [showOtherDietary, setShowOtherDietary] = useState(false)
   const [otherDietary, setOtherDietary] = useState('')
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    watch,
-    setValue,
-  } = useForm<any>({
+  const form = useForm({
     resolver: zodResolver(profileSchema) as any,
     mode: 'onBlur',
-    defaultValues: existingProfile || {
+    defaultValues: (existingProfile || {
       firstName: '',
       lastName: '',
-      age: '' as any,
+      age: '',
       location: '',
-      pickleballSkillLevel: '' as any,
+      pickleballSkillLevel: '',
       pickleballFrequency: '',
       dietaryRestrictions: [],
       emergencyContactName: '',
       emergencyContactPhone: '',
       emergencyContactRelationship: '',
-    },
+    }) as any,
   })
+
+  const { register, handleSubmit, formState: { errors, isValid }, watch, setValue } = form
 
   const saveMutation = trpc.user.completeGuestProfile.useMutation({
     onSuccess: () => {
+      toast.success('Profile saved successfully!')
       router.push('/booking/payment')
     },
     onError: (error) => {
+      const errorMessage = error?.message || 'Failed to save profile. Please check your information and try again.'
+      toast.error(errorMessage)
       console.error('Profile save error:', error)
     },
   })
@@ -93,16 +99,23 @@ export default function GuestProfileForm({ existingProfile }: GuestProfileFormPr
     setValue('dietaryRestrictions', newRestrictions)
   }
 
-  const onSubmit = (data: ProfileFormData) => {
+  const onSubmit = (data: any) => {
+    // Validate custom dietary restriction if checkbox is checked
+    if (showOtherDietary && !otherDietary.trim()) {
+      toast.error('Please specify your dietary restriction or uncheck "Other"')
+      return
+    }
+
     // Add custom dietary restriction if specified
     if (showOtherDietary && otherDietary.trim()) {
       data.dietaryRestrictions = [
-        ...data.dietaryRestrictions.filter((r) => r !== 'Other'),
+        ...(data.dietaryRestrictions || []).filter((r: string) => r !== 'Other'),
         otherDietary.trim(),
       ]
     }
 
-    saveMutation.mutate(data)
+    // Type assertion for mutation - Zod has already validated
+    saveMutation.mutate(data as ProfileFormData)
   }
 
   return (
@@ -132,7 +145,7 @@ export default function GuestProfileForm({ existingProfile }: GuestProfileFormPr
                 {String(errors.firstName?.message || "")}
               </p>
             )}
-            {!errors.firstName && watch('firstName')?.length >= 2 && (
+            {!errors.firstName && watch('firstName') && (watch('firstName') as string).length >= 2 && (
               <p className="mt-1 text-sm text-emerald-600 flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4" />
                 Looks good!
