@@ -307,6 +307,11 @@ model Booking {
   // Referral
   referredBy String? // Partner referral code
 
+  // Rescheduling
+  rescheduleCount Int       @default(0) // Track number of reschedules (max: 1)
+  rescheduledAt   DateTime? // Last reschedule timestamp
+  originalTripId  String?   // Original trip before reschedule (audit trail)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -30,6 +30,7 @@ import { prisma } from '@/lib/db'
 import { BookingStatus } from '@prisma/client'
 import { BookingStatusTimeline } from '@/components/bookings/booking-status-timeline'
 import CancelBookingButton from '@/components/booking/cancel-booking-button'
+import RescheduleBookingButton from '@/components/booking/reschedule-booking-button'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -50,7 +51,21 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
     where: {
       id,
     },
-    include: {
+    select: {
+      id: true,
+      userId: true,
+      bookingReference: true,
+      status: true,
+      totalPrice: true,
+      basePrice: true,
+      accommodationPrice: true,
+      addOnsTotal: true,
+      duration: true,
+      accommodationTier: true,
+      referredBy: true,
+      createdAt: true,
+      updatedAt: true,
+      rescheduleCount: true,
       package: {
         select: {
           id: true,
@@ -170,14 +185,25 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-2">
           {booking.trip && (
-            <CancelBookingButton
-              bookingId={booking.id}
-              bookingReference={booking.bookingReference}
-              bookingStatus={booking.status}
-              tripName={booking.trip.destination}
-              tripStartDate={booking.trip.startDate}
-              totalPrice={booking.totalPrice}
-            />
+            <>
+              <RescheduleBookingButton
+                bookingId={booking.id}
+                bookingReference={booking.bookingReference}
+                bookingStatus={booking.status}
+                tripName={booking.trip.destination}
+                tripStartDate={booking.trip.startDate}
+                tripEndDate={booking.trip.endDate}
+                rescheduleCount={booking.rescheduleCount}
+              />
+              <CancelBookingButton
+                bookingId={booking.id}
+                bookingReference={booking.bookingReference}
+                bookingStatus={booking.status}
+                tripName={booking.trip.destination}
+                tripStartDate={booking.trip.startDate}
+                totalPrice={booking.totalPrice}
+              />
+            </>
           )}
           <Button variant="outline" size="sm" disabled>
             <Download className="mr-2 h-4 w-4" />

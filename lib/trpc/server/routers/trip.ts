@@ -7,7 +7,7 @@
  */
 
 import { z } from 'zod'
-import { router, publicProcedure, adminProcedure } from '../trpc'
+import { router, publicProcedure, adminProcedure, protectedProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 
 export const tripRouter = router({
@@ -98,6 +98,82 @@ export const tripRouter = router({
       }
 
       return trip
+    }),
+
+  /**
+   * Get available trips for rescheduling
+   * Protected endpoint - requires authentication
+   * Returns future trips with availability for rescheduling a specific booking
+   */
+  getAvailableForReschedule: protectedProcedure
+    .input(
+      z.object({
+        bookingId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Get booking to verify ownership and check package
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        select: {
+          packageId: true,
+          userId: true,
+        },
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        })
+      }
+
+      // Verify user owns the booking
+      if (booking.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to access this booking',
+        })
+      }
+
+      const now = new Date()
+
+      // Fetch all active, future trips and filter in-memory for availability
+      const allTrips = await ctx.db.trip.findMany({
+        where: {
+          isActive: true,
+          startDate: {
+            gt: now, // Future trips only
+          },
+        },
+        orderBy: {
+          startDate: 'asc',
+        },
+        select: {
+          id: true,
+          name: true,
+          destination: true,
+          startDate: true,
+          endDate: true,
+          capacity: true,
+          currentBookings: true,
+        },
+      })
+
+      // Filter to only trips with available capacity
+      const trips = allTrips.filter((trip) => trip.currentBookings < trip.capacity)
+
+      // Return trips with additional computed fields
+      return trips.map((trip) => ({
+        id: trip.id,
+        name: trip.name,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        location: trip.destination,
+        currentBookings: trip.currentBookings,
+        maxCapacity: trip.capacity,
+        spotsAvailable: trip.capacity - trip.currentBookings,
+      }))
     }),
 
   // ============================================================================

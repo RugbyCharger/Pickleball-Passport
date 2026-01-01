@@ -14,7 +14,7 @@ import { createPaymentIntent as createStripePaymentIntent } from '@/lib/stripe/s
 import Stripe from 'stripe'
 
 // Initialize Stripe client
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-12-15.clover'
 })
 
@@ -813,6 +813,262 @@ export const bookingRouter = router({
         refundAmount,
         refundPercentage,
         daysUntilTrip,
+        bookingReference: booking.bookingReference
+      }
+    }),
+
+  /**
+   * Reschedule Booking
+   *
+   * Allows guests to move their booking to a different trip.
+   * Authorization: User must own the booking
+   * Eligibility:
+   * - Booking must be CONFIRMED or PENDING_PAYMENT
+   * - Trip must not have started yet
+   * - <30 days before trip (non-refundable period)
+   * - Maximum 1 reschedule per booking
+   *
+   * Process:
+   * 1. Validate authorization and eligibility
+   * 2. Validate new trip availability
+   * 3. Calculate price adjustment (if any)
+   * 4. Process payment/refund for price difference
+   * 5. Update booking record atomically:
+   *    - Update tripId, totalPrice, rescheduleCount
+   *    - Decrement old trip capacity
+   *    - Increment new trip capacity
+   * 6. Create payment records for adjustments
+   * 7. Send confirmation email (non-blocking)
+   */
+  reschedule: guestProcedure
+    .input(
+      z.object({
+        bookingId: z.string().cuid(),
+        newTripId: z.string().cuid()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 1. Authorization: Verify user owns booking
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        include: {
+          trip: true,
+          package: true,
+          payments: {
+            where: { status: 'SUCCEEDED' },
+            orderBy: { createdAt: 'desc' },
+            take: 1
+          }
+        }
+      })
+
+      if (!booking || !ctx.user || booking.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to reschedule this booking'
+        })
+      }
+
+      // 2. Validate booking is reschedulable
+      if (booking.status !== 'CONFIRMED' && booking.status !== 'PENDING_PAYMENT') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Only confirmed bookings can be rescheduled'
+        })
+      }
+
+      // 3. Check reschedule limit (max 1 reschedule)
+      if ((booking.rescheduleCount || 0) >= 1) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Reschedule limit reached. Each booking can only be rescheduled once.'
+        })
+      }
+
+      // 4. Check eligibility: <30 days before trip
+      if (!booking.trip) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Booking does not have an assigned trip'
+        })
+      }
+
+      const tripStartDate = new Date(booking.trip.startDate)
+      const now = new Date()
+      const daysUntilTrip = Math.floor(
+        (tripStartDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      )
+
+      if (daysUntilTrip >= 30) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Rescheduling is only available less than 30 days before trip. Consider canceling for a refund instead.'
+        })
+      }
+
+      if (tripStartDate <= now) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot reschedule - trip has already started'
+        })
+      }
+
+      // 5. Validate new trip
+      const newTrip = await ctx.db.trip.findUnique({
+        where: { id: input.newTripId }
+      })
+
+      if (!newTrip) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Selected trip not found'
+        })
+      }
+
+      if (newTrip.currentBookings >= newTrip.capacity) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Selected trip is full. Please choose another trip.'
+        })
+      }
+
+      if (new Date(newTrip.startDate) <= now) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot reschedule to a trip that has already started'
+        })
+      }
+
+      // 6. Calculate price adjustment
+      // Note: For MVP, assume same pricing. Future: calculate based on trip pricing
+      const priceDifference = 0 // TODO: Implement dynamic pricing per trip
+      let stripePaymentIntentId: string | null = null
+      let stripeRefundId: string | null = null
+
+      // 7. Process payment if price differs
+      if (priceDifference > 0) {
+        // Price increase: charge difference
+        try {
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: priceDifference,
+            currency: 'usd',
+            customer: booking.payments[0]?.stripeCustomerId || undefined,
+            metadata: {
+              bookingId: booking.id,
+              bookingReference: booking.bookingReference,
+              type: 'reschedule_price_adjustment',
+              originalTripId: booking.tripId!,
+              newTripId: input.newTripId
+            }
+          })
+          stripePaymentIntentId = paymentIntent.id
+        } catch (error: any) {
+          console.error('Stripe payment intent error:', error)
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `Payment processing failed: ${error.message || 'Unknown error'}`
+          })
+        }
+      } else if (priceDifference < 0) {
+        // Price decrease: issue refund
+        const payment = booking.payments[0]
+        if (payment?.stripePaymentIntentId) {
+          try {
+            const refund = await stripe.refunds.create({
+              payment_intent: payment.stripePaymentIntentId,
+              amount: Math.abs(priceDifference),
+              reason: 'requested_by_customer',
+              metadata: {
+                bookingId: booking.id,
+                bookingReference: booking.bookingReference,
+                type: 'reschedule_price_adjustment'
+              }
+            })
+            stripeRefundId = refund.id
+          } catch (error: any) {
+            console.error('Stripe refund error:', error)
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: `Refund processing failed: ${error.message || 'Unknown error'}`
+            })
+          }
+        }
+      }
+
+      // 8. Update booking and trip capacities atomically
+      const updatedBooking = await ctx.db.$transaction(async (tx) => {
+        // Decrement old trip capacity
+        if (booking.tripId) {
+          await tx.trip.update({
+            where: { id: booking.tripId },
+            data: {
+              currentBookings: {
+                decrement: 1
+              }
+            }
+          })
+        }
+
+        // Increment new trip capacity
+        await tx.trip.update({
+          where: { id: input.newTripId },
+          data: {
+            currentBookings: {
+              increment: 1
+            }
+          }
+        })
+
+        // Update booking
+        const updated = await tx.booking.update({
+          where: { id: input.bookingId },
+          data: {
+            tripId: input.newTripId,
+            totalPrice: booking.totalPrice + priceDifference,
+            rescheduleCount: (booking.rescheduleCount || 0) + 1,
+            rescheduledAt: new Date(),
+            originalTripId: booking.tripId,
+            updatedAt: new Date()
+          },
+          include: {
+            trip: true
+          }
+        })
+
+        // Create payment records if price changed
+        if (priceDifference > 0 && stripePaymentIntentId) {
+          await tx.payment.create({
+            data: {
+              bookingId: booking.id,
+              amount: priceDifference,
+              status: 'SUCCEEDED',
+              stripePaymentIntentId,
+              stripeCustomerId: booking.payments[0]?.stripeCustomerId
+            }
+          })
+        } else if (priceDifference < 0 && stripeRefundId) {
+          await tx.payment.create({
+            data: {
+              bookingId: booking.id,
+              amount: priceDifference, // Negative amount
+              status: 'REFUNDED',
+              stripePaymentIntentId: stripeRefundId,
+              stripeCustomerId: booking.payments[0]?.stripeCustomerId
+            }
+          })
+        }
+
+        return updated
+      })
+
+      // 9. Send reschedule confirmation email (non-blocking)
+      // TODO: Implement email sending
+      // sendRescheduleEmail(booking, updatedBooking.trip!).catch(console.error)
+
+      return {
+        success: true,
+        newTrip: updatedBooking.trip,
+        priceDifference,
         bookingReference: booking.bookingReference
       }
     }),
