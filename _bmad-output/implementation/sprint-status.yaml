@@ -212,7 +212,7 @@ development_status:
   11-2-booking-confirmation-email: done
   11-3-application-confirmation-email: backlog
   11-4-pre-trip-email-sequence: backlog
-  11-5-payment-receipt-email: backlog
+  11-5-payment-receipt-email: done
   11-6-sms-notifications-twilio: backlog
   11-7-in-app-notifications: backlog
   11-8-admin-email-alerts: backlog
