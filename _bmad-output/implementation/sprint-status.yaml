@@ -96,7 +96,7 @@ development_status:
   4-1-stripe-integration-setup: done
   4-2-payment-intent-creation: done
   4-3-payment-form-ui: done
-  4-4-webhook-handler: backlog
+  4-4-webhook-handler: ready-for-dev
   4-5-payment-failure-handling: done
   4-6-installment-payment-plans: backlog
   4-7-scheduled-payment-processing: backlog
