@@ -229,3 +229,21 @@ export async function sendApplicationConfirmation(
     text,
   });
 }
+
+/**
+ * Send refund confirmation email
+ */
+export async function sendRefundConfirmation(
+  to: string,
+  data: import('./templates/refund-confirmation').RefundConfirmationData
+): Promise<void> {
+  const { generateRefundConfirmationEmail } = await import('./templates/refund-confirmation');
+  const html = generateRefundConfirmationEmail(data);
+
+  await sendEmail({
+    to,
+    subject: `Refund Processed - Booking ${data.bookingReference}`,
+    html,
+    text: `Your refund of $${(data.refundAmount / 100).toFixed(2)} has been processed for booking ${data.bookingReference}. Please allow ${data.expectedTimeline} for the funds to appear in your account.`,
+  });
+}

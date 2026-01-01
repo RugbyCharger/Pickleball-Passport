@@ -18,6 +18,8 @@ import { sendBookingConfirmation } from '@/lib/email/sendgrid';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+
   try {
     // Check if Stripe is configured
     if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -55,6 +57,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check if event already processed (idempotency)
+    const alreadyProcessed = await checkEventProcessed(event.id);
+    if (alreadyProcessed) {
+      console.log(`Event ${event.id} (${event.type}) already processed, skipping`);
+      return NextResponse.json({ received: true, status: 'already_processed' });
+    }
+
     // Handle the event based on type
     switch (event.type) {
       case 'payment_intent.succeeded':
@@ -69,11 +78,29 @@ export async function POST(req: NextRequest) {
         await handlePaymentCanceled(event.data.object as Stripe.PaymentIntent);
         break;
 
+      case 'charge.refunded':
+        await handleRefundCompleted(event.data.object as Stripe.Charge);
+        break;
+
+      case 'charge.dispute.created':
+        await handleDisputeCreated(event.data.object as Stripe.Dispute);
+        break;
+
+      case 'charge.dispute.closed':
+        await handleDisputeClosed(event.data.object as Stripe.Dispute);
+        break;
+
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
 
-    return NextResponse.json({ received: true });
+    // Mark event as processed
+    await markEventProcessed(event.id, event.type);
+
+    const duration = Date.now() - startTime;
+    console.log(`Event ${event.id} (${event.type}) processed successfully in ${duration}ms`);
+
+    return NextResponse.json({ received: true, status: 'processed' });
   } catch (error) {
     console.error('Webhook handler error:', error);
     return NextResponse.json(
@@ -342,5 +369,259 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
     );
   } catch (error) {
     console.error('Error awarding partner points:', error);
+  }
+}
+
+/**
+ * Check if webhook event has already been processed (idempotency)
+ */
+async function checkEventProcessed(eventId: string): Promise<boolean> {
+  const existing = await prisma.webhookEvent.findUnique({
+    where: { stripeEventId: eventId },
+  });
+
+  return existing !== null;
+}
+
+/**
+ * Mark webhook event as processed (idempotency)
+ */
+async function markEventProcessed(
+  eventId: string,
+  eventType: string
+): Promise<void> {
+  await prisma.webhookEvent.create({
+    data: {
+      stripeEventId: eventId,
+      type: eventType,
+      processed: true,
+    },
+  });
+}
+
+/**
+ * Handle Refund Completed
+ *
+ * Triggered when a refund is processed (from E3-S13 cancellation or Stripe dashboard).
+ * Updates payment status, booking status, and sends confirmation email.
+ */
+async function handleRefundCompleted(charge: Stripe.Charge) {
+  const { payment_intent: paymentIntentId, amount_refunded, id: chargeId } = charge;
+
+  if (!paymentIntentId) {
+    console.error('Charge missing payment_intent:', chargeId);
+    return;
+  }
+
+  try {
+    // Find payment by payment intent ID
+    const payment = await prisma.payment.findFirst({
+      where: { stripePaymentIntentId: paymentIntentId as string },
+      include: {
+        booking: {
+          include: {
+            trip: true,
+            user: true,
+            package: true,
+          },
+        },
+      },
+    });
+
+    if (!payment) {
+      console.error(`Payment not found for intent: ${paymentIntentId}`);
+      return;
+    }
+
+    // Check if this is a partial refund or full refund
+    const isFullRefund = amount_refunded >= payment.amount;
+
+    // Use transaction for atomic updates
+    await prisma.$transaction(async (tx) => {
+      // Update payment record
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: 'REFUNDED',
+          refundedAmount: amount_refunded,
+          stripeRefundId: charge.refunds?.data?.[0]?.id || null,
+        },
+      });
+
+      // If full refund, update booking status
+      if (isFullRefund && payment.booking.status === 'CONFIRMED') {
+        await tx.booking.update({
+          where: { id: payment.bookingId },
+          data: { status: 'CANCELLED' },
+        });
+
+        // Decrement trip capacity if booking has a trip
+        if (payment.booking.tripId) {
+          await tx.trip.update({
+            where: { id: payment.booking.tripId },
+            data: {
+              currentBookings: {
+                decrement: 1,
+              },
+            },
+          });
+        }
+      }
+    });
+
+    // Send refund confirmation email (non-blocking)
+    const { sendRefundConfirmation } = await import('@/lib/email/sendgrid');
+
+    await sendRefundConfirmation(payment.booking.user.email, {
+      firstName: payment.booking.user.email.split('@')[0], // Fallback
+      email: payment.booking.user.email,
+      bookingReference: payment.booking.bookingReference,
+      packageName: payment.booking.package.name,
+      refundAmount: amount_refunded,
+      originalAmount: payment.amount,
+      isPartialRefund: !isFullRefund,
+      refundDate: new Date().toISOString(),
+      expectedTimeline: '5-10 business days',
+    }).catch((error) => {
+      console.error('Failed to send refund confirmation email:', error);
+      // Don't throw - email failure shouldn't block webhook
+    });
+
+    console.log(
+      `Refund processed for payment ${payment.id}: $${amount_refunded / 100} (${
+        isFullRefund ? 'full' : 'partial'
+      })`
+    );
+  } catch (error) {
+    console.error('Error handling refund:', error);
+    throw error; // Re-throw to trigger Stripe retry if needed
+  }
+}
+
+/**
+ * Handle Dispute Created
+ *
+ * When a guest disputes a charge with their bank.
+ * Creates urgent admin notification and email alert.
+ */
+async function handleDisputeCreated(dispute: Stripe.Dispute) {
+  const { id: disputeId, amount, reason, charge, evidence_details } = dispute;
+
+  try {
+    // Find payment by charge ID
+    const chargeObj = charge as Stripe.Charge;
+    const payment = await prisma.payment.findFirst({
+      where: { stripePaymentIntentId: chargeObj.payment_intent as string },
+      include: {
+        booking: {
+          include: {
+            user: true,
+            package: true,
+          },
+        },
+      },
+    });
+
+    if (!payment) {
+      console.error(`Payment not found for charge: ${charge}`);
+      return;
+    }
+
+    // Create admin notification (Note: Requires admin user or system account)
+    // For now, log the dispute details
+    console.warn(`🚨 URGENT: Payment Dispute - ${payment.booking.bookingReference}`);
+    console.warn(`Dispute ID: ${disputeId}`);
+    console.warn(`Amount: $${amount / 100}`);
+    console.warn(`Reason: ${reason}`);
+    if (evidence_details?.due_by) {
+      console.warn(`Deadline: ${new Date(evidence_details.due_by * 1000).toLocaleDateString()}`);
+    }
+
+    // TODO: Send email alert to admin team
+    // This would require admin email configuration or admin user lookup
+
+    console.log(`Dispute created for payment ${payment.id}: ${disputeId}`);
+  } catch (error) {
+    console.error('Error handling dispute creation:', error);
+    // Don't throw - log error but acknowledge webhook
+  }
+}
+
+/**
+ * Handle Dispute Closed
+ *
+ * When a dispute is resolved (won or lost).
+ * Updates payment/booking status if dispute was lost.
+ */
+async function handleDisputeClosed(dispute: Stripe.Dispute) {
+  const { id: disputeId, status, charge, amount } = dispute;
+
+  try {
+    // Find payment
+    const chargeObj = charge as Stripe.Charge;
+    const payment = await prisma.payment.findFirst({
+      where: { stripePaymentIntentId: chargeObj.payment_intent as string },
+      include: {
+        booking: {
+          include: {
+            user: true,
+            trip: true,
+            package: true,
+          },
+        },
+      },
+    });
+
+    if (!payment) {
+      console.error(`Payment not found for charge: ${charge}`);
+      return;
+    }
+
+    if (status === 'won') {
+      // Dispute won - no action needed, just log
+      console.log(`✅ Dispute won: ${disputeId} for booking ${payment.booking.bookingReference}`);
+    } else if (status === 'lost') {
+      // Dispute lost - refund the guest, cancel booking
+      await prisma.$transaction(async (tx) => {
+        // Update payment to REFUNDED
+        await tx.payment.update({
+          where: { id: payment.id },
+          data: {
+            status: 'REFUNDED',
+            refundedAmount: amount,
+            stripeRefundId: disputeId,
+          },
+        });
+
+        // Cancel booking if currently confirmed
+        if (payment.booking.status === 'CONFIRMED') {
+          await tx.booking.update({
+            where: { id: payment.bookingId },
+            data: { status: 'CANCELLED' },
+          });
+
+          // Decrement trip capacity
+          if (payment.booking.tripId) {
+            await tx.trip.update({
+              where: { id: payment.booking.tripId },
+              data: {
+                currentBookings: {
+                  decrement: 1,
+                },
+              },
+            });
+          }
+        }
+      });
+
+      console.log(
+        `❌ Dispute lost: ${disputeId}, booking ${payment.booking.bookingReference} cancelled`
+      );
+
+      // TODO: Send email to guest explaining outcome
+    }
+  } catch (error) {
+    console.error('Error handling dispute closure:', error);
+    // Don't throw - log error but acknowledge webhook
   }
 }

@@ -395,6 +395,10 @@ model Payment {
   failureReason String? // Error message if payment failed
   receiptUrl    String?
 
+  // Refund Tracking
+  refundedAmount Int?    // Amount refunded in cents
+  stripeRefundId String? // Stripe refund ID (re_...)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -618,5 +622,22 @@ model Message {
   createdAt DateTime @default(now())
 
   @@index([isRead])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// WEBHOOK EVENT TRACKING
+// ============================================================================
+
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique // Stripe event ID (evt_...)
+  type          String   // Event type (charge.refunded, etc.)
+  processed     Boolean  @default(true)
+  processedAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  @@index([stripeEventId])
+  @@index([type])
   @@index([createdAt])
 }
