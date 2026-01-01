@@ -191,6 +191,30 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       // Get guest name from profile or email
       const guestFirstName = booking.user.email.split('@')[0]; // Fallback
 
+      // Generate PDF receipt (E4-S8 - non-blocking, under 2s target)
+      let receiptUrl: string | undefined;
+      let pdfBuffer: Buffer | undefined;
+
+      try {
+        const { generateReceipt } = await import('@/lib/pdf/receipt-generator');
+        const receiptResult = await generateReceipt({
+          paymentId: payment.id,
+          bookingId: booking.id,
+        });
+
+        if (receiptResult.success) {
+          receiptUrl = receiptResult.receiptUrl;
+          pdfBuffer = receiptResult.pdfBuffer;
+          console.log(`PDF receipt generated: ${receiptResult.receiptNumber}`);
+        } else {
+          console.error('Failed to generate PDF receipt:', receiptResult.error);
+          // Continue processing - don't block webhook on PDF failure
+        }
+      } catch (pdfError) {
+        console.error('Error generating PDF receipt:', pdfError);
+        // Continue processing - don't block webhook on PDF failure
+      }
+
       // Send payment receipt email
       const { sendPaymentReceipt } = await import('@/lib/email/sendgrid');
 
@@ -221,7 +245,8 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         ],
         subtotal: booking.totalPrice,
         totalAmount: booking.totalPrice,
-        receiptUrl: undefined, // Receipt URL would be available from charge.succeeded event if needed
+        receiptUrl, // Include receipt URL if available (E4-S8)
+        pdfAttachment: pdfBuffer, // Include PDF attachment if available (E4-S8)
       });
 
       // Send booking confirmation email

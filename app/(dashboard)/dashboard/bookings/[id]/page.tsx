@@ -104,6 +104,8 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
           status: true,
           createdAt: true,
           stripePaymentIntentId: true,
+          receiptNumber: true,
+          receiptUrl: true,
         },
         orderBy: {
           createdAt: 'desc',
@@ -377,9 +379,9 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                   {booking.payments.map((payment) => (
                     <div
                       key={payment.id}
-                      className="flex items-center justify-between py-3 border-b last:border-0"
+                      className="flex items-start justify-between py-3 border-b last:border-0"
                     >
-                      <div>
+                      <div className="flex-1">
                         <p className="font-semibold">
                           ${(payment.amount / 100).toLocaleString()}
                         </p>
@@ -392,10 +394,24 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                             minute: '2-digit',
                           })}
                         </p>
+                        {payment.receiptNumber && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Receipt: {payment.receiptNumber}
+                          </p>
+                        )}
                       </div>
-                      <Badge variant={payment.status === 'SUCCEEDED' ? 'default' : 'secondary'}>
-                        {payment.status}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={payment.status === 'SUCCEEDED' ? 'default' : 'secondary'}>
+                          {payment.status}
+                        </Badge>
+                        {payment.status === 'SUCCEEDED' && payment.receiptUrl && (
+                          <Link href={`/api/receipts/${payment.id}/download`} target="_blank">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

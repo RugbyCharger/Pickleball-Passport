@@ -1139,4 +1139,181 @@ export const adminRouter = router({
       };
     }),
   }),
+
+  // ============================================================================
+  // REFUND PROCESSING - E4-S9
+  // ============================================================================
+
+  /**
+   * Process a refund for a payment
+   * Handles both full and partial refunds through Stripe API
+   */
+  processRefund: adminProcedure
+    .input(
+      z.object({
+        paymentId: z.string(),
+        amount: z.number().int().positive().optional(), // Optional for partial refunds (in cents)
+        reason: z.enum([
+          'REQUESTED_BY_CUSTOMER',
+          'DUPLICATE',
+          'FRAUDULENT',
+          'EVENT_CANCELLED',
+          'OTHER',
+        ]),
+        notes: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { paymentId, amount, reason, notes } = input;
+
+      // 1. Fetch payment with booking details
+      const payment = await ctx.db.payment.findUnique({
+        where: { id: paymentId },
+        include: {
+          booking: {
+            include: {
+              trip: true,
+              user: true,
+              package: true,
+            },
+          },
+        },
+      });
+
+      if (!payment) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Payment not found',
+        });
+      }
+
+      // 2. Validate payment status
+      if (payment.status !== 'SUCCEEDED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Can only refund successful payments',
+        });
+      }
+
+      // 3. Calculate refund amount
+      const refundAmount = amount || payment.amount; // Full refund if amount not specified
+      const isFullRefund = refundAmount >= payment.amount;
+
+      // 4. Validate refund amount
+      const alreadyRefunded = payment.refundedAmount || 0;
+      const remainingAmount = payment.amount - alreadyRefunded;
+
+      if (refundAmount > remainingAmount) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Refund amount ($${refundAmount / 100}) exceeds remaining amount ($${remainingAmount / 100})`,
+        });
+      }
+
+      // 5. Process refund through Stripe
+      let stripeRefund;
+      try {
+        const stripe = (await import('stripe')).default;
+        const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
+          apiVersion: '2025-12-15.clover',
+        });
+
+        stripeRefund = await stripeClient.refunds.create({
+          payment_intent: payment.stripePaymentIntentId as string,
+          amount: refundAmount,
+          reason: reason === 'REQUESTED_BY_CUSTOMER' ? 'requested_by_customer' : 'requested_by_customer',
+          metadata: {
+            bookingId: payment.bookingId,
+            adminUserId: ctx.user?.id || 'unknown',
+            adminNotes: notes || '',
+          },
+        });
+      } catch (error) {
+        console.error('Stripe refund error:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to process refund through Stripe',
+        });
+      }
+
+      // 6. Update database atomically
+      const result = await ctx.db.$transaction(async (tx) => {
+        // Update payment record
+        const updatedPayment = await tx.payment.update({
+          where: { id: payment.id },
+          data: {
+            refundedAmount: alreadyRefunded + refundAmount,
+            status: isFullRefund ? 'REFUNDED' : 'SUCCEEDED',
+            stripeRefundId: stripeRefund.id,
+          },
+        });
+
+        // Create refund log for audit trail
+        const refundLog = await tx.refundLog.create({
+          data: {
+            paymentId: payment.id,
+            amount: refundAmount,
+            stripeRefundId: stripeRefund.id,
+            reason,
+            notes,
+            processedBy: ctx.user?.id || 'unknown',
+          },
+        });
+
+        // If full refund, update booking status and trip capacity
+        if (isFullRefund && payment.booking.status === 'CONFIRMED') {
+          await tx.booking.update({
+            where: { id: payment.bookingId },
+            data: { status: 'CANCELLED' },
+          });
+
+          // Decrement trip capacity if booking has a trip
+          if (payment.booking.tripId) {
+            await tx.trip.update({
+              where: { id: payment.booking.tripId },
+              data: {
+                currentBookings: {
+                  decrement: 1,
+                },
+              },
+            });
+          }
+        }
+
+        return { updatedPayment, refundLog };
+      });
+
+      // 7. Send refund confirmation email (non-blocking)
+      try {
+        const { sendRefundConfirmation } = await import('@/lib/email/sendgrid');
+
+        await sendRefundConfirmation(payment.booking.user.email, {
+          firstName: payment.booking.user.email.split('@')[0], // Fallback
+          email: payment.booking.user.email,
+          bookingReference: payment.booking.bookingReference,
+          packageName: payment.booking.package.name,
+          refundAmount,
+          originalAmount: payment.amount,
+          isPartialRefund: !isFullRefund,
+          refundDate: new Date().toISOString(),
+          expectedTimeline: '5-10 business days',
+        });
+      } catch (emailError) {
+        console.error('Failed to send refund confirmation email:', emailError);
+        // Don't throw - email failure shouldn't block refund
+      }
+
+      console.log(
+        `Refund processed by admin ${ctx.user?.id || 'unknown'}: $${refundAmount / 100} for payment ${payment.id} (${isFullRefund ? 'full' : 'partial'})`
+      );
+
+      return {
+        success: true,
+        refundId: stripeRefund.id,
+        refundAmount,
+        isFullRefund,
+        payment: result.updatedPayment,
+        refundLog: result.refundLog,
+      };
+    }),
 });

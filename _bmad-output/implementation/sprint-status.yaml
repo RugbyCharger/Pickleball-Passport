@@ -100,8 +100,8 @@ development_status:
   4-5-payment-failure-handling: done
   4-6-installment-payment-plans: backlog
   4-7-scheduled-payment-processing: backlog
-  4-8-receipt-generation: backlog
-  4-9-refund-processing: backlog
+  4-8-receipt-generation: ready-for-dev
+  4-9-refund-processing: ready-for-dev
   4-10-payment-history-view: backlog
   4-11-multi-currency-support: backlog
   4-12-stripe-connect-partner-payouts: backlog

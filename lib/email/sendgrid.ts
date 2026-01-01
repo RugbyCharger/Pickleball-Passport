@@ -41,6 +41,12 @@ export interface SendEmailOptions {
   text?: string;
   from?: string;
   replyTo?: string;
+  attachments?: Array<{
+    content: string; // Base64 encoded content
+    filename: string;
+    type: string; // MIME type
+    disposition?: string; // 'attachment' or 'inline'
+  }>;
 }
 
 /**
@@ -56,6 +62,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
     html: options.html,
     text: options.text || '', // SendGrid requires text field
     replyTo: options.replyTo,
+    attachments: options.attachments,
   };
 
   try {
@@ -127,16 +134,31 @@ export async function sendBookingConfirmation(
  */
 export async function sendPaymentReceipt(
   to: string,
-  data: import('./templates/payment-receipt').PaymentReceiptData
+  data: import('./templates/payment-receipt').PaymentReceiptData & {
+    pdfAttachment?: Buffer; // Optional PDF receipt attachment (E4-S8)
+  }
 ): Promise<void> {
   const { generatePaymentReceiptEmail } = await import('./templates/payment-receipt');
   const { html, text, subject } = generatePaymentReceiptEmail(data);
+
+  // Prepare attachments if PDF buffer is provided
+  const attachments = data.pdfAttachment
+    ? [
+        {
+          content: data.pdfAttachment.toString('base64'),
+          filename: `${data.receiptNumber}.pdf`,
+          type: 'application/pdf',
+          disposition: 'attachment',
+        },
+      ]
+    : undefined;
 
   await sendEmail({
     to,
     subject,
     html,
     text,
+    attachments,
   });
 }
 

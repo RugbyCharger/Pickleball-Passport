@@ -393,11 +393,18 @@ model Payment {
 
   // Metadata
   failureReason String? // Error message if payment failed
-  receiptUrl    String?
 
-  // Refund Tracking
+  // Receipt Generation (E4-S8)
+  receiptUrl         String?   // Supabase Storage URL
+  receiptNumber      String?   @unique // Format: RCPT-YYYYMMDD-XXXXX
+  receiptGeneratedAt DateTime? // When PDF was generated
+
+  // Refund Tracking (E4-S4, E4-S9)
   refundedAmount Int?    // Amount refunded in cents
   stripeRefundId String? // Stripe refund ID (re_...)
+
+  // Relations
+  refundLogs RefundLog[] // Detailed refund history (E4-S9)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -640,4 +647,24 @@ model WebhookEvent {
   @@index([stripeEventId])
   @@index([type])
   @@index([createdAt])
+}
+
+// ============================================================================
+// REFUND TRACKING (E4-S9)
+// ============================================================================
+
+model RefundLog {
+  id             String   @id @default(cuid())
+  paymentId      String
+  payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  amount         Int      // Refund amount in cents
+  stripeRefundId String   @unique // Stripe refund ID (re_...)
+  reason         String   // RefundReason enum value
+  notes          String?  // Admin notes (optional)
+  processedBy    String   // Admin user ID (Clerk ID)
+  processedAt    DateTime @default(now())
+
+  @@index([paymentId])
+  @@index([stripeRefundId])
+  @@index([processedAt])
 }
