@@ -12,6 +12,7 @@ const navigation = [
   { name: 'Packages', href: '/packages' },
   { name: 'How It Works', href: '/how-it-works' },
   { name: 'Testimonials', href: '/testimonials' },
+  { name: 'Trust & Safety', href: '/trust-and-safety' },
   { name: 'Apply', href: '/apply' },
 ];
 
