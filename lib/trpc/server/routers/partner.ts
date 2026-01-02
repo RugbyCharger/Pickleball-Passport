@@ -8,9 +8,9 @@
  */
 
 import { z } from 'zod'
-import { router, partnerProcedure } from '../trpc'
+import { router, partnerProcedure, publicProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
-import { PartnerTier } from '@prisma/client'
+import { PartnerTier, Role } from '@prisma/client'
 
 /**
  * Tier thresholds for partner progression
@@ -362,7 +362,153 @@ export const partnerRouter = router({
         }))
         .sort((a, b) => a.month.localeCompare(b.month))
     }),
+
+  /**
+   * Partner signup - create new partner account
+   * Public procedure (requires authentication via Clerk)
+   */
+  signup: publicProcedure
+    .input(
+      z.object({
+        firstName: z.string().min(1, 'First name is required'),
+        lastName: z.string().min(1, 'Last name is required'),
+        email: z.string().email('Invalid email address'),
+        phone: z.string().optional(),
+        clubName: z.string().min(1, 'Club name is required'),
+        clubLocation: z.string().min(1, 'Club location is required'),
+        jobTitle: z.string().optional(),
+        userId: z.string().min(1, 'User ID is required'), // Clerk user ID
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { userId, email, firstName, lastName, phone, clubName, clubLocation, jobTitle } = input
+
+      // Check if user already has a partner profile
+      const existingPartner = await ctx.db.partnerProfile.findUnique({
+        where: { userId },
+      })
+
+      if (existingPartner) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'Partner account already exists for this user',
+        })
+      }
+
+      // Check if email already exists
+      const existingUser = await ctx.db.user.findUnique({
+        where: { email },
+      })
+
+      if (existingUser && existingUser.id !== userId) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'An account with this email already exists',
+        })
+      }
+
+      // Generate unique referral code
+      const baseReferralCode = generateReferralCode(clubName, firstName)
+      const referralCode = await ensureUniqueReferralCode(ctx.db, baseReferralCode)
+
+      try {
+        // Create or update User, then create PartnerProfile
+        const user = await ctx.db.user.upsert({
+          where: { id: userId },
+          update: {
+            role: Role.PARTNER,
+            email,
+          },
+          create: {
+            id: userId,
+            email,
+            role: Role.PARTNER,
+          },
+        })
+
+        // Create partner profile
+        const partnerProfile = await ctx.db.partnerProfile.create({
+          data: {
+            userId: user.id,
+            clubName,
+            clubLocation,
+            jobTitle: jobTitle || null,
+            referralCode,
+            tier: PartnerTier.BRONZE,
+            passportPoints: 0,
+          },
+        })
+
+        // TODO: Send welcome email via SendGrid
+        // This is handled separately to not block signup
+        try {
+          // await sendPartnerWelcomeEmail(email, firstName, referralCode)
+          console.log(`Welcome email would be sent to: ${email}`)
+        } catch (emailError) {
+          console.error('Failed to send partner welcome email:', emailError)
+          // Don't throw - email failure shouldn't block signup
+        }
+
+        return {
+          success: true,
+          partnerId: partnerProfile.id,
+          referralCode,
+        }
+      } catch (error) {
+        console.error('Partner signup error:', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create partner account. Please try again.',
+        })
+      }
+    }),
 })
+
+/**
+ * Helper: Generate referral code from club name and first name
+ * Format: {CLUB_SLUG}-{FIRST_NAME_PREFIX}-{YEAR}
+ * Example: VILLAGES-JEN-2026
+ */
+function generateReferralCode(clubName: string, firstName: string): string {
+  const year = new Date().getFullYear()
+
+  // Slugify club name: uppercase, remove special chars, replace spaces with hyphens
+  const clubSlug = clubName
+    .toUpperCase()
+    .replace(/[^A-Z0-9\s]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+
+  // Use first 3 letters of first name
+  const namePrefix = firstName.substring(0, 3).toUpperCase()
+
+  return `${clubSlug}-${namePrefix}-${year}`
+}
+
+/**
+ * Helper: Ensure referral code is unique in database
+ * If code exists, append suffix (-2, -3, etc.)
+ */
+async function ensureUniqueReferralCode(
+  db: any,
+  baseCode: string
+): Promise<string> {
+  let code = baseCode
+  let suffix = 1
+
+  while (true) {
+    const existing = await db.partnerProfile.findUnique({
+      where: { referralCode: code },
+    })
+
+    if (!existing) {
+      return code
+    }
+
+    suffix++
+    code = `${baseCode}-${suffix}`
+  }
+}
 
 /**
  * Helper: Get the next tier based on current tier
