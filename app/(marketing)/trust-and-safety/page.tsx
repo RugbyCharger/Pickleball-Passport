@@ -17,14 +17,42 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Trust & Safety | Pickleball Passport',
+  title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
   description:
-    'Learn about our safety standards, hospital accreditations, travel insurance, and policies for your transformation tourism experience in Thailand.',
+    'Learn about our safety standards, JCI-accredited hospitals, comprehensive travel insurance, and transparent policies for your transformation tourism experience in Thailand.',
+  keywords: ['travel insurance', 'medical tourism safety', 'JCI accreditation', 'Thailand hospital credentials', 'medical tourism insurance', 'safe medical tourism'],
   openGraph: {
-    title: 'Trust & Safety | Pickleball Passport',
+    title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
     description:
-      'World-class medical care, comprehensive insurance, 24/7 support.',
-    images: ['/images/trust-safety-og.jpg'],
+      'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
+    url: 'https://pickleballpassport.com/trust-and-safety',
+    siteName: 'Pickleball Passport',
+    images: [
+      {
+        url: '/og-images/trust-safety.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Trust & Safety - Pickleball Passport Medical Tourism',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
+    description:
+      'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
+    images: ['/og-images/trust-safety.jpg'],
+    site: '@PickleballPass',
+    creator: '@PickleballPass',
+  },
+  alternates: {
+    canonical: 'https://pickleballpassport.com/trust-and-safety',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

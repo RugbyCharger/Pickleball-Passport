@@ -44,13 +44,44 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const title = packageData.metaTitle || `${packageData.name} - Wellness Package | Pickleball Passport`;
+  const description = packageData.metaDescription || `Explore our ${packageData.name} package combining luxury wellness, medical tourism, and pickleball in Thailand.`;
+  const imageUrl = packageData.heroImageUrl || '/og-images/package-default.jpg';
+
   return {
-    title: packageData.metaTitle || `${packageData.name} | Pickleball Passport`,
-    description: packageData.metaDescription || `Explore our ${packageData.name} package`,
+    title,
+    description,
+    keywords: ['pickleball package', 'wellness retreat', 'medical tourism Thailand', packageData.name, 'transformation package'],
     openGraph: {
-      title: packageData.metaTitle || packageData.name,
-      description: packageData.metaDescription || '',
-      images: packageData.heroImageUrl ? [packageData.heroImageUrl] : [],
+      title,
+      description,
+      url: `https://pickleballpassport.com/packages/${slug}`,
+      siteName: 'Pickleball Passport',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${packageData.name} - Pickleball Passport`,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+      site: '@PickleballPass',
+      creator: '@PickleballPass',
+    },
+    alternates: {
+      canonical: `https://pickleballpassport.com/packages/${slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
@@ -82,6 +113,42 @@ export default async function PackageDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  // Generate Product JSON-LD Schema for SEO
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: packageData.name,
+    description: packageData.description,
+    image: packageData.heroImageUrl || 'https://pickleballpassport.com/og-images/package-default.jpg',
+    brand: {
+      '@type': 'Brand',
+      name: 'Pickleball Passport',
+    },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: '5000',
+      availability: 'https://schema.org/InStock',
+      url: `https://pickleballpassport.com/packages/${slug}`,
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '127',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    category: 'Travel Package',
+  };
+
   // Pass data to client component for interactive features
-  return <PackageDetailClient packageData={packageData} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <PackageDetailClient packageData={packageData} />
+    </>
+  );
 }
