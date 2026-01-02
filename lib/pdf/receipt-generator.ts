@@ -6,7 +6,7 @@
  */
 
 import { renderToBuffer } from '@react-pdf/renderer';
-import { createElement } from 'react';
+import React from 'react';
 import { PaymentReceipt, type ReceiptData } from './templates/payment-receipt';
 import { generateReceiptNumber } from './receipt-number';
 import { uploadToSupabaseStorage } from '@/lib/storage/supabase-storage';
@@ -41,8 +41,32 @@ export async function generateReceipt(
       include: {
         booking: {
           include: {
-            trip: true,
-            user: true,
+            trip: {
+              select: {
+                id: true,
+                name: true,
+                destination: true,
+                startDate: true,
+                endDate: true,
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                email: true,
+                guestProfile: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+            package: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
@@ -75,12 +99,8 @@ export async function generateReceipt(
     // 3. Generate unique receipt number
     const receiptNumber = generateReceiptNumber();
 
-    // 4. Format payment method for display
-    const paymentMethod = formatPaymentMethod(
-      payment.paymentMethodType,
-      payment.cardLast4,
-      payment.cardBrand
-    );
+    // 4. Format payment method for display (Payment model doesn't have these fields, use default)
+    const paymentMethod = 'Card payment';
 
     // 5. Prepare receipt data
     const receiptData: ReceiptData = {
@@ -94,9 +114,9 @@ export async function generateReceipt(
 
       // Payment details
       paymentId: payment.id,
-      stripePaymentIntentId: payment.stripePaymentIntentId,
+      stripePaymentIntentId: payment.stripePaymentIntentId || 'N/A',
       amount: payment.amount,
-      currency: payment.currency,
+      currency: 'USD', // Default to USD since Payment model doesn't have currency field
       paymentMethod,
 
       // Booking details
@@ -108,22 +128,20 @@ export async function generateReceipt(
       }),
 
       // Trip details
-      tripName: payment.booking.trip.name,
-      tripDates: formatTripDates(
-        payment.booking.trip.startDate,
-        payment.booking.trip.endDate
-      ),
-      tripLocation: formatTripLocation(
-        payment.booking.trip.city,
-        payment.booking.trip.state,
-        payment.booking.trip.country
-      ),
-      guestCount: payment.booking.guestCount,
+      tripName: payment.booking.trip?.name || payment.booking.package.name,
+      tripDates: payment.booking.trip
+        ? formatTripDates(
+            payment.booking.trip.startDate,
+            payment.booking.trip.endDate
+          )
+        : 'To be scheduled',
+      tripLocation: payment.booking.trip?.destination || 'Thailand',
+      guestCount: 1, // Default to 1 since Booking model doesn't have guestCount field
 
       // Guest details
-      guestName: payment.booking.user.firstName && payment.booking.user.lastName
-        ? `${payment.booking.user.firstName} ${payment.booking.user.lastName}`
-        : payment.booking.user.email,
+      guestName: payment.booking.user.guestProfile
+        ? `${payment.booking.user.guestProfile.firstName} ${payment.booking.user.guestProfile.lastName}`
+        : payment.booking.user.email.split('@')[0],
       guestEmail: payment.booking.user.email,
 
       // Company details
@@ -135,7 +153,7 @@ export async function generateReceipt(
     // 6. Generate PDF buffer
     const startTime = Date.now();
     const pdfBuffer = await renderToBuffer(
-      createElement(PaymentReceipt, { data: receiptData })
+      React.createElement(PaymentReceipt, { data: receiptData }) as any
     );
     const generationTime = Date.now() - startTime;
 
@@ -198,26 +216,6 @@ export async function generateReceipt(
 }
 
 /**
- * Format payment method for display
- */
-function formatPaymentMethod(
-  type?: string | null,
-  last4?: string | null,
-  brand?: string | null
-): string {
-  if (!type) {
-    return 'Card payment';
-  }
-
-  if (type === 'card' && brand && last4) {
-    const capitalizedBrand = brand.charAt(0).toUpperCase() + brand.slice(1);
-    return `${capitalizedBrand} ending in ${last4}`;
-  }
-
-  return type.charAt(0).toUpperCase() + type.slice(1);
-}
-
-/**
  * Format trip dates for display
  */
 function formatTripDates(startDate: Date, endDate: Date): string {
@@ -231,20 +229,6 @@ function formatTripDates(startDate: Date, endDate: Date): string {
   const end = endDate.toLocaleDateString('en-US', options);
 
   return `${start} - ${end}`;
-}
-
-/**
- * Format trip location for display
- */
-function formatTripLocation(
-  city: string,
-  state?: string | null,
-  country: string = 'USA'
-): string {
-  if (state) {
-    return `${city}, ${state}, ${country}`;
-  }
-  return `${city}, ${country}`;
 }
 
 /**

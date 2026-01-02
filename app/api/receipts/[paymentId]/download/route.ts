@@ -57,8 +57,9 @@ export async function GET(
     }
 
     // 5. Verify ownership (user owns the booking OR user is admin)
+    // Note: User.id in the schema IS the Clerk ID
     const userRecord = await db.user.findUnique({
-      where: { clerkId: userId },
+      where: { id: userId },
     });
 
     if (!userRecord) {
