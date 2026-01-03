@@ -104,6 +104,13 @@ enum PickleballSkillLevel {
   ADVANCED
 }
 
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -667,4 +674,25 @@ model RefundLog {
   @@index([paymentId])
   @@index([stripeRefundId])
   @@index([processedAt])
+}
+
+// ============================================================================
+// NEWSLETTER SUBSCRIBERS (E1-S11)
+// ============================================================================
+
+model NewsletterSubscriber {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  firstName      String?          // Optional for single-opt-in
+  status         SubscriberStatus @default(PENDING)
+  confirmToken   String?          @unique // For double opt-in confirmation
+  confirmedAt    DateTime?        // When user confirmed subscription
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([confirmToken])
 }

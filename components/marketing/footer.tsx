@@ -1,5 +1,17 @@
+'use client';
+
+/**
+ * Footer Component
+ *
+ * Global footer with navigation and newsletter signup (E1-S14, E1-S11)
+ */
+
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { useState } from 'react';
+import { trpc } from '@/lib/trpc/client';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 const navigation = {
   explore: [
@@ -40,12 +52,99 @@ const navigation = {
   ],
 };
 
+const emailSchema = z.string().email('Please enter a valid email address');
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setEmail('');
+      setEmailError('');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setEmailError(error.message);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError('');
+
+    // Validate email
+    const result = emailSchema.safeParse(email);
+    if (!result.success) {
+      const error = result.error.issues[0]?.message || 'Invalid email';
+      setEmailError(error);
+      toast.error(error);
+      return;
+    }
+
+    // Submit
+    subscribeMutation.mutate({ email });
+  };
 
   return (
-    <footer className="bg-slate-900 text-slate-300">
+    <footer className="bg-slate-900 text-slate-300" id="newsletter">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Newsletter Section */}
+        <div className="mb-12 pb-12 border-b border-slate-800">
+          <div className="max-w-2xl mx-auto text-center">
+            <h3 className="text-2xl font-bold text-white mb-2">
+              Stay in the Loop 📬
+            </h3>
+            <p className="text-slate-400 mb-6">
+              Get exclusive offers, wellness tips, and pickleball adventures delivered to your inbox.
+            </p>
+
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <div className="flex-1">
+                <label htmlFor="newsletter-email" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError('');
+                  }}
+                  placeholder="Enter your email"
+                  className={`w-full px-4 py-3 rounded-lg bg-slate-800 border ${
+                    emailError
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : 'border-slate-700 focus:border-emerald-500 focus:ring-emerald-500'
+                  } text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition`}
+                  disabled={subscribeMutation.isPending}
+                  aria-invalid={!!emailError}
+                  aria-describedby={emailError ? 'newsletter-error' : undefined}
+                />
+                {emailError && (
+                  <p id="newsletter-error" className="mt-2 text-sm text-red-400 text-left">
+                    {emailError}
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                disabled={subscribeMutation.isPending}
+                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                {subscribeMutation.isPending ? 'Subscribing...' : 'Subscribe'}
+              </button>
+            </form>
+
+            <p className="mt-4 text-xs text-slate-500">
+              By subscribing, you agree to receive marketing emails from Pickleball Passport. Unsubscribe anytime.
+            </p>
+          </div>
+        </div>
+
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Section */}
