@@ -4,6 +4,7 @@
  * App Providers
  *
  * This file wraps the app with all necessary providers:
+ * - Google reCAPTCHA v3 (spam protection)
  * - React Query (for tRPC and data fetching)
  * - tRPC client
  * - Toaster (for toast notifications)
@@ -15,6 +16,7 @@ import { useState } from 'react'
 import { trpc } from '@/lib/trpc/client'
 import superjson from 'superjson'
 import { Toaster } from 'sonner'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') return '' // browser should use relative url
@@ -48,11 +50,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <Toaster position="top-right" richColors />
-        {children}
-      </QueryClientProvider>
-    </trpc.Provider>
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''}
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: 'head',
+      }}
+    >
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <Toaster position="top-right" richColors />
+          {children}
+        </QueryClientProvider>
+      </trpc.Provider>
+    </GoogleReCaptchaProvider>
   )
 }

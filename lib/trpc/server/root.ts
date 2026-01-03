@@ -22,6 +22,7 @@ import { analyticsRouter } from './routers/analytics'
 import { reminderRouter } from './routers/reminder'
 import { tripRouter } from './routers/trip'
 import { newsletterRouter } from './routers/newsletter'
+import { contactRouter } from './routers/contact'
 
 export const appRouter = router({
   user: userRouter,
@@ -40,6 +41,7 @@ export const appRouter = router({
   reminder: reminderRouter,
   trip: tripRouter,
   newsletter: newsletterRouter,
+  contact: contactRouter,
   // Future routers will be added here:
   // payment: paymentRouter,
 })
