@@ -127,7 +127,7 @@ export default function ConfirmClient({ token }: ConfirmClientProps) {
           </svg>
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Subscription Confirmed! 🎉
+          Subscription Confirmed!
         </h1>
         <p className="text-gray-600 mb-6">{message}</p>
         <p className="text-sm text-gray-500 mb-6">

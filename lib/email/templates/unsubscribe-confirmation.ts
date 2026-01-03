@@ -42,13 +42,14 @@ export function unsubscribeConfirmationEmail(email: string): {
     </p>
   `;
 
+  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
   const footerText = `This email confirms your unsubscribe request from Pickleball Passport marketing emails.`;
 
   const html = baseEmailTemplate({
     title: 'Unsubscribe Confirmation',
     content,
     preheader: 'You have been unsubscribed from Pickleball Passport updates',
-    footerText,
+    footerText: `${footerText}<br><br><a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>`,
   });
 
   const text = `

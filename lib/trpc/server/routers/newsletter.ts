@@ -17,6 +17,11 @@ import crypto from 'crypto';
 export const newsletterRouter = router({
   /**
    * Subscribe to newsletter (double opt-in)
+   *
+   * TODO: Add rate limiting to prevent abuse (recommend: 5 requests/minute per IP using Upstash Redis)
+   * - Without rate limiting, attackers can spam database with PENDING subscriptions
+   * - Can exhaust SendGrid quota causing service disruption
+   * - Reference: Story E1-S11 Code Review Issue MEDIUM-4
    */
   subscribe: publicProcedure
     .input(
@@ -88,6 +93,9 @@ export const newsletterRouter = router({
           message: 'Thanks for subscribing! Check your inbox to confirm.',
         };
       } catch (error) {
+        // TODO: Add structured logging (Sentry/LogRocket) for production monitoring
+        // Current console.error does not persist to database or monitoring system
+        // Reference: Story E1-S11 Code Review Issue MEDIUM-5
         console.error('Failed to send confirmation email:', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -116,6 +124,17 @@ export const newsletterRouter = router({
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Invalid or expired confirmation link.',
+        });
+      }
+
+      // Check token expiration (7 days = 604800000 milliseconds)
+      const TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+      const tokenAge = Date.now() - subscriber.subscribedAt.getTime();
+
+      if (tokenAge > TOKEN_EXPIRY_MS) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Confirmation link has expired. Please subscribe again.',
         });
       }
 
@@ -188,13 +207,19 @@ export const newsletterRouter = router({
         });
       }
 
+      // Build where conditions dynamically to avoid empty OR clause
+      const whereConditions = [];
+      if (input.email) {
+        whereConditions.push({ email: input.email.toLowerCase().trim() });
+      }
+      if (input.token) {
+        whereConditions.push({ confirmToken: input.token });
+      }
+
       // Find subscriber
       const subscriber = await prisma.newsletterSubscriber.findFirst({
         where: {
-          OR: [
-            input.email ? { email: input.email.toLowerCase().trim() } : {},
-            input.token ? { confirmToken: input.token } : {},
-          ],
+          OR: whereConditions,
         },
       });
 

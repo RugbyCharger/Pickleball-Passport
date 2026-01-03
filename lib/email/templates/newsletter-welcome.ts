@@ -15,7 +15,7 @@ export function newsletterWelcomeEmail(email: string): {
   const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
 
   const content = `
-    <h1>Welcome to Pickleball Passport! 🏓</h1>
+    <h1>Welcome to Pickleball Passport!</h1>
     <p>You're officially part of our community! Thanks for confirming your subscription.</p>
 
     <h2 style="font-size: 20px; color: #111827; margin: 24px 0 12px 0;">What to Expect</h2>
@@ -47,7 +47,7 @@ export function newsletterWelcomeEmail(email: string): {
   });
 
   const text = `
-Welcome to Pickleball Passport! 🏓
+Welcome to Pickleball Passport!
 
 You're officially part of our community! Thanks for confirming your subscription.
 

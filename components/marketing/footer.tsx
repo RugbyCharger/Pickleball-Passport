@@ -95,7 +95,7 @@ export function Footer() {
         <div className="mb-12 pb-12 border-b border-slate-800">
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-2xl font-bold text-white mb-2">
-              Stay in the Loop 📬
+              Stay in the Loop
             </h3>
             <p className="text-slate-400 mb-6">
               Get exclusive offers, wellness tips, and pickleball adventures delivered to your inbox.
@@ -125,7 +125,7 @@ export function Footer() {
                   aria-describedby={emailError ? 'newsletter-error' : undefined}
                 />
                 {emailError && (
-                  <p id="newsletter-error" className="mt-2 text-sm text-red-400 text-left">
+                  <p id="newsletter-error" className="mt-2 text-sm text-red-400 text-left" aria-live="polite">
                     {emailError}
                   </p>
                 )}
