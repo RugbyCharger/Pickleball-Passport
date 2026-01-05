@@ -58,10 +58,23 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if event already processed (idempotency)
-    const alreadyProcessed = await checkEventProcessed(event.id);
-    if (alreadyProcessed) {
-      console.log(`Event ${event.id} (${event.type}) already processed, skipping`);
-      return NextResponse.json({ received: true, status: 'already_processed' });
+    // We try to create the event record first. If it fails due to uniqueness constraint,
+    // it means it's already being processed or has been processed.
+    try {
+      await prisma.webhookEvent.create({
+        data: {
+          stripeEventId: event.id,
+          type: event.type,
+          processed: false,
+        },
+      });
+    } catch (error: any) {
+      // P2002: Unique constraint failed
+      if (error.code === 'P2002') {
+        console.log(`Event ${event.id} (${event.type}) already processed/processing, skipping`);
+        return NextResponse.json({ received: true, status: 'already_processed' });
+      }
+      throw error;
     }
 
     // Handle the event based on type
@@ -95,7 +108,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Mark event as processed
-    await markEventProcessed(event.id, event.type);
+    await prisma.webhookEvent.update({
+      where: { stripeEventId: event.id },
+      data: { processed: true },
+    });
 
     const duration = Date.now() - startTime;
     console.log(`Event ${event.id} (${event.type}) processed successfully in ${duration}ms`);
@@ -178,9 +194,23 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
 
     // Update booking status if fully paid
     if (isFullyPaid) {
-      await prisma.booking.update({
-        where: { id: bookingId },
-        data: { status: 'CONFIRMED' },
+      await prisma.$transaction(async (tx) => {
+        await tx.booking.update({
+          where: { id: bookingId },
+          data: { status: 'CONFIRMED' },
+        });
+
+        // Increment trip capacity
+        if (booking.tripId) {
+          await tx.trip.update({
+            where: { id: booking.tripId },
+            data: {
+              currentBookings: {
+                increment: 1,
+              },
+            },
+          });
+        }
       });
 
       // Award partner points if booking was referred
@@ -395,33 +425,6 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
   } catch (error) {
     console.error('Error awarding partner points:', error);
   }
-}
-
-/**
- * Check if webhook event has already been processed (idempotency)
- */
-async function checkEventProcessed(eventId: string): Promise<boolean> {
-  const existing = await prisma.webhookEvent.findUnique({
-    where: { stripeEventId: eventId },
-  });
-
-  return existing !== null;
-}
-
-/**
- * Mark webhook event as processed (idempotency)
- */
-async function markEventProcessed(
-  eventId: string,
-  eventType: string
-): Promise<void> {
-  await prisma.webhookEvent.create({
-    data: {
-      stripeEventId: eventId,
-      type: eventType,
-      processed: true,
-    },
-  });
 }
 
 /**
