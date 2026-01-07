@@ -312,6 +312,412 @@ export const bookingRouter = router({
     }),
 
   /**
+   * Create Companion Booking
+   *
+   * Creates linked bookings for primary guest + companion in a single transaction.
+   * This endpoint:
+   * 1. Validates both primary and companion packages/selections
+   * 2. Calculates combined pricing (handles shared accommodation)
+   * 3. Creates a single Stripe payment intent for both bookings
+   * 4. Creates both booking records atomically with proper linkage
+   * 5. Returns client secret for payment
+   */
+  createCompanion: guestProcedure
+    .input(
+      z.object({
+        // Primary guest data
+        primary: z.object({
+          packageId: z.string().cuid(),
+          duration: z.number().refine((d) => [7, 10, 14, 21].includes(d)),
+          accommodationTier: z.enum(['LUXURY', 'ULTRA_LUXURY', 'VILLA']),
+          addOnIds: z.array(z.string().cuid()).default([]),
+          tripId: z.string().cuid().optional(),
+        }),
+        // Companion guest data
+        companion: z.object({
+          firstName: z.string().min(1),
+          lastName: z.string().min(1),
+          email: z.string().email(),
+          phone: z.string().optional(),
+          dateOfBirth: z.string().optional(),
+          passportNumber: z.string().optional(),
+          dietaryNotes: z.string().optional(),
+          packageId: z.string().cuid(),
+          duration: z.number().refine((d) => [7, 10, 14, 21].includes(d)),
+          accommodationTier: z.enum(['LUXURY', 'ULTRA_LUXURY', 'VILLA']),
+          addOnIds: z.array(z.string().cuid()).default([]),
+          shared: z.boolean(), // Shared accommodation flag
+          tripId: z.string().cuid().optional(),
+        }),
+        referralCode: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { primary, companion, referralCode } = input
+
+      // 1. VALIDATION - Primary package
+      const primaryPackage = await ctx.db.package.findUnique({
+        where: { id: primary.packageId, isActive: true },
+        select: { id: true, name: true, basePrice: true, durationOptions: true },
+      })
+
+      if (!primaryPackage) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Primary guest package not found',
+        })
+      }
+
+      if (!primaryPackage.durationOptions.includes(primary.duration)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Primary package does not support ${primary.duration}-day duration`,
+        })
+      }
+
+      // 2. VALIDATION - Companion package
+      const companionPackage = await ctx.db.package.findUnique({
+        where: { id: companion.packageId, isActive: true },
+        select: { id: true, name: true, basePrice: true, durationOptions: true },
+      })
+
+      if (!companionPackage) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Companion package not found',
+        })
+      }
+
+      if (!companionPackage.durationOptions.includes(companion.duration)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Companion package does not support ${companion.duration}-day duration`,
+        })
+      }
+
+      // 3. VALIDATION - Shared accommodation rules
+      if (companion.shared) {
+        if (primary.accommodationTier !== companion.accommodationTier) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Shared accommodation requires same tier for both guests',
+          })
+        }
+        if (primary.duration !== companion.duration) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Shared accommodation requires same duration for both guests',
+          })
+        }
+        if (primary.tripId !== companion.tripId) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Shared accommodation requires same trip for both guests',
+          })
+        }
+      }
+
+      // 4. VALIDATION - Companion email uniqueness
+      const existingUserWithEmail = await ctx.db.user.findUnique({
+        where: { email: companion.email },
+      })
+
+      if (existingUserWithEmail) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Companion email already has an account',
+        })
+      }
+
+      // 5. VALIDATION - Trip capacity (if specified)
+      if (primary.tripId) {
+        const trip = await ctx.db.trip.findUnique({
+          where: { id: primary.tripId },
+          select: { id: true, capacity: true, currentBookings: true, isActive: true },
+        })
+
+        if (!trip || !trip.isActive) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Trip not found or unavailable',
+          })
+        }
+
+        // Check capacity for both guests
+        const requiredCapacity = 2
+        if (trip.currentBookings + requiredCapacity > trip.capacity) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Trip does not have capacity for 2 guests',
+          })
+        }
+      }
+
+      // 6. CALCULATE PRICING - Primary guest
+      const primaryBasePrice = Math.round(primaryPackage.basePrice * (primary.duration / 14))
+      const primaryAccommodationPrice = ACCOMMODATION_TIER_PRICING[primary.accommodationTier] || 0
+
+      let primaryAddOnsTotal = 0
+      if (primary.addOnIds.length > 0) {
+        const primaryAddOns = await ctx.db.addOn.findMany({
+          where: { id: { in: primary.addOnIds }, isActive: true },
+          select: { id: true, thPrice: true },
+        })
+
+        if (primaryAddOns.length !== primary.addOnIds.length) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Some primary guest add-ons are not available',
+          })
+        }
+
+        primaryAddOnsTotal = primaryAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+      }
+
+      const primarySubtotal = primaryBasePrice + primaryAccommodationPrice + primaryAddOnsTotal
+
+      // 7. CALCULATE PRICING - Companion guest
+      const companionBasePrice = Math.round(companionPackage.basePrice * (companion.duration / 14))
+      const companionAccommodationPrice = companion.shared
+        ? 0 // FREE if sharing
+        : (ACCOMMODATION_TIER_PRICING[companion.accommodationTier] || 0)
+
+      let companionAddOnsTotal = 0
+      if (companion.addOnIds.length > 0) {
+        const companionAddOns = await ctx.db.addOn.findMany({
+          where: { id: { in: companion.addOnIds }, isActive: true },
+          select: { id: true, thPrice: true },
+        })
+
+        if (companionAddOns.length !== companion.addOnIds.length) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Some companion add-ons are not available',
+          })
+        }
+
+        companionAddOnsTotal = companionAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+      }
+
+      const companionSubtotal = companionBasePrice + companionAccommodationPrice + companionAddOnsTotal
+
+      // 8. CALCULATE COMBINED TOTAL
+      const combinedSubtotal = primarySubtotal + companionSubtotal
+
+      // 9. APPLY REFERRAL DISCOUNT (if provided)
+      let discount = 0
+      let referredByPartnerId: string | undefined
+
+      if (referralCode) {
+        const partner = await ctx.db.partnerProfile.findUnique({
+          where: { referralCode },
+          select: { id: true, tier: true },
+        })
+
+        if (!partner) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Invalid referral code',
+          })
+        }
+
+        const discountPercentages: Record<string, number> = {
+          BRONZE: 0.05,
+          SILVER: 0.075,
+          GOLD: 0.10,
+          PLATINUM: 0.15,
+        }
+
+        const discountRate = discountPercentages[partner.tier] || 0
+        discount = Math.round(combinedSubtotal * discountRate)
+        referredByPartnerId = partner.id
+      }
+
+      const grandTotal = combinedSubtotal - discount
+
+      // 10. GET USER INFO
+      const user = ctx.user!
+      const guestEmail = user.emailAddresses[0]?.emailAddress || ''
+      const guestName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Guest'
+
+      // 11. CREATE BOTH BOOKINGS IN TRANSACTION
+      const result = await ctx.db.$transaction(async (tx) => {
+        // Generate booking references
+        const primaryReference = generateBookingReference()
+        const companionReference = generateBookingReference()
+
+        // Create primary booking
+        const primaryBooking = await tx.booking.create({
+          data: {
+            bookingReference: primaryReference,
+            userId: user.id,
+            packageId: primary.packageId,
+            tripId: primary.tripId,
+            status: 'PENDING_PAYMENT',
+            duration: primary.duration,
+            accommodationTier: primary.accommodationTier,
+            basePrice: primaryBasePrice,
+            accommodationPrice: primaryAccommodationPrice,
+            addOnsTotal: primaryAddOnsTotal,
+            totalPrice: primarySubtotal,
+            referredBy: referredByPartnerId || null,
+          },
+        })
+
+        // Create companion booking (linked to primary)
+        const companionBooking = await tx.booking.create({
+          data: {
+            bookingReference: companionReference,
+            userId: user.id, // Same user owns both
+            packageId: companion.packageId,
+            tripId: companion.tripId || primary.tripId,
+            status: 'PENDING_PAYMENT',
+            duration: companion.duration,
+            accommodationTier: companion.accommodationTier,
+            basePrice: companionBasePrice,
+            accommodationPrice: companionAccommodationPrice,
+            addOnsTotal: companionAddOnsTotal,
+            totalPrice: companionSubtotal,
+            referredBy: referredByPartnerId || null,
+            isCompanionBooking: true,
+            primaryBookingId: primaryBooking.id,
+            accommodationShared: companion.shared,
+            guestFirstName: companion.firstName,
+            guestLastName: companion.lastName,
+            guestEmail: companion.email,
+            guestPhone: companion.phone,
+            guestDateOfBirth: companion.dateOfBirth,
+            guestPassportNumber: companion.passportNumber,
+            guestDietaryNotes: companion.dietaryNotes,
+          },
+        })
+
+        // Create primary booking add-ons
+        if (primary.addOnIds.length > 0) {
+          const primaryAddOns = await tx.addOn.findMany({
+            where: { id: { in: primary.addOnIds } },
+            select: { id: true, thPrice: true },
+          })
+
+          await tx.bookingAddOn.createMany({
+            data: primaryAddOns.map((addOn) => ({
+              bookingId: primaryBooking.id,
+              addOnId: addOn.id,
+              quantity: 1,
+              price: addOn.thPrice,
+            })),
+          })
+        }
+
+        // Create companion booking add-ons
+        if (companion.addOnIds.length > 0) {
+          const companionAddOns = await tx.addOn.findMany({
+            where: { id: { in: companion.addOnIds } },
+            select: { id: true, thPrice: true },
+          })
+
+          await tx.bookingAddOn.createMany({
+            data: companionAddOns.map((addOn) => ({
+              bookingId: companionBooking.id,
+              addOnId: addOn.id,
+              quantity: 1,
+              price: addOn.thPrice,
+            })),
+          })
+        }
+
+        return { primaryBooking, companionBooking }
+      })
+
+      // 12. CREATE STRIPE PAYMENT INTENT
+      try {
+        const paymentIntent = await createStripePaymentIntent({
+          amount: grandTotal,
+          bookingId: result.primaryBooking.id,
+          guestEmail,
+          guestName,
+          metadata: {
+            type: 'companion_booking',
+            primaryBookingReference: result.primaryBooking.bookingReference,
+            companionBookingReference: result.companionBooking.bookingReference,
+            primaryBookingId: result.primaryBooking.id,
+            companionBookingId: result.companionBooking.id,
+            userId: user.id,
+            companionEmail: companion.email,
+            companionName: `${companion.firstName} ${companion.lastName}`,
+          },
+        })
+
+        // 13. CREATE PAYMENT RECORDS FOR BOTH BOOKINGS
+        await ctx.db.payment.createMany({
+          data: [
+            {
+              bookingId: result.primaryBooking.id,
+              amount: primarySubtotal,
+              status: 'PENDING',
+              stripePaymentIntentId: paymentIntent.paymentIntentId,
+            },
+            {
+              bookingId: result.companionBooking.id,
+              amount: companionSubtotal,
+              status: 'PENDING',
+              stripePaymentIntentId: paymentIntent.paymentIntentId,
+            },
+          ],
+        })
+
+        // 14. CREATE PARTNER REFERRAL RECORD (if applicable)
+        if (referredByPartnerId) {
+          const basePoints = Math.floor(grandTotal / 100000) * 100
+          const pointsEarned = Math.min(Math.max(basePoints, 500), 2000)
+
+          await ctx.db.partnerReferral.create({
+            data: {
+              partnerId: referredByPartnerId,
+              bookingId: result.primaryBooking.id,
+              pointsEarned,
+            },
+          })
+
+          await ctx.db.partnerProfile.update({
+            where: { id: referredByPartnerId },
+            data: {
+              passportPoints: { increment: pointsEarned },
+            },
+          })
+        }
+
+        // 15. RETURN CLIENT SECRET AND BOOKING INFO
+        return {
+          clientSecret: paymentIntent.clientSecret,
+          primaryBookingId: result.primaryBooking.id,
+          companionBookingId: result.companionBooking.id,
+          primaryBookingReference: result.primaryBooking.bookingReference,
+          companionBookingReference: result.companionBooking.bookingReference,
+          primarySubtotal,
+          companionSubtotal,
+          grandTotal,
+          discount,
+        }
+      } catch (error) {
+        // If Stripe payment intent creation fails, delete both bookings
+        await ctx.db.booking.deleteMany({
+          where: {
+            id: {
+              in: [result.primaryBooking.id, result.companionBooking.id],
+            },
+          },
+        })
+
+        console.error('Error creating companion payment intent:', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create payment intent. Please try again.',
+        })
+      }
+    }),
+
+  /**
    * Get Booking by Reference
    *
    * Fetches complete booking details by booking reference for display on confirmation page.

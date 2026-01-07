@@ -324,6 +324,16 @@ model Booking {
   primaryBookingId    String? // References primary booking if this is companion
   accommodationShared Boolean @default(false) // True if sharing room with primary guest
 
+  // Companion Guest Information (E3-S17 Task 9)
+  // These fields store companion's information when isCompanionBooking = true
+  guestFirstName      String? // Companion's first name
+  guestLastName       String? // Companion's last name
+  guestEmail          String? // Companion's email (must be unique from primary)
+  guestPhone          String? // Companion's phone (optional)
+  guestDateOfBirth    String? // Companion's DOB (optional)
+  guestPassportNumber String? // Companion's passport number (optional)
+  guestDietaryNotes   String? // Companion's dietary restrictions/notes (optional)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
