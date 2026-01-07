@@ -269,3 +269,21 @@ export async function sendRefundConfirmation(
     text: `Your refund of $${(data.refundAmount / 100).toFixed(2)} has been processed for booking ${data.bookingReference}. Please allow ${data.expectedTimeline} for the funds to appear in your account.`,
   });
 }
+
+/**
+ * Send booking modification confirmation email (E3-S16)
+ */
+export async function sendBookingModification(
+  to: string,
+  data: import('./templates/booking-modification').BookingModificationData
+): Promise<void> {
+  const { generateBookingModificationEmail } = await import('./templates/booking-modification');
+  const { html, text, subject } = generateBookingModificationEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}

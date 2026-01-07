@@ -31,6 +31,7 @@ import { BookingStatus } from '@prisma/client'
 import { BookingStatusTimeline } from '@/components/bookings/booking-status-timeline'
 import CancelBookingButton from '@/components/booking/cancel-booking-button'
 import RescheduleBookingButton from '@/components/booking/reschedule-booking-button'
+import ModifyBookingButton from '@/components/booking/modify-booking-button'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -188,6 +189,22 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
         <div className="flex flex-col sm:flex-row gap-2">
           {booking.trip && (
             <>
+              <ModifyBookingButton
+                bookingId={booking.id}
+                bookingReference={booking.bookingReference}
+                bookingStatus={booking.status}
+                tripStartDate={booking.trip.startDate}
+                tripAssigned={true}
+                currentAddOns={booking.bookingAddOns.map((ba) => ({
+                  id: ba.addOn.id,
+                  name: ba.addOn.name,
+                  price: ba.price
+                }))}
+                packageName={booking.package.name}
+                duration={booking.duration}
+                accommodationTier={booking.accommodationTier}
+                currentTotal={booking.totalPrice}
+              />
               <RescheduleBookingButton
                 bookingId={booking.id}
                 bookingReference={booking.bookingReference}

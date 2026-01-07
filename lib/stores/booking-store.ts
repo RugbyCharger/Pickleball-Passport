@@ -69,6 +69,14 @@ export interface BookingState {
     clubLocation: string
   } | null
 
+  // Modification Mode (E3-S16)
+  isModificationMode: boolean
+  originalBookingId: string | null
+  originalAddOns: SelectedAddOn[]
+  lockedPackageId: string | null
+  lockedDuration: number | null
+  lockedAccommodationTier: AccommodationTier | null
+
   // Actions
   setCurrentStep: (step: number) => void
   nextStep: () => void
@@ -88,6 +96,17 @@ export interface BookingState {
   setReferralDiscount: (discount: number) => void
   setReferralPartnerId: (partnerId: string | null) => void
   setReferralPartnerInfo: (info: BookingState['referralPartnerInfo']) => void
+
+  // Modification mode actions
+  enterModificationMode: (booking: {
+    bookingId: string
+    packageId: string
+    duration: number
+    accommodationTier: AccommodationTier
+    addOns: SelectedAddOn[]
+  }) => void
+  exitModificationMode: () => void
+  calculatePriceDifference: () => number
 
   // Pricing calculations
   calculateSubtotal: () => number
@@ -119,6 +138,12 @@ const initialState = {
   referralDiscount: 0,
   referralPartnerId: null,
   referralPartnerInfo: null,
+  isModificationMode: false,
+  originalBookingId: null,
+  originalAddOns: [],
+  lockedPackageId: null,
+  lockedDuration: null,
+  lockedAccommodationTier: null,
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -264,13 +289,40 @@ export const useBookingStore = create<BookingState>()(
         }
       },
 
+      // Modification Mode Actions (E3-S16)
+      enterModificationMode: (booking) => set({
+        isModificationMode: true,
+        originalBookingId: booking.bookingId,
+        originalAddOns: booking.addOns,
+        lockedPackageId: booking.packageId,
+        lockedDuration: booking.duration,
+        lockedAccommodationTier: booking.accommodationTier,
+        selectedAddOns: booking.addOns, // Pre-populate current selections
+      }),
+
+      exitModificationMode: () => set({
+        isModificationMode: false,
+        originalBookingId: null,
+        originalAddOns: [],
+        lockedPackageId: null,
+        lockedDuration: null,
+        lockedAccommodationTier: null,
+      }),
+
+      calculatePriceDifference: () => {
+        const state = get()
+        const originalTotal = state.originalAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+        const newTotal = state.selectedAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+        return newTotal - originalTotal
+      },
+
       // Reset to initial state
       reset: () => set(initialState),
     }),
     {
       name: 'booking-storage', // localStorage key
       storage: createJSONStorage(() => localStorage),
-      // Only persist the essential state
+      // Only persist the essential state (DO NOT persist modification mode)
       partialize: (state) => ({
         selectedPackage: state.selectedPackage,
         duration: state.duration,
@@ -282,6 +334,7 @@ export const useBookingStore = create<BookingState>()(
         referralPartnerId: state.referralPartnerId,
         referralPartnerInfo: state.referralPartnerInfo,
         currentStep: state.currentStep,
+        // Modification mode state excluded from persistence
       }),
     }
   )

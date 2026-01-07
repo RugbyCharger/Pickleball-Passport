@@ -35,6 +35,7 @@ interface AddOnCardProps {
   addOn: AddOnData
   isSelected: boolean
   onToggle: (addOn: AddOnData) => void
+  wasOriginallySelected?: boolean // For modification mode visual indicator
 }
 
 // Category display configuration
@@ -104,6 +105,7 @@ export default function AddOnCard({
   addOn,
   isSelected,
   onToggle,
+  wasOriginallySelected = false,
 }: AddOnCardProps) {
   const categoryConfig = CATEGORY_CONFIG[addOn.category]
   const savings = addOn.usPrice - addOn.thPrice
@@ -165,6 +167,11 @@ export default function AddOnCard({
         >
           {categoryConfig.label}
         </span>
+        {wasOriginallySelected && (
+          <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+            Currently Selected
+          </span>
+        )}
       </div>
 
       {/* Name */}

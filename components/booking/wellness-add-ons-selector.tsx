@@ -82,7 +82,13 @@ export default function WellnessAddOnsSelector() {
   )
 
   // Zustand booking store
-  const { selectedAddOns, addAddOn, removeAddOn } = useBookingStore()
+  const {
+    selectedAddOns,
+    addAddOn,
+    removeAddOn,
+    isModificationMode,
+    originalAddOns,
+  } = useBookingStore()
 
   // Fetch add-ons from tRPC
   const { data: addOns, isLoading } = trpc.addOn.getByCategories.useQuery({
@@ -102,6 +108,12 @@ export default function WellnessAddOnsSelector() {
   // Check if add-on is selected
   const isSelected = (addOnId: string) => {
     return selectedAddOns.some((a) => a.id === addOnId)
+  }
+
+  // Check if add-on was originally selected (for modification mode visual indicator)
+  const wasOriginallySelected = (addOnId: string) => {
+    if (!isModificationMode) return false
+    return originalAddOns.some((a) => a.id === addOnId)
   }
 
   // Toggle add-on selection
@@ -280,6 +292,7 @@ export default function WellnessAddOnsSelector() {
                 addOn={addOn}
                 isSelected={isSelected(addOn.id)}
                 onToggle={toggleAddOn}
+                wasOriginallySelected={wasOriginallySelected(addOn.id)}
               />
             ))}
           </div>

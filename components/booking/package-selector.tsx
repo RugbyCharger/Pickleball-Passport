@@ -34,6 +34,10 @@ export default function PackageSelector() {
   const setSelectedPackage = useBookingStore((state) => state.setSelectedPackage)
   const nextStep = useBookingStore((state) => state.nextStep)
 
+  // Modification mode detection (E3-S16)
+  const isModificationMode = useBookingStore((state) => state.isModificationMode)
+  const lockedPackageId = useBookingStore((state) => state.lockedPackageId)
+
   // Handle package selection
   const handleSelectPackage = (pkg: NonNullable<typeof packages>[number]) => {
     setSelectedPackage({
@@ -114,19 +118,34 @@ export default function PackageSelector() {
       <div className="grid gap-6 sm:grid-cols-2">
         {packages.map((pkg) => {
           const isSelected = selectedPackage?.id === pkg.id
+          const isLockedPackage = isModificationMode && pkg.id === lockedPackageId
+          const isDisabled = isModificationMode && pkg.id !== lockedPackageId
 
           return (
             <button
               key={pkg.id}
-              onClick={() => handleSelectPackage(pkg)}
-              className={`group relative overflow-hidden rounded-2xl border-2 bg-white text-left transition-all hover:shadow-xl ${
-                isSelected
+              onClick={() => !isDisabled && handleSelectPackage(pkg)}
+              disabled={isDisabled}
+              className={`group relative overflow-hidden rounded-2xl border-2 bg-white text-left transition-all ${
+                isDisabled
+                  ? 'cursor-not-allowed opacity-50'
+                  : 'hover:shadow-xl'
+              } ${
+                isSelected || isLockedPackage
                   ? 'border-blue-600 shadow-lg ring-4 ring-blue-100'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
+              title={isDisabled ? 'Cannot change package in modification mode' : undefined}
+              aria-label={isDisabled ? 'Package locked - Cannot change package in modification mode' : undefined}
             >
-              {/* Selected Checkmark */}
-              {isSelected && (
+              {/* Selected Checkmark or Locked Badge */}
+              {isLockedPackage && (
+                <div className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-full bg-blue-600 px-3 py-1">
+                  <CheckCircle2 className="h-5 w-5 text-white" />
+                  <span className="text-xs font-semibold text-white">LOCKED</span>
+                </div>
+              )}
+              {isSelected && !isLockedPackage && (
                 <div className="absolute right-4 top-4 z-10 rounded-full bg-blue-600 p-1">
                   <CheckCircle2 className="h-6 w-6 text-white" />
                 </div>

@@ -86,7 +86,7 @@ development_status:
   3-13-booking-cancellation-flow: done
   3-14-booking-rescheduling: done
   3-15-referral-code-application-at-booking: done
-  3-16-booking-modification-change-add-ons: ready-for-dev
+  3-16-booking-modification-change-add-ons: in-progress
   3-17-companion-booking-bring-a-friend-spouse: backlog
   3-18-gift-booking-purchase-for-someone-else: backlog
   epic-3-retrospective: optional

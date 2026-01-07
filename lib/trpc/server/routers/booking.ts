@@ -620,6 +620,75 @@ export const bookingRouter = router({
   }),
 
   /**
+   * Get Booking By ID (E3-S16)
+   *
+   * Fetches a single booking with all related data for modification.
+   * Used by modification loader to initialize modification mode.
+   */
+  getById: guestProcedure
+    .input(z.object({
+      bookingId: z.string().cuid()
+    }))
+    .query(async ({ ctx, input }) => {
+      const user = ctx.user!
+
+      // Fetch booking with all relations needed for modification
+      const booking = await ctx.db.booking.findUnique({
+        where: {
+          id: input.bookingId,
+        },
+        include: {
+          package: {
+            select: {
+              id: true,
+              slug: true,
+              name: true,
+              tagline: true,
+              basePrice: true,
+              heroImageUrl: true,
+            },
+          },
+          trip: {
+            select: {
+              id: true,
+              name: true,
+              destination: true,
+              startDate: true,
+              endDate: true,
+            },
+          },
+          bookingAddOns: {
+            include: {
+              addOn: true,
+            },
+          },
+          payments: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+        },
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        })
+      }
+
+      // Authorization: Verify user owns booking
+      if (booking.userId !== user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Not authorized to access this booking',
+        })
+      }
+
+      return booking
+    }),
+
+  /**
    * Cancel Booking
    *
    * Cancels an existing booking and processes refund according to cancellation policy:
@@ -1074,4 +1143,283 @@ export const bookingRouter = router({
         bookingReference: booking.bookingReference
       }
     }),
+
+  /**
+   * Modify Booking Add-Ons (E3-S16)
+   *
+   * Allows guests to change add-ons (not base package) if >60 days before trip.
+   * Follows same pattern as reschedule mutation for price adjustments.
+   *
+   * Authorization: User must own the booking
+   * Eligibility:
+   * - Booking must be CONFIRMED
+   * - Trip must be assigned
+   * - >60 days before trip start
+   * - Trip must not have started yet
+   *
+   * Process:
+   * 1. Validate authorization and eligibility
+   * 2. Calculate price difference (server-side only)
+   * 3. Process payment/refund for price difference
+   * 4. Update booking record atomically:
+   *    - Delete old BookingAddOn records
+   *    - Create new BookingAddOn records
+   *    - Update addOnsTotal and totalPrice
+   *    - Create payment records for adjustments
+   * 5. Send confirmation email (non-blocking)
+   */
+  modify: guestProcedure
+    .input(
+      z.object({
+        bookingId: z.string().cuid(),
+        addOnIds: z.array(z.string().cuid())
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 1. AUTHORIZATION & VALIDATION
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        include: {
+          bookingAddOns: { include: { addOn: true } },
+          payments: {
+            where: { status: 'SUCCEEDED' },
+            orderBy: { createdAt: 'desc' }
+          },
+          trip: true,
+          package: true,
+          user: { include: { guestProfile: true } }
+        }
+      })
+
+      if (!booking) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Booking not found' })
+      }
+
+      // Verify user owns booking
+      if (!ctx.user || booking.userId !== ctx.user.id) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized' })
+      }
+
+      // Verify booking status
+      if (booking.status !== 'CONFIRMED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Only confirmed bookings can be modified'
+        })
+      }
+
+      // Verify trip assigned
+      if (!booking.trip) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'No trip assigned to this booking'
+        })
+      }
+
+      // Calculate days until trip
+      const tripStartDate = new Date(booking.trip.startDate)
+      const now = new Date()
+      const daysUntilTrip = Math.floor(
+        (tripStartDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      )
+
+      // Verify >60 days before trip
+      if (daysUntilTrip <= 60) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Modifications are only allowed more than 60 days before trip. Please contact support for assistance.'
+        })
+      }
+
+      // Verify trip not started
+      if (tripStartDate <= now) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot modify - trip has already started'
+        })
+      }
+
+      // 2. CALCULATE PRICE DIFFERENCE (Server-side only!)
+      const originalAddOnsTotal = booking.bookingAddOns.reduce(
+        (sum, ba) => sum + ba.price,
+        0
+      )
+
+      // Fetch new add-ons from database
+      const newAddOns = await ctx.db.addOn.findMany({
+        where: { id: { in: input.addOnIds } }
+      })
+
+      if (newAddOns.length !== input.addOnIds.length) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Some add-ons not found'
+        })
+      }
+
+      // Calculate new add-ons total
+      const newAddOnsTotal = newAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+
+      // Calculate price difference
+      const priceDifference = newAddOnsTotal - originalAddOnsTotal
+
+      // 3. PROCESS PAYMENT ADJUSTMENT
+      let stripePaymentIntentId: string | null = null
+      let stripeRefundId: string | null = null
+
+      if (priceDifference > 0) {
+        // Price increased - charge difference
+        try {
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: priceDifference,
+            currency: 'usd',
+            customer: booking.payments[0]?.stripeCustomerId || undefined,
+            automatic_payment_methods: { enabled: true },
+            metadata: {
+              bookingId: booking.id,
+              bookingReference: booking.bookingReference,
+              type: 'modification_price_adjustment',
+              adjustmentReason: 'addons_modification'
+            }
+          })
+
+          stripePaymentIntentId = paymentIntent.id
+
+          // Return client secret for payment confirmation on frontend
+          return {
+            requiresPayment: true,
+            clientSecret: paymentIntent.client_secret,
+            amount: priceDifference
+          }
+        } catch (error: any) {
+          console.error('Stripe payment intent error:', error)
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `Payment processing failed: ${error.message || 'Unknown error'}`
+          })
+        }
+      } else if (priceDifference < 0) {
+        // Price decreased - issue refund
+        const payment = booking.payments[0]
+        if (payment?.stripePaymentIntentId) {
+          try {
+            const refund = await stripe.refunds.create({
+              payment_intent: payment.stripePaymentIntentId,
+              amount: Math.abs(priceDifference),
+              reason: 'requested_by_customer',
+              metadata: {
+                bookingId: booking.id,
+                bookingReference: booking.bookingReference,
+                type: 'modification_price_adjustment',
+                adjustmentReason: 'addons_removed'
+              }
+            })
+            stripeRefundId = refund.id
+          } catch (error: any) {
+            console.error('Stripe refund error:', error)
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: `Refund processing failed: ${error.message || 'Unknown error'}`
+            })
+          }
+        }
+      }
+
+      // 4. UPDATE DATABASE (Atomic transaction)
+      const updatedBooking = await ctx.db.$transaction(async (tx) => {
+        // Delete existing add-ons
+        await tx.bookingAddOn.deleteMany({
+          where: { bookingId: input.bookingId }
+        })
+
+        // Create new add-ons
+        await tx.bookingAddOn.createMany({
+          data: newAddOns.map((addOn) => ({
+            bookingId: input.bookingId,
+            addOnId: addOn.id,
+            quantity: 1,
+            price: addOn.thPrice
+          }))
+        })
+
+        // Update booking totals
+        const updatedBooking = await tx.booking.update({
+          where: { id: input.bookingId },
+          data: {
+            addOnsTotal: newAddOnsTotal,
+            totalPrice: booking.basePrice + booking.accommodationPrice + newAddOnsTotal,
+            updatedAt: new Date()
+          },
+          include: {
+            bookingAddOns: { include: { addOn: true } },
+            trip: true,
+            package: true
+          }
+        })
+
+        // Create payment record if adjustment made
+        if (stripePaymentIntentId || stripeRefundId) {
+          await tx.payment.create({
+            data: {
+              bookingId: input.bookingId,
+              amount: priceDifference,
+              status: priceDifference > 0 ? 'SUCCEEDED' : 'REFUNDED',
+              stripePaymentIntentId: stripePaymentIntentId || stripeRefundId,
+              stripeCustomerId: booking.payments[0]?.stripeCustomerId
+            }
+          })
+        }
+
+        return updatedBooking
+      })
+
+      // 5. SEND CONFIRMATION EMAIL (Non-blocking)
+      const guestFirstName = booking.user.guestProfile?.firstName || booking.user.email.split('@')[0]
+
+      // Calculate added/removed add-ons for email
+      const originalAddOnIds = booking.bookingAddOns.map((ba) => ba.addOnId)
+      const newAddOnIds = input.addOnIds
+
+      const addedAddOnIds = newAddOnIds.filter((id) => !originalAddOnIds.includes(id))
+      const removedAddOnIds = originalAddOnIds.filter((id) => !newAddOnIds.includes(id))
+
+      const addedAddOns = newAddOns.filter((addOn) => addedAddOnIds.includes(addOn.id))
+      const removedAddOns = booking.bookingAddOns
+        .filter((ba) => removedAddOnIds.includes(ba.addOnId))
+        .map((ba) => ba.addOn)
+
+      try {
+        const { sendBookingModification } = await import('@/lib/email/sendgrid')
+
+        await sendBookingModification(booking.user.email, {
+          firstName: guestFirstName,
+          email: booking.user.email,
+          bookingReference: booking.bookingReference,
+          packageName: booking.package.name,
+          addedAddOns: addedAddOns.map((a) => ({ name: a.name, price: a.thPrice })),
+          removedAddOns: removedAddOns.map((a) => ({ name: a.name, price: a.thPrice })),
+          originalTotal: booking.basePrice + booking.accommodationPrice + originalAddOnsTotal,
+          newTotal: updatedBooking.totalPrice,
+          priceDifference,
+          adjustmentType: priceDifference > 0 ? 'charge' : priceDifference < 0 ? 'refund' : 'none',
+          tripStartDate: booking.trip.startDate.toISOString(),
+          tripEndDate: booking.trip.endDate.toISOString(),
+          destination: booking.trip.destination
+        })
+      } catch (emailError) {
+        // Log but don't fail mutation
+        console.error('Failed to send modification confirmation email:', emailError)
+      }
+
+      // 6. RETURN SUCCESS RESPONSE
+      return {
+        success: true,
+        requiresPayment: false,
+        priceDifference,
+        adjustmentType: priceDifference > 0 ? 'charge' : priceDifference < 0 ? 'refund' : 'none',
+        newAddOnsTotal,
+        newTotalPrice: updatedBooking.totalPrice,
+        bookingReference: booking.bookingReference
+      }
+    })
 })

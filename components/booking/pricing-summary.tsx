@@ -54,6 +54,9 @@ export function PricingSummary() {
     calculateSubtotal,
     calculateSavings,
     calculateTotal,
+    isModificationMode,
+    originalAddOns,
+    calculatePriceDifference,
   } = useBookingStore()
 
   // Calculate prices
@@ -86,6 +89,17 @@ export function PricingSummary() {
   const addOnsTotal = useMemo(() => {
     return selectedAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
   }, [selectedAddOns])
+
+  // Modification mode calculations
+  const originalAddOnsTotal = useMemo(() => {
+    if (!isModificationMode) return 0
+    return originalAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+  }, [isModificationMode, originalAddOns])
+
+  const priceDifference = useMemo(() => {
+    if (!isModificationMode) return 0
+    return calculatePriceDifference()
+  }, [isModificationMode, selectedAddOns, originalAddOns])
 
   // Progress steps
   const steps = [
@@ -219,14 +233,78 @@ export function PricingSummary() {
         )}
 
         {/* Subtotal */}
-        <div className="border-t-2 border-slate-200 pt-4">
-          <div className="flex items-center justify-between">
-            <p className="text-base font-semibold text-slate-900">Subtotal</p>
-            <p className="text-2xl font-bold text-slate-900">
-              {formatPrice(subtotal)}
-            </p>
+        {!isModificationMode ? (
+          <div className="border-t-2 border-slate-200 pt-4">
+            <div className="flex items-center justify-between">
+              <p className="text-base font-semibold text-slate-900">Subtotal</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {formatPrice(subtotal)}
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Modification Mode: Show Original vs New */}
+            <div className="border-t-2 border-slate-200 pt-4 space-y-3">
+              {/* Original Total */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-slate-500">Original Add-Ons Total</p>
+                <p className="text-lg font-semibold text-slate-500 line-through">
+                  {formatPrice(originalAddOnsTotal)}
+                </p>
+              </div>
+
+              {/* New Total */}
+              <div className="flex items-center justify-between">
+                <p className="text-base font-semibold text-slate-900">New Add-Ons Total</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {formatPrice(addOnsTotal)}
+                </p>
+              </div>
+
+              {/* Price Difference */}
+              <div className={`flex items-center justify-between rounded-lg border-2 p-3 ${
+                priceDifference > 0
+                  ? 'border-red-200 bg-red-50'
+                  : priceDifference < 0
+                  ? 'border-green-200 bg-green-50'
+                  : 'border-slate-200 bg-slate-50'
+              }`}>
+                <p className={`text-sm font-semibold ${
+                  priceDifference > 0
+                    ? 'text-red-900'
+                    : priceDifference < 0
+                    ? 'text-green-900'
+                    : 'text-slate-900'
+                }`}>
+                  {priceDifference > 0 ? 'Price Increase' : priceDifference < 0 ? 'Price Decrease' : 'No Change'}
+                </p>
+                <p className={`text-xl font-bold ${
+                  priceDifference > 0
+                    ? 'text-red-700'
+                    : priceDifference < 0
+                    ? 'text-green-700'
+                    : 'text-slate-700'
+                }`}>
+                  {priceDifference > 0 && '+'}
+                  {formatPrice(Math.abs(priceDifference))}
+                </p>
+              </div>
+
+              {/* Payment Adjustment Explanation */}
+              {priceDifference !== 0 && (
+                <div className="text-xs text-slate-600">
+                  {priceDifference > 0 && (
+                    <p>You will be charged the price increase</p>
+                  )}
+                  {priceDifference < 0 && (
+                    <p>You will receive a refund (5-10 business days)</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         {/* Referral Discount */}
         {referralDiscount > 0 && (
