@@ -319,6 +319,11 @@ model Booking {
   rescheduledAt   DateTime? // Last reschedule timestamp
   originalTripId  String?   // Original trip before reschedule (audit trail)
 
+  // Companion Booking (E3-S17)
+  isCompanionBooking  Boolean @default(false) // True if this is a companion booking
+  primaryBookingId    String? // References primary booking if this is companion
+  accommodationShared Boolean @default(false) // True if sharing room with primary guest
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -329,12 +334,17 @@ model Booking {
   referral        PartnerReferral?
   reminderHistory ReminderHistory[]
 
+  // Companion booking relationships
+  primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
+  companionBookings Booking[] @relation("CompanionTo")
+
   @@index([userId])
   @@index([packageId])
   @@index([tripId])
   @@index([bookingReference])
   @@index([status])
   @@index([createdAt])
+  @@index([primaryBookingId])
 }
 
 model AddOn {

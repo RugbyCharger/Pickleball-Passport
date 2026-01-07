@@ -40,6 +40,27 @@ export interface SelectedAddOn {
   usPrice: number // in cents
 }
 
+export interface CompanionInfo {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  dateOfBirth?: string
+  passportNumber?: string
+  dietaryNotes?: string
+}
+
+export interface CompanionPackage {
+  packageId: string
+  sameAsPrimary: boolean
+  duration: number
+}
+
+export interface CompanionAccommodation {
+  shared: boolean
+  tier?: AccommodationTier
+}
+
 export interface BookingState {
   // Current step in the configurator
   currentStep: number
@@ -77,6 +98,13 @@ export interface BookingState {
   lockedDuration: number | null
   lockedAccommodationTier: AccommodationTier | null
 
+  // Companion Booking (E3-S17)
+  hasCompanion: boolean
+  companionInfo: CompanionInfo | null
+  companionPackage: CompanionPackage | null
+  companionAccommodation: CompanionAccommodation | null
+  companionAddOns: SelectedAddOn[]
+
   // Actions
   setCurrentStep: (step: number) => void
   nextStep: () => void
@@ -107,6 +135,19 @@ export interface BookingState {
   }) => void
   exitModificationMode: () => void
   calculatePriceDifference: () => number
+
+  // Companion booking actions
+  toggleCompanion: () => void
+  setCompanionInfo: (info: CompanionInfo | null) => void
+  setCompanionPackage: (pkg: CompanionPackage | null) => void
+  setCompanionAccommodation: (acc: CompanionAccommodation | null) => void
+  addCompanionAddOn: (addOn: SelectedAddOn) => void
+  removeCompanionAddOn: (addOnId: string) => void
+  clearCompanionAddOns: () => void
+  copyAddOnsToCompanion: () => void
+  calculateCompanionSubtotal: () => number
+  calculateCombinedTotal: () => number
+  validateCompanionBooking: () => { isValid: boolean; errors: string[] }
 
   // Pricing calculations
   calculateSubtotal: () => number
@@ -144,6 +185,11 @@ const initialState = {
   lockedPackageId: null,
   lockedDuration: null,
   lockedAccommodationTier: null,
+  hasCompanion: false,
+  companionInfo: null,
+  companionPackage: null,
+  companionAccommodation: null,
+  companionAddOns: [],
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -316,6 +362,149 @@ export const useBookingStore = create<BookingState>()(
         return newTotal - originalTotal
       },
 
+      // Companion Booking Actions (E3-S17)
+      toggleCompanion: () => set((state) => {
+        const newHasCompanion = !state.hasCompanion
+        // If disabling companion, clear all companion data
+        if (!newHasCompanion) {
+          return {
+            hasCompanion: false,
+            companionInfo: null,
+            companionPackage: null,
+            companionAccommodation: null,
+            companionAddOns: [],
+          }
+        }
+        return { hasCompanion: true }
+      }),
+
+      setCompanionInfo: (info) => set({ companionInfo: info }),
+
+      setCompanionPackage: (pkg) => set({ companionPackage: pkg }),
+
+      setCompanionAccommodation: (acc) => set({ companionAccommodation: acc }),
+
+      addCompanionAddOn: (addOn) => set((state) => {
+        const exists = state.companionAddOns.some((a) => a.id === addOn.id)
+        if (exists) return state
+        return {
+          companionAddOns: [...state.companionAddOns, addOn],
+        }
+      }),
+
+      removeCompanionAddOn: (addOnId) => set((state) => ({
+        companionAddOns: state.companionAddOns.filter((a) => a.id !== addOnId),
+      })),
+
+      clearCompanionAddOns: () => set({ companionAddOns: [] }),
+
+      copyAddOnsToCompanion: () => set((state) => ({
+        companionAddOns: [...state.selectedAddOns],
+      })),
+
+      calculateCompanionSubtotal: () => {
+        const state = get()
+        if (!state.hasCompanion || !state.companionPackage) return 0
+
+        let subtotal = 0
+
+        // Companion base package price
+        if (state.selectedPackage && state.companionPackage.sameAsPrimary) {
+          const basePrice = state.selectedPackage.basePrice
+          subtotal += Math.round(basePrice * (state.companionPackage.duration / 14))
+        } else if (state.companionPackage.packageId) {
+          // Different package - would need to look up price (handled in backend)
+          // For now, use same pricing logic as primary
+          if (state.selectedPackage) {
+            const basePrice = state.selectedPackage.basePrice
+            subtotal += Math.round(basePrice * (state.companionPackage.duration / 14))
+          }
+        }
+
+        // Companion accommodation (FREE if shared, full price if separate)
+        if (state.companionAccommodation) {
+          if (!state.companionAccommodation.shared && state.companionAccommodation.tier) {
+            subtotal += ACCOMMODATION_TIER_PRICING[state.companionAccommodation.tier]
+          }
+          // If shared: $0 accommodation cost
+        }
+
+        // Companion add-ons
+        state.companionAddOns.forEach((addOn) => {
+          subtotal += addOn.thPrice
+        })
+
+        return subtotal
+      },
+
+      calculateCombinedTotal: () => {
+        const primaryTotal = get().calculateTotal()
+        const companionTotal = get().calculateCompanionSubtotal()
+        return primaryTotal + companionTotal
+      },
+
+      validateCompanionBooking: () => {
+        const state = get()
+        const errors: string[] = []
+
+        if (!state.hasCompanion) {
+          return { isValid: true, errors: [] }
+        }
+
+        // Validate companion info
+        if (!state.companionInfo) {
+          errors.push('Companion information is required')
+        } else {
+          if (!state.companionInfo.firstName) errors.push('Companion first name is required')
+          if (!state.companionInfo.lastName) errors.push('Companion last name is required')
+          if (!state.companionInfo.email) errors.push('Companion email is required')
+
+          // Email format validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          if (state.companionInfo.email && !emailRegex.test(state.companionInfo.email)) {
+            errors.push('Companion email format is invalid')
+          }
+
+          // Age validation (18+)
+          if (state.companionInfo.dateOfBirth) {
+            const today = new Date()
+            const birthDate = new Date(state.companionInfo.dateOfBirth)
+            const age = today.getFullYear() - birthDate.getFullYear()
+            const monthDiff = today.getMonth() - birthDate.getMonth()
+            const adjustedAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())
+              ? age - 1
+              : age
+
+            if (adjustedAge < 18) {
+              errors.push('Companion must be 18 years or older')
+            }
+          }
+        }
+
+        // Validate companion package
+        if (!state.companionPackage) {
+          errors.push('Companion package selection is required')
+        }
+
+        // Validate companion accommodation
+        if (!state.companionAccommodation) {
+          errors.push('Companion accommodation option is required')
+        } else if (state.companionAccommodation.shared) {
+          // Shared room validation
+          if (state.duration !== state.companionPackage?.duration) {
+            errors.push('Shared accommodation requires same trip duration')
+          }
+          if (state.accommodationTier !== state.companionAccommodation.tier) {
+            errors.push('Shared accommodation requires same accommodation tier')
+          }
+        }
+
+        return {
+          isValid: errors.length === 0,
+          errors,
+        }
+      },
+
       // Reset to initial state
       reset: () => set(initialState),
     }),
@@ -334,6 +523,12 @@ export const useBookingStore = create<BookingState>()(
         referralPartnerId: state.referralPartnerId,
         referralPartnerInfo: state.referralPartnerInfo,
         currentStep: state.currentStep,
+        // Companion booking state
+        hasCompanion: state.hasCompanion,
+        companionInfo: state.companionInfo,
+        companionPackage: state.companionPackage,
+        companionAccommodation: state.companionAccommodation,
+        companionAddOns: state.companionAddOns,
         // Modification mode state excluded from persistence
       }),
     }
