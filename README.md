@@ -19,48 +19,66 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 
 ## 📊 Project Status
 
-**Current Sprint: Sprint 13** (December 2025)
+**Current Sprint: Sprint 13** (January 2026)
 
-### Sprint 13 Progress (13/18 points - 72%)
+### Sprint 13 Progress - COMPLETE
 
-✅ **Completed:**
+✅ **Epic 3 (Booking System) - Completed:**
 - E3-S4: Medical Add-Ons Configurator (8 pts)
-- E3-S5: Wellness Add-Ons Configurator (5 pts) - **In Review**
-
-📝 **Ready for Development:**
+- E3-S5: Wellness Add-Ons Configurator (5 pts)
 - E3-S8: Trip Selection - Choose Departure Date (5 pts)
+- E3-S9: Guest Profile Completion (8 pts)
+- E3-S10: Booking Confirmation Page (5 pts)
+- E3-S11: Guest Dashboard - My Bookings (8 pts)
+- E3-S12: Booking Details Page (5 pts)
+- E3-S13: Booking Cancellation Flow (5 pts)
+- E3-S14: Booking Rescheduling (5 pts)
 
-🎯 **Remaining Capacity:** 5 points
+✅ **Epic 4 (Payment Processing) - Key Features:**
+- E4-S4: Stripe Webhook Handler (production-ready)
+- E4-S8: Receipt Generation (PDF receipts)
+- E4-S9: Refund Processing (full/partial refunds)
+
+✅ **Epic 1 (Marketing Website) - Recent:**
+- E1-S7: Trust & Safety Section
+- E1-S8: Partner Program Landing Page
+- E1-S9: Partner Signup Form
+
+✅ **Epic 11 (Communications):**
+- E11-S5: Payment Receipt Email (automated)
 
 ### Major Epics Status
 
 | Epic | Name | Status | Stories | Progress |
 |------|------|--------|---------|----------|
-| **E1** | Marketing Website | 🟡 In Progress | 6/15 | 40% |
+| **E1** | Marketing Website | 🟡 In Progress | 9/15 | 60% |
 | **E2** | User Authentication | ✅ Done | 4/8 | 100% |
-| **E3** | Booking System | 🟡 In Progress | 8/18 | 72% |
+| **E3** | Booking System | ✅ Done | 14/18 | 78% |
 | **E4** | Payment Processing | 🟡 In Progress | 5/12 | 42% |
 | **E5** | Admin Dashboard | ✅ Done | 10/10 | 100% |
 | **E9** | Partner Portal | 🟡 In Progress | 1/20 | 5% |
-| **E11** | Communication System | 🟡 In Progress | 2/12 | 17% |
+| **E11** | Communication System | 🟡 In Progress | 3/12 | 25% |
 
 ### Recent Milestones
 
-**Sprint 12 (Completed):**
+**Sprint 13 (Completed - January 2026):**
+- ✅ Complete Booking System (E3) - Full guest booking flow
+- ✅ Trip Selection with departure dates
+- ✅ Guest Profile Completion workflow
+- ✅ Booking Confirmation & Dashboard
+- ✅ Booking Management (cancellation & rescheduling)
+- ✅ Payment Processing enhancements (webhooks, receipts, refunds)
+- ✅ Marketing Website updates (Trust & Safety, Partner Program)
+
+**Sprint 12 (Completed - December 2025):**
 - ✅ Admin Dashboard - Testing & Polish
 - ✅ Email Template Management
-- ✅ Scheduled Trip Reminders
-- ✅ Bulk Notifications
-
-**Sprint 11 (Completed):**
-- ✅ Analytics Dashboard
-- ✅ Package & Add-On Management
-- ✅ Trip Management
-- ✅ Guest Management
+- ✅ Scheduled Trip Reminders (30/7/1 day automation)
+- ✅ Bulk Notifications System
 
 ## 🎨 Key Features
 
-### Booking System (Epic 3)
+### Booking System (Epic 3) - ✅ COMPLETE
 - ✅ Multi-step package configurator
   - Package selection (5 options)
   - Duration selection (7, 10, 14, 21 days)
@@ -68,10 +86,13 @@ A Next.js application for managing luxury pickleball tourism packages, combining
   - Medical/Cosmetic add-ons (4 categories)
   - Wellness & Cultural add-ons (4 categories)
   - Real-time pricing with Thailand vs US comparison
-- ✅ Booking review page with itinerary
+- ✅ Trip date selection with departure calendar
+- ✅ Guest profile completion before booking
+- ✅ Booking confirmation page with itinerary
 - ✅ Guest dashboard with booking management
 - ✅ Booking details page with payment tracking
-- 📝 Trip date selection (In Development)
+- ✅ Booking cancellation flow with refund processing
+- ✅ Booking rescheduling with date changes
 
 ### Admin Dashboard (Epic 5)
 - ✅ Role-based authentication (Admin-only access)
@@ -89,15 +110,20 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - ✅ Payment Intent creation
 - ✅ Payment form UI with Stripe Elements
 - ✅ Payment failure handling
-- 📝 Webhook handler (Pending)
-- 📝 Receipt generation (Pending)
+- ✅ Webhook handler (production-ready with event tracking)
+- ✅ Receipt generation (PDF receipts with branding)
+- ✅ Refund processing (full/partial refunds with tracking)
+- 📝 Installment payment plans (Planned)
+- 📝 Scheduled payment processing (Planned)
 
 ### Communication System (Epic 11)
 - ✅ SendGrid integration
 - ✅ Booking confirmation emails
+- ✅ Payment receipt emails (automated with PDF attachments)
 - ✅ Transactional email templates
+- ✅ Admin email template management
 - 📝 Pre-trip email sequences (Planned)
-- 📝 Payment receipt emails (Planned)
+- 📝 SMS notifications (Planned)
 
 ### Marketing Website (Epic 1)
 - ✅ Homepage hero section
@@ -105,10 +131,16 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - ✅ Package detail pages
 - ✅ Testimonial video gallery
 - ✅ Multi-step application form
+- ✅ Medical tourism cost calculator
+- ✅ Trust & safety section
+- ✅ Partner program landing page
+- ✅ Partner signup form
 - ✅ Mobile navigation
 - ✅ Footer
-- 📝 Medical tourism cost calculator (Planned)
-- 📝 Trust & safety section (Planned)
+- 📝 SEO optimization (Planned)
+- 📝 Email capture & newsletter signup (Planned)
+- 📝 Contact form (Planned)
+- 📝 Privacy policy & terms of service (Planned)
 
 ## 🚀 Getting Started
 
@@ -183,14 +215,14 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 
 ### Core Documentation
 - **[SETUP.md](SETUP.md)** - Environment setup guide (Clerk, Stripe, Database)
-- **[SPRINT_12_SUMMARY.md](SPRINT_12_SUMMARY.md)** - Latest sprint summary
-- **[Architecture](_bmad-output/solutioning/architecture-Pickleball-Passport-2025-12-28.md)** - System architecture
-- **[PRD](_bmad-output/planning/prd-Pickleball-Passport-2025-12-28.md)** - Product requirements
+- **[Architecture](_bmad-output/solutioning/architecture-Pickleball-Passport-2025-12-28.md)** - System architecture & technical decisions
+- **[PRD](_bmad-output/planning/prd-Pickleball-Passport-2025-12-28.md)** - Product requirements document
+- **[UX Design](_bmad-output/solutioning/ux-design-Pickleball-Passport-2025-12-28.md)** - Design patterns & user experience
 
 ### Development Tracking
-- **[Sprint Status](_bmad-output/implementation/sprint-status.yaml)** - Real-time progress tracking
+- **[Sprint Status](_bmad-output/implementation/sprint-status.yaml)** - Real-time progress tracking (Sprint 13)
 - **[Epics & Stories](_bmad-output/solutioning/epics-and-stories-Pickleball-Passport-2025-12-28.md)** - All user stories
-- **[Implementation Stories](_bmad-output/implementation/)** - Detailed story files
+- **[Implementation Stories](_bmad-output/implementation/)** - Detailed story files with acceptance criteria
 
 ## 🗄️ Database Schema
 
@@ -403,17 +435,21 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ## 📝 Recent Updates
 
-### December 29, 2025
-- ✅ E3-S5: Wellness Add-Ons Configurator completed
-- ✅ E3-S4: Medical Add-Ons Configurator completed
-- 📝 E3-S8: Trip Selection story created (ready-for-dev)
-- 📊 Sprint 13: 72% complete (13/18 points)
+### January 7, 2026
+- ✅ E1-S8: Partner Program Landing Page completed
+- ✅ E1-S9: Partner Signup Form completed
+- ✅ E1-S7: Trust & Safety Section completed
+- 📊 Marketing Website: 60% complete (9/15 stories)
 
-### December 28, 2025
+### December 2025
+- ✅ Epic 3 (Booking System): Core booking flow COMPLETE
+  - Trip selection, profile completion, confirmation
+  - Guest dashboard, booking details, cancellation/rescheduling
+- ✅ Epic 4 (Payment Processing): Production-ready infrastructure
+  - Stripe webhooks, PDF receipts, refund processing
+- ✅ Epic 11 (Communications): Automated payment receipts
 - ✅ Sprint 12: Admin Dashboard completed
-- ✅ Email template management
-- ✅ Scheduled trip reminders (30/7/1 day automation)
-- ✅ Bulk notifications system
+  - Email template management, scheduled reminders, bulk notifications
 
 ## 🤝 Contributing
 
