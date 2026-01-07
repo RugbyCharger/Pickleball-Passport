@@ -73,7 +73,13 @@ const CATEGORY_STYLES: Record<
   },
 }
 
-export default function MedicalAddOnsSelector() {
+interface MedicalAddOnsSelectorProps {
+  mode?: 'primary' | 'companion'
+}
+
+export default function MedicalAddOnsSelector({
+  mode = 'primary',
+}: MedicalAddOnsSelectorProps) {
   const router = useRouter()
 
   // Category filter state (all selected by default)
@@ -84,12 +90,22 @@ export default function MedicalAddOnsSelector() {
   // Zustand booking store
   const {
     selectedAddOns,
+    companionAddOns,
     addAddOn,
     removeAddOn,
     clearAddOns,
+    addCompanionAddOn,
+    removeCompanionAddOn,
+    clearCompanionAddOns,
     isModificationMode,
     originalAddOns,
   } = useBookingStore()
+
+  // Get the appropriate add-ons list based on mode
+  const activeAddOns = mode === 'companion' ? companionAddOns : selectedAddOns
+  const addFn = mode === 'companion' ? addCompanionAddOn : addAddOn
+  const removeFn = mode === 'companion' ? removeCompanionAddOn : removeAddOn
+  const clearFn = mode === 'companion' ? clearCompanionAddOns : clearAddOns
 
   // Fetch add-ons from tRPC
   const { data: addOns, isLoading } = trpc.addOn.getByCategories.useQuery({
@@ -108,7 +124,7 @@ export default function MedicalAddOnsSelector() {
 
   // Check if add-on is selected
   const isSelected = (addOnId: string) => {
-    return selectedAddOns.some((a) => a.id === addOnId)
+    return activeAddOns.some((a) => a.id === addOnId)
   }
 
   // Check if add-on was originally selected (for modification mode visual indicator)
@@ -120,9 +136,9 @@ export default function MedicalAddOnsSelector() {
   // Toggle add-on selection
   const toggleAddOn = (addOn: AddOnData) => {
     if (isSelected(addOn.id)) {
-      removeAddOn(addOn.id)
+      removeFn(addOn.id)
     } else {
-      addAddOn({
+      addFn({
         id: addOn.id,
         name: addOn.name,
         description: addOn.description,
@@ -137,11 +153,11 @@ export default function MedicalAddOnsSelector() {
   const handleSkip = () => {
     // Clear only medical add-ons
     const medicalCategories = MEDICAL_CATEGORIES.map((c) => c.key as string)
-    const medicalAddOnIds = selectedAddOns
+    const medicalAddOnIds = activeAddOns
       .filter((a) => medicalCategories.includes(a.category))
       .map((a) => a.id)
 
-    medicalAddOnIds.forEach((id) => removeAddOn(id))
+    medicalAddOnIds.forEach((id) => removeFn(id))
 
     // Navigate to wellness add-ons
     router.push('/booking/configure/wellness')
@@ -222,12 +238,12 @@ export default function MedicalAddOnsSelector() {
           <h3 className="text-lg font-semibold text-slate-900">
             Available Medical Procedures
           </h3>
-          {selectedAddOns.length > 0 && (
+          {activeAddOns.length > 0 && (
             <button
-              onClick={clearAddOns}
+              onClick={clearFn}
               className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
             >
-              Clear all ({selectedAddOns.length})
+              Clear all ({activeAddOns.length})
             </button>
           )}
         </div>

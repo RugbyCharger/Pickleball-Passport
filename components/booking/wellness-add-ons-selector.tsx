@@ -73,7 +73,13 @@ const CATEGORY_STYLES: Record<
   },
 }
 
-export default function WellnessAddOnsSelector() {
+interface WellnessAddOnsSelectorProps {
+  mode?: 'primary' | 'companion'
+}
+
+export default function WellnessAddOnsSelector({
+  mode = 'primary',
+}: WellnessAddOnsSelectorProps) {
   const router = useRouter()
 
   // Category filter state (all selected by default)
@@ -84,11 +90,19 @@ export default function WellnessAddOnsSelector() {
   // Zustand booking store
   const {
     selectedAddOns,
+    companionAddOns,
     addAddOn,
     removeAddOn,
+    addCompanionAddOn,
+    removeCompanionAddOn,
     isModificationMode,
     originalAddOns,
   } = useBookingStore()
+
+  // Get the appropriate add-ons list based on mode
+  const activeAddOns = mode === 'companion' ? companionAddOns : selectedAddOns
+  const addFn = mode === 'companion' ? addCompanionAddOn : addAddOn
+  const removeFn = mode === 'companion' ? removeCompanionAddOn : removeAddOn
 
   // Fetch add-ons from tRPC
   const { data: addOns, isLoading } = trpc.addOn.getByCategories.useQuery({
@@ -107,7 +121,7 @@ export default function WellnessAddOnsSelector() {
 
   // Check if add-on is selected
   const isSelected = (addOnId: string) => {
-    return selectedAddOns.some((a) => a.id === addOnId)
+    return activeAddOns.some((a) => a.id === addOnId)
   }
 
   // Check if add-on was originally selected (for modification mode visual indicator)
@@ -119,9 +133,9 @@ export default function WellnessAddOnsSelector() {
   // Toggle add-on selection
   const toggleAddOn = (addOn: AddOnData) => {
     if (isSelected(addOn.id)) {
-      removeAddOn(addOn.id)
+      removeFn(addOn.id)
     } else {
-      addAddOn({
+      addFn({
         id: addOn.id,
         name: addOn.name,
         description: addOn.description,
@@ -136,11 +150,11 @@ export default function WellnessAddOnsSelector() {
   const handleSkip = () => {
     // Clear only wellness add-ons (keep medical add-ons)
     const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
-    const wellnessAddOnIds = selectedAddOns
+    const wellnessAddOnIds = activeAddOns
       .filter((a) => wellnessCategories.includes(a.category))
       .map((a) => a.id)
 
-    wellnessAddOnIds.forEach((id) => removeAddOn(id))
+    wellnessAddOnIds.forEach((id) => removeFn(id))
 
     // Navigate to trip selection page
     router.push('/booking/configure/trip')
@@ -165,7 +179,7 @@ export default function WellnessAddOnsSelector() {
   // Get count of selected wellness add-ons
   const getSelectedWellnessCount = () => {
     const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
-    return selectedAddOns.filter((a) =>
+    return activeAddOns.filter((a) =>
       wellnessCategories.includes(a.category)
     ).length
   }
@@ -173,11 +187,11 @@ export default function WellnessAddOnsSelector() {
   // Clear only wellness add-ons
   const clearWellnessAddOns = () => {
     const wellnessCategories = WELLNESS_CATEGORIES.map((c) => c.key as string)
-    const wellnessAddOnIds = selectedAddOns
+    const wellnessAddOnIds = activeAddOns
       .filter((a) => wellnessCategories.includes(a.category))
       .map((a) => a.id)
 
-    wellnessAddOnIds.forEach((id) => removeAddOn(id))
+    wellnessAddOnIds.forEach((id) => removeFn(id))
   }
 
   return (
