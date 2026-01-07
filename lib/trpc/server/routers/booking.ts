@@ -215,7 +215,7 @@ export const bookingRouter = router({
           accommodationPrice,
           addOnsTotal,
           totalPrice,
-          referredBy: referralCode,
+          referredBy: referredByPartnerId || null, // Store partner ID, not code
         },
       })
 
@@ -265,8 +265,10 @@ export const bookingRouter = router({
 
         // 15. Create partner referral record if applicable
         if (referredByPartnerId) {
-          // Calculate points earned (1 point per $100)
-          const pointsEarned = Math.floor(totalPrice / 10000) // $100 = 10000 cents
+          // Calculate points earned: 100 points per $1,000
+          // Min: 500 points, Max: 2,000 points
+          const basePoints = Math.floor(totalPrice / 100000) * 100 // $1,000 = 100k cents
+          const pointsEarned = Math.min(Math.max(basePoints, 500), 2000)
 
           await ctx.db.partnerReferral.create({
             data: {

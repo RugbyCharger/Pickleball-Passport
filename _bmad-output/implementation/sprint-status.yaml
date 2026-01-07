@@ -85,7 +85,7 @@ development_status:
   3-12-booking-details-page: done
   3-13-booking-cancellation-flow: done
   3-14-booking-rescheduling: done
-  3-15-referral-code-application-at-booking: backlog
+  3-15-referral-code-application-at-booking: done
   3-16-booking-modification-change-add-ons: backlog
   3-17-companion-booking-bring-a-friend-spouse: backlog
   3-18-gift-booking-purchase-for-someone-else: backlog
@@ -108,7 +108,7 @@ development_status:
   epic-4-retrospective: optional
 
   # EPIC 5: Admin Dashboard
-  epic-5: in-progress
+  epic-5: done
   5-1-admin-authentication: done
   5-2-booking-management-view: done
   5-3-guest-management: done

@@ -16,10 +16,10 @@
 
 'use client'
 
+import React, { useState } from 'react'
 import { useBookingStore } from '@/lib/stores/booking-store'
 import { trpc } from '@/lib/trpc/client'
 import { AlertCircle, CheckCircle2, Loader2, Tag } from 'lucide-react'
-import { useState } from 'react'
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -31,65 +31,85 @@ function formatPrice(cents: number): string {
 }
 
 export function ReferralCodeInput() {
-  const { referralCode, referralDiscount, setReferralCode, setReferralDiscount, calculateSubtotal } =
-    useBookingStore()
+  const {
+    referralCode,
+    referralDiscount,
+    setReferralCode,
+    setReferralDiscount,
+    setReferralPartnerId,
+    setReferralPartnerInfo,
+  } = useBookingStore()
 
   const [inputValue, setInputValue] = useState(referralCode || '')
-  const [isValidating, setIsValidating] = useState(false)
-  const [validationError, setValidationError] = useState<string | null>(null)
+  const [shouldValidate, setShouldValidate] = useState(false)
   const [isValid, setIsValid] = useState(!!referralCode)
 
-  const handleApply = async () => {
+  // tRPC query for validation - only runs when shouldValidate is true
+  const { data: validationResult, isLoading, error } = trpc.partner.validateReferralCode.useQuery(
+    { code: inputValue },
+    {
+      enabled: shouldValidate && inputValue.length >= 5,
+      retry: false,
+    }
+  )
+
+  // Handle validation results
+  React.useEffect(() => {
+    if (!shouldValidate || isLoading) return
+
+    if (validationResult) {
+      if (validationResult.isValid) {
+        setReferralCode(inputValue.toUpperCase())
+        setReferralPartnerId(validationResult.partnerId!)
+        setReferralPartnerInfo({
+          partnerName: validationResult.partnerName!,
+          clubName: validationResult.clubName!,
+          clubLocation: validationResult.clubLocation!,
+        })
+        setIsValid(true)
+      } else {
+        setIsValid(false)
+        setReferralCode(null)
+        setReferralPartnerId(null)
+        setReferralPartnerInfo(null)
+      }
+      setShouldValidate(false)
+    }
+
+    if (error) {
+      setIsValid(false)
+      setReferralCode(null)
+      setReferralPartnerId(null)
+      setReferralPartnerInfo(null)
+      setShouldValidate(false)
+    }
+  }, [validationResult, error, shouldValidate, isLoading, inputValue, setReferralCode, setReferralPartnerId, setReferralPartnerInfo])
+
+  const handleApply = () => {
     const code = inputValue.trim().toUpperCase()
 
     if (!code) {
-      setValidationError('Please enter a referral code')
       return
     }
 
-    setIsValidating(true)
-    setValidationError(null)
-
-    try {
-      // Simulate validation - in a real implementation, this would call the backend
-      // For now, we'll do basic format validation and calculate discount
-      // The actual validation will happen server-side in createPaymentIntent
-
-      // Basic format check: CODE-NAME-YEAR pattern
-      const codePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
-      if (!codePattern.test(code)) {
-        setValidationError('Invalid code format. Expected format: LOCATION-NAME-YEAR')
-        setIsValid(false)
-        setReferralCode(null)
-        setReferralDiscount(0)
-        return
-      }
-
-      // For demo purposes, calculate a 5% discount
-      // In production, this would come from the backend based on partner tier
-      const subtotal = calculateSubtotal()
-      const discount = Math.round(subtotal * 0.05) // 5% discount
-
-      setReferralCode(code)
-      setReferralDiscount(discount)
-      setIsValid(true)
-      setValidationError(null)
-    } catch (error) {
-      setValidationError('Failed to validate code. Please try again.')
-      setIsValid(false)
-      setReferralCode(null)
-      setReferralDiscount(0)
-    } finally {
-      setIsValidating(false)
+    // Basic format check: CODE-NAME-YEAR pattern
+    const codePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
+    if (!codePattern.test(code)) {
+      // Invalid format - don't call API
+      return
     }
+
+    // Trigger validation
+    setShouldValidate(true)
   }
 
   const handleRemove = () => {
     setInputValue('')
     setReferralCode(null)
     setReferralDiscount(0)
+    setReferralPartnerId(null)
+    setReferralPartnerInfo(null)
     setIsValid(false)
-    setValidationError(null)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -97,6 +117,14 @@ export function ReferralCodeInput() {
       handleApply()
     }
   }
+
+  // Get error message from validation
+  const validationError = error?.message || (!validationResult?.isValid && validationResult?.message)
+
+  // Check format for client-side validation
+  const code = inputValue.trim().toUpperCase()
+  const codePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
+  const hasInvalidFormat = inputValue.length > 0 && !codePattern.test(code)
 
   return (
     <div className="space-y-3">
@@ -130,10 +158,11 @@ export function ReferralCodeInput() {
         {!isValid ? (
           <button
             onClick={handleApply}
-            disabled={isValidating || !inputValue.trim()}
+            disabled={isLoading || !inputValue.trim() || hasInvalidFormat}
             className="rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Apply referral code"
           >
-            {isValidating ? (
+            {isLoading ? (
               <span className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Validating...
@@ -152,9 +181,21 @@ export function ReferralCodeInput() {
         )}
       </div>
 
-      {/* Validation Messages */}
-      {validationError && (
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 p-3">
+      {/* Format Error Message */}
+      {hasInvalidFormat && (
+        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 p-3" role="alert">
+          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-red-900">
+              Invalid code format. Expected format: LOCATION-NAME-YEAR
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Validation Error Message */}
+      {validationError && !hasInvalidFormat && (
+        <div id="referral-code-error" className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 p-3" role="alert">
           <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-medium text-red-900">{validationError}</p>
@@ -165,24 +206,25 @@ export function ReferralCodeInput() {
         </div>
       )}
 
-      {isValid && referralDiscount > 0 && (
-        <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-200 p-3">
+      {/* Success Message */}
+      {isValid && validationResult?.isValid && (
+        <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-200 p-3" role="status">
           <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-emerald-900">
-              Code applied! You save {formatPrice(referralDiscount)}
+              Code applied! Referred by {validationResult.partnerName}
             </p>
             <p className="text-xs text-emerald-700 mt-1">
-              Your discount will be applied at checkout.
+              {validationResult.clubName}, {validationResult.clubLocation}
             </p>
           </div>
         </div>
       )}
 
       {/* Help Text */}
-      {!isValid && !validationError && (
+      {!isValid && !validationError && !hasInvalidFormat && (
         <p className="text-xs text-slate-500">
-          Have a referral code from one of our partner facilities? Enter it here to receive a discount.
+          Have a referral code from one of our partner facilities? Enter it here.
         </p>
       )}
     </div>

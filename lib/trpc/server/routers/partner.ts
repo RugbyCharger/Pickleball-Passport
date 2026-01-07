@@ -364,6 +364,51 @@ export const partnerRouter = router({
     }),
 
   /**
+   * Validate referral code and return partner information
+   * Public procedure (no auth required - guests can validate codes before booking)
+   */
+  validateReferralCode: publicProcedure
+    .input(
+      z.object({
+        code: z.string().min(5).max(50).trim(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Convert to uppercase for case-insensitive matching
+      const normalizedCode = input.code.toUpperCase()
+
+      // Find partner by referral code
+      const partner = await ctx.db.partnerProfile.findUnique({
+        where: {
+          referralCode: normalizedCode,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      })
+
+      if (!partner) {
+        return {
+          isValid: false,
+          message: 'Invalid referral code. Please check with your partner facility.',
+        }
+      }
+
+      // Return partner information
+      return {
+        isValid: true,
+        partnerId: partner.id,
+        partnerName: partner.clubName, // Using clubName as partner name
+        clubName: partner.clubName,
+        clubLocation: partner.clubLocation,
+      }
+    }),
+
+  /**
    * Partner signup - create new partner account
    * Public procedure (requires authentication via Clerk)
    */

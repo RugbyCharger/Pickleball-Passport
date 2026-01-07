@@ -62,6 +62,12 @@ export interface BookingState {
   // Referral Code (applied at review step)
   referralCode: string | null
   referralDiscount: number // in cents
+  referralPartnerId: string | null // Partner ID for database relation
+  referralPartnerInfo: {
+    partnerName: string
+    clubName: string
+    clubLocation: string
+  } | null
 
   // Actions
   setCurrentStep: (step: number) => void
@@ -80,6 +86,8 @@ export interface BookingState {
 
   setReferralCode: (code: string | null) => void
   setReferralDiscount: (discount: number) => void
+  setReferralPartnerId: (partnerId: string | null) => void
+  setReferralPartnerInfo: (info: BookingState['referralPartnerInfo']) => void
 
   // Pricing calculations
   calculateSubtotal: () => number
@@ -109,6 +117,8 @@ const initialState = {
   selectedTripId: null,
   referralCode: null,
   referralDiscount: 0,
+  referralPartnerId: null,
+  referralPartnerInfo: null,
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -159,6 +169,8 @@ export const useBookingStore = create<BookingState>()(
       // Referral Code
       setReferralCode: (code) => set({ referralCode: code }),
       setReferralDiscount: (discount) => set({ referralDiscount: discount }),
+      setReferralPartnerId: (partnerId) => set({ referralPartnerId: partnerId }),
+      setReferralPartnerInfo: (info) => set({ referralPartnerInfo: info }),
 
       // Pricing calculations
       calculateSubtotal: () => {
@@ -267,6 +279,8 @@ export const useBookingStore = create<BookingState>()(
         selectedTripId: state.selectedTripId,
         referralCode: state.referralCode,
         referralDiscount: state.referralDiscount,
+        referralPartnerId: state.referralPartnerId,
+        referralPartnerInfo: state.referralPartnerInfo,
         currentStep: state.currentStep,
       }),
     }
