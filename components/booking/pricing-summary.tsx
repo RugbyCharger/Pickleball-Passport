@@ -57,6 +57,13 @@ export function PricingSummary() {
     isModificationMode,
     originalAddOns,
     calculatePriceDifference,
+    hasCompanion,
+    companionInfo,
+    companionPackage,
+    companionAccommodation,
+    companionAddOns,
+    calculateCompanionSubtotal,
+    calculateCombinedTotal,
   } = useBookingStore()
 
   // Calculate prices
@@ -100,6 +107,26 @@ export function PricingSummary() {
     if (!isModificationMode) return 0
     return calculatePriceDifference()
   }, [isModificationMode, selectedAddOns, originalAddOns])
+
+  // Companion calculations
+  const companionSubtotal = useMemo(() => {
+    if (!hasCompanion) return 0
+    return calculateCompanionSubtotal()
+  }, [hasCompanion, companionPackage, companionAccommodation, companionAddOns])
+
+  const companionAddOnsTotal = useMemo(() => {
+    if (!hasCompanion) return 0
+    return companionAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+  }, [hasCompanion, companionAddOns])
+
+  const grandTotal = useMemo(() => {
+    if (!hasCompanion) return calculateTotal()
+    return calculateCombinedTotal()
+  }, [hasCompanion, subtotal, companionSubtotal, referralDiscount])
+
+  const companionName = companionInfo
+    ? `${companionInfo.firstName} ${companionInfo.lastName}`
+    : 'Companion'
 
   // Progress steps
   const steps = [
@@ -232,8 +259,114 @@ export function PricingSummary() {
           </div>
         )}
 
-        {/* Subtotal */}
-        {!isModificationMode ? (
+        {/* Primary Guest Subtotal (only show label if companion mode) */}
+        {!isModificationMode && hasCompanion && (
+          <div className="border-t-2 border-slate-200 pt-4">
+            <div className="flex items-center justify-between">
+              <p className="text-base font-semibold text-slate-900">Your Subtotal</p>
+              <p className="text-xl font-bold text-slate-900">
+                {formatPrice(subtotal)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Companion Breakdown */}
+        {!isModificationMode && hasCompanion && (
+          <div className="border-t-2 border-emerald-200 bg-emerald-50 rounded-lg p-4 mt-4">
+            <h4 className="text-sm font-semibold uppercase tracking-wide text-emerald-900 mb-3">
+              {companionName}'s Breakdown
+            </h4>
+
+            {/* Companion Package */}
+            {companionPackage && selectedPackage && (
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {companionPackage.sameAsPrimary ? selectedPackage.name : 'Package'}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {companionPackage.duration} days
+                    {companionPackage.sameAsPrimary && ' (same as yours)'}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-slate-900 whitespace-nowrap">
+                  {formatPrice(Math.round(selectedPackage.basePrice * (companionPackage.duration / 14)))}
+                </p>
+              </div>
+            )}
+
+            {/* Companion Accommodation */}
+            {companionAccommodation && accommodationTier && (
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {companionAccommodation.shared ? 'Shared Room' : ACCOMMODATION_TIER_NAMES[accommodationTier]}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {companionAccommodation.shared ? 'Sharing with you' : 'Separate room'}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-slate-900 whitespace-nowrap">
+                  {companionAccommodation.shared ? (
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                      FREE
+                    </span>
+                  ) : (
+                    `+${formatPrice(ACCOMMODATION_TIER_PRICING[accommodationTier])}`
+                  )}
+                </p>
+              </div>
+            )}
+
+            {/* Companion Add-Ons */}
+            {companionAddOns.length > 0 && (
+              <div className="border-t border-emerald-200 pt-2 mt-2 space-y-2">
+                {companionAddOns.map((addOn) => (
+                  <div key={addOn.id} className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">
+                        {addOn.name}
+                      </p>
+                      <p className="text-xs text-slate-500">{addOn.category}</p>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-900 whitespace-nowrap">
+                      +{formatPrice(addOn.thPrice)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Companion Subtotal */}
+            <div className="border-t-2 border-emerald-300 mt-3 pt-3">
+              <div className="flex items-center justify-between">
+                <p className="text-base font-semibold text-emerald-900">{companionName}'s Subtotal</p>
+                <p className="text-xl font-bold text-emerald-900">
+                  {formatPrice(companionSubtotal)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Combined Grand Total (companion mode) */}
+        {!isModificationMode && hasCompanion && (
+          <div className="border-t-2 border-slate-300 pt-4">
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-bold text-slate-900">Combined Total</p>
+              <p className="text-3xl font-bold text-emerald-600">
+                {formatPrice(grandTotal)}
+              </p>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              For 2 guests (you + {companionInfo?.firstName})
+            </p>
+          </div>
+        )}
+
+        {/* Subtotal (non-companion mode) */}
+        {!isModificationMode && !hasCompanion && (
           <div className="border-t-2 border-slate-200 pt-4">
             <div className="flex items-center justify-between">
               <p className="text-base font-semibold text-slate-900">Subtotal</p>
@@ -242,9 +375,11 @@ export function PricingSummary() {
               </p>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* Modification Mode: Show Original vs New (non-companion mode) */}
+        {isModificationMode && !hasCompanion && (
           <>
-            {/* Modification Mode: Show Original vs New */}
             <div className="border-t-2 border-slate-200 pt-4 space-y-3">
               {/* Original Total */}
               <div className="flex items-center justify-between">
@@ -306,8 +441,8 @@ export function PricingSummary() {
           </>
         )}
 
-        {/* Referral Discount */}
-        {referralDiscount > 0 && (
+        {/* Referral Discount (only show if not companion mode or if showing final total) */}
+        {referralDiscount > 0 && !hasCompanion && (
           <div className="flex items-center justify-between border-t border-slate-100 pt-3">
             <p className="text-sm font-medium text-emerald-700">Referral Discount</p>
             <p className="text-lg font-bold text-emerald-700">
@@ -316,8 +451,8 @@ export function PricingSummary() {
           </div>
         )}
 
-        {/* Total (if referral applied) */}
-        {referralDiscount > 0 && (
+        {/* Total (if referral applied, non-companion mode) */}
+        {referralDiscount > 0 && !hasCompanion && (
           <div className="border-t-2 border-slate-300 pt-4">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold text-slate-900">Total</p>
