@@ -15,6 +15,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import { BookingSummary } from '@/components/booking/booking-summary'
+import { CompanionBookingSummary } from '@/components/booking/companion-booking-summary'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 import { ReferralCodeInput } from '@/components/booking/referral-code-input'
 import { ReviewPageClient } from './review-client'
@@ -54,8 +55,11 @@ export default async function BookingReviewPage() {
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column - Booking Summary */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Booking Details */}
+            {/* Primary Booking Details */}
             <BookingSummary />
+
+            {/* Companion Booking Details */}
+            <CompanionBookingSummary />
 
             {/* Referral Code */}
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">

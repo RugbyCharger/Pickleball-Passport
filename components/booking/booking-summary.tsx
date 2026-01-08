@@ -83,7 +83,7 @@ function formatPrice(cents: number): string {
 
 export function BookingSummary() {
   const router = useRouter()
-  const { selectedPackage, duration, accommodationTier, selectedAddOns } = useBookingStore()
+  const { selectedPackage, duration, accommodationTier, selectedAddOns, hasCompanion } = useBookingStore()
 
   if (!selectedPackage || !duration || !accommodationTier) {
     return (
@@ -100,6 +100,21 @@ export function BookingSummary() {
 
   return (
     <div className="space-y-6">
+      {/* Header for companion mode */}
+      {hasCompanion && (
+        <div className="rounded-xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-blue-50 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white">
+              <Package className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Your Booking</h2>
+              <p className="text-sm text-slate-600">Primary guest booking details</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Package Section */}
       <section className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-emerald-600 to-blue-600 px-6 py-4">
