@@ -418,6 +418,17 @@ export const bookingRouter = router({
       }
 
       // 4. VALIDATION - Companion email uniqueness
+      // Check if companion email matches primary guest email
+      const user = ctx.user!
+      const primaryGuestEmail = user.emailAddresses[0]?.emailAddress || ''
+
+      if (companion.email.toLowerCase() === primaryGuestEmail.toLowerCase()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Companion email cannot be the same as primary guest email',
+        })
+      }
+
       const existingUserWithEmail = await ctx.db.user.findUnique({
         where: { email: companion.email },
       })
@@ -535,8 +546,7 @@ export const bookingRouter = router({
 
       const grandTotal = combinedSubtotal - discount
 
-      // 10. GET USER INFO
-      const user = ctx.user!
+      // 10. GET USER INFO (already retrieved earlier for email validation)
       const guestEmail = user.emailAddresses[0]?.emailAddress || ''
       const guestName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Guest'
 
