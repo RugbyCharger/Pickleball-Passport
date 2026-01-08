@@ -1392,7 +1392,9 @@ export const bookingRouter = router({
     .input(
       z.object({
         bookingId: z.string().cuid(),
-        newTripId: z.string().cuid()
+        newTripId: z.string().cuid(),
+        rescheduleBothBookings: z.boolean().optional(),
+        companionBookingId: z.string().cuid().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -1461,6 +1463,49 @@ export const bookingRouter = router({
         })
       }
 
+      // 4.5 Validate companion booking if rescheduling both
+      let companionBooking = null
+      if (input.rescheduleBothBookings && input.companionBookingId) {
+        companionBooking = await ctx.db.booking.findUnique({
+          where: { id: input.companionBookingId },
+          include: {
+            trip: true,
+            package: true
+          }
+        })
+
+        if (!companionBooking) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Companion booking not found'
+          })
+        }
+
+        // Verify companion is linked to primary booking
+        if (companionBooking.primaryBookingId !== booking.id) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Companion booking is not linked to this primary booking'
+          })
+        }
+
+        // Verify companion booking is reschedulable
+        if (companionBooking.status !== 'CONFIRMED' && companionBooking.status !== 'PENDING_PAYMENT') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Companion booking cannot be rescheduled in its current status'
+          })
+        }
+
+        // Check companion reschedule limit
+        if ((companionBooking.rescheduleCount || 0) >= 1) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Companion booking has reached its reschedule limit'
+          })
+        }
+      }
+
       // 5. Validate new trip
       const newTrip = await ctx.db.trip.findUnique({
         where: { id: input.newTripId }
@@ -1473,10 +1518,16 @@ export const bookingRouter = router({
         })
       }
 
-      if (newTrip.currentBookings >= newTrip.capacity) {
+      // Check capacity: 2 spots if rescheduling both, 1 spot otherwise
+      const requiredSpots = companionBooking ? 2 : 1
+      const availableSpots = newTrip.capacity - newTrip.currentBookings
+
+      if (availableSpots < requiredSpots) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Selected trip is full. Please choose another trip.'
+          message: companionBooking
+            ? `Selected trip does not have capacity for both guests. ${availableSpots} ${availableSpots === 1 ? 'spot' : 'spots'} available, but ${requiredSpots} spots needed.`
+            : 'Selected trip is full. Please choose another trip.'
         })
       }
 
@@ -1545,29 +1596,29 @@ export const bookingRouter = router({
 
       // 8. Update booking and trip capacities atomically
       const updatedBooking = await ctx.db.$transaction(async (tx) => {
-        // Decrement old trip capacity
+        // Decrement old trip capacity (1 or 2 guests)
         if (booking.tripId) {
           await tx.trip.update({
             where: { id: booking.tripId },
             data: {
               currentBookings: {
-                decrement: 1
+                decrement: requiredSpots
               }
             }
           })
         }
 
-        // Increment new trip capacity
+        // Increment new trip capacity (1 or 2 guests)
         await tx.trip.update({
           where: { id: input.newTripId },
           data: {
             currentBookings: {
-              increment: 1
+              increment: requiredSpots
             }
           }
         })
 
-        // Update booking
+        // Update primary booking
         const updated = await tx.booking.update({
           where: { id: input.bookingId },
           data: {
@@ -1582,6 +1633,52 @@ export const bookingRouter = router({
             trip: true
           }
         })
+
+        // Update companion booking if rescheduling both
+        if (companionBooking) {
+          await tx.booking.update({
+            where: { id: companionBooking.id },
+            data: {
+              tripId: input.newTripId,
+              totalPrice: companionBooking.totalPrice, // No price adjustment for companion
+              rescheduleCount: (companionBooking.rescheduleCount || 0) + 1,
+              rescheduledAt: new Date(),
+              originalTripId: companionBooking.tripId,
+              updatedAt: new Date()
+            }
+          })
+        }
+
+        // If rescheduling only primary (not both), unlink companion
+        if (!input.rescheduleBothBookings && booking.primaryBookingId === null) {
+          // This is a primary booking being rescheduled alone
+          // Find and unlink the companion booking if it exists
+          const linkedCompanion = await tx.booking.findFirst({
+            where: {
+              primaryBookingId: booking.id,
+              status: { in: ['CONFIRMED', 'PENDING_PAYMENT'] }
+            }
+          })
+
+          if (linkedCompanion) {
+            await tx.booking.update({
+              where: { id: linkedCompanion.id },
+              data: {
+                primaryBookingId: null
+              }
+            })
+          }
+        }
+
+        // If this is a companion booking being rescheduled, unlink it
+        if (booking.primaryBookingId !== null) {
+          await tx.booking.update({
+            where: { id: booking.id },
+            data: {
+              primaryBookingId: null
+            }
+          })
+        }
 
         // Create payment records if price changed
         if (priceDifference > 0 && stripePaymentIntentId) {

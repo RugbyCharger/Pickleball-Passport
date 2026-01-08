@@ -6,6 +6,19 @@ import { Calendar } from 'lucide-react'
 import ReschedulingModal from './rescheduling-modal'
 import { BookingStatus } from '@prisma/client'
 
+interface CompanionBooking {
+  id: string
+  bookingReference: string
+  guestFirstName: string | null
+  guestLastName: string | null
+  totalPrice: number
+}
+
+interface PrimaryBooking {
+  id: string
+  bookingReference: string
+}
+
 interface RescheduleBookingButtonProps {
   bookingId: string
   bookingReference: string
@@ -14,6 +27,9 @@ interface RescheduleBookingButtonProps {
   tripStartDate: Date
   tripEndDate: Date
   rescheduleCount: number
+  companionBooking?: CompanionBooking
+  primaryBooking?: PrimaryBooking
+  isCompanionBooking?: boolean
 }
 
 export default function RescheduleBookingButton({
@@ -23,7 +39,10 @@ export default function RescheduleBookingButton({
   tripName,
   tripStartDate,
   tripEndDate,
-  rescheduleCount
+  rescheduleCount,
+  companionBooking,
+  primaryBooking,
+  isCompanionBooking = false
 }: RescheduleBookingButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -59,6 +78,9 @@ export default function RescheduleBookingButton({
         currentTripStartDate={tripStartDate}
         currentTripEndDate={tripEndDate}
         rescheduleCount={rescheduleCount}
+        companionBooking={companionBooking}
+        primaryBooking={primaryBooking}
+        isCompanionBooking={isCompanionBooking}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
       />

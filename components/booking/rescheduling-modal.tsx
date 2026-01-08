@@ -5,7 +5,20 @@ import { useState } from 'react'
 import { trpc } from '@/lib/trpc/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Loader2, Calendar, X } from 'lucide-react'
+import { Loader2, Calendar, X, Users } from 'lucide-react'
+
+interface CompanionBooking {
+  id: string
+  bookingReference: string
+  guestFirstName: string | null
+  guestLastName: string | null
+  totalPrice: number
+}
+
+interface PrimaryBooking {
+  id: string
+  bookingReference: string
+}
 
 interface ReschedulingModalProps {
   bookingId: string
@@ -14,6 +27,9 @@ interface ReschedulingModalProps {
   currentTripStartDate: Date
   currentTripEndDate: Date
   rescheduleCount: number
+  companionBooking?: CompanionBooking
+  primaryBooking?: PrimaryBooking
+  isCompanionBooking?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -25,10 +41,14 @@ export default function ReschedulingModal({
   currentTripStartDate,
   currentTripEndDate,
   rescheduleCount,
+  companionBooking,
+  primaryBooking,
+  isCompanionBooking = false,
   open,
   onOpenChange
 }: ReschedulingModalProps) {
   const [selectedTripId, setSelectedTripId] = useState<string | null>(null)
+  const [rescheduleBothBookings, setRescheduleBothBookings] = useState(false)
   const router = useRouter()
   const utils = trpc.useUtils()
 
@@ -52,6 +72,15 @@ export default function ReschedulingModal({
     }
   })
 
+  // Determine if this is a linked booking scenario
+  const hasCompanion = !isCompanionBooking && !!companionBooking
+  const hasPrimaryBooking = isCompanionBooking && !!primaryBooking
+
+  // Companion name for display
+  const companionName = companionBooking?.guestFirstName && companionBooking?.guestLastName
+    ? `${companionBooking.guestFirstName} ${companionBooking.guestLastName}`
+    : 'Your Companion'
+
   const selectedTrip = trips?.find(t => t.id === selectedTripId)
   const hasRescheduleAvailable = rescheduleCount < 1
 
@@ -59,7 +88,9 @@ export default function ReschedulingModal({
     if (!selectedTripId) return
     rescheduleMutation.mutate({
       bookingId,
-      newTripId: selectedTripId
+      newTripId: selectedTripId,
+      rescheduleBothBookings: hasCompanion && rescheduleBothBookings,
+      companionBookingId: hasCompanion && rescheduleBothBookings ? companionBooking?.id : undefined
     })
   }
 
@@ -115,6 +146,70 @@ export default function ReschedulingModal({
               </p>
             </div>
 
+            {/* Linked Booking Warning (Primary booking with companion) */}
+            {hasCompanion && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <Users className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-2">Linked Companion Booking</h3>
+                    <p className="text-sm text-gray-700 mb-3">
+                      You have a linked companion booking for <strong>{companionName}</strong> ({companionBooking.bookingReference}).
+                    </p>
+
+                    {/* Rescheduling Options */}
+                    <div className="space-y-3">
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="reschedule-option"
+                          checked={!rescheduleBothBookings}
+                          onChange={() => setRescheduleBothBookings(false)}
+                          className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 group-hover:text-blue-700">Reschedule only my booking</p>
+                          <p className="text-sm text-gray-600">Companion booking remains on current trip (bookings will be unlinked)</p>
+                        </div>
+                      </label>
+
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="reschedule-option"
+                          checked={rescheduleBothBookings}
+                          onChange={() => setRescheduleBothBookings(true)}
+                          className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 group-hover:text-blue-700">Reschedule both bookings</p>
+                          <p className="text-sm text-gray-600">Both you and your companion move to the new trip together</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Linked Booking Info (Companion booking) */}
+            {hasPrimaryBooking && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <Users className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-2">Companion Booking - Unlinking Warning</h3>
+                    <p className="text-sm text-gray-700 mb-2">
+                      This is a companion booking linked to primary booking <strong>{primaryBooking.bookingReference}</strong>.
+                    </p>
+                    <p className="text-sm text-gray-700 font-semibold text-amber-700">
+                      ⚠️ Rescheduling will unlink your bookings. You and the primary guest will be on different trips.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Eligibility Status */}
             {hasRescheduleAvailable ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
@@ -162,46 +257,60 @@ export default function ReschedulingModal({
 
                 {!tripsLoading && trips && trips.length > 0 && (
                   <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {trips.map((trip) => (
-                      <button
-                        key={trip.id}
-                        onClick={() => setSelectedTripId(trip.id)}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ocean-blue focus:ring-offset-2 ${
-                          selectedTripId === trip.id
-                            ? 'border-ocean-blue bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                        role="radio"
-                        aria-checked={selectedTripId === trip.id}
-                        tabIndex={0}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900">{trip.name}</h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              <Calendar className="inline h-4 w-4 mr-1" />
-                              {new Date(trip.startDate).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })} - {new Date(trip.endDate).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              {trip.location}
-                            </p>
+                    {trips.map((trip) => {
+                      const requiredSpots = hasCompanion && rescheduleBothBookings ? 2 : 1
+                      const hasEnoughCapacity = trip.spotsAvailable >= requiredSpots
+                      const isDisabled = !hasEnoughCapacity
+
+                      return (
+                        <button
+                          key={trip.id}
+                          onClick={() => !isDisabled && setSelectedTripId(trip.id)}
+                          disabled={isDisabled}
+                          className={`w-full text-left p-4 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ocean-blue focus:ring-offset-2 ${
+                            selectedTripId === trip.id
+                              ? 'border-ocean-blue bg-blue-50'
+                              : isDisabled
+                              ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                          role="radio"
+                          aria-checked={selectedTripId === trip.id}
+                          tabIndex={isDisabled ? -1 : 0}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-gray-900">{trip.name}</h4>
+                              <p className="text-sm text-gray-600 mt-1">
+                                <Calendar className="inline h-4 w-4 mr-1" />
+                                {new Date(trip.startDate).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })} - {new Date(trip.endDate).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {trip.location}
+                              </p>
+                            </div>
+                            <div className="ml-4 text-right">
+                              <p className={`text-sm font-medium ${isDisabled ? 'text-red-700' : 'text-gray-900'}`}>
+                                {trip.spotsAvailable} {trip.spotsAvailable === 1 ? 'spot' : 'spots'} left
+                              </p>
+                              {isDisabled && requiredSpots === 2 && (
+                                <p className="text-xs text-red-600 mt-1">
+                                  Need {requiredSpots} spots
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div className="ml-4 text-right">
-                            <p className="text-sm font-medium text-gray-900">
-                              {trip.spotsAvailable} {trip.spotsAvailable === 1 ? 'spot' : 'spots'} left
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
+                        </button>
+                      )
+                    })}
                   </div>
                 )}
 
