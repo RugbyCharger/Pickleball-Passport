@@ -66,9 +66,10 @@ export const emailRouter = router({
     }),
 
   /**
-   * Send welcome email (internal use)
+   * Send welcome email (admin only - for testing/manual triggers)
+   * SECURITY: Changed from publicProcedure to prevent email abuse
    */
-  sendWelcome: publicProcedure
+  sendWelcome: adminProcedure
     .input(
       z.object({
         email: z.string().email(),
@@ -105,9 +106,10 @@ export const emailRouter = router({
     }),
 
   /**
-   * Send booking confirmation email
+   * Send booking confirmation email (admin only - for testing/manual triggers)
+   * SECURITY: Changed from publicProcedure to prevent email abuse
    */
-  sendBookingConfirmation: publicProcedure
+  sendBookingConfirmation: adminProcedure
     .input(
       z.object({
         email: z.string().email(),

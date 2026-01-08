@@ -109,7 +109,18 @@ export const documentRouter = router({
         bookingId: z.string().optional(),
         type: z.enum(['PASSPORT', 'MEDICAL_FORM', 'INSURANCE', 'VISA', 'OTHER']),
         fileName: z.string(),
-        fileUrl: z.string().url(),
+        // SECURITY: Validate URL is from our Supabase storage bucket
+        fileUrl: z.string().url().refine(
+          (url) => {
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+            if (!supabaseUrl) {
+              // In development without Supabase, allow any URL
+              return process.env.NODE_ENV === 'development';
+            }
+            return url.startsWith(supabaseUrl);
+          },
+          { message: 'File URL must be from our storage provider' }
+        ),
         fileSize: z.number().int().positive(),
         mimeType: z.string(),
       })

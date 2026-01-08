@@ -116,6 +116,8 @@ export default function PartnerSetupPage() {
     setIsSubmitting(true);
 
     try {
+      // SECURITY: userId is now automatically taken from the authenticated session
+      // instead of being passed from the client (prevents spoofing)
       const result = await signupMutation.mutateAsync({
         firstName: data.firstName,
         lastName: data.lastName,
@@ -124,7 +126,6 @@ export default function PartnerSetupPage() {
         clubName: data.clubName,
         clubLocation: data.clubLocation,
         jobTitle: data.jobTitle,
-        userId: user.id,
       });
 
       if (result.success) {
@@ -138,10 +139,11 @@ export default function PartnerSetupPage() {
           router.push('/partner/dashboard');
         }, 1500);
       }
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string }
       console.error('Partner signup error:', error);
 
-      if (error.message?.includes('already exists')) {
+      if (err.message?.includes('already exists')) {
         toast.error(
           'A partner account already exists. Please sign in to access your dashboard.',
           { duration: 5000 }
@@ -150,7 +152,7 @@ export default function PartnerSetupPage() {
           router.push('/partner/dashboard');
         }, 2000);
       } else {
-        toast.error(error.message || 'Failed to create partner account. Please try again.');
+        toast.error(err.message || 'Failed to create partner account. Please try again.');
       }
     } finally {
       setIsSubmitting(false);
@@ -195,7 +197,7 @@ export default function PartnerSetupPage() {
           <CardHeader>
             <CardTitle className="text-2xl">Partner Information</CardTitle>
             <CardDescription>
-              Tell us about your club and we'll set up your partner account.
+              Tell us about your club and we&apos;ll set up your partner account.
             </CardDescription>
           </CardHeader>
           <CardContent>

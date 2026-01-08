@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '../trpc';
+import { router, protectedProcedure, publicProcedure, adminProcedure } from '../trpc';
 import {
   createUploadUrl,
   getVideoAsset,
@@ -95,26 +95,13 @@ export const testimonialRouter = router({
   /**
    * Get all testimonials (admin only)
    */
-  listAll: protectedProcedure
+  listAll: adminProcedure
     .input(
       z.object({
         includeUnapproved: z.boolean().default(false),
       })
     )
     .query(async ({ input, ctx }) => {
-      // Check if user is admin
-      const user = await ctx.db.user.findUnique({
-        where: { id: ctx.user.id },
-        select: { role: true },
-      });
-
-      if (user?.role !== 'ADMIN') {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Admin access required',
-        });
-      }
-
       const testimonials = await ctx.db.testimonial.findMany({
         where: input.includeUnapproved ? {} : { isApproved: true },
         orderBy: { createdAt: 'desc' },
@@ -132,30 +119,17 @@ export const testimonialRouter = router({
     }),
 
   /**
-   * Create a direct upload URL for video upload
+   * Create a direct upload URL for video upload (admin only)
    */
-  createUploadUrl: protectedProcedure.mutation(async ({ ctx }) => {
-    // Check if user is admin
-    const user = await ctx.db.user.findUnique({
-      where: { id: ctx.user.id },
-      select: { role: true },
-    });
-
-    if (user?.role !== 'ADMIN') {
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Admin access required',
-      });
-    }
-
+  createUploadUrl: adminProcedure.mutation(async () => {
     const result = await createUploadUrl();
     return result;
   }),
 
   /**
-   * Create a new testimonial
+   * Create a new testimonial (admin only)
    */
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         guestName: z.string().min(1, 'Guest name is required'),
@@ -170,19 +144,6 @@ export const testimonialRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // Check if user is admin
-      const user = await ctx.db.user.findUnique({
-        where: { id: ctx.user.id },
-        select: { role: true },
-      });
-
-      if (user?.role !== 'ADMIN') {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Admin access required',
-        });
-      }
-
       // Get video details from Mux
       const videoAsset = await getVideoAsset(input.muxAssetId);
 
@@ -222,9 +183,9 @@ export const testimonialRouter = router({
     }),
 
   /**
-   * Update a testimonial
+   * Update a testimonial (admin only)
    */
-  update: protectedProcedure
+  update: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -239,19 +200,6 @@ export const testimonialRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // Check if user is admin
-      const user = await ctx.db.user.findUnique({
-        where: { id: ctx.user.id },
-        select: { role: true },
-      });
-
-      if (user?.role !== 'ADMIN') {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Admin access required',
-        });
-      }
-
       const { id, tripDate, ...updateData } = input;
 
       const testimonial = await ctx.db.testimonial.update({
@@ -266,24 +214,11 @@ export const testimonialRouter = router({
     }),
 
   /**
-   * Delete a testimonial
+   * Delete a testimonial (admin only)
    */
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      // Check if user is admin
-      const user = await ctx.db.user.findUnique({
-        where: { id: ctx.user.id },
-        select: { role: true },
-      });
-
-      if (user?.role !== 'ADMIN') {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Admin access required',
-        });
-      }
-
       // Get testimonial to retrieve Mux asset ID
       const testimonial = await ctx.db.testimonial.findUnique({
         where: { id: input.id },

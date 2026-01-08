@@ -8,9 +8,10 @@
  */
 
 import { z } from 'zod'
-import { router, partnerProcedure, publicProcedure } from '../trpc'
+import { router, partnerProcedure, publicProcedure, protectedProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import { PartnerTier, Role } from '@prisma/client'
+import { checkRateLimit, getIpAddress } from '@/lib/rate-limit'
 
 /**
  * Tier thresholds for partner progression
@@ -366,6 +367,7 @@ export const partnerRouter = router({
   /**
    * Validate referral code and return partner information
    * Public procedure (no auth required - guests can validate codes before booking)
+   * Rate limited to prevent enumeration attacks
    */
   validateReferralCode: publicProcedure
     .input(
@@ -374,6 +376,17 @@ export const partnerRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      // Rate limiting to prevent code enumeration
+      const ip = getIpAddress(ctx.headers)
+      const rateLimitResult = await checkRateLimit('api', ip)
+
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many validation attempts. Please try again later.',
+        })
+      }
+
       // Convert to uppercase for case-insensitive matching
       const normalizedCode = input.code.toUpperCase()
 
@@ -410,9 +423,10 @@ export const partnerRouter = router({
 
   /**
    * Partner signup - create new partner account
-   * Public procedure (requires authentication via Clerk)
+   * SECURITY: Changed to protectedProcedure - userId comes from authenticated session
+   * Previously accepted userId as input which allowed spoofing
    */
-  signup: publicProcedure
+  signup: protectedProcedure
     .input(
       z.object({
         firstName: z.string().min(1, 'First name is required'),
@@ -422,11 +436,13 @@ export const partnerRouter = router({
         clubName: z.string().min(1, 'Club name is required'),
         clubLocation: z.string().min(1, 'Club location is required'),
         jobTitle: z.string().optional(),
-        userId: z.string().min(1, 'User ID is required'), // Clerk user ID
+        // SECURITY: Removed userId from input - now taken from authenticated session
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { userId, email, firstName, lastName, phone, clubName, clubLocation, jobTitle } = input
+      // SECURITY: Use authenticated user's ID instead of accepting from input
+      const userId = ctx.user.id
+      const { email, firstName, lastName, phone, clubName, clubLocation, jobTitle } = input
 
       // Check if user already has a partner profile
       const existingPartner = await ctx.db.partnerProfile.findUnique({

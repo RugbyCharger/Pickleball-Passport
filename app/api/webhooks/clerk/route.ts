@@ -65,7 +65,8 @@ export async function POST(req: Request) {
         },
       });
 
-      console.log(`User created: ${id} (${email_addresses[0]?.email_address})`);
+      // SECURITY: Don't log email addresses
+      console.log(`User created: ${id}`);
 
       // TODO: Send welcome email (E2-S2)
       // This will be implemented in Sprint 3 when SendGrid is set up (E11-S1)

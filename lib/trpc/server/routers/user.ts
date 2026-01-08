@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod'
-import { router, publicProcedure, protectedProcedure } from '../trpc'
+import { router, publicProcedure, protectedProcedure, adminProcedure } from '../trpc'
 import { PickleballSkillLevel } from '@prisma/client'
 
 export const userRouter = router({
@@ -45,17 +45,54 @@ export const userRouter = router({
     }),
 
   /**
-   * Update user role (used during onboarding)
+   * Update own role during onboarding (GUEST or PARTNER only)
+   * Users cannot self-assign ADMIN role - this must be done by an existing admin
    */
   updateRole: protectedProcedure
     .input(
       z.object({
-        role: z.enum(['GUEST', 'PARTNER', 'ADMIN']),
+        // SECURITY: ADMIN role removed - cannot self-escalate privileges
+        role: z.enum(['GUEST', 'PARTNER']),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const updatedUser = await ctx.db.user.update({
         where: { id: ctx.user.id },
+        data: { role: input.role },
+      })
+
+      return updatedUser
+    }),
+
+  /**
+   * Admin-only: Update any user's role
+   * Only admins can assign the ADMIN role to other users
+   */
+  adminUpdateUserRole: adminProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        role: z.enum(['GUEST', 'PARTNER', 'ADMIN']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Prevent admins from demoting themselves (safety check)
+      if (input.userId === ctx.user.id && input.role !== 'ADMIN') {
+        // Verify there's at least one other admin before allowing self-demotion
+        const otherAdminCount = await ctx.db.user.count({
+          where: {
+            role: 'ADMIN',
+            id: { not: ctx.user.id },
+          },
+        })
+        
+        if (otherAdminCount === 0) {
+          throw new Error('Cannot demote yourself when you are the only admin')
+        }
+      }
+
+      const updatedUser = await ctx.db.user.update({
+        where: { id: input.userId },
         data: { role: input.role },
       })
 

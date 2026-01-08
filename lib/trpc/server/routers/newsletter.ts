@@ -13,15 +13,14 @@ import { unsubscribeConfirmationEmail } from '@/lib/email/templates/unsubscribe-
 import { TRPCError } from '@trpc/server';
 import { prisma } from '@/lib/db';
 import crypto from 'crypto';
+import { checkRateLimit, getIpAddress } from '@/lib/rate-limit';
 
 export const newsletterRouter = router({
   /**
    * Subscribe to newsletter (double opt-in)
    *
-   * TODO: Add rate limiting to prevent abuse (recommend: 5 requests/minute per IP using Upstash Redis)
-   * - Without rate limiting, attackers can spam database with PENDING subscriptions
-   * - Can exhaust SendGrid quota causing service disruption
-   * - Reference: Story E1-S11 Code Review Issue MEDIUM-4
+   * Rate limited: 5 requests per minute per IP
+   * Prevents database spam and SendGrid quota exhaustion
    */
   subscribe: publicProcedure
     .input(
@@ -29,7 +28,18 @@ export const newsletterRouter = router({
         email: z.string().email('Invalid email address'),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Rate limiting check
+      const ip = getIpAddress(ctx.headers);
+      const rateLimitResult = await checkRateLimit('newsletter', ip);
+
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many subscription attempts. Please try again in a minute.',
+        });
+      }
+
       // Normalize email
       const normalizedEmail = input.email.toLowerCase().trim();
 

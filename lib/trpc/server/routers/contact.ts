@@ -17,6 +17,8 @@ import {
   generateContactAdminNotificationEmail,
   type ContactAdminNotificationData,
 } from '@/lib/email/templates/contact-admin-notification'
+import { checkRateLimit, getIpAddress } from '@/lib/rate-limit'
+import { TRPCError } from '@trpc/server'
 
 /**
  * Contact form input schema with reCAPTCHA token
@@ -78,11 +80,25 @@ async function verifyRecaptcha(token: string): Promise<{
 export const contactRouter = router({
   /**
    * Submit contact form
+   *
+   * Rate limited: 3 requests per minute per IP
+   * Prevents email abuse and spam
    */
   submit: publicProcedure
     .input(contactFormSchema)
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { name, email, phone, message, recaptchaToken } = input
+
+      // Step 0: Rate limiting check (before reCAPTCHA to save API calls)
+      const ip = getIpAddress(ctx.headers);
+      const rateLimitResult = await checkRateLimit('contact', ip);
+
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many contact requests. Please try again in a minute.',
+        });
+      }
 
       // Step 1: Verify reCAPTCHA token
       try {
@@ -90,7 +106,8 @@ export const contactRouter = router({
 
         if (!recaptchaResult.success) {
           console.warn('reCAPTCHA verification failed:', {
-            email,
+            // SECURITY: Redact email to prevent PII leakage in logs
+            emailDomain: email.split('@')[1] || 'unknown',
             action: recaptchaResult.action,
           })
           throw new Error('reCAPTCHA verification failed. Please try again.')
@@ -99,15 +116,17 @@ export const contactRouter = router({
         // Check score threshold (0.5 is Google's recommended starting point)
         if (recaptchaResult.score < 0.5) {
           console.warn('reCAPTCHA score too low (possible spam):', {
-            email,
+            // SECURITY: Redact email to prevent PII leakage in logs
+            emailDomain: email.split('@')[1] || 'unknown',
             score: recaptchaResult.score,
             action: recaptchaResult.action,
           })
           throw new Error('Spam detected. Please try again.')
         }
 
+        // SECURITY: Don't log full email addresses - only domain for debugging
         console.log('reCAPTCHA verification passed:', {
-          email,
+          emailDomain: email.split('@')[1] || 'unknown',
           score: recaptchaResult.score,
           action: recaptchaResult.action,
         })
@@ -133,10 +152,8 @@ export const contactRouter = router({
           },
         })
 
-        console.log('Contact form submission saved to database:', {
-          name,
-          email: normalizedEmail,
-        })
+        // SECURITY: Log submission without full PII
+        console.log('Contact form submission saved to database')
       } catch (error) {
         console.error('Failed to save contact form to database:', error)
         throw new Error('Failed to save your message. Please try again.')
@@ -159,7 +176,7 @@ export const contactRouter = router({
           text,
         })
 
-        console.log('Confirmation email sent to user:', normalizedEmail)
+        console.log('Confirmation email sent to user')
       } catch (error) {
         // Don't fail the request if email fails, just log it
         console.error('Failed to send confirmation email to user:', error)
@@ -189,7 +206,7 @@ export const contactRouter = router({
           replyTo: normalizedEmail,
         })
 
-        console.log('Admin notification email sent:', adminEmail)
+        console.log('Admin notification email sent')
       } catch (error) {
         // Don't fail the request if email fails, just log it
         console.error('Failed to send admin notification email:', error)

@@ -86,6 +86,7 @@ export const enforceRole = (allowedRoles: string[]) =>
     return next({
       ctx: {
         ...ctx,
+        user: ctx.user, // TypeScript now knows user is defined
         role: dbUser.role,
       },
     })

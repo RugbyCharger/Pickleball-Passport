@@ -4,12 +4,14 @@
  * GET /api/receipts/[paymentId]/download
  *
  * Downloads PDF receipt for a payment with authentication and ownership verification
+ * Rate limited: 10 requests per minute per user (prevents enumeration attacks)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { prisma as db } from '@/lib/db';
 import { downloadFromSupabaseStorage } from '@/lib/storage/supabase-storage';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function GET(
   request: NextRequest,
@@ -23,6 +25,15 @@ export async function GET(
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    // 1b. Rate limiting (prevents enumeration attacks on receipt IDs)
+    const rateLimitResult = await checkRateLimit('api', userId);
+    if (rateLimitResult && !rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
       );
     }
 
