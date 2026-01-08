@@ -2052,6 +2052,8 @@ export const bookingRouter = router({
         select: {
           id: true,
           name: true,
+          slug: true,
+          description: true,
           basePrice: true,
           durationOptions: true,
         },
@@ -2240,6 +2242,15 @@ export const bookingRouter = router({
             select: {
               name: true,
               slug: true,
+              description: true,
+            },
+          },
+          trip: {
+            select: {
+              id: true,
+              startDate: true,
+              endDate: true,
+              destination: true,
             },
           },
           bookingAddOns: {
@@ -2274,11 +2285,108 @@ export const bookingRouter = router({
         },
       })
 
-      // 12. TODO: SEND EMAILS
-      // Note: Email sending implementation will be added in next task
-      // - Send confirmation to purchaser
-      // - If immediate delivery, send gift notification to recipient and update status to SENT
-      // - If scheduled, leave status as PENDING for cron job
+      // 12. SEND EMAILS
+      // Import email functions at top of file if not already imported
+      const { sendEmail } = await import('@/lib/email/sendgrid')
+      const {
+        generateGiftConfirmationPurchaserEmail,
+      } = await import('@/lib/email/templates/gift-confirmation-purchaser')
+      const {
+        generateGiftNotificationRecipientEmail,
+      } = await import('@/lib/email/templates/gift-notification-recipient')
+
+      const purchaserFirstName = user.firstName || 'Valued Customer'
+      const purchaserEmailAddress = user.emailAddresses[0]?.emailAddress || ''
+
+      // Send confirmation to purchaser
+      try {
+        const purchaserConfirmationData = {
+          purchaserFirstName,
+          purchaserEmail: purchaserEmailAddress,
+          recipientFirstName: giftRecipient.firstName,
+          recipientLastName: giftRecipient.lastName,
+          recipientEmail: giftRecipient.email,
+          bookingReference: booking.bookingReference,
+          packageName: pkg.name,
+          duration,
+          accommodationTier,
+          tripStartDate: booking.trip?.startDate?.toISOString(),
+          tripEndDate: booking.trip?.endDate?.toISOString(),
+          destination: booking.trip?.destination || 'Chiang Mai, Thailand',
+          totalPrice,
+          addOns: addOnRecords.map((addOn) => ({
+            name: addOn.name,
+            quantity: 1,
+            price: addOn.thPrice,
+          })),
+          giftMessage: giftMessage || undefined,
+          deliveryDate: giftDeliveryDate,
+          isScheduled: !!giftDeliveryDate,
+          portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+        }
+
+        const purchaserEmailTemplate = generateGiftConfirmationPurchaserEmail(purchaserConfirmationData)
+
+        await sendEmail({
+          to: purchaserEmailAddress,
+          subject: purchaserEmailTemplate.subject,
+          html: purchaserEmailTemplate.html,
+          text: purchaserEmailTemplate.text,
+        })
+      } catch (emailError) {
+        console.error('Failed to send gift confirmation to purchaser:', emailError)
+        // Don't throw - booking already created
+      }
+
+      // If immediate delivery, send gift notification to recipient and update status to SENT
+      if (!giftDeliveryDate) {
+        try {
+          const acceptanceUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/gift/accept?token=${giftAcceptanceToken}`
+          const packageUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages/${pkg.slug || ''}`
+
+          const recipientNotificationData = {
+            recipientFirstName: giftRecipient.firstName,
+            recipientEmail: giftRecipient.email,
+            purchaserFirstName: user.firstName || '',
+            purchaserLastName: user.lastName || '',
+            bookingReference: booking.bookingReference,
+            packageName: pkg.name,
+            packageDescription: pkg.description,
+            duration,
+            accommodationTier,
+            tripStartDate: booking.trip?.startDate?.toISOString(),
+            tripEndDate: booking.trip?.endDate?.toISOString(),
+            destination: booking.trip?.destination || 'Chiang Mai, Thailand',
+            totalValue: totalPrice,
+            addOns: addOnRecords.map((addOn) => ({
+              name: addOn.name,
+              quantity: 1,
+            })),
+            giftMessage: giftMessage || undefined,
+            acceptanceUrl,
+            packageUrl,
+          }
+
+          const recipientEmailTemplate = generateGiftNotificationRecipientEmail(recipientNotificationData)
+
+          await sendEmail({
+            to: giftRecipient.email,
+            subject: recipientEmailTemplate.subject,
+            html: recipientEmailTemplate.html,
+            text: recipientEmailTemplate.text,
+          })
+
+          // Update status to SENT
+          await ctx.db.booking.update({
+            where: { id: booking.id },
+            data: { giftStatus: 'SENT' },
+          })
+        } catch (emailError) {
+          console.error('Failed to send gift notification to recipient:', emailError)
+          // Don't throw - booking already created, gift will remain in PENDING status
+        }
+      }
+      // If scheduled, leave status as PENDING for cron job to handle
 
       // 13. RETURN PAYMENT CLIENT SECRET
       return {
