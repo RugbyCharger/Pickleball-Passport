@@ -20,7 +20,7 @@ export default async function BookingsPage() {
     redirect('/sign-in')
   }
 
-  // Fetch all user bookings with related data
+  // Fetch all user bookings with related data including companion relationships
   const bookings = await prisma.booking.findMany({
     where: {
       userId: user.id,
@@ -50,6 +50,24 @@ export default async function BookingsPage() {
           createdAt: 'desc',
         },
         take: 1,
+      },
+      companionBookings: {
+        select: {
+          id: true,
+          bookingReference: true,
+          guestFirstName: true,
+          guestLastName: true,
+          status: true,
+          totalPrice: true,
+          accommodationTier: true,
+        },
+      },
+      primaryBooking: {
+        select: {
+          id: true,
+          bookingReference: true,
+          userId: true,
+        },
       },
     },
     orderBy: {

@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, MapPin, DollarSign } from 'lucide-react'
 import { BookingStatus } from '@prisma/client'
+import { LinkedBookingCard } from './linked-booking-card'
 
 interface Booking {
   id: string
@@ -27,6 +28,7 @@ interface Booking {
   accommodationTier: string
   totalPrice: number
   createdAt: Date
+  isCompanionBooking: boolean
   package: {
     name: string
     slug: string
@@ -42,6 +44,20 @@ interface Booking {
     status: string
     createdAt: Date
   }>
+  companionBookings: Array<{
+    id: string
+    bookingReference: string
+    guestFirstName: string | null
+    guestLastName: string | null
+    status: BookingStatus
+    totalPrice: number
+    accommodationTier: string
+  }>
+  primaryBooking: {
+    id: string
+    bookingReference: string
+    userId: string
+  } | null
 }
 
 interface BookingsListProps {
@@ -70,8 +86,9 @@ export function BookingsList({ bookings }: BookingsListProps) {
   const [sortOrder, setSortOrder] = useState<SortOption>('newest')
 
   // Filter and sort bookings
+  // Exclude companion bookings (they're displayed with their primary booking)
   const filteredAndSortedBookings = useMemo(() => {
-    let result = bookings
+    let result = bookings.filter((booking) => !booking.isCompanionBooking)
 
     // Apply status filter
     if (statusFilter !== 'ALL') {
@@ -146,90 +163,101 @@ export function BookingsList({ bookings }: BookingsListProps) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {filteredAndSortedBookings.map((booking) => (
-            <Card key={booking.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="py-6">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                  {/* Booking Info */}
-                  <div className="flex-1 space-y-3">
-                    {/* Header */}
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-lg">{booking.package.name}</h3>
-                          <Badge variant={getStatusVariant(booking.status)}>
-                            {getStatusLabel(booking.status)}
-                          </Badge>
+        <div className="grid gap-6">
+          {filteredAndSortedBookings.map((booking) => {
+            // Check if this booking has a companion
+            const hasCompanion = booking.companionBookings && booking.companionBookings.length > 0
+
+            // Render linked booking card if companion exists
+            if (hasCompanion) {
+              return <LinkedBookingCard key={booking.id} booking={booking} />
+            }
+
+            // Render regular booking card
+            return (
+              <Card key={booking.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="py-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                    {/* Booking Info */}
+                    <div className="flex-1 space-y-3">
+                      {/* Header */}
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-lg">{booking.package.name}</h3>
+                            <Badge variant={getStatusVariant(booking.status)}>
+                              {getStatusLabel(booking.status)}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {booking.bookingReference}
+                          </p>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          {booking.bookingReference}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Details Grid */}
-                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                      {/* Duration */}
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>{booking.duration} days</span>
                       </div>
 
-                      {/* Price */}
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <DollarSign className="h-4 w-4" />
-                        <span>${(booking.totalPrice / 100).toLocaleString()}</span>
+                      {/* Details Grid */}
+                      <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                        {/* Duration */}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          <span>{booking.duration} days</span>
+                        </div>
+
+                        {/* Price */}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <DollarSign className="h-4 w-4" />
+                          <span>${(booking.totalPrice / 100).toLocaleString()}</span>
+                        </div>
+
+                        {/* Trip Info */}
+                        {booking.trip && (
+                          <div className="flex items-center gap-2 text-muted-foreground sm:col-span-2">
+                            <MapPin className="h-4 w-4" />
+                            <span>
+                              {booking.trip.destination} • {new Date(booking.trip.startDate).toLocaleDateString()} - {new Date(booking.trip.endDate).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Accommodation Tier */}
+                        <div className="text-muted-foreground">
+                          <span className="font-medium">Accommodation:</span>{' '}
+                          {formatAccommodationTier(booking.accommodationTier)}
+                        </div>
+
+                        {/* Booked Date */}
+                        <div className="text-muted-foreground">
+                          <span className="font-medium">Booked:</span>{' '}
+                          {new Date(booking.createdAt).toLocaleDateString()}
+                        </div>
                       </div>
 
-                      {/* Trip Info */}
-                      {booking.trip && (
-                        <div className="flex items-center gap-2 text-muted-foreground sm:col-span-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>
-                            {booking.trip.destination} • {new Date(booking.trip.startDate).toLocaleDateString()} - {new Date(booking.trip.endDate).toLocaleDateString()}
-                          </span>
+                      {/* Payment Status */}
+                      {booking.payments[0] && (
+                        <div className="pt-2 border-t">
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Payment:</span>{' '}
+                            <Badge variant={booking.payments[0].status === 'SUCCEEDED' ? 'default' : 'secondary'} className="ml-1">
+                              {booking.payments[0].status}
+                            </Badge>
+                          </p>
                         </div>
                       )}
-
-                      {/* Accommodation Tier */}
-                      <div className="text-muted-foreground">
-                        <span className="font-medium">Accommodation:</span>{' '}
-                        {formatAccommodationTier(booking.accommodationTier)}
-                      </div>
-
-                      {/* Booked Date */}
-                      <div className="text-muted-foreground">
-                        <span className="font-medium">Booked:</span>{' '}
-                        {new Date(booking.createdAt).toLocaleDateString()}
-                      </div>
                     </div>
 
-                    {/* Payment Status */}
-                    {booking.payments[0] && (
-                      <div className="pt-2 border-t">
-                        <p className="text-xs text-muted-foreground">
-                          <span className="font-medium">Payment:</span>{' '}
-                          <Badge variant={booking.payments[0].status === 'SUCCEEDED' ? 'default' : 'secondary'} className="ml-1">
-                            {booking.payments[0].status}
-                          </Badge>
-                        </p>
-                      </div>
-                    )}
+                    {/* Actions */}
+                    <div className="flex flex-col gap-2 lg:self-start">
+                      <Link href={`/dashboard/bookings/${booking.id}`}>
+                        <Button variant="default" size="sm" className="w-full lg:w-auto">
+                          View Details
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex flex-col gap-2 lg:self-start">
-                    <Link href={`/dashboard/bookings/${booking.id}`}>
-                      <Button variant="default" size="sm" className="w-full lg:w-auto">
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       )}
     </div>

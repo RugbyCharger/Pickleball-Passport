@@ -25,6 +25,7 @@ import {
   CreditCard,
   Home,
   Package as PackageIcon,
+  Users,
 } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { BookingStatus } from '@prisma/client'
@@ -47,7 +48,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
     redirect('/sign-in')
   }
 
-  // Fetch complete booking details
+  // Fetch complete booking details including companion relationships
   const booking = await prisma.booking.findUnique({
     where: {
       id,
@@ -67,6 +68,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
       createdAt: true,
       updatedAt: true,
       rescheduleCount: true,
+      isCompanionBooking: true,
       package: {
         select: {
           id: true,
@@ -118,6 +120,24 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
           type: true,
           status: true,
           uploadedAt: true,
+        },
+      },
+      companionBookings: {
+        select: {
+          id: true,
+          bookingReference: true,
+          guestFirstName: true,
+          guestLastName: true,
+          status: true,
+          totalPrice: true,
+          accommodationTier: true,
+        },
+      },
+      primaryBooking: {
+        select: {
+          id: true,
+          bookingReference: true,
+          userId: true,
         },
       },
     },
@@ -230,6 +250,88 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
           </Button>
         </div>
       </div>
+
+      {/* Linked Booking Info (if companion booking or has companion) */}
+      {(booking.companionBookings.length > 0 || booking.primaryBooking) && (
+        <Card className="border-blue-200 dark:border-blue-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
+              <Users className="h-5 w-5" />
+              {booking.companionBookings.length > 0 ? 'Traveling With Companion' : 'Companion Booking'}
+            </CardTitle>
+            <CardDescription>
+              {booking.companionBookings.length > 0
+                ? 'This booking is linked with a companion booking'
+                : 'This is a companion booking linked to a primary booking'
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {booking.companionBookings.length > 0 ? (
+              <>
+                {booking.companionBookings.map((companion) => {
+                  const companionName = companion.guestFirstName && companion.guestLastName
+                    ? `${companion.guestFirstName} ${companion.guestLastName}`
+                    : 'Your Companion'
+
+                  return (
+                    <div key={companion.id} className="flex items-start justify-between p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-semibold">{companionName}</h4>
+                          <Badge variant={getStatusVariant(companion.status)}>
+                            {getStatusLabel(companion.status)}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          Booking Reference: <span className="font-mono font-semibold">{companion.bookingReference}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Accommodation: {formatAccommodationTier(companion.accommodationTier)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Total: ${(companion.totalPrice / 100).toLocaleString()}
+                        </p>
+                      </div>
+                      <Link href={`/dashboard/bookings/${companion.id}`}>
+                        <Button variant="outline" size="sm">
+                          View Details
+                        </Button>
+                      </Link>
+                    </div>
+                  )
+                })}
+                <div className="pt-3 border-t">
+                  <p className="text-sm text-center">
+                    <span className="font-medium">Combined Total:</span>{' '}
+                    <span className="text-lg font-semibold">
+                      ${((booking.totalPrice + booking.companionBookings[0].totalPrice) / 100).toLocaleString()}
+                    </span>
+                    <span className="text-muted-foreground ml-2">(2 bookings)</span>
+                  </p>
+                </div>
+              </>
+            ) : booking.primaryBooking && (
+              <div className="flex items-start justify-between p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
+                <div className="flex-1">
+                  <h4 className="font-semibold mb-2">Primary Booking</h4>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Booking Reference: <span className="font-mono font-semibold">{booking.primaryBooking.bookingReference}</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    This companion booking is linked to the primary booking above.
+                  </p>
+                </div>
+                <Link href={`/dashboard/bookings/${booking.primaryBooking.id}`}>
+                  <Button variant="outline" size="sm">
+                    View Primary Booking
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Booking Status Timeline */}
       <Card>
