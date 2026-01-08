@@ -16,6 +16,7 @@ import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import { BookingSummary } from '@/components/booking/booking-summary'
 import { CompanionBookingSummary } from '@/components/booking/companion-booking-summary'
+import { GiftBookingSummary } from '@/components/booking/gift-booking-summary'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 import { ReferralCodeInput } from '@/components/booking/referral-code-input'
 import { ReviewPageClient } from './review-client'
@@ -60,6 +61,9 @@ export default async function BookingReviewPage() {
 
             {/* Companion Booking Details */}
             <CompanionBookingSummary />
+
+            {/* Gift Booking Details */}
+            <GiftBookingSummary />
 
             {/* Referral Code */}
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">

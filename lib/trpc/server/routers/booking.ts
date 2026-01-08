@@ -2010,5 +2010,284 @@ export const bookingRouter = router({
         newTotalPrice: updatedBooking.totalPrice,
         bookingReference: booking.bookingReference
       }
+    }),
+
+  /**
+   * Create Gift Booking (E3-S18)
+   *
+   * Creates a gift booking where the purchaser pays for a trip as a gift for someone else.
+   * The booking is initially assigned to the purchaser, then transferred to the recipient upon acceptance.
+   */
+  createGift: guestProcedure
+    .input(
+      z.object({
+        // Standard booking data
+        packageId: z.string().cuid(),
+        tripId: z.string().cuid().optional(),
+        duration: z.number().refine((d) => [7, 10, 14, 21].includes(d)),
+        accommodationTier: z.enum(['LUXURY', 'ULTRA_LUXURY', 'VILLA']),
+        addOnIds: z.array(z.string().cuid()).default([]),
+        referralCode: z.string().optional(),
+
+        // Gift recipient data
+        giftRecipient: z.object({
+          firstName: z.string().min(1),
+          lastName: z.string().min(1),
+          email: z.string().email(),
+          phone: z.string().optional(),
+          dateOfBirth: z.string().optional(),
+        }),
+
+        // Gift message and delivery
+        giftMessage: z.string().max(500).optional(),
+        giftDeliveryDate: z.string().datetime().optional(), // ISO string, null = immediate
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { packageId, tripId, duration, accommodationTier, addOnIds, giftRecipient, giftMessage, giftDeliveryDate, referralCode } = input
+
+      // 1. VALIDATION - Package
+      const pkg = await ctx.db.package.findFirst({
+        where: { id: packageId, isActive: true },
+        select: {
+          id: true,
+          name: true,
+          basePrice: true,
+          durationOptions: true,
+        },
+      })
+
+      if (!pkg) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Package not found or is no longer available',
+        })
+      }
+
+      if (!pkg.durationOptions.includes(duration)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `This package does not support ${duration}-day duration`,
+        })
+      }
+
+      // 2. VALIDATION - Recipient email != Purchaser email
+      const user = ctx.user!
+      const purchaserEmail = user.emailAddresses[0]?.emailAddress || ''
+
+      if (giftRecipient.email.toLowerCase() === purchaserEmail.toLowerCase()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'You cannot purchase a gift for yourself',
+        })
+      }
+
+      // 3. VALIDATION - Trip if specified
+      if (tripId) {
+        const trip = await ctx.db.trip.findFirst({
+          where: { id: tripId, isActive: true },
+          select: {
+            id: true,
+            capacity: true,
+            currentBookings: true,
+            isActive: true,
+          },
+        })
+
+        if (!trip || !trip.isActive) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Trip not found or is no longer available',
+          })
+        }
+
+        if (trip.currentBookings >= trip.capacity) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'This trip is fully booked',
+          })
+        }
+      }
+
+      // 4. VALIDATION - Delivery date if scheduled
+      if (giftDeliveryDate) {
+        const deliveryDate = new Date(giftDeliveryDate)
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        tomorrow.setHours(0, 0, 0, 0)
+
+        if (deliveryDate < tomorrow) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Delivery date must be at least tomorrow',
+          })
+        }
+
+        const oneYearFromNow = new Date()
+        oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+
+        if (deliveryDate > oneYearFromNow) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Delivery date must be within one year',
+          })
+        }
+      }
+
+      // 5. CALCULATE PRICING (standard booking flow)
+      const basePrice = Math.round(pkg.basePrice * (duration / 14))
+      const accommodationPrice = ACCOMMODATION_TIER_PRICING[accommodationTier] || 0
+
+      let addOnsTotal = 0
+      const addOnRecords = []
+      if (addOnIds.length > 0) {
+        const addOns = await ctx.db.addOn.findMany({
+          where: {
+            id: { in: addOnIds },
+            isActive: true,
+          },
+          select: {
+            id: true,
+            name: true,
+            thPrice: true,
+          },
+        })
+
+        addOnsTotal = addOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
+        addOnRecords.push(...addOns)
+      }
+
+      let referralDiscount = 0
+      let referredBy: string | null = null
+
+      if (referralCode) {
+        const partner = await ctx.db.partnerProfile.findUnique({
+          where: { referralCode: referralCode.toUpperCase() },
+          select: {
+            id: true,
+            referralCode: true,
+            tier: true,
+          },
+        })
+
+        if (partner) {
+          referralDiscount = Math.round((basePrice + accommodationPrice + addOnsTotal) * 0.1)
+          referredBy = partner.referralCode
+        }
+      }
+
+      const totalPrice = basePrice + accommodationPrice + addOnsTotal - referralDiscount
+
+      // 6. GENERATE GIFT ACCEPTANCE TOKEN
+      const { randomUUID } = await import('crypto')
+      const giftAcceptanceToken = randomUUID()
+
+      // 7. GENERATE BOOKING REFERENCE
+      const bookingReference = generateBookingReference()
+
+      // 8. CREATE STRIPE PAYMENT INTENT
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: totalPrice,
+        currency: 'usd',
+        metadata: {
+          type: 'gift_booking',
+          bookingReference,
+          purchaserEmail,
+          purchaserName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+          recipientEmail: giftRecipient.email,
+          recipientName: `${giftRecipient.firstName} ${giftRecipient.lastName}`,
+          packageName: pkg.name,
+          duration: duration.toString(),
+        },
+      })
+
+      // 9. CREATE BOOKING (initially assigned to purchaser)
+      const booking = await ctx.db.booking.create({
+        data: {
+          bookingReference,
+          userId: user.id, // Purchaser
+          packageId,
+          tripId: tripId || null,
+          status: 'PENDING_PAYMENT',
+          duration,
+          accommodationTier,
+          basePrice,
+          accommodationPrice,
+          addOnsTotal,
+          totalPrice,
+          referredBy,
+          // Gift booking fields
+          isGift: true,
+          giftPurchaserId: user.id,
+          giftRecipientEmail: giftRecipient.email,
+          giftRecipientName: `${giftRecipient.firstName} ${giftRecipient.lastName}`,
+          giftRecipientPhone: giftRecipient.phone || null,
+          giftMessage: giftMessage || null,
+          giftDeliveryDate: giftDeliveryDate ? new Date(giftDeliveryDate) : null,
+          giftStatus: 'PENDING', // Will be SENT after email is sent
+          giftAcceptanceToken,
+          // Add-ons
+          bookingAddOns: {
+            create: addOnRecords.map((addOn) => ({
+              addOnId: addOn.id,
+              quantity: 1,
+              price: addOn.thPrice,
+            })),
+          },
+        },
+        include: {
+          package: {
+            select: {
+              name: true,
+              slug: true,
+            },
+          },
+          bookingAddOns: {
+            include: {
+              addOn: {
+                select: {
+                  name: true,
+                  category: true,
+                },
+              },
+            },
+          },
+        },
+      })
+
+      // 10. INCREMENT TRIP CAPACITY (if trip selected)
+      if (tripId) {
+        await ctx.db.trip.update({
+          where: { id: tripId },
+          data: { currentBookings: { increment: 1 } },
+        })
+      }
+
+      // 11. CREATE PAYMENT RECORD
+      await ctx.db.payment.create({
+        data: {
+          bookingId: booking.id,
+          amount: totalPrice,
+          status: 'PENDING',
+          stripePaymentIntentId: paymentIntent.id,
+          stripeCustomerId: null,
+        },
+      })
+
+      // 12. TODO: SEND EMAILS
+      // Note: Email sending implementation will be added in next task
+      // - Send confirmation to purchaser
+      // - If immediate delivery, send gift notification to recipient and update status to SENT
+      // - If scheduled, leave status as PENDING for cron job
+
+      // 13. RETURN PAYMENT CLIENT SECRET
+      return {
+        requiresPayment: true,
+        clientSecret: paymentIntent.client_secret,
+        bookingId: booking.id,
+        bookingReference: booking.bookingReference,
+        total: totalPrice,
+        giftAcceptanceToken, // For testing purposes
+      }
     })
 })

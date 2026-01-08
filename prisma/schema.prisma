@@ -111,6 +111,13 @@ enum SubscriberStatus {
   BOUNCED
 }
 
+enum GiftStatus {
+  PENDING   // Payment complete, waiting to send notification
+  SENT      // Gift notification email sent to recipient
+  ACCEPTED  // Recipient accepted gift, booking transferred
+  DECLINED  // Recipient declined gift, refund processed
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -334,6 +341,18 @@ model Booking {
   guestPassportNumber String? // Companion's passport number (optional)
   guestDietaryNotes   String? // Companion's dietary restrictions/notes (optional)
 
+  // Gift Booking (E3-S18)
+  isGift              Boolean    @default(false) // True if this is a gift booking
+  giftPurchaserId     String? // User ID of original purchaser (before transfer)
+  giftRecipientEmail  String? // Recipient's email
+  giftRecipientName   String? // Recipient's full name
+  giftRecipientPhone  String? // Recipient's phone (optional)
+  giftMessage         String?    @db.Text // Personal message from purchaser
+  giftDeliveryDate    DateTime? // When to send gift notification (null = immediate)
+  giftAcceptedAt      DateTime? // When recipient accepted the gift
+  giftStatus          GiftStatus @default(PENDING) // PENDING, SENT, ACCEPTED, DECLINED
+  giftAcceptanceToken String?    @unique // Unique token for secure gift acceptance
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -355,6 +374,9 @@ model Booking {
   @@index([status])
   @@index([createdAt])
   @@index([primaryBookingId])
+  @@index([giftAcceptanceToken])
+  @@index([giftStatus])
+  @@index([giftDeliveryDate])
 }
 
 model AddOn {

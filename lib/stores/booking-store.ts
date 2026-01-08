@@ -61,6 +61,14 @@ export interface CompanionAccommodation {
   tier?: AccommodationTier
 }
 
+export interface GiftRecipient {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  dateOfBirth?: string
+}
+
 export interface BookingState {
   // Current step in the configurator
   currentStep: number
@@ -104,6 +112,13 @@ export interface BookingState {
   companionPackage: CompanionPackage | null
   companionAccommodation: CompanionAccommodation | null
   companionAddOns: SelectedAddOn[]
+
+  // Gift Booking (E3-S18)
+  isGift: boolean
+  giftRecipient: GiftRecipient | null
+  giftMessage: string
+  giftDeliveryOption: 'immediate' | 'scheduled'
+  giftDeliveryDate: Date | null
 
   // Actions
   setCurrentStep: (step: number) => void
@@ -149,6 +164,14 @@ export interface BookingState {
   calculateCombinedTotal: () => number
   validateCompanionBooking: () => { isValid: boolean; errors: string[] }
 
+  // Gift booking actions
+  toggleGift: () => void
+  setGiftRecipient: (recipient: GiftRecipient | null) => void
+  setGiftMessage: (message: string) => void
+  setGiftDeliveryOption: (option: 'immediate' | 'scheduled') => void
+  setGiftDeliveryDate: (date: Date | null) => void
+  validateGiftBooking: () => { isValid: boolean; errors: string[] }
+
   // Pricing calculations
   calculateSubtotal: () => number
   calculateSavings: () => number
@@ -190,6 +213,11 @@ const initialState = {
   companionPackage: null,
   companionAccommodation: null,
   companionAddOns: [],
+  isGift: false,
+  giftRecipient: null,
+  giftMessage: '',
+  giftDeliveryOption: 'immediate' as 'immediate' | 'scheduled',
+  giftDeliveryDate: null,
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -505,6 +533,121 @@ export const useBookingStore = create<BookingState>()(
         }
       },
 
+      // Gift Booking Actions (E3-S18)
+      toggleGift: () => set((state) => {
+        const newIsGift = !state.isGift
+        // If disabling gift mode, clear all gift data
+        if (!newIsGift) {
+          return {
+            isGift: false,
+            giftRecipient: null,
+            giftMessage: '',
+            giftDeliveryOption: 'immediate',
+            giftDeliveryDate: null,
+          }
+        }
+        // If enabling gift mode, disable companion mode (can't be both)
+        return {
+          isGift: true,
+          hasCompanion: false,
+          companionInfo: null,
+          companionPackage: null,
+          companionAccommodation: null,
+          companionAddOns: [],
+        }
+      }),
+
+      setGiftRecipient: (recipient) => set({ giftRecipient: recipient }),
+
+      setGiftMessage: (message) => set({ giftMessage: message }),
+
+      setGiftDeliveryOption: (option) => set((state) => ({
+        giftDeliveryOption: option,
+        // Clear delivery date if switching to immediate
+        giftDeliveryDate: option === 'immediate' ? null : state.giftDeliveryDate,
+      })),
+
+      setGiftDeliveryDate: (date) => set({ giftDeliveryDate: date }),
+
+      validateGiftBooking: () => {
+        const state = get()
+        const errors: string[] = []
+
+        if (!state.isGift) {
+          return { isValid: true, errors: [] }
+        }
+
+        // Validate gift recipient
+        if (!state.giftRecipient) {
+          errors.push('Gift recipient information is required')
+        } else {
+          if (!state.giftRecipient.firstName) {
+            errors.push('Recipient first name is required')
+          }
+          if (!state.giftRecipient.lastName) {
+            errors.push('Recipient last name is required')
+          }
+          if (!state.giftRecipient.email) {
+            errors.push('Recipient email is required')
+          }
+
+          // Email format validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          if (state.giftRecipient.email && !emailRegex.test(state.giftRecipient.email)) {
+            errors.push('Recipient email format is invalid')
+          }
+
+          // Age validation (18+)
+          if (state.giftRecipient.dateOfBirth) {
+            const today = new Date()
+            const birthDate = new Date(state.giftRecipient.dateOfBirth)
+            const age = today.getFullYear() - birthDate.getFullYear()
+            const monthDiff = today.getMonth() - birthDate.getMonth()
+            const adjustedAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())
+              ? age - 1
+              : age
+
+            if (adjustedAge < 18) {
+              errors.push('Recipient must be 18 years or older')
+            }
+          }
+        }
+
+        // Validate gift message length
+        if (state.giftMessage.length > 500) {
+          errors.push('Gift message must be 500 characters or less')
+        }
+
+        // Validate delivery date if scheduled
+        if (state.giftDeliveryOption === 'scheduled') {
+          if (!state.giftDeliveryDate) {
+            errors.push('Delivery date is required for scheduled gifts')
+          } else {
+            const tomorrow = new Date()
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            tomorrow.setHours(0, 0, 0, 0)
+
+            const oneYearFromNow = new Date()
+            oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+
+            const deliveryDate = new Date(state.giftDeliveryDate)
+            deliveryDate.setHours(0, 0, 0, 0)
+
+            if (deliveryDate < tomorrow) {
+              errors.push('Delivery date must be at least tomorrow')
+            }
+            if (deliveryDate > oneYearFromNow) {
+              errors.push('Delivery date must be within one year')
+            }
+          }
+        }
+
+        return {
+          isValid: errors.length === 0,
+          errors,
+        }
+      },
+
       // Reset to initial state
       reset: () => set(initialState),
     }),
@@ -529,6 +672,12 @@ export const useBookingStore = create<BookingState>()(
         companionPackage: state.companionPackage,
         companionAccommodation: state.companionAccommodation,
         companionAddOns: state.companionAddOns,
+        // Gift booking state
+        isGift: state.isGift,
+        giftRecipient: state.giftRecipient,
+        giftMessage: state.giftMessage,
+        giftDeliveryOption: state.giftDeliveryOption,
+        giftDeliveryDate: state.giftDeliveryDate,
         // Modification mode state excluded from persistence
       }),
     }
