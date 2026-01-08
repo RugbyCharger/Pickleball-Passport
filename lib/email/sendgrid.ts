@@ -287,3 +287,39 @@ export async function sendBookingModification(
     text,
   });
 }
+
+/**
+ * Send booking confirmation to primary guest with companion (E3-S17)
+ */
+export async function sendPrimaryWithCompanionConfirmation(
+  to: string,
+  data: import('./templates/booking-confirmation-primary-with-companion').PrimaryWithCompanionConfirmationData
+): Promise<void> {
+  const { generatePrimaryWithCompanionConfirmationEmail } = await import('./templates/booking-confirmation-primary-with-companion');
+  const { html, text, subject } = generatePrimaryWithCompanionConfirmationEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send booking confirmation to companion guest (E3-S17)
+ */
+export async function sendCompanionConfirmation(
+  to: string,
+  data: import('./templates/booking-confirmation-companion').CompanionConfirmationData
+): Promise<void> {
+  const { generateCompanionConfirmationEmail } = await import('./templates/booking-confirmation-companion');
+  const { html, text, subject } = generateCompanionConfirmationEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
