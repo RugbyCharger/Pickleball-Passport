@@ -14,7 +14,7 @@
  */
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import type { ComponentType } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import { uploadFile, validateFile, FILE_VALIDATION } from '@/lib/storage/supabase';
 import {
@@ -40,9 +40,11 @@ const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
   OTHER: 'Other',
 };
 
+type StatusIcon = ComponentType<{ className?: string }>;
+
 const STATUS_CONFIG: Record<
   DocumentStatus,
-  { label: string; icon: any; color: string }
+  { label: string; icon: StatusIcon; color: string }
 > = {
   PENDING_REVIEW: {
     label: 'Pending Review',
@@ -67,7 +69,6 @@ const STATUS_CONFIG: Record<
 };
 
 export default function DocumentsPage() {
-  const router = useRouter();
   const [selectedType, setSelectedType] = useState<DocumentType>('PASSPORT');
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -312,7 +313,11 @@ export default function DocumentsPage() {
             <Filter className="h-4 w-4 text-gray-500" />
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) =>
+                setFilterStatus(
+                  e.target.value as DocumentStatus | 'ALL'
+                )
+              }
               className="text-sm border-gray-300 rounded-md"
             >
               <option value="ALL">All Status</option>

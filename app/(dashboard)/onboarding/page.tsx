@@ -54,7 +54,7 @@ export default function OnboardingPage() {
             Welcome to Pickleball Passport
           </h1>
           <p className="text-muted-foreground text-lg">
-            First, let us know how you'll be using our platform
+            First, let us know how you&apos;ll be using our platform
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export default function OnboardingPage() {
                   <Users className="h-8 w-8 text-primary" />
                 </div>
                 <div>
-                  <CardTitle>I'm a Guest</CardTitle>
+                  <CardTitle>I&apos;m a Guest</CardTitle>
                   <CardDescription>
                     Book transformation packages
                   </CardDescription>
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
                   <Building2 className="h-8 w-8 text-primary" />
                 </div>
                 <div>
-                  <CardTitle>I'm a Partner</CardTitle>
+                  <CardTitle>I&apos;m a Partner</CardTitle>
                   <CardDescription>
                     Refer members and earn rewards
                   </CardDescription>
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
                 <li>• Earn Passport Points on referrals</li>
                 <li>• Access partner portal</li>
                 <li>• Redeem points for free trips</li>
-                <li>• Track your club's bookings</li>
+                <li>• Track your club&apos;s bookings</li>
               </ul>
             </CardContent>
           </Card>

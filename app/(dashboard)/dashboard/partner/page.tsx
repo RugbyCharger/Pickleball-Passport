@@ -261,7 +261,7 @@ export default function PartnerDashboardPage() {
             <div className="rounded-lg bg-purple-50 p-4 text-center">
               <Trophy className="mx-auto h-12 w-12 text-purple-600 mb-2" />
               <p className="font-semibold text-purple-900">
-                Congratulations! You've reached the highest tier!
+                Congratulations! You&apos;ve reached the highest tier!
               </p>
               <p className="mt-1 text-sm text-purple-700">
                 Keep earning points to maintain your PLATINUM status

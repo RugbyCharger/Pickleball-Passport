@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/client';
 import {
@@ -66,9 +66,28 @@ export default function PackageFormPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof PackageFormData, string>>>({});
 
   // Fetch existing package data if editing
-  const { data: existingPackage, isLoading: isLoadingPackage } = trpc.package.adminGetById.useQuery(
+  const { isLoading: isLoadingPackage } = trpc.package.adminGetById.useQuery(
     { id: packageId! },
-    { enabled: !isNew && !!packageId }
+    {
+      enabled: !isNew && !!packageId,
+      onSuccess: (data) => {
+        if (data && !isNew) {
+          setFormData({
+            slug: data.slug,
+            name: data.name,
+            tagline: data.tagline || '',
+            description: data.description,
+            basePrice: (data.basePrice / 100).toString(),
+            durationOptions: data.durationOptions.join(', '),
+            heroImageUrl: data.heroImageUrl || '',
+            imageUrls: data.imageUrls.join('\n'),
+            metaTitle: data.metaTitle || '',
+            metaDescription: data.metaDescription || '',
+            isActive: data.isActive,
+          });
+        }
+      },
+    }
   );
 
   // Mutations
@@ -89,25 +108,6 @@ export default function PackageFormPage() {
       alert(error.message || 'Failed to update package');
     },
   });
-
-  // Load existing package data
-  useEffect(() => {
-    if (existingPackage && !isNew) {
-      setFormData({
-        slug: existingPackage.slug,
-        name: existingPackage.name,
-        tagline: existingPackage.tagline || '',
-        description: existingPackage.description,
-        basePrice: (existingPackage.basePrice / 100).toString(),
-        durationOptions: existingPackage.durationOptions.join(', '),
-        heroImageUrl: existingPackage.heroImageUrl || '',
-        imageUrls: existingPackage.imageUrls.join('\n'),
-        metaTitle: existingPackage.metaTitle || '',
-        metaDescription: existingPackage.metaDescription || '',
-        isActive: existingPackage.isActive,
-      });
-    }
-  }, [existingPackage, isNew]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof PackageFormData, string>> = {};

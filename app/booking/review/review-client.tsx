@@ -10,7 +10,7 @@
 import { useBookingStore } from '@/lib/stores/booking-store'
 import { ArrowLeft, Check, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -24,19 +24,17 @@ function formatPrice(cents: number): string {
 export function ReviewPageClient() {
   const router = useRouter()
   const { isReadyForReview, hasCompanion, calculateTotal, calculateCompanionSubtotal } = useBookingStore()
-  const [canProceed, setCanProceed] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
 
-  useEffect(() => {
-    // Check if all required selections are made
-    const ready = isReadyForReview()
-    setCanProceed(ready)
+  // Determine readiness once per render; redirect if not ready
+  const canProceed = useMemo(() => isReadyForReview(), [isReadyForReview])
 
+  useEffect(() => {
     // Redirect to configure if not ready
-    if (!ready) {
+    if (!canProceed) {
       router.push('/booking/configure')
     }
-  }, [isReadyForReview, router])
+  }, [canProceed, router])
 
   const handleBack = () => {
     router.push('/booking/configure/accommodation')

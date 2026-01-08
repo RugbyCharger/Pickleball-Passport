@@ -87,9 +87,10 @@ export default function AdminRemindersPage() {
           reminderType,
         });
         alert('Reminder sent successfully!');
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to send reminder:', error);
-        alert(error.message || 'Failed to send reminder');
+        const message = error instanceof Error ? error.message : 'Failed to send reminder';
+        alert(message);
       }
     }
   };
@@ -107,9 +108,10 @@ export default function AdminRemindersPage() {
           reminderType,
           bookingIds: bookings.map(b => b.id),
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to send bulk reminders:', error);
-        alert(error.message || 'Failed to send bulk reminders');
+        const message = error instanceof Error ? error.message : 'Failed to send bulk reminders';
+        alert(message);
       }
     }
   };

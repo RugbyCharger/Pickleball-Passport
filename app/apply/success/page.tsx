@@ -37,7 +37,7 @@ export default function ApplicationSuccessPage() {
             Application Received! 🎉
           </h1>
           <p className="text-lg text-slate-600 mb-8">
-            Thank you for applying to Pickleball Passport. We've received your application
+            Thank you for applying to Pickleball Passport. We&apos;ve received your application
             and sent a confirmation email to your inbox.
           </p>
 
@@ -63,7 +63,7 @@ export default function ApplicationSuccessPage() {
                 <div>
                   <p className="font-semibold text-slate-900">Receive Your Custom Package Recommendation</p>
                   <p className="text-sm text-slate-600">
-                    We'll create a personalized itinerary based on your interests and goals.
+                    We&apos;ll create a personalized itinerary based on your interests and goals.
                   </p>
                 </div>
               </div>

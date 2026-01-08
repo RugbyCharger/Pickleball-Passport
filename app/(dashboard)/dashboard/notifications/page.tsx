@@ -15,17 +15,8 @@
 
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
-import {
-  Bell,
-  Mail,
-  MessageSquare,
-  Check,
-  Trash2,
-  Calendar,
-  CreditCard,
-  Plane,
-  Info,
-} from 'lucide-react';
+import { Mail, MessageSquare, Check, Trash2, Calendar, CreditCard, Plane, Info, Bell } from 'lucide-react';
+import type { ComponentType } from 'react';
 
 type NotificationType =
   | 'BOOKING_CONFIRMATION'
@@ -33,9 +24,11 @@ type NotificationType =
   | 'TRIP_REMINDER'
   | 'GENERAL';
 
+type NotificationIcon = ComponentType<{ className?: string }>;
+
 const NOTIFICATION_TYPE_CONFIG: Record<
   NotificationType,
-  { label: string; icon: any; color: string }
+  { label: string; icon: NotificationIcon; color: string }
 > = {
   BOOKING_CONFIRMATION: {
     label: 'Booking Confirmation',
@@ -262,8 +255,8 @@ export default function NotificationsPage() {
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
-            Your notification preferences are saved automatically. You'll only
-            receive emails for the types of notifications you've enabled.
+            Your notification preferences are saved automatically. You&apos;ll only
+            receive emails for the types of notifications you&apos;ve enabled.
           </p>
         </div>
       </div>
@@ -316,8 +309,8 @@ export default function NotificationsPage() {
             <p className="text-gray-600">No notifications</p>
             <p className="text-sm text-gray-500 mt-1">
               {activeTab === 'unread'
-                ? 'You\'re all caught up!'
-                : 'You haven\'t received any notifications yet'}
+                ? 'You&apos;re all caught up!'
+                : 'You haven&apos;t received any notifications yet'}
             </p>
           </div>
         ) : (

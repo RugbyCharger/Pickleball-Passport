@@ -5,7 +5,7 @@ import { trpc } from '@/lib/trpc/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Loader2, X, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface CompanionBooking {
   id: string
@@ -63,10 +63,11 @@ export default function CancellationModal({
     }
   })
 
-  // Calculate days until trip
-  const daysUntilTrip = Math.floor(
-    (new Date(tripStartDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-  )
+  // Calculate days until trip (stable within render)
+  const daysUntilTrip = useMemo(() => {
+    const now = Date.now()
+    return Math.floor((new Date(tripStartDate).getTime() - now) / (1000 * 60 * 60 * 24))
+  }, [tripStartDate])
 
   // Determine if this is a linked booking scenario
   const hasCompanion = !isCompanionBooking && !!companionBooking

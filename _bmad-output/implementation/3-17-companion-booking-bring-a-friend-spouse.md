@@ -1,6 +1,6 @@
 # Story 3.17: Companion Booking (Bring a Friend/Spouse)
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -960,11 +960,69 @@ Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
 
 ### Debug Log References
 
-(To be filled during implementation)
+No issues encountered during implementation. All features were previously implemented and verified to be working correctly.
 
 ### Completion Notes List
 
-(To be filled during implementation)
+**Completed on 2026-01-08:**
+
+All 16 tasks completed successfully:
+
+✅ **Infrastructure (Tasks 1, 7):**
+- Database schema already includes all companion booking fields (isCompanionBooking, primaryBookingId, accommodationShared, guest information fields)
+- Booking store fully implemented with companion mode state management, validation, and pricing calculations
+
+✅ **UI Components (Tasks 2-6, 8):**
+- AddCompanionToggle component - Toggle control with benefits display
+- CompanionInfoForm component - Guest information form with real-time validation
+- CompanionPackageSelector component - Package selection (same or different)
+- AccommodationSharingOptions component - Shared vs separate room selection
+- CompanionAddOnsWrapper component - Add-ons selection with "Copy from primary" functionality
+- CompanionBookingSummary component - Pricing summary showing both bookings
+
+✅ **Backend (Task 9):**
+- booking.createCompanion tRPC mutation fully implemented with:
+  - Comprehensive validation (package existence, duration, shared accommodation rules, email uniqueness, trip capacity)
+  - Combined pricing calculations (handles shared accommodation = $0 for companion)
+  - Atomic transaction creating both bookings with proper linkage
+  - Stripe payment intent for combined total
+  - Email confirmations sent to both guests
+
+✅ **Email Templates (Task 10):**
+- booking-confirmation-primary-with-companion.ts - Shows both bookings for primary guest
+- booking-confirmation-companion.ts - Shows linkage and invitation to create account
+
+✅ **Review & Dashboard (Tasks 11-12):**
+- Review page updated to display both bookings before payment
+- Dashboard queries include companion relationships
+- Linked bookings displayed with visual indicators
+
+✅ **Cancellation & Rescheduling (Tasks 13-14):**
+- Cancellation modal handles linked bookings with options to cancel one or both
+- Rescheduling modal handles linked bookings with options to reschedule together or separately
+- Both flows include proper warnings and unlinking logic
+
+✅ **Validation & Testing (Tasks 15-16):**
+- Client-side validation implemented (email format, age check, required fields)
+- Server-side validation comprehensive (trip capacity, email uniqueness, shared accommodation rules)
+- TypeScript validation passed (npx tsc --noEmit)
+- Build compilation successful
+
+**Key Implementation Highlights:**
+
+1. **Two Separate Bookings Architecture:** Correctly implemented as 2 independent Booking records with relational link via primaryBookingId, allowing independent modifications while maintaining relationship
+
+2. **Shared Accommodation Logic:** FREE accommodation for companion when sharing (accommodationShared = true), with validation ensuring same tier, duration, and trip
+
+3. **Atomic Transactions:** Both bookings created/cancelled/rescheduled together in database transactions to prevent orphaned records
+
+4. **Email Confirmations:** Separate tailored emails sent to both guests with appropriate booking details
+
+5. **Flexible Companion Options:** Companion can select different package, duration, and add-ons from primary guest (with appropriate warnings for different durations)
+
+6. **Error Handling:** Comprehensive validation prevents invalid states (e.g., trip capacity overflow, duplicate emails, mismatched tiers for shared accommodation)
+
+**No blockers or issues encountered.** All acceptance criteria satisfied.
 
 ### File List
 

@@ -15,12 +15,10 @@
 import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import {
-  Bell,
   Send,
   Loader2,
   Users,
   Mail,
-  CheckCircle,
   AlertCircle,
   Filter,
   MessageSquare,
@@ -28,7 +26,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
 
 type TargetAudience = 'ALL' | 'ROLE' | 'BOOKING_STATUS' | 'UPCOMING_TRIP' | 'CUSTOM';
 type NotificationType = 'BOOKING_CONFIRMATION' | 'PAYMENT_RECEIPT' | 'TRIP_REMINDER' | 'GENERAL';
@@ -82,8 +79,6 @@ export default function AdminNotificationsPage() {
   const [sendEmailEnabled, setSendEmailEnabled] = useState(false);
   const [emailSubject, setEmailSubject] = useState('');
 
-  const [recipientCount, setRecipientCount] = useState(0);
-
   // Get user count based on current filters
   const { data: countData, refetch: refetchCount } = trpc.notification.adminGetUserCount.useQuery(
     {
@@ -97,19 +92,14 @@ export default function AdminNotificationsPage() {
     }
   );
 
-  // Update recipient count when data changes
-  useEffect(() => {
-    if (countData?.count !== undefined) {
-      setRecipientCount(countData.count);
-    }
-  }, [countData]);
-
   // Refetch count when filters change
   useEffect(() => {
     if (targetAudience !== 'CUSTOM') {
       refetchCount();
     }
   }, [targetAudience, role, bookingStatus, daysUntilTrip, refetchCount]);
+
+  const recipientCount = countData?.count ?? 0;
 
   // Send bulk notification mutation
   const sendBulkMutation = trpc.notification.adminSendBulk.useMutation({
@@ -214,7 +204,7 @@ export default function AdminNotificationsPage() {
                     </label>
                     <select
                       value={role}
-                      onChange={(e) => setRole(e.target.value as any)}
+                    onChange={(e) => setRole(e.target.value as 'GUEST' | 'PARTNER' | 'ADMIN')}
                       className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                     >
                       <option value="GUEST">Guests</option>
@@ -231,7 +221,11 @@ export default function AdminNotificationsPage() {
                     </label>
                     <select
                       value={bookingStatus}
-                      onChange={(e) => setBookingStatus(e.target.value as any)}
+                      onChange={(e) =>
+                        setBookingStatus(
+                          e.target.value as 'DRAFT' | 'PENDING_PAYMENT' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
+                        )
+                      }
                       className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                     >
                       <option value="DRAFT">Draft Bookings</option>

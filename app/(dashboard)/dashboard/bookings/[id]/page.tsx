@@ -460,7 +460,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground mb-4">
-                  You haven't selected a trip date yet. Choose your preferred dates to complete your booking.
+                  You haven&apos;t selected a trip date yet. Choose your preferred dates to complete your booking.
                 </p>
                 <Link href={`/dashboard/bookings/${booking.id}/select-trip`}>
                   <Button>Select Trip Dates</Button>

@@ -87,8 +87,8 @@ development_status:
   3-14-booking-rescheduling: done
   3-15-referral-code-application-at-booking: done
   3-16-booking-modification-change-add-ons: done
-  3-17-companion-booking-bring-a-friend-spouse: ready-for-dev
-  3-18-gift-booking-purchase-for-someone-else: backlog
+  3-17-companion-booking-bring-a-friend-spouse: done
+  3-18-gift-booking-purchase-for-someone-else: ready-for-dev
   epic-3-retrospective: optional
 
   # EPIC 4: Payment Processing

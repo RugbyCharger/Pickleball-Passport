@@ -99,7 +99,7 @@ export default async function AddOnsSelectionPage() {
               <p className="mt-4 text-slate-600">
                 Yes! All medical procedures are performed at JCI-accredited
                 hospitals (the international gold standard) by board-certified
-                specialists. Thailand's medical tourism industry is world-class
+                specialists. Thailand&apos;s medical tourism industry is world-class
                 and serves hundreds of thousands of international patients
                 annually.
               </p>
@@ -158,7 +158,7 @@ export default async function AddOnsSelectionPage() {
 
             <details className="group rounded-lg border border-slate-200 bg-white p-6">
               <summary className="flex cursor-pointer items-center justify-between font-semibold text-slate-900">
-                <span>What if I don't want any medical procedures?</span>
+                <span>What if I don&apos;t want any medical procedures?</span>
                 <svg
                   className="h-5 w-5 transition-transform group-open:rotate-180"
                   fill="none"
@@ -174,9 +174,9 @@ export default async function AddOnsSelectionPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                No problem! Our "Pure Play" package is perfect for guests who
+                No problem! Our &quot;Pure Play&quot; package is perfect for guests who
                 just want pickleball, wellness, and relaxation without medical
-                procedures. Simply click "Skip Medical Add-Ons" above to
+                procedures. Simply click &quot;Skip Medical Add-Ons&quot; above to
                 continue without adding any procedures.
               </p>
             </details>
@@ -203,7 +203,7 @@ export default async function AddOnsSelectionPage() {
                 crowns) typically allows you to resume activities the next day.
                 Cosmetic procedures range from 3-14 days depending on
                 complexity. Our medical team will provide detailed recovery
-                guidelines and our on-site concierge ensures you're comfortable
+                guidelines and our on-site concierge ensures you&apos;re comfortable
                 throughout.
               </p>
             </details>

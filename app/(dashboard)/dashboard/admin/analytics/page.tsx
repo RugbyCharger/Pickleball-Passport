@@ -219,7 +219,7 @@ export default function AnalyticsDashboardPage() {
   // CSV Export mutation
   const exportMutation = trpc.analytics.export.generateCSV.useQuery(
     {
-      reportType: 'bookings' as any,
+      reportType: 'bookings',
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
     },

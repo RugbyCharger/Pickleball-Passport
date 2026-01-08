@@ -38,13 +38,16 @@ export default function EmailPreviewPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate>('booking-confirmation');
   const [viewMode, setViewMode] = useState<'html' | 'text'>('html');
 
+  // Use stable timestamps (captured once) to avoid impure calls during render
+  const [now] = useState(() => Date.now());
+  const today = new Date(now).toISOString();
+  const futureDate = new Date(now + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const tripStart = new Date(now + 30 * 24 * 60 * 60 * 1000).toISOString();
+  const tripEnd = new Date(now + 37 * 24 * 60 * 60 * 1000).toISOString();
+  const twoDaysAgo = new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString();
+
   // Generate sample data for the selected template
   const getEmailContent = () => {
-    const today = new Date().toISOString();
-    const futureDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-    const tripStart = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    const tripEnd = new Date(Date.now() + 37 * 24 * 60 * 60 * 1000).toISOString();
-
     switch (selectedTemplate) {
       case 'booking-confirmation':
         return generateBookingConfirmationEmail({
@@ -116,7 +119,7 @@ export default function EmailPreviewPage() {
           email: 'sarah@example.com',
           documentType: 'PASSPORT',
           documentTypeFriendly: 'Passport Copy',
-          uploadedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          uploadedDate: twoDaysAgo,
           reviewedDate: today,
           bookingReference: 'ABC12345',
           notes: 'Everything looks perfect! Your passport is valid and clearly readable.',
@@ -128,7 +131,7 @@ export default function EmailPreviewPage() {
           email: 'sarah@example.com',
           documentType: 'PASSPORT',
           documentTypeFriendly: 'Passport Copy',
-          uploadedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          uploadedDate: twoDaysAgo,
           reviewedDate: today,
           bookingReference: 'ABC12345',
           reason: 'The image appears to have glare on the photo page, making it difficult to read your passport number. Please upload a new photo without glare.',

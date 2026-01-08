@@ -71,9 +71,10 @@ export default function AdminPackagesPage() {
     if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
       try {
         await deleteMutation.mutateAsync({ id });
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to delete package:', error);
-        alert(error.message || 'Failed to delete package. It may have existing bookings.');
+        const message = error instanceof Error ? error.message : 'Failed to delete package. It may have existing bookings.';
+        alert(message);
       }
     }
   };

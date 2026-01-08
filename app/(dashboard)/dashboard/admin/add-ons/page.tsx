@@ -95,9 +95,10 @@ export default function AdminAddOnsPage() {
     if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
       try {
         await deleteMutation.mutateAsync({ id });
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Failed to delete add-on:', error);
-        alert(error.message || 'Failed to delete add-on. It may be in existing bookings.');
+        const message = error instanceof Error ? error.message : 'Failed to delete add-on. It may be in existing bookings.';
+        alert(message);
       }
     }
   };

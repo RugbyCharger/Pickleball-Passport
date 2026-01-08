@@ -13,9 +13,14 @@ import { TRPCError } from '@trpc/server'
 import { createPaymentIntent as createStripePaymentIntent } from '@/lib/stripe/stripe-service'
 import Stripe from 'stripe'
 
-// Initialize Stripe client
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-  apiVersion: '2025-12-15.clover'
+// Initialize Stripe client (server-side)
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+if (!stripeSecretKey) {
+  throw new Error('STRIPE_SECRET_KEY is not configured')
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: '2023-10-16'
 })
 
 /**
@@ -70,7 +75,7 @@ export const bookingRouter = router({
       const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode } = input
 
       // 1. Validate package exists and is active
-      const pkg = await ctx.db.package.findUnique({
+      const pkg = await ctx.db.package.findFirst({
         where: { id: packageId, isActive: true },
         select: {
           id: true,
@@ -97,8 +102,8 @@ export const bookingRouter = router({
 
       // 2. Validate trip if specified
       if (tripId) {
-        const trip = await ctx.db.trip.findUnique({
-          where: { id: tripId },
+        const trip = await ctx.db.trip.findFirst({
+          where: { id: tripId, isActive: true },
           select: {
             id: true,
             capacity: true,

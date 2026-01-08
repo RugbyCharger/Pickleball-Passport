@@ -14,6 +14,7 @@
  */
 
 import { useState } from 'react';
+import type { ComponentType } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import {
   MessageSquare,
@@ -43,7 +44,7 @@ const PRIORITY_CONFIG: Record<
 
 const STATUS_CONFIG: Record<
   TicketStatus,
-  { label: string; icon: any; color: string }
+  { label: string; icon: ComponentType<{ className?: string }>; color: string }
 > = {
   OPEN: {
     label: 'Open',

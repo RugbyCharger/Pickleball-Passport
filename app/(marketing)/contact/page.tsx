@@ -95,12 +95,12 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-4">
-            Have questions? We're here to help.
+            Have questions? We&apos;re here to help.
           </p>
           <p className="text-base md:text-lg text-blue-200 max-w-3xl mx-auto">
-            Whether you're curious about our packages, planning your
+            Whether you&apos;re curious about our packages, planning your
             transformation journey, or just want to learn more about our Thailand
-            experiences, we'd love to hear from you.
+            experiences, we&apos;d love to hear from you.
           </p>
         </div>
       </section>
@@ -116,7 +116,7 @@ export default function ContactPage() {
                   Send Us a Message
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Fill out the form below and we'll get back to you within 24
+                  Fill out the form below and we&apos;ll get back to you within 24
                   hours.
                 </p>
 
@@ -128,7 +128,7 @@ export default function ContactPage() {
                         Message sent successfully!
                       </p>
                       <p className="text-green-700 text-sm mt-1">
-                        We've received your message and will respond within 24
+                        We&apos;ve received your message and will respond within 24
                         hours.
                       </p>
                     </div>

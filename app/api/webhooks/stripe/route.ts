@@ -57,24 +57,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if event already processed (idempotency)
-    // We try to create the event record first. If it fails due to uniqueness constraint,
-    // it means it's already being processed or has been processed.
-    try {
-      await prisma.webhookEvent.create({
-        data: {
-          stripeEventId: event.id,
-          type: event.type,
-          processed: false,
-        },
-      });
-    } catch (error: any) {
-      // P2002: Unique constraint failed
-      if (error.code === 'P2002') {
-        console.log(`Event ${event.id} (${event.type}) already processed/processing, skipping`);
-        return NextResponse.json({ received: true, status: 'already_processed' });
-      }
-      throw error;
+    // Idempotency: upsert event record and only skip if already processed
+    const eventRecord = await prisma.webhookEvent.upsert({
+      where: { stripeEventId: event.id },
+      create: {
+        stripeEventId: event.id,
+        type: event.type,
+        processed: false,
+      },
+      update: {
+        type: event.type,
+      },
+      select: { processed: true },
+    });
+
+    if (eventRecord.processed) {
+      console.log(`Event ${event.id} (${event.type}) already processed, skipping`);
+      return NextResponse.json({ received: true, status: 'already_processed' });
     }
 
     // Handle the event based on type

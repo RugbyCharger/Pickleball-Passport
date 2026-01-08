@@ -119,7 +119,7 @@ export default async function PackageSelectionPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                Absolutely! You'll be able to add medical procedures, wellness
+                Absolutely! You&apos;ll be able to add medical procedures, wellness
                 treatments, and customize your accommodation in the next steps.
                 You can also modify your booking up to 30 days before departure.
               </p>
@@ -127,7 +127,7 @@ export default async function PackageSelectionPage() {
 
             <details className="group rounded-lg border border-slate-200 bg-white p-6">
               <summary className="flex cursor-pointer items-center justify-between font-semibold text-slate-900">
-                <span>What's included in the base package?</span>
+                <span>What&apos;s included in the base package?</span>
                 <svg
                   className="h-5 w-5 transition-transform group-open:rotate-180"
                   fill="none"

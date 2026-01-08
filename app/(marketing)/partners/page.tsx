@@ -463,10 +463,10 @@ export default function PartnersPage() {
                   ))}
                 </div>
                 <p className="text-gray-700 italic mb-6">
-                  "We've sent 12 members on transformations this year. The
+                  &ldquo;We&apos;ve sent 12 members on transformations this year. The
                   marketing materials make it easy, and the free trips are
-                  amazing! Our members absolutely love the experiences, and we're
-                  earning rewards every month."
+                  amazing! Our members absolutely love the experiences, and we&apos;re
+                  earning rewards every month.&rdquo;
                 </p>
                 <div className="flex items-center justify-between">
                   <div>
@@ -494,9 +494,9 @@ export default function PartnersPage() {
                   ))}
                 </div>
                 <p className="text-gray-700 italic mb-6">
-                  "Easiest partnership we've ever joined. Our members love it,
-                  and we're earning rewards every month. The support team is
-                  fantastic, and the program basically runs itself."
+                  &ldquo;Easiest partnership we&apos;ve ever joined. Our members love it,
+                  and we&apos;re earning rewards every month. The support team is
+                  fantastic, and the program basically runs itself.&rdquo;
                 </p>
                 <div className="flex items-center justify-between">
                   <div>
@@ -519,7 +519,7 @@ export default function PartnersPage() {
       <section className="py-16 sm:py-20 bg-gradient-to-br from-[#003D5C] to-[#005580] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
-            Ready to Transform Your Members' Lives?
+          Ready to Transform Your Members&apos; Lives?
           </h2>
           <p className="text-xl text-blue-100 mb-10">
             Join 150+ partner clubs earning rewards while offering their members
@@ -593,7 +593,7 @@ export default function PartnersPage() {
                 How do I share my referral link?
               </AccordionTrigger>
               <AccordionContent className="text-gray-700">
-                Upon signup, you'll receive a unique referral code and link in
+                Upon signup, you&apos;ll receive a unique referral code and link in
                 your partner dashboard. You can share this via email, social
                 media, or in-person events. We also provide QR codes and
                 shortened URLs for easy sharing.
@@ -652,7 +652,7 @@ export default function PartnersPage() {
               </AccordionTrigger>
               <AccordionContent className="text-gray-700">
                 Approval is instant! This is a self-service signup process. As
-                soon as you complete your partner account registration, you'll
+                soon as you complete your partner account registration, you&apos;ll
                 have immediate access to your dashboard, referral links, and
                 marketing materials.
               </AccordionContent>

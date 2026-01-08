@@ -15,6 +15,7 @@
  */
 
 import { useState } from 'react';
+import type { ComponentType } from 'react';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc/client';
 import {
@@ -32,9 +33,28 @@ import {
 
 type PaymentStatus = 'PENDING' | 'SUCCEEDED' | 'FAILED' | 'REFUNDED';
 
+type PaymentIcon = ComponentType<{ className?: string }>;
+
+type PaymentView = {
+  id: string;
+  amount: number;
+  status: PaymentStatus;
+  createdAt: string;
+  paymentMethod?: string | null;
+  isInstallment?: boolean;
+  installmentNumber?: number | null;
+  scheduledDate?: string | null;
+  failureReason?: string | null;
+  booking: {
+    id: string;
+    bookingReference: string;
+    packageName: string;
+  };
+};
+
 const STATUS_CONFIG: Record<
   PaymentStatus,
-  { label: string; icon: any; color: string; bgColor: string }
+  { label: string; icon: PaymentIcon; color: string; bgColor: string }
 > = {
   PENDING: {
     label: 'Pending',
@@ -71,10 +91,18 @@ export default function PaymentsPage() {
   const { data: bookings = [] } = trpc.booking.list.useQuery();
 
   // Extract all payments from bookings and sort by date
-  const allPayments = bookings
+  const allPayments: PaymentView[] = bookings
     .flatMap((booking) =>
-      booking.payments.map((payment) => ({
-        ...payment,
+      booking.payments.map((payment): PaymentView => ({
+        id: payment.id,
+        amount: payment.amount,
+        status: payment.status as PaymentStatus,
+        createdAt: payment.createdAt,
+        paymentMethod: (payment as { paymentMethod?: string | null }).paymentMethod,
+        isInstallment: payment.isInstallment,
+        installmentNumber: payment.installmentNumber,
+        scheduledDate: payment.scheduledDate,
+        failureReason: payment.failureReason,
         booking: {
           id: booking.id,
           bookingReference: booking.bookingReference,
@@ -147,7 +175,7 @@ export default function PaymentsPage() {
     });
   };
 
-  const handleDownloadReceipt = (payment: any) => {
+  const handleDownloadReceipt = (payment: PaymentView) => {
     // TODO: Generate PDF receipt
     // For now, we'll show an alert
     alert(
@@ -220,7 +248,9 @@ export default function PaymentsPage() {
             </label>
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) =>
+                setFilterStatus(e.target.value as PaymentStatus | 'ALL')
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="ALL">All Status</option>
@@ -238,7 +268,9 @@ export default function PaymentsPage() {
             </label>
             <select
               value={dateRange}
-              onChange={(e) => setDateRange(e.target.value as any)}
+              onChange={(e) =>
+                setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">All Time</option>

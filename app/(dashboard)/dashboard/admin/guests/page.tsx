@@ -359,7 +359,13 @@ export default function AdminGuestsPage() {
                     <h4 className="font-medium text-gray-900">Recent Bookings</h4>
                     {'bookings' in guest && guest.bookings.length > 0 ? (
                       <div className="space-y-2">
-                        {guest.bookings.map((booking: any) => (
+                        {guest.bookings.map((booking: {
+                          id: string;
+                          bookingReference: string;
+                          status: 'CONFIRMED' | 'PENDING_PAYMENT' | 'CANCELLED' | string;
+                          trip?: { startDate: string | null } | null;
+                          totalPrice?: number | null;
+                        }) => (
                           <div
                             key={booking.id}
                             className="p-3 bg-gray-50 rounded border border-gray-200"

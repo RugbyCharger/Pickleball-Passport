@@ -164,7 +164,7 @@ export default function TrustAndSafetyPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 text-sm mb-4">
-                  Fully licensed and approved by Thailand's Ministry of Public
+                  Fully licensed and approved by Thailand&apos;s Ministry of Public
                   Health for medical tourism and international patient care.
                 </p>
                 <div className="text-sm text-gray-500 mb-3">
@@ -208,7 +208,7 @@ export default function TrustAndSafetyPage() {
                 Annual Medical Tourism Industry
               </div>
               <div className="text-sm text-gray-600">
-                Thailand's medical tourism generates over $1.2 billion annually,
+                Thailand&apos;s medical tourism generates over $1.2 billion annually,
                 demonstrating trust from millions worldwide.
               </div>
               <div className="text-xs text-gray-500 mt-3">
@@ -298,7 +298,7 @@ export default function TrustAndSafetyPage() {
                 Healthcare System Rating
               </div>
               <div className="text-sm text-gray-600">
-                Thailand's healthcare system is ranked among the best in
+                Thailand&apos;s healthcare system is ranked among the best in
                 Southeast Asia by the WHO.
               </div>
               <div className="text-xs text-gray-500 mt-3">
@@ -465,7 +465,7 @@ export default function TrustAndSafetyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              24/7 Support & Medical Liaison
+                24/7 Support &amp; Medical Liaison
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               You're never alone. Our dedicated concierge team and medical

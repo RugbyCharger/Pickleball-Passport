@@ -45,7 +45,7 @@ export default async function DurationSelectionPage() {
             Choose Your Duration
           </h1>
           <p className="mt-4 text-lg text-slate-600">
-            Select how many days you'd like to stay for your transformation
+            Select how many days you&apos;d like to stay for your transformation
             journey.
           </p>
         </div>
