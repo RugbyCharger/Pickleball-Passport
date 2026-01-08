@@ -4,7 +4,21 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { trpc } from '@/lib/trpc/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Loader2, X } from 'lucide-react'
+import { Loader2, X, Users } from 'lucide-react'
+import { useState } from 'react'
+
+interface CompanionBooking {
+  id: string
+  bookingReference: string
+  guestFirstName: string | null
+  guestLastName: string | null
+  totalPrice: number
+}
+
+interface PrimaryBooking {
+  id: string
+  bookingReference: string
+}
 
 interface CancellationModalProps {
   bookingId: string
@@ -12,6 +26,9 @@ interface CancellationModalProps {
   tripName: string
   tripStartDate: Date
   totalPrice: number
+  companionBooking?: CompanionBooking
+  primaryBooking?: PrimaryBooking
+  isCompanionBooking?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -22,11 +39,15 @@ export default function CancellationModal({
   tripName,
   tripStartDate,
   totalPrice,
+  companionBooking,
+  primaryBooking,
+  isCompanionBooking = false,
   open,
   onOpenChange
 }: CancellationModalProps) {
   const router = useRouter()
   const utils = trpc.useUtils()
+  const [cancelBothBookings, setCancelBothBookings] = useState(false)
 
   const cancelMutation = trpc.booking.cancel.useMutation({
     onSuccess: (data) => {
@@ -47,16 +68,25 @@ export default function CancellationModal({
     (new Date(tripStartDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   )
 
+  // Determine if this is a linked booking scenario
+  const hasCompanion = !isCompanionBooking && !!companionBooking
+  const hasPrimaryBooking = isCompanionBooking && !!primaryBooking
+
+  // Calculate total price considering linked bookings
+  const effectiveTotalPrice = (hasCompanion && cancelBothBookings)
+    ? totalPrice + (companionBooking?.totalPrice || 0)
+    : totalPrice
+
   // Calculate refund amount (client-side for display only - server validates)
   let refundAmount = 0
   let refundPercentage = 0
   const PROCESSING_FEE = 500 // $500
 
   if (daysUntilTrip > 60) {
-    refundAmount = totalPrice / 100 - PROCESSING_FEE
+    refundAmount = effectiveTotalPrice / 100 - PROCESSING_FEE
     refundPercentage = 100
   } else if (daysUntilTrip >= 30) {
-    refundAmount = (totalPrice / 100) * 0.5
+    refundAmount = (effectiveTotalPrice / 100) * 0.5
     refundPercentage = 50
   }
 
@@ -65,8 +95,17 @@ export default function CancellationModal({
     refundAmount = 0
   }
 
+  // Companion name for display
+  const companionName = companionBooking?.guestFirstName && companionBooking?.guestLastName
+    ? `${companionBooking.guestFirstName} ${companionBooking.guestLastName}`
+    : 'Your Companion'
+
   const handleCancel = () => {
-    cancelMutation.mutate({ bookingId })
+    cancelMutation.mutate({
+      bookingId,
+      cancelBothBookings: hasCompanion && cancelBothBookings,
+      companionBookingId: hasCompanion && cancelBothBookings ? companionBooking?.id : undefined
+    })
   }
 
   return (
@@ -98,6 +137,68 @@ export default function CancellationModal({
             Are you sure you want to cancel booking <strong className="font-semibold text-gray-900">{bookingReference}</strong>? This action cannot be undone.
           </Dialog.Description>
 
+          {/* Linked Booking Warning (Primary booking with companion) */}
+          {hasCompanion && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <Users className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 mb-2">Linked Companion Booking</h3>
+                  <p className="text-sm text-gray-700 mb-3">
+                    You have a linked companion booking for <strong>{companionName}</strong> ({companionBooking.bookingReference}).
+                  </p>
+
+                  {/* Cancellation Options */}
+                  <div className="space-y-3">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="radio"
+                        name="cancellation-option"
+                        checked={!cancelBothBookings}
+                        onChange={() => setCancelBothBookings(false)}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 group-hover:text-blue-700">Cancel only my booking</p>
+                        <p className="text-sm text-gray-600">Companion booking remains active</p>
+                      </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="radio"
+                        name="cancellation-option"
+                        checked={cancelBothBookings}
+                        onChange={() => setCancelBothBookings(true)}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 group-hover:text-blue-700">Cancel both bookings</p>
+                        <p className="text-sm text-gray-600">Cancels both your booking and the companion booking together</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Linked Booking Info (Companion booking) */}
+          {hasPrimaryBooking && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <Users className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 mb-2">Companion Booking</h3>
+                  <p className="text-sm text-gray-700">
+                    This is a companion booking linked to primary booking <strong>{primaryBooking.bookingReference}</strong>.
+                    Canceling this booking will only cancel your companion booking. The primary booking will remain active.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Trip Details */}
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
             <h3 className="font-semibold text-gray-900 mb-2">Trip Details</h3>
@@ -114,7 +215,10 @@ export default function CancellationModal({
               })}
             </p>
             <p className="text-sm text-gray-700">
-              <span className="font-medium">Total Paid:</span> ${(totalPrice / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <span className="font-medium">Total Paid:</span> ${(effectiveTotalPrice / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {hasCompanion && cancelBothBookings && (
+                <span className="text-xs text-gray-600 ml-1">(2 bookings combined)</span>
+              )}
             </p>
           </div>
 

@@ -241,6 +241,18 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                 tripName={booking.trip.destination}
                 tripStartDate={booking.trip.startDate}
                 totalPrice={booking.totalPrice}
+                companionBooking={booking.companionBookings[0] ? {
+                  id: booking.companionBookings[0].id,
+                  bookingReference: booking.companionBookings[0].bookingReference,
+                  guestFirstName: booking.companionBookings[0].guestFirstName,
+                  guestLastName: booking.companionBookings[0].guestLastName,
+                  totalPrice: booking.companionBookings[0].totalPrice,
+                } : undefined}
+                primaryBooking={booking.primaryBooking ? {
+                  id: booking.primaryBooking.id,
+                  bookingReference: booking.primaryBooking.bookingReference,
+                } : undefined}
+                isCompanionBooking={booking.isCompanionBooking}
               />
             </>
           )}

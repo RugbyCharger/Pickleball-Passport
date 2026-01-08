@@ -5,6 +5,19 @@ import { Button } from '@/components/ui/button'
 import { XCircle } from 'lucide-react'
 import CancellationModal from './cancellation-modal'
 
+interface CompanionBooking {
+  id: string
+  bookingReference: string
+  guestFirstName: string | null
+  guestLastName: string | null
+  totalPrice: number
+}
+
+interface PrimaryBooking {
+  id: string
+  bookingReference: string
+}
+
 interface CancelBookingButtonProps {
   bookingId: string
   bookingReference: string
@@ -12,6 +25,9 @@ interface CancelBookingButtonProps {
   tripName: string
   tripStartDate: Date
   totalPrice: number
+  companionBooking?: CompanionBooking
+  primaryBooking?: PrimaryBooking
+  isCompanionBooking?: boolean
 }
 
 export default function CancelBookingButton({
@@ -20,7 +36,10 @@ export default function CancelBookingButton({
   bookingStatus,
   tripName,
   tripStartDate,
-  totalPrice
+  totalPrice,
+  companionBooking,
+  primaryBooking,
+  isCompanionBooking = false
 }: CancelBookingButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -55,6 +74,9 @@ export default function CancelBookingButton({
         tripName={tripName}
         tripStartDate={tripStartDate}
         totalPrice={totalPrice}
+        companionBooking={companionBooking}
+        primaryBooking={primaryBooking}
+        isCompanionBooking={isCompanionBooking}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
       />

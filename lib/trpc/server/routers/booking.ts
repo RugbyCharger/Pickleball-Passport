@@ -1111,7 +1111,9 @@ export const bookingRouter = router({
    */
   cancel: guestProcedure
     .input(z.object({
-      bookingId: z.string().cuid()
+      bookingId: z.string().cuid(),
+      cancelBothBookings: z.boolean().optional().default(false),
+      companionBookingId: z.string().cuid().optional()
     }))
     .mutation(async ({ ctx, input }) => {
       const user = ctx.user!
@@ -1181,20 +1183,76 @@ export const bookingRouter = router({
         })
       }
 
+      // 3.5. Fetch companion booking if canceling both
+      let companionBooking = null
+      if (input.cancelBothBookings && input.companionBookingId) {
+        companionBooking = await ctx.db.booking.findUnique({
+          where: { id: input.companionBookingId },
+          include: {
+            trip: true,
+            package: {
+              select: {
+                name: true
+              }
+            },
+            payments: {
+              where: { status: 'SUCCEEDED' },
+              orderBy: { createdAt: 'desc' },
+              take: 1
+            }
+          }
+        })
+
+        if (!companionBooking) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Companion booking not found'
+          })
+        }
+
+        // Verify companion booking is linked to primary booking
+        if (companionBooking.primaryBookingId !== booking.id) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Companion booking is not linked to this booking'
+          })
+        }
+
+        // Verify companion booking is cancellable
+        if (companionBooking.status === 'CANCELLED') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Companion booking is already cancelled'
+          })
+        }
+
+        if (companionBooking.status === 'COMPLETED') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Cannot cancel a completed companion booking'
+          })
+        }
+      }
+
       // 4. Calculate refund amount (server-side - NEVER trust client calculation)
       const daysUntilTrip = Math.floor(
         (tripStartDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       )
+
+      // Calculate combined total if canceling both bookings
+      const totalPriceForRefund = companionBooking
+        ? booking.totalPrice + companionBooking.totalPrice
+        : booking.totalPrice
 
       let refundAmount = 0
       let refundPercentage = 0
       const PROCESSING_FEE = 50000 // $500 in cents
 
       if (daysUntilTrip > 60) {
-        refundAmount = booking.totalPrice - PROCESSING_FEE
+        refundAmount = totalPriceForRefund - PROCESSING_FEE
         refundPercentage = 100
       } else if (daysUntilTrip >= 30) {
-        refundAmount = Math.floor(booking.totalPrice * 0.5)
+        refundAmount = Math.floor(totalPriceForRefund * 0.5)
         refundPercentage = 50
       } else {
         refundAmount = 0
@@ -1244,7 +1302,7 @@ export const bookingRouter = router({
 
       // 6. Update booking status and create refund payment record (atomic transaction)
       const updatedBooking = await ctx.db.$transaction(async (tx) => {
-        // Update booking status
+        // Update primary booking status
         const updated = await tx.booking.update({
           where: { id: input.bookingId },
           data: {
@@ -1252,6 +1310,17 @@ export const bookingRouter = router({
             updatedAt: new Date()
           }
         })
+
+        // Update companion booking status if canceling both
+        if (companionBooking) {
+          await tx.booking.update({
+            where: { id: companionBooking.id },
+            data: {
+              status: 'CANCELLED',
+              updatedAt: new Date()
+            }
+          })
+        }
 
         // Create refund payment record if refund was processed
         if (refundAmount > 0 && stripeRefundId) {
@@ -1267,12 +1336,14 @@ export const bookingRouter = router({
         }
 
         // Decrement trip currentBookings count if trip was assigned
+        // Decrement by 2 if canceling both bookings, otherwise by 1
         if (booking.tripId) {
+          const decrementAmount = companionBooking ? 2 : 1
           await tx.trip.update({
             where: { id: booking.tripId },
             data: {
               currentBookings: {
-                decrement: 1
+                decrement: decrementAmount
               }
             }
           })
