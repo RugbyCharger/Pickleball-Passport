@@ -23,6 +23,7 @@ import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
 import MedicalAddOnsSelector from '@/components/booking/medical-add-ons-selector'
 import { PricingSummary } from '@/components/booking/pricing-summary'
+import { GiftSection } from '@/components/booking/gift-section'
 
 export const metadata: Metadata = {
   title: 'Medical Add-Ons | Pickleball Passport',
@@ -60,8 +61,12 @@ export default async function AddOnsSelectionPage() {
 
         {/* Main Content Grid with Sidebar */}
         <div className="grid gap-8 lg:grid-cols-3">
-          {/* Left Column: Add-Ons Selection */}
-          <div className="lg:col-span-2">
+          {/* Left Column: Gift Options + Add-Ons Selection */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Gift Booking Section */}
+            <GiftSection />
+
+            {/* Medical Add-Ons Section */}
             <MedicalAddOnsSelector />
           </div>
 
