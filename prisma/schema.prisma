@@ -118,6 +118,18 @@ enum GiftStatus {
   DECLINED  // Recipient declined gift, refund processed
 }
 
+enum TaskPriority {
+  URGENT
+  IMPORTANT
+  NORMAL
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -362,6 +374,7 @@ model Booking {
   documents       Document[]
   referral        PartnerReferral?
   reminderHistory ReminderHistory[]
+  tasks           Task[]
 
   // Companion booking relationships
   primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
@@ -716,6 +729,35 @@ model RefundLog {
   @@index([paymentId])
   @@index([stripeRefundId])
   @@index([processedAt])
+}
+
+// ============================================================================
+// TASKS (US-001)
+// ============================================================================
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  description String?      @db.Text
+  priority    TaskPriority @default(NORMAL)
+  status      TaskStatus   @default(PENDING)
+  dueDate     DateTime?
+
+  // Relations
+  bookingId        String?
+  booking          Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  assignedToUserId String?  // User ID who is assigned this task
+  createdByUserId  String   // User ID who created this task (admin)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([assignedToUserId])
+  @@index([createdByUserId])
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
 }
 
 // ============================================================================

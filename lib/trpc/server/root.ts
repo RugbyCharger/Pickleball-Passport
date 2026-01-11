@@ -24,6 +24,7 @@ import { tripRouter } from './routers/trip'
 import { newsletterRouter } from './routers/newsletter'
 import { contactRouter } from './routers/contact'
 import { giftRouter } from './routers/gift'
+import { taskRouter } from './routers/task'
 
 export const appRouter = router({
   user: userRouter,
@@ -44,6 +45,7 @@ export const appRouter = router({
   newsletter: newsletterRouter,
   contact: contactRouter,
   gift: giftRouter,
+  task: taskRouter,
   // Future routers will be added here:
   // payment: paymentRouter,
 })

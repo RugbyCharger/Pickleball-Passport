@@ -10,8 +10,9 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, CreditCard, FileText, Bell, ArrowRight, MapPin } from 'lucide-react'
+import { Calendar, CreditCard, FileText, Bell, ArrowRight, MapPin, CheckSquare } from 'lucide-react'
 import { prisma } from '@/lib/db'
+import { GuestTaskSection } from './guest-task-section'
 
 export default async function DashboardPage() {
   const user = await currentUser()
@@ -56,6 +57,16 @@ export default async function DashboardPage() {
     },
   })
 
+  // Get pending tasks count for stats
+  const pendingTasksCount = await prisma.task.count({
+    where: {
+      assignedToUserId: user.id,
+      status: {
+        in: ['PENDING', 'IN_PROGRESS'],
+      },
+    },
+  })
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
@@ -90,6 +101,13 @@ export default async function DashboardPage() {
             <CardTitle className="text-3xl">
               {activeBookings.filter((b) => b.tripId !== null).length}
             </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Pending Tasks</CardDescription>
+            <CardTitle className="text-3xl">{pendingTasksCount}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -165,6 +183,9 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Tasks Section */}
+      <GuestTaskSection userId={user.id} />
 
       {/* Quick Actions */}
       <div>

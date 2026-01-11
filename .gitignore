@@ -43,3 +43,8 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Ralph AI assistant metadata
+.ralph-last-branch
+prd.json
+progress.txt
