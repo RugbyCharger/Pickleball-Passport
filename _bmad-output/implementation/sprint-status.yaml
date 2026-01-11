@@ -70,7 +70,7 @@ development_status:
   epic-2-retrospective: optional
 
   # EPIC 3: Booking System
-  epic-3: in-progress
+  epic-3: done
   3-1-package-configurator-base-package-selection: done
   3-2-package-configurator-duration-selection: done
   3-3-package-configurator-accommodation-tier: done
@@ -88,7 +88,7 @@ development_status:
   3-15-referral-code-application-at-booking: done
   3-16-booking-modification-change-add-ons: done
   3-17-companion-booking-bring-a-friend-spouse: done
-  3-18-gift-booking-purchase-for-someone-else: ready-for-dev
+  3-18-gift-booking-purchase-for-someone-else: done
   epic-3-retrospective: optional
 
   # EPIC 4: Payment Processing

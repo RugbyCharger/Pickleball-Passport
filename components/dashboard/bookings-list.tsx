@@ -16,8 +16,8 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, MapPin, DollarSign } from 'lucide-react'
-import { BookingStatus } from '@prisma/client'
+import { Calendar, MapPin, DollarSign, Gift } from 'lucide-react'
+import { BookingStatus, GiftStatus } from '@prisma/client'
 import { LinkedBookingCard } from './linked-booking-card'
 
 interface Booking {
@@ -29,6 +29,11 @@ interface Booking {
   totalPrice: number
   createdAt: Date
   isCompanionBooking: boolean
+  isGift: boolean
+  giftStatus: GiftStatus | null
+  giftRecipientName: string | null
+  giftPurchaserId: string | null
+  giftAcceptedAt: Date | null
   package: {
     name: string
     slug: string
@@ -183,15 +188,31 @@ export function BookingsList({ bookings }: BookingsListProps) {
                       {/* Header */}
                       <div className="flex items-start gap-3">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
                             <h3 className="font-semibold text-lg">{booking.package.name}</h3>
                             <Badge variant={getStatusVariant(booking.status)}>
                               {getStatusLabel(booking.status)}
                             </Badge>
+                            {booking.isGift && (
+                              <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                                <Gift className="h-3 w-3 mr-1" />
+                                {booking.giftPurchaserId ? 'Gift Purchased' : 'Gift Received'}
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-sm text-muted-foreground">
                             {booking.bookingReference}
                           </p>
+                          {booking.isGift && booking.giftRecipientName && booking.giftPurchaserId && (
+                            <p className="text-sm text-purple-600 mt-1">
+                              Gift for: {booking.giftRecipientName}
+                            </p>
+                          )}
+                          {booking.isGift && !booking.giftPurchaserId && (
+                            <p className="text-sm text-purple-600 mt-1">
+                              Fully Paid Gift
+                            </p>
+                          )}
                         </div>
                       </div>
 
@@ -240,6 +261,23 @@ export function BookingsList({ bookings }: BookingsListProps) {
                             <Badge variant={booking.payments[0].status === 'SUCCEEDED' ? 'default' : 'secondary'} className="ml-1">
                               {booking.payments[0].status}
                             </Badge>
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Gift Status */}
+                      {booking.isGift && booking.giftStatus && booking.giftPurchaserId && (
+                        <div className="pt-2 border-t">
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Gift Status:</span>{' '}
+                            <Badge variant={getGiftStatusVariant(booking.giftStatus)} className="ml-1">
+                              {getGiftStatusLabel(booking.giftStatus)}
+                            </Badge>
+                            {booking.giftAcceptedAt && (
+                              <span className="ml-2">
+                                Accepted {new Date(booking.giftAcceptedAt).toLocaleDateString()}
+                              </span>
+                            )}
                           </p>
                         </div>
                       )}
@@ -315,5 +353,41 @@ function formatAccommodationTier(tier: string): string {
       return 'Private Villa'
     default:
       return tier
+  }
+}
+
+/**
+ * Get badge variant based on gift status
+ */
+function getGiftStatusVariant(status: GiftStatus): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status) {
+    case 'ACCEPTED':
+      return 'default' // Green
+    case 'SENT':
+      return 'secondary' // Blue
+    case 'PENDING':
+      return 'outline' // Gray
+    case 'DECLINED':
+      return 'destructive' // Red
+    default:
+      return 'outline'
+  }
+}
+
+/**
+ * Get human-readable gift status label
+ */
+function getGiftStatusLabel(status: GiftStatus): string {
+  switch (status) {
+    case 'PENDING':
+      return 'Scheduled'
+    case 'SENT':
+      return 'Awaiting Acceptance'
+    case 'ACCEPTED':
+      return 'Accepted'
+    case 'DECLINED':
+      return 'Declined'
+    default:
+      return status
   }
 }
