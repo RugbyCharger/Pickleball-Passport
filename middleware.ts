@@ -21,6 +21,7 @@ const isPublicRoute = createRouteMatcher([
   '/packages(.*)',
   '/testimonials(.*)',
   '/api/webhooks(.*)',
+  '/flyers(.*)',
 ])
 
 // Define role-specific route patterns

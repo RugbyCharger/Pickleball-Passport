@@ -135,6 +135,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - ✅ Trust & safety section
 - ✅ Partner program landing page
 - ✅ Partner signup form
+- ✅ Marketing flyers (Director & Guest editions)
 - ✅ Mobile navigation
 - ✅ Footer
 - 📝 SEO optimization (Planned)
@@ -218,6 +219,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - **[Architecture](_bmad-output/solutioning/architecture-Pickleball-Passport-2025-12-28.md)** - System architecture & technical decisions
 - **[PRD](_bmad-output/planning/prd-Pickleball-Passport-2025-12-28.md)** - Product requirements document
 - **[UX Design](_bmad-output/solutioning/ux-design-Pickleball-Passport-2025-12-28.md)** - Design patterns & user experience
+- **[Pickleball Culture Research](_bmad-output/research/pickleball-culture.md)** - Comprehensive guide on pickleball demographics and culture
 
 ### Development Tracking
 - **[Sprint Status](_bmad-output/implementation/sprint-status.yaml)** - Real-time progress tracking (Sprint 13)
@@ -434,6 +436,11 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 - **Staging**: (Coming soon)
 
 ## 📝 Recent Updates
+
+### January 11, 2026
+- ✅ Created luxury digital flyers for Club Directors and Guests
+- ✅ Completed comprehensive Pickleball Culture research guide
+- ✅ Updated middleware to support public access to marketing assets
 
 ### January 7, 2026
 - ✅ E1-S8: Partner Program Landing Page completed
