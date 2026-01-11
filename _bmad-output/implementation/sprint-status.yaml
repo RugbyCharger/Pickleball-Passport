@@ -98,7 +98,7 @@ development_status:
   4-3-payment-form-ui: done
   4-4-webhook-handler: done
   4-5-payment-failure-handling: done
-  4-6-installment-payment-plans: backlog
+  4-6-installment-payment-plans: ready-for-dev
   4-7-scheduled-payment-processing: backlog
   4-8-receipt-generation: done
   4-9-refund-processing: done
