@@ -17,9 +17,16 @@
 
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import {
+  calculateInstallmentAmounts,
+  calculateInstallmentDates,
+  canUseInstallmentPlan,
+  calculateFullPaymentDiscount,
+} from '@/lib/utils/installment-calculator'
 
 // Types based on Prisma schema
 export type AccommodationTier = 'LUXURY' | 'ULTRA_LUXURY' | 'VILLA'
+export type PaymentPlan = 'FULL' | 'INSTALLMENT_4' | 'FINANCING'
 
 export interface SelectedPackage {
   id: string
@@ -69,6 +76,23 @@ export interface GiftRecipient {
   dateOfBirth?: string
 }
 
+export interface SelectedTrip {
+  id: string
+  name: string
+  destination: string
+  startDate: Date
+  endDate: Date
+  capacity: number
+  currentBookings: number
+}
+
+export interface InstallmentScheduleItem {
+  number: number
+  amount: number
+  dueDate: Date
+  percentage: string
+}
+
 export interface BookingState {
   // Current step in the configurator
   currentStep: number
@@ -87,6 +111,10 @@ export interface BookingState {
 
   // Step 5: Trip Selection (optional - if user wants specific dates)
   selectedTripId: string | null
+  selectedTrip: SelectedTrip | null
+
+  // Payment Plan (E4-S6)
+  paymentPlan: PaymentPlan
 
   // Referral Code (applied at review step)
   referralCode: string | null
@@ -134,6 +162,13 @@ export interface BookingState {
   clearAddOns: () => void
 
   setSelectedTripId: (tripId: string | null) => void
+  setSelectedTrip: (trip: SelectedTrip | null) => void
+
+  // Payment plan actions (E4-S6)
+  setPaymentPlan: (plan: PaymentPlan) => void
+  canUseInstallments: () => boolean
+  getDiscountedTotal: () => number
+  getInstallmentSchedule: () => InstallmentScheduleItem[]
 
   setReferralCode: (code: string | null) => void
   setReferralDiscount: (discount: number) => void
@@ -198,6 +233,8 @@ const initialState = {
   accommodationTier: null,
   selectedAddOns: [],
   selectedTripId: null,
+  selectedTrip: null,
+  paymentPlan: 'FULL' as PaymentPlan,
   referralCode: null,
   referralDiscount: 0,
   referralPartnerId: null,
@@ -264,6 +301,47 @@ export const useBookingStore = create<BookingState>()(
 
       // Step 5: Trip Selection
       setSelectedTripId: (tripId) => set({ selectedTripId: tripId }),
+      setSelectedTrip: (trip) => set({ selectedTrip: trip }),
+
+      // Payment Plan Actions (E4-S6)
+      setPaymentPlan: (plan) => set({ paymentPlan: plan }),
+
+      canUseInstallments: () => {
+        const state = get()
+        if (!state.selectedTrip) return false
+        return canUseInstallmentPlan(state.selectedTrip.startDate)
+      },
+
+      getDiscountedTotal: () => {
+        const state = get()
+        const subtotal = state.calculateSubtotal()
+        const referralDiscount = state.referralDiscount || 0
+        const totalBeforePaymentDiscount = Math.max(0, subtotal - referralDiscount)
+
+        if (state.paymentPlan === 'FULL') {
+          const { discountedTotal } = calculateFullPaymentDiscount(totalBeforePaymentDiscount)
+          return discountedTotal
+        }
+
+        return totalBeforePaymentDiscount
+      },
+
+      getInstallmentSchedule: () => {
+        const state = get()
+        if (!state.selectedTrip || state.paymentPlan !== 'INSTALLMENT_4') return []
+
+        const total = state.calculateTotal()
+        const amounts = calculateInstallmentAmounts(total)
+        const dates = calculateInstallmentDates(state.selectedTrip.startDate)
+        const percentages = ['50%', '25%', '15%', '10%']
+
+        return amounts.map((amount, index) => ({
+          number: index + 1,
+          amount,
+          dueDate: dates[index],
+          percentage: percentages[index],
+        }))
+      },
 
       // Referral Code
       setReferralCode: (code) => set({ referralCode: code }),
@@ -661,6 +739,8 @@ export const useBookingStore = create<BookingState>()(
         accommodationTier: state.accommodationTier,
         selectedAddOns: state.selectedAddOns,
         selectedTripId: state.selectedTripId,
+        selectedTrip: state.selectedTrip,
+        paymentPlan: state.paymentPlan,
         referralCode: state.referralCode,
         referralDiscount: state.referralDiscount,
         referralPartnerId: state.referralPartnerId,

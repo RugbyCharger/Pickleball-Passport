@@ -130,6 +130,12 @@ enum TaskStatus {
   COMPLETED
 }
 
+enum PaymentPlan {
+  FULL          // Pay in full (2% discount)
+  INSTALLMENT_4 // 4 payments (50%, 25%, 15%, 10%)
+  FINANCING     // Affirm financing (future)
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -332,6 +338,10 @@ model Booking {
 
   // Referral
   referredBy String? // Partner referral code
+
+  // Payment Plan (E4-S6)
+  paymentPlan      PaymentPlan @default(FULL)
+  stripeCustomerId String? // Stripe customer ID for installment plans
 
   // Rescheduling
   rescheduleCount Int       @default(0) // Track number of reschedules (max: 1)

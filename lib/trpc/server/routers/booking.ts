@@ -12,6 +12,11 @@ import { router, guestProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import { createPaymentIntent as createStripePaymentIntent } from '@/lib/stripe/stripe-service'
 import Stripe from 'stripe'
+import {
+  calculateInstallmentAmounts,
+  calculateFullPaymentDiscount,
+} from '@/lib/utils/installment-calculator'
+import { createStripeCustomer } from '@/lib/stripe/create-customer'
 
 // Initialize Stripe client (server-side)
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -35,6 +40,7 @@ const createPaymentIntentInput = z.object({
   addOnIds: z.array(z.string().cuid()).optional().default([]),
   tripId: z.string().cuid().optional(),
   referralCode: z.string().optional(),
+  paymentPlan: z.enum(['FULL', 'INSTALLMENT_4', 'FINANCING']).optional().default('FULL'),
 })
 
 /**
@@ -72,7 +78,7 @@ export const bookingRouter = router({
   createPaymentIntent: guestProcedure
     .input(createPaymentIntentInput)
     .mutation(async ({ ctx, input }) => {
-      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode } = input
+      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode, paymentPlan } = input
 
       // 1. Validate package exists and is active
       const pkg = await ctx.db.package.findFirst({
@@ -195,18 +201,49 @@ export const bookingRouter = router({
         referredByPartnerId = partner.id
       }
 
-      // 8. Calculate final total
-      const totalPrice = subtotal - discount
+      // 8. Calculate final total and apply payment plan discount (if applicable)
+      let totalPrice = subtotal - discount
+
+      // Apply 2% discount for full payment
+      if (paymentPlan === 'FULL') {
+        const { discountedTotal } = calculateFullPaymentDiscount(totalPrice)
+        totalPrice = discountedTotal
+      }
+
+      // Calculate first installment amount for installment plan (for payment intent)
+      const paymentAmount = paymentPlan === 'INSTALLMENT_4'
+        ? calculateInstallmentAmounts(totalPrice)[0] // 50% for first installment
+        : totalPrice
 
       // 9. Get user info from Clerk
       const user = ctx.user!
       const guestEmail = user.emailAddresses[0]?.emailAddress || ''
       const guestName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Guest'
 
-      // 10. Generate booking reference
+      // 10. Create Stripe customer if installment plan (to save payment method)
+      let stripeCustomerId: string | null = null
+      if (paymentPlan === 'INSTALLMENT_4') {
+        try {
+          const customer = await createStripeCustomer({
+            email: guestEmail,
+            name: guestName,
+            userId: user.id,
+            bookingId: 'pending', // Will be updated after booking is created
+          })
+          stripeCustomerId = customer.id
+        } catch (error) {
+          console.error('Failed to create Stripe customer for installment plan:', error)
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Unable to create customer for installment plan. Please try again or select "Pay in Full".',
+          })
+        }
+      }
+
+      // 11. Generate booking reference
       const bookingReference = generateBookingReference()
 
-      // 11. Create booking record in database (status: PENDING_PAYMENT)
+      // 12. Create booking record in database (status: PENDING_PAYMENT)
       const booking = await ctx.db.booking.create({
         data: {
           bookingReference,
@@ -221,6 +258,8 @@ export const bookingRouter = router({
           addOnsTotal,
           totalPrice,
           referredBy: referredByPartnerId || null, // Store partner ID, not code
+          paymentPlan, // E4-S6: Store payment plan
+          stripeCustomerId, // E4-S6: Store customer ID for installment plans
         },
       })
 
@@ -241,10 +280,10 @@ export const bookingRouter = router({
         })
       }
 
-      // 13. Create Stripe payment intent
+      // 13. Create Stripe payment intent (first installment or full amount)
       try {
         const paymentIntent = await createStripePaymentIntent({
-          amount: totalPrice,
+          amount: paymentAmount, // E4-S6: First installment or full amount
           bookingId: booking.id,
           guestEmail,
           guestName,
@@ -255,16 +294,24 @@ export const bookingRouter = router({
             duration: duration.toString(),
             accommodationTier,
             referralCode: referralCode || '',
+            paymentPlan, // E4-S6: Store payment plan in metadata
+            totalPrice: totalPrice.toString(), // E4-S6: Store total for reference
+            ...(paymentPlan === 'INSTALLMENT_4' && {
+              installmentNumber: '1',
+              installmentOf: '4',
+              stripeCustomerId: stripeCustomerId || '',
+            }),
           },
         })
 
-        // 14. Create payment record
+        // 14. Create payment record (first installment or full amount)
         await ctx.db.payment.create({
           data: {
             bookingId: booking.id,
-            amount: totalPrice,
+            amount: paymentAmount, // E4-S6: First installment or full amount
             status: 'PENDING',
             stripePaymentIntentId: paymentIntent.paymentIntentId,
+            stripeCustomerId, // E4-S6: Store customer ID for installment plans
           },
         })
 
@@ -299,8 +346,11 @@ export const bookingRouter = router({
           clientSecret: paymentIntent.clientSecret,
           bookingId: booking.id,
           bookingReference,
-          totalPrice,
+          totalPrice, // E4-S6: Full booking total
+          paymentAmount, // E4-S6: Amount being charged now (first installment or full)
           discount,
+          paymentPlan, // E4-S6: Payment plan selected
+          stripeCustomerId, // E4-S6: Customer ID for installment plans
         }
       } catch (error) {
         // If Stripe payment intent creation fails, delete the booking
