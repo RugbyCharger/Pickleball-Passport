@@ -15,6 +15,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - **State Management**: Zustand + localStorage persistence
 - **Payments**: Stripe (Payment Intents + Webhooks)
 - **Email**: SendGrid (Transactional emails)
+- **Monitoring**: Sentry (Error tracking + Performance monitoring)
 - **Deployment**: Vercel
 
 ## 📊 Project Status
@@ -162,6 +163,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - Clerk account for authentication
 - Stripe account for payments
 - SendGrid account for emails
+- Sentry account for error monitoring (optional but recommended)
 
 ### Installation
 
@@ -199,6 +201,10 @@ A Next.js application for managing luxury pickleball tourism packages, combining
    # SendGrid
    SENDGRID_API_KEY="SG..."
    SENDGRID_FROM_EMAIL="noreply@example.com"
+
+   # Sentry (optional)
+   SENTRY_AUTH_TOKEN="sntrys_..."
+   NEXT_PUBLIC_SENTRY_DSN="https://..."
    ```
 
    See [SETUP.md](SETUP.md) for detailed configuration instructions.
@@ -450,6 +456,16 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 - **Staging**: (Coming soon)
 
 ## 📝 Recent Updates
+
+### January 13, 2026
+- ✅ **Sentry Integration** - Production-ready error monitoring and performance tracking
+  - Real-time error tracking for client, server, and edge runtimes
+  - Global error boundary for React error handling
+  - Performance monitoring with automatic tracing
+  - Source map uploads for better debugging
+  - Automatic Vercel Cron Monitor instrumentation
+  - Tunnel route to bypass ad-blockers
+  - Tree-shaking configuration for optimized bundle size
 
 ### January 11, 2026
 - ✅ **Task Management System** - Added priority-based task tracking
