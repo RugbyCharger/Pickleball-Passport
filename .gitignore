@@ -48,3 +48,6 @@ next-env.d.ts
 .ralph-last-branch
 prd.json
 progress.txt
+
+# Sentry Config File
+.env.sentry-build-plugin
