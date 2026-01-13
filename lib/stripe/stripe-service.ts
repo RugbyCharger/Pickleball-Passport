@@ -43,6 +43,8 @@ export interface CreatePaymentIntentParams {
   guestEmail: string;
   guestName: string;
   metadata?: Record<string, string>;
+  customerId?: string; // E4-S6: For installment plans
+  setupFutureUsage?: 'off_session' | 'on_session'; // E4-S6: Save payment method for future charges
 }
 
 export interface PaymentIntentResult {
@@ -59,7 +61,7 @@ export interface PaymentIntentResult {
 export async function createPaymentIntent(
   params: CreatePaymentIntentParams
 ): Promise<PaymentIntentResult> {
-  const { amount, bookingId, guestEmail, guestName, metadata = {} } = params;
+  const { amount, bookingId, guestEmail, guestName, metadata = {}, customerId, setupFutureUsage } = params;
 
   try {
     const paymentIntent = await getStripe().paymentIntents.create({
@@ -76,6 +78,9 @@ export async function createPaymentIntent(
         guestName,
         ...metadata,
       },
+      // E4-S6: For installment plans, attach customer and save payment method
+      ...(customerId && { customer: customerId }),
+      ...(setupFutureUsage && { setup_future_usage: setupFutureUsage }),
     });
 
     return {

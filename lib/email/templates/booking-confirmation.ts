@@ -35,6 +35,15 @@ export interface BookingConfirmationData {
     price: number; // In cents
   }>;
 
+  // Payment Plan - E4-S6
+  paymentPlan?: 'FULL' | 'INSTALLMENT_4' | 'FINANCING';
+  amountPaid?: number; // In cents - for installment plans (first payment)
+  installmentSchedule?: Array<{
+    number: number;
+    amount: number; // In cents
+    dueDate: string; // ISO date string
+  }>;
+
   // Portal link
   portalUrl?: string;
 }
@@ -153,13 +162,47 @@ export function generateBookingConfirmationEmail(data: BookingConfirmationData):
         </tr>
         ` : ''}
         <tr style="border-top: 2px solid #059669;">
-          <td style="padding: 12px 0 0 0; color: #111827; font-size: 18px; font-weight: bold;">Total Paid:</td>
+          <td style="padding: 12px 0 0 0; color: #111827; font-size: 18px; font-weight: bold;">
+            ${data.paymentPlan === 'INSTALLMENT_4' ? 'Total Package Price:' : 'Total Paid:'}
+          </td>
           <td style="padding: 12px 0 0 0; color: #059669; font-size: 18px; font-weight: bold; text-align: right;">${formatCurrency(data.totalPrice)}</td>
         </tr>
+        ${data.paymentPlan === 'INSTALLMENT_4' && data.amountPaid ? `
+        <tr>
+          <td style="padding: 8px 0 0 0; color: #6b7280; font-size: 14px;">Paid Today (50%):</td>
+          <td style="padding: 8px 0 0 0; color: #059669; font-weight: 600; text-align: right;">${formatCurrency(data.amountPaid)}</td>
+        </tr>
+        ` : ''}
       </table>
     </div>
 
     ${addOnsHtml}
+
+    ${data.paymentPlan === 'INSTALLMENT_4' && data.installmentSchedule ? `
+    <div style="margin: 24px 0; padding: 20px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #2563eb;">
+      <h3 style="color: #111827; font-size: 16px; margin: 0 0 12px 0;">💳 Payment Schedule (4 Installments)</h3>
+      <p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px;">
+        Your remaining payments will be automatically charged to your saved payment method on the following dates:
+      </p>
+      ${data.installmentSchedule.map(inst => `
+        <div style="margin: 12px 0; padding: 12px; background-color: ${inst.number === 1 ? '#dbeafe' : '#ffffff'}; border-radius: 6px; ${inst.number === 1 ? 'border: 2px solid #2563eb;' : ''}">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="margin: 0; color: #111827; font-weight: 600; font-size: 14px;">
+                ${inst.number === 1 ? '✓ Payment 1 - Paid Today' : `Payment ${inst.number} - ${formatDate(inst.dueDate)}`}
+              </p>
+            </div>
+            <p style="margin: 0; color: #111827; font-weight: bold; font-size: 16px;">
+              ${formatCurrency(inst.amount)}
+            </p>
+          </div>
+        </div>
+      `).join('')}
+      <p style="margin: 16px 0 0 0; color: #6b7280; font-size: 12px;">
+        You can view and manage your payment schedule anytime from your member portal. We'll send you email reminders before each payment.
+      </p>
+    </div>
+    ` : ''}
 
     ${tripDatesHtml}
 

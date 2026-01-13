@@ -29,8 +29,11 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     accommodationTier,
     selectedAddOns,
     referralCode,
+    paymentPlan,
     isReadyForReview,
     calculateTotal,
+    getDiscountedTotal,
+    getInstallmentSchedule,
   } = useBookingStore()
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -60,6 +63,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
           accommodationTier,
           addOnIds: selectedAddOns.map((a) => a.id),
           referralCode: referralCode || undefined,
+          paymentPlan, // E4-S6: Include payment plan
         })
 
         setClientSecret(result.clientSecret)
@@ -115,13 +119,23 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
   }
 
   // Success - render payment form
-  const totalAmount = calculateTotal()
+  const totalAmount = getDiscountedTotal() // E4-S6: Use discounted total
+  const installmentSchedule = paymentPlan === 'INSTALLMENT_4' ? getInstallmentSchedule() : []
+  const paymentAmount = installmentSchedule.length > 0
+    ? installmentSchedule[0].amount
+    : totalAmount
 
   return (
     <div className="grid grid-cols-1 gap-8">
       {/* Payment Form */}
       <StripeProvider clientSecret={clientSecret}>
-        <PaymentForm bookingReference={bookingReference} amount={totalAmount} />
+        <PaymentForm
+          bookingReference={bookingReference}
+          amount={paymentAmount}
+          totalAmount={totalAmount}
+          paymentPlan={paymentPlan}
+          installmentSchedule={installmentSchedule}
+        />
       </StripeProvider>
     </div>
   )

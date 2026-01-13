@@ -33,6 +33,8 @@ import { BookingStatusTimeline } from '@/components/bookings/booking-status-time
 import CancelBookingButton from '@/components/booking/cancel-booking-button'
 import RescheduleBookingButton from '@/components/booking/reschedule-booking-button'
 import ModifyBookingButton from '@/components/booking/modify-booking-button'
+import { PaymentScheduleDisplay } from '@/components/booking/payment-schedule-display'
+import { calculateInstallmentAmounts, calculateInstallmentDates } from '@/lib/utils/installment-calculator'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -65,6 +67,8 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
       duration: true,
       accommodationTier: true,
       referredBy: true,
+      paymentPlan: true, // E4-S6
+      stripeCustomerId: true, // E4-S6
       createdAt: true,
       updatedAt: true,
       rescheduleCount: true,
@@ -171,6 +175,47 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
     : undefined
   const tripConfirmedDate = booking.trip ? booking.createdAt : undefined
   const completedDate = booking.status === 'COMPLETED' ? booking.updatedAt : undefined
+
+  // E4-S6: Build payment schedule for installment plans
+  const paymentSchedule = (() => {
+    if (booking.paymentPlan !== 'INSTALLMENT_4' || !booking.trip) return null
+
+    const amounts = calculateInstallmentAmounts(booking.totalPrice)
+    const dates = calculateInstallmentDates(booking.trip.startDate)
+
+    // Match payments to installments
+    const successfulPayments = booking.payments
+      .filter(p => p.status === 'SUCCEEDED')
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
+    return amounts.map((amount, index) => {
+      const payment = successfulPayments[index]
+      const dueDate = dates[index]
+      const now = new Date()
+
+      let status: 'PAID' | 'PENDING' | 'UPCOMING' | 'OVERDUE'
+      if (payment) {
+        status = 'PAID'
+      } else if (dueDate < now) {
+        status = 'OVERDUE'
+      } else if (index === successfulPayments.length) {
+        // Next payment due
+        status = 'PENDING'
+      } else {
+        status = 'UPCOMING'
+      }
+
+      return {
+        id: payment?.id || `installment-${index + 1}`,
+        number: index + 1,
+        amount,
+        dueDate,
+        status,
+        paidDate: payment?.createdAt,
+        paymentIntentId: payment?.stripePaymentIntentId,
+      }
+    })
+  })()
 
   return (
     <div className="space-y-6">
@@ -502,6 +547,30 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Payment Schedule - E4-S6 (for installment plans) */}
+          {booking.paymentPlan === 'INSTALLMENT_4' && paymentSchedule && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Payment Schedule
+                </CardTitle>
+                <CardDescription>
+                  Your 4-installment payment plan
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PaymentScheduleDisplay
+                  bookingReference={booking.bookingReference}
+                  totalAmount={booking.totalPrice}
+                  schedule={paymentSchedule}
+                  showTitle={false}
+                  compact={false}
+                />
               </CardContent>
             </Card>
           )}

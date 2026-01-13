@@ -19,6 +19,7 @@ import { CompanionBookingSummary } from '@/components/booking/companion-booking-
 import { GiftBookingSummary } from '@/components/booking/gift-booking-summary'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 import { ReferralCodeInput } from '@/components/booking/referral-code-input'
+import { PaymentPlanSelector } from '@/components/booking/payment-plan-selector'
 import { ReviewPageClient } from './review-client'
 
 export const metadata: Metadata = {
@@ -69,6 +70,9 @@ export default async function BookingReviewPage() {
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
               <ReferralCodeInput />
             </div>
+
+            {/* Payment Plan Selection - E4-S6 */}
+            <PaymentPlanSelector />
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between gap-4 pt-4">

@@ -25,7 +25,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import type { StripeError } from '@stripe/stripe-js'
-import { AlertCircle, CreditCard, Loader2, Lock, RefreshCw, Info } from 'lucide-react'
+import { AlertCircle, CreditCard, Loader2, Lock, RefreshCw, Info, Calendar } from 'lucide-react'
 import { useBookingStore } from '@/lib/stores/booking-store'
 import {
   categorizePaymentError,
@@ -34,9 +34,19 @@ import {
   type PaymentErrorInfo,
 } from '@/lib/stripe/payment-errors'
 
+interface InstallmentScheduleItem {
+  number: number
+  amount: number
+  dueDate: Date
+  percentage: string
+}
+
 interface PaymentFormProps {
   bookingReference: string
-  amount: number // in cents
+  amount: number // in cents - amount being charged now
+  totalAmount: number // in cents - total booking amount
+  paymentPlan: 'FULL' | 'INSTALLMENT_4' | 'FINANCING'
+  installmentSchedule: InstallmentScheduleItem[]
 }
 
 function formatPrice(cents: number): string {
@@ -48,7 +58,13 @@ function formatPrice(cents: number): string {
   }).format(cents / 100)
 }
 
-export function PaymentForm({ bookingReference, amount }: PaymentFormProps) {
+export function PaymentForm({
+  bookingReference,
+  amount,
+  totalAmount,
+  paymentPlan,
+  installmentSchedule,
+}: PaymentFormProps) {
   const stripe = useStripe()
   const elements = useElements()
   const router = useRouter()
@@ -208,15 +224,68 @@ export function PaymentForm({ bookingReference, amount }: PaymentFormProps) {
               Your payment information is encrypted and secure. We never store your card details.
               All transactions are processed through Stripe.
             </p>
+            {paymentPlan === 'INSTALLMENT_4' && (
+              <p className="text-xs text-emerald-700 mt-2">
+                <strong>Installment Plan:</strong> Your payment method will be securely saved for automatic charges
+                on future installment due dates. You can manage your payment method anytime from your dashboard.
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Installment Plan Info */}
+      {paymentPlan === 'INSTALLMENT_4' && installmentSchedule.length > 0 && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-6">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-blue-900">4-Payment Installment Plan</h3>
+            <p className="text-sm text-blue-700 mt-1">
+              Pay {formatPrice(amount)} today, then 3 more automatic payments
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            {installmentSchedule.map((installment) => (
+              <div
+                key={installment.number}
+                className={`flex items-center justify-between p-3 rounded-lg ${
+                  installment.number === 1
+                    ? 'bg-blue-100 border border-blue-300'
+                    : 'bg-white border border-blue-200'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+                    {installment.number}
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">
+                      {installment.number === 1 ? 'Due Today' : `Due ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(installment.dueDate)}`}
+                    </p>
+                    <p className="text-xs text-slate-600">{installment.percentage} of total</p>
+                  </div>
+                </div>
+                <p className="text-lg font-bold text-slate-900">{formatPrice(installment.amount)}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-blue-200">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-blue-900">Total Booking Amount</p>
+              <p className="text-xl font-bold text-blue-900">{formatPrice(totalAmount)}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Payment Amount */}
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-600">Total Amount</p>
+            <p className="text-sm text-slate-600">
+              {paymentPlan === 'INSTALLMENT_4' ? 'Due Today (First Installment)' : 'Total Amount'}
+            </p>
             <p className="text-xs text-slate-500 mt-1">Booking: {bookingReference}</p>
           </div>
           <p className="text-3xl font-bold text-slate-900">{formatPrice(amount)}</p>
@@ -247,7 +316,9 @@ export function PaymentForm({ bookingReference, amount }: PaymentFormProps) {
           ) : (
             <span className="flex items-center justify-center gap-2">
               <Lock className="h-5 w-5" />
-              Pay {formatPrice(amount)}
+              {paymentPlan === 'INSTALLMENT_4'
+                ? `Pay First Installment ${formatPrice(amount)}`
+                : `Pay ${formatPrice(amount)}`}
             </span>
           )}
         </button>

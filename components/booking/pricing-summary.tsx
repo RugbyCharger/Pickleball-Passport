@@ -51,9 +51,11 @@ export function PricingSummary() {
     selectedAddOns,
     currentStep,
     referralDiscount,
+    paymentPlan,
     calculateSubtotal,
     calculateSavings,
     calculateTotal,
+    getDiscountedTotal,
     isModificationMode,
     originalAddOns,
     calculatePriceDifference,
@@ -119,10 +121,23 @@ export function PricingSummary() {
     return companionAddOns.reduce((sum, addOn) => sum + addOn.thPrice, 0)
   }, [hasCompanion, companionAddOns])
 
+  // E4-S6: Calculate discounted total (includes 2% discount for FULL payment plan)
+  const discountedTotal = useMemo(() => getDiscountedTotal(), [
+    subtotal,
+    referralDiscount,
+    paymentPlan,
+  ])
+
+  const paymentPlanDiscount = useMemo(() => {
+    if (paymentPlan !== 'FULL') return 0
+    const totalBeforePaymentDiscount = Math.max(0, subtotal - (referralDiscount || 0))
+    return Math.round(totalBeforePaymentDiscount * 0.02)
+  }, [subtotal, referralDiscount, paymentPlan])
+
   const grandTotal = useMemo(() => {
-    if (!hasCompanion) return calculateTotal()
+    if (!hasCompanion) return discountedTotal
     return calculateCombinedTotal()
-  }, [hasCompanion, subtotal, companionSubtotal, referralDiscount])
+  }, [hasCompanion, discountedTotal, companionSubtotal, referralDiscount])
 
   const companionName = companionInfo
     ? `${companionInfo.firstName} ${companionInfo.lastName}`
@@ -451,13 +466,26 @@ export function PricingSummary() {
           </div>
         )}
 
-        {/* Total (if referral applied, non-companion mode) */}
-        {referralDiscount > 0 && !hasCompanion && (
+        {/* Payment Plan Discount - E4-S6 (only show if FULL payment and not companion mode) */}
+        {paymentPlanDiscount > 0 && !hasCompanion && (
+          <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+            <div>
+              <p className="text-sm font-medium text-emerald-700">Pay in Full Discount</p>
+              <p className="text-xs text-emerald-600">2% off for full payment</p>
+            </div>
+            <p className="text-lg font-bold text-emerald-700">
+              -{formatPrice(paymentPlanDiscount)}
+            </p>
+          </div>
+        )}
+
+        {/* Total (if any discounts applied, non-companion mode) */}
+        {(referralDiscount > 0 || paymentPlanDiscount > 0) && !hasCompanion && (
           <div className="border-t-2 border-slate-300 pt-4">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold text-slate-900">Total</p>
               <p className="text-3xl font-bold text-emerald-600">
-                {formatPrice(calculateTotal())}
+                {formatPrice(discountedTotal)}
               </p>
             </div>
           </div>

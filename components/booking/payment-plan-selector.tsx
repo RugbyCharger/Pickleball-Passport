@@ -35,6 +35,7 @@ export function PaymentPlanSelector() {
     getDiscountedTotal,
     canUseInstallments,
     isGift,
+    hasCompanion,
   } = useBookingStore()
 
   const total = calculateTotal()
@@ -42,8 +43,8 @@ export function PaymentPlanSelector() {
   const discount = total - discountedTotal
   const canInstallments = canUseInstallments()
 
-  // Disable installments for gift bookings
-  const installmentsDisabled = isGift || !canInstallments
+  // E4-S6: Disable installments for gift bookings and companion bookings (FULL payment only)
+  const installmentsDisabled = isGift || hasCompanion || !canInstallments
 
   const paymentOptions: PaymentOption[] = [
     {
@@ -178,6 +179,8 @@ export function PaymentPlanSelector() {
                   <p className="mt-4 text-xs text-gray-500">
                     {isGift
                       ? 'Gift bookings must be paid in full'
+                      : hasCompanion
+                      ? 'Companion bookings must be paid in full'
                       : 'Installment plans require booking at least 70 days before departure'}
                   </p>
                 )}

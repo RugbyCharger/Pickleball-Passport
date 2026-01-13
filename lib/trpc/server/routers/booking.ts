@@ -287,6 +287,11 @@ export const bookingRouter = router({
           bookingId: booking.id,
           guestEmail,
           guestName,
+          // E4-S6: For installment plans, attach customer and save payment method
+          ...(paymentPlan === 'INSTALLMENT_4' && stripeCustomerId && {
+            customerId: stripeCustomerId,
+            setupFutureUsage: 'off_session' as const,
+          }),
           metadata: {
             bookingReference,
             packageId,
