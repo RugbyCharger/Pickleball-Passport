@@ -136,6 +136,12 @@ enum PaymentPlan {
   FINANCING     // Affirm financing (future)
 }
 
+enum PaymentRecordStatus {
+  PAID    // Payment completed successfully
+  PENDING // Payment scheduled but not yet processed
+  FAILED  // Payment attempt failed
+}
+
 // ============================================================================
 // USER & AUTHENTICATION
 // ============================================================================
@@ -147,6 +153,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Stripe Integration (E4-S6)
+  stripeCustomerId String? // Stripe customer ID for installment plans
+
   // Relationships
   guestProfile   GuestProfile?
   partnerProfile PartnerProfile?
@@ -157,6 +166,7 @@ model User {
 
   @@index([email])
   @@index([role])
+  @@index([stripeCustomerId])
 }
 
 // ============================================================================
@@ -381,6 +391,7 @@ model Booking {
   // Relationships
   bookingAddOns   BookingAddOn[]
   payments        Payment[]
+  paymentRecords  PaymentRecord[] // E4-S6: Installment payment tracking
   documents       Document[]
   referral        PartnerReferral?
   reminderHistory ReminderHistory[]
@@ -484,6 +495,38 @@ model Payment {
   @@index([bookingId])
   @@index([status])
   @@index([scheduledDate])
+  @@index([stripePaymentIntentId])
+}
+
+// ============================================================================
+// PAYMENT RECORDS (E4-S6 - Installment Tracking)
+// ============================================================================
+
+model PaymentRecord {
+  id        String              @id @default(cuid())
+  bookingId String
+  booking   Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  // Amount and Status
+  amountCents Int                 // Payment amount in cents
+  status      PaymentRecordStatus @default(PENDING)
+
+  // Installment Details
+  dueDate            DateTime  // When this payment is due
+  paidDate           DateTime? // When payment was completed
+  percentage         Int?      // Percentage of total (50, 25, 15, 10)
+  installmentNumber  Int?      // Which installment (1, 2, 3, 4)
+
+  // Stripe Integration
+  stripePaymentIntentId String? @unique // Stripe payment intent for this installment
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([dueDate])
   @@index([stripePaymentIntentId])
 }
 
