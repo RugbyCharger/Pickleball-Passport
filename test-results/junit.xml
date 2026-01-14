@@ -1,0 +1,62 @@
+<testsuites id="" name="" tests="27" failures="0" skipped="0" errors="0" time="1.6078370000000002">
+<testsuite name="unit/installment-calculator.spec.ts" timestamp="2026-01-14T13:47:54.371Z" hostname="chromium" tests="9" failures="0" skipped="0" time="0.06" errors="0">
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for small amount ($10.00)" classname="unit/installment-calculator.spec.ts" time="0.016">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.009">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for large amount ($15,385.67)" classname="unit/installment-calculator.spec.ts" time="0.005">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for amount with 1 cent ($0.01)" classname="unit/installment-calculator.spec.ts" time="0.004">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should ensure installment sum equals exact total (no rounding errors)" classname="unit/installment-calculator.spec.ts" time="0.015">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.001">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount with rounding for odd amount ($1,234.56)" classname="unit/installment-calculator.spec.ts" time="0.002">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should ensure discount never exceeds 2%" classname="unit/installment-calculator.spec.ts" time="0.005">
+</testcase>
+<testcase name="Date Calculation - Installment Due Dates › should calculate installment dates for leap year trip (Feb 29)" classname="unit/installment-calculator.spec.ts" time="0.003">
+</testcase>
+</testsuite>
+<testsuite name="unit/installment-calculator.spec.ts" timestamp="2026-01-14T13:47:54.371Z" hostname="firefox" tests="9" failures="0" skipped="0" time="0.039" errors="0">
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for small amount ($10.00)" classname="unit/installment-calculator.spec.ts" time="0.004">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.007">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for large amount ($15,385.67)" classname="unit/installment-calculator.spec.ts" time="0.003">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for amount with 1 cent ($0.01)" classname="unit/installment-calculator.spec.ts" time="0.007">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should ensure installment sum equals exact total (no rounding errors)" classname="unit/installment-calculator.spec.ts" time="0.003">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.001">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount with rounding for odd amount ($1,234.56)" classname="unit/installment-calculator.spec.ts" time="0.005">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should ensure discount never exceeds 2%" classname="unit/installment-calculator.spec.ts" time="0.004">
+</testcase>
+<testcase name="Date Calculation - Installment Due Dates › should calculate installment dates for leap year trip (Feb 29)" classname="unit/installment-calculator.spec.ts" time="0.005">
+</testcase>
+</testsuite>
+<testsuite name="unit/installment-calculator.spec.ts" timestamp="2026-01-14T13:47:54.371Z" hostname="webkit" tests="9" failures="0" skipped="0" time="0.035" errors="0">
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for small amount ($10.00)" classname="unit/installment-calculator.spec.ts" time="0.005">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.008">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for large amount ($15,385.67)" classname="unit/installment-calculator.spec.ts" time="0.006">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should calculate installments for amount with 1 cent ($0.01)" classname="unit/installment-calculator.spec.ts" time="0.003">
+</testcase>
+<testcase name="Installment Calculator - Amount Splitting › should ensure installment sum equals exact total (no rounding errors)" classname="unit/installment-calculator.spec.ts" time="0.004">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount for typical amount ($5,000.00)" classname="unit/installment-calculator.spec.ts" time="0.001">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should calculate 2% discount with rounding for odd amount ($1,234.56)" classname="unit/installment-calculator.spec.ts" time="0.001">
+</testcase>
+<testcase name="2% Discount Calculator - FULL Payment › should ensure discount never exceeds 2%" classname="unit/installment-calculator.spec.ts" time="0.004">
+</testcase>
+<testcase name="Date Calculation - Installment Due Dates › should calculate installment dates for leap year trip (Feb 29)" classname="unit/installment-calculator.spec.ts" time="0.003">
+</testcase>
+</testsuite>
+</testsuites>
