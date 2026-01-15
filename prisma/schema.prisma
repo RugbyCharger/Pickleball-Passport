@@ -520,6 +520,11 @@ model PaymentRecord {
   // Stripe Integration
   stripePaymentIntentId String? @unique // Stripe payment intent for this installment
 
+  // E4-S6 Phase 8: Retry Logic
+  retryCount     Int      @default(0)  // Track retry attempts (0-3)
+  lastAttemptAt  DateTime?             // When last charge was attempted
+  failureReason  String?               // Stripe error message for debugging
+
   // Metadata
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
