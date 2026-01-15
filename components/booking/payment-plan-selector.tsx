@@ -12,8 +12,11 @@
 
 import { useBookingStore, type PaymentPlan } from '@/lib/stores/booking-store'
 import { formatCentsAsDollars } from '@/lib/utils/installment-calculator'
-import { Check, CreditCard, Calendar, Building2 } from 'lucide-react'
+import { Check, CreditCard, Calendar, Building2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { useState } from 'react'
 
 interface PaymentOption {
   value: PaymentPlan
@@ -45,6 +48,10 @@ export function PaymentPlanSelector() {
 
   // E4-S6: Disable installments for gift bookings and companion bookings (FULL payment only)
   const installmentsDisabled = isGift || hasCompanion || !canInstallments
+
+  // E4-S6 Phase 7: Authorization checkbox for installment plans (AC-7)
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [showAuthError, setShowAuthError] = useState(false)
 
   const paymentOptions: PaymentOption[] = [
     {
@@ -82,11 +89,16 @@ export function PaymentPlanSelector() {
   ]
 
   const handleSelect = (value: PaymentPlan) => {
+    // E4-S6 Phase 7: Clear error when switching plans
+    setShowAuthError(false)
     setPaymentPlan(value)
   }
 
+  // E4-S6 Phase 7: Validate authorization before allowing proceed
+  const canProceed = paymentPlan !== 'INSTALLMENT_4' || isAuthorized
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="payment-plan-selector">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Payment Options</h2>
@@ -107,6 +119,7 @@ export function PaymentPlanSelector() {
               type="button"
               onClick={() => !isDisabled && handleSelect(option.value)}
               disabled={isDisabled}
+              data-testid={`payment-plan-${option.value.toLowerCase().replace('_', '-')}`}
               className={cn(
                 'relative flex flex-col items-start rounded-lg border-2 p-6 text-left transition-all',
                 'min-h-[200px]',
@@ -122,6 +135,7 @@ export function PaymentPlanSelector() {
               {/* Badge */}
               {option.badge && (
                 <span
+                  data-testid={`payment-plan-${option.value.toLowerCase().replace('_', '-')}-badge`}
                   className={cn(
                     'absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-semibold',
                     option.badge.variant === 'success' && 'bg-green-100 text-green-800',
@@ -156,7 +170,7 @@ export function PaymentPlanSelector() {
 
                 {/* Amount Display */}
                 {option.value === 'FULL' && (
-                  <div className="mt-4 space-y-1">
+                  <div className="mt-4 space-y-1" data-testid="payment-plan-full-amount">
                     <p className="text-xs text-gray-500">Original: {formatCentsAsDollars(total)}</p>
                     <p className="text-xs text-green-600">Discount: -{formatCentsAsDollars(discount)}</p>
                     <p className="text-lg font-bold text-gray-900">
@@ -166,7 +180,7 @@ export function PaymentPlanSelector() {
                 )}
 
                 {option.value === 'INSTALLMENT_4' && !isDisabled && (
-                  <div className="mt-4">
+                  <div className="mt-4" data-testid="payment-plan-installment-4-amount">
                     <p className="text-sm text-gray-500">4 payments starting at:</p>
                     <p className="text-lg font-bold text-gray-900">
                       {formatCentsAsDollars(Math.round(total * 0.5))} today
@@ -189,6 +203,58 @@ export function PaymentPlanSelector() {
           )
         })}
       </div>
+
+      {/* E4-S6 Phase 7: Authorization Checkbox (AC-7) */}
+      {paymentPlan === 'INSTALLMENT_4' && !installmentsDisabled && (
+        <div className="space-y-4">
+          <div className="rounded-lg border-2 border-gray-200 bg-white p-6">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="payment-method-authorization-checkbox"
+                data-testid="payment-method-authorization-checkbox"
+                checked={isAuthorized}
+                onCheckedChange={(checked) => {
+                  setIsAuthorized(checked as boolean)
+                  setShowAuthError(false)
+                }}
+                aria-label="Authorize automatic installment payments"
+                aria-describedby="authorization-text authorization-help"
+                className="mt-1"
+              />
+              <div className="flex-1 space-y-2">
+                <Label
+                  htmlFor="payment-method-authorization-checkbox"
+                  className="text-sm font-medium text-gray-900 cursor-pointer"
+                >
+                  <span id="authorization-text" data-testid="authorization-text">
+                    I authorize Pickleball Passport to charge my payment method for future installments on the scheduled dates
+                  </span>
+                </Label>
+                <p
+                  id="authorization-help"
+                  className="text-xs text-gray-600"
+                >
+                  Your card will be securely saved for scheduled payments. You can update your payment method anytime in your dashboard.
+                </p>
+              </div>
+            </div>
+
+            {/* E4-S6 Phase 7: Authorization Error Message */}
+            {showAuthError && (
+              <div
+                data-testid="authorization-error"
+                className="mt-4 flex items-start space-x-2 rounded-md bg-red-50 p-3"
+                role="alert"
+              >
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800">
+                  Please check the authorization box to proceed with installment payments.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Help Text */}
       <div className="rounded-lg bg-blue-50 p-4">

@@ -29,7 +29,7 @@ export function InstallmentScheduleDisplay() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="installment-schedule-preview">
       {/* Header */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900">Payment Schedule</h3>
@@ -76,6 +76,7 @@ export function InstallmentScheduleDisplay() {
               return (
                 <tr
                   key={installment.number}
+                  data-testid={`installment-${installment.number}`}
                   className={cn(
                     isFirst && 'bg-blue-50'
                   )}
@@ -96,12 +97,12 @@ export function InstallmentScheduleDisplay() {
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
-                    <div className="text-lg font-semibold text-gray-900">
+                    <div className="text-lg font-semibold text-gray-900" data-testid={`installment-${installment.number}-amount`}>
                       {formatCentsAsDollars(installment.amount)}
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex items-center text-sm text-gray-900">
+                    <div className="flex items-center text-sm text-gray-900" data-testid={`installment-${installment.number}-date`}>
                       <Calendar className="mr-2 h-4 w-4 text-gray-400" />
                       {format(installment.dueDate, 'MMM d, yyyy')}
                     </div>
@@ -149,6 +150,7 @@ export function InstallmentScheduleDisplay() {
           return (
             <div
               key={installment.number}
+              data-testid={`installment-${installment.number}`}
               className={cn(
                 'rounded-lg border-2 p-4',
                 isFirst ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'
@@ -182,13 +184,13 @@ export function InstallmentScheduleDisplay() {
 
               {/* Amount */}
               <div className="mt-4">
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-gray-900" data-testid={`installment-${installment.number}-amount`}>
                   {formatCentsAsDollars(installment.amount)}
                 </div>
               </div>
 
               {/* Due Date */}
-              <div className="mt-3 flex items-center text-sm text-gray-600">
+              <div className="mt-3 flex items-center text-sm text-gray-600" data-testid={`installment-${installment.number}-date`}>
                 <Calendar className="mr-2 h-4 w-4" />
                 <span>Due {format(installment.dueDate, 'MMMM d, yyyy')}</span>
               </div>
