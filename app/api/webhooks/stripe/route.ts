@@ -170,6 +170,11 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
             addOn: true,
           },
         },
+        paymentRecords: {
+          orderBy: {
+            installmentNumber: 'asc',
+          },
+        },
       },
     });
 
@@ -278,31 +283,65 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         pdfAttachment: pdfBuffer, // Include PDF attachment if available (E4-S8)
       });
 
-      // Send booking confirmation email
-      await sendBookingConfirmation(booking.user.email, {
-        firstName: guestFirstName,
-        email: booking.user.email,
-        bookingReference: bookingId.slice(-8).toUpperCase(),
-        packageName: booking.package.name,
-        duration: booking.duration,
-        accommodationTier: booking.accommodationTier,
-        tripStartDate: booking.trip?.startDate
-          ? new Date(booking.trip.startDate).toISOString()
-          : undefined,
-        tripEndDate: booking.trip?.endDate
-          ? new Date(booking.trip.endDate).toISOString()
-          : undefined,
-        destination: booking.trip?.destination || 'Thailand',
-        basePrice: booking.basePrice,
-        accommodationPrice: booking.accommodationPrice,
-        addOnsTotal: booking.addOnsTotal,
-        totalPrice: booking.totalPrice,
-        addOns: booking.bookingAddOns.map((ba) => ({
-          name: ba.addOn.name,
-          quantity: ba.quantity,
-          price: ba.price,
-        })),
-      });
+      // E4-S6: Check if this is an installment plan booking
+      const hasInstallmentPlan = booking.paymentRecords && booking.paymentRecords.length > 0;
+      const paymentPlanMetadata = paymentIntent.metadata.paymentPlan as 'FULL' | 'INSTALLMENT_4' | 'FINANCING' | undefined;
+      const isInstallmentPlan = hasInstallmentPlan || paymentPlanMetadata === 'INSTALLMENT_4';
+
+      // E4-S6: For installment plans, only send booking confirmation after FIRST payment
+      // Subsequent payments only get payment receipts (already sent above)
+      const installmentNumberMetadata = paymentIntent.metadata.installmentNumber;
+      const isFirstInstallment = installmentNumberMetadata === '1' || !installmentNumberMetadata;
+
+      // Only send booking confirmation for:
+      // - Full payment bookings (not installment)
+      // - First installment of installment plans
+      const shouldSendBookingConfirmation = !isInstallmentPlan || isFirstInstallment;
+
+      if (shouldSendBookingConfirmation) {
+        // E4-S6: Build installment schedule for email if applicable
+        let installmentSchedule;
+        let amountPaid;
+
+        if (isInstallmentPlan && hasInstallmentPlan) {
+          installmentSchedule = booking.paymentRecords.map((record) => ({
+            number: record.installmentNumber || 1,
+            amount: record.amountCents,
+            dueDate: new Date(record.dueDate).toISOString(),
+          }));
+          amountPaid = payment.amount; // First installment amount
+        }
+
+        // Send booking confirmation email
+        await sendBookingConfirmation(booking.user.email, {
+          firstName: guestFirstName,
+          email: booking.user.email,
+          bookingReference: bookingId.slice(-8).toUpperCase(),
+          packageName: booking.package.name,
+          duration: booking.duration,
+          accommodationTier: booking.accommodationTier,
+          tripStartDate: booking.trip?.startDate
+            ? new Date(booking.trip.startDate).toISOString()
+            : undefined,
+          tripEndDate: booking.trip?.endDate
+            ? new Date(booking.trip.endDate).toISOString()
+            : undefined,
+          destination: booking.trip?.destination || 'Thailand',
+          basePrice: booking.basePrice,
+          accommodationPrice: booking.accommodationPrice,
+          addOnsTotal: booking.addOnsTotal,
+          totalPrice: booking.totalPrice,
+          addOns: booking.bookingAddOns.map((ba) => ({
+            name: ba.addOn.name,
+            quantity: ba.quantity,
+            price: ba.price,
+          })),
+          // E4-S6: Include installment plan data
+          paymentPlan: isInstallmentPlan ? 'INSTALLMENT_4' : 'FULL',
+          amountPaid,
+          installmentSchedule,
+        });
+      }
     }
 
     console.log(`Payment succeeded for booking: ${bookingId}`);
