@@ -158,6 +158,22 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       },
     });
 
+    // E4-S6 Phase 6: Update PaymentRecord if this is an installment payment
+    const paymentRecord = await prisma.paymentRecord.findUnique({
+      where: { stripePaymentIntentId: paymentIntent.id },
+    });
+
+    if (paymentRecord) {
+      await prisma.paymentRecord.update({
+        where: { id: paymentRecord.id },
+        data: {
+          status: 'PAID',
+          paidDate: new Date(),
+        },
+      });
+      console.log(`PaymentRecord updated: ${paymentRecord.id} (installment ${paymentRecord.installmentNumber})`);
+    }
+
     // Get booking details
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
@@ -373,6 +389,22 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
         failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
       },
     });
+
+    // E4-S6 Phase 6: Update PaymentRecord if this is an installment payment
+    const paymentRecord = await prisma.paymentRecord.findUnique({
+      where: { stripePaymentIntentId: paymentIntent.id },
+    });
+
+    if (paymentRecord) {
+      await prisma.paymentRecord.update({
+        where: { id: paymentRecord.id },
+        data: {
+          status: 'FAILED',
+        },
+      });
+      console.log(`PaymentRecord marked as FAILED: ${paymentRecord.id} (installment ${paymentRecord.installmentNumber})`);
+      // TODO E4-S6 Phase 6: Create admin notification for failed installment
+    }
 
     // TODO: Send payment failure email with retry link
 
