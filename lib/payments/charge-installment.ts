@@ -1,0 +1,325 @@
+/**
+ * Charge Installment Payment
+ * E4-S6 Phase 8
+ *
+ * Core logic for charging an installment payment via Stripe
+ * Handles off-session payment intents with idempotency
+ */
+
+import Stripe from 'stripe'
+import { prisma } from '@/lib/db'
+import { getStripe } from '@/lib/stripe/get-stripe'
+import { isTransientError, isPermanentError, getNextRetryDate } from './retry-calculator'
+import { sendEmail } from '@/lib/email/send-email'
+import { generateInstallmentReminderEmail } from '@/lib/email/templates/installment-payment-reminder'
+import { generateInstallmentFailureAdminEmail } from '@/lib/email/templates/installment-failure-admin'
+
+export interface ChargeInstallmentInput {
+  paymentRecordId: string
+}
+
+export interface ChargeInstallmentResult {
+  success: boolean
+  paymentRecordId: string
+  stripePaymentIntentId?: string
+  errorCode?: string
+  errorMessage?: string
+  shouldRetry: boolean
+  isPermanentFailure: boolean
+}
+
+/**
+ * Charge an installment payment using Stripe off-session payment intent
+ *
+ * @param input - Payment record ID to charge
+ * @returns Result object with success status and error info
+ */
+export async function chargeInstallment(
+  input: ChargeInstallmentInput
+): Promise<ChargeInstallmentResult> {
+  const stripe = getStripe()
+
+  try {
+    // Fetch payment record with related booking data
+    const paymentRecord = await prisma.paymentRecord.findUnique({
+      where: { id: input.paymentRecordId },
+      include: {
+        booking: {
+          include: {
+            user: true,
+            trip: true,
+            package: true,
+          },
+        },
+      },
+    })
+
+    if (!paymentRecord) {
+      console.error(`PaymentRecord not found: ${input.paymentRecordId}`)
+      return {
+        success: false,
+        paymentRecordId: input.paymentRecordId,
+        errorCode: 'payment_record_not_found',
+        errorMessage: 'Payment record not found',
+        shouldRetry: false,
+        isPermanentFailure: true,
+      }
+    }
+
+    const { booking } = paymentRecord
+
+    // Skip if booking is cancelled
+    if (booking.status === 'CANCELLED') {
+      console.log(`Skipping payment for cancelled booking: ${booking.bookingReference}`)
+      return {
+        success: false,
+        paymentRecordId: input.paymentRecordId,
+        errorCode: 'booking_cancelled',
+        errorMessage: 'Booking is cancelled',
+        shouldRetry: false,
+        isPermanentFailure: true,
+      }
+    }
+
+    // Verify Stripe customer exists
+    if (!booking.stripeCustomerId) {
+      console.error(`No Stripe customer for booking: ${booking.bookingReference}`)
+
+      // Send admin alert
+      await sendAdminAlert(paymentRecord, 'customer_not_found', 'No Stripe customer ID found')
+
+      return {
+        success: false,
+        paymentRecordId: input.paymentRecordId,
+        errorCode: 'customer_not_found',
+        errorMessage: 'No Stripe customer ID',
+        shouldRetry: false,
+        isPermanentFailure: true,
+      }
+    }
+
+    // Create idempotency key
+    const idempotencyKey = `installment-${paymentRecord.id}-${paymentRecord.retryCount}-${paymentRecord.dueDate.toISOString().split('T')[0]}`
+
+    console.log(`Charging installment: ${booking.bookingReference} - Installment ${paymentRecord.installmentNumber}`)
+
+    // Create payment intent with off_session confirmation
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: paymentRecord.amountCents,
+      currency: 'usd',
+      customer: booking.stripeCustomerId,
+      confirm: true,
+      off_session: true,
+      description: `Installment ${paymentRecord.installmentNumber} - ${booking.bookingReference}`,
+      metadata: {
+        bookingId: booking.id,
+        bookingReference: booking.bookingReference,
+        paymentRecordId: paymentRecord.id,
+        installmentNumber: paymentRecord.installmentNumber?.toString() || '',
+        installmentOf: '4',
+      },
+    }, {
+      idempotencyKey,
+    })
+
+    // Update payment record with payment intent ID and attempt info
+    await prisma.paymentRecord.update({
+      where: { id: paymentRecord.id },
+      data: {
+        stripePaymentIntentId: paymentIntent.id,
+        lastAttemptAt: new Date(),
+      },
+    })
+
+    console.log(`Payment intent created: ${paymentIntent.id} for ${booking.bookingReference}`)
+
+    // Webhook will handle status update (Phase 6)
+    return {
+      success: true,
+      paymentRecordId: paymentRecord.id,
+      stripePaymentIntentId: paymentIntent.id,
+      shouldRetry: false,
+      isPermanentFailure: false,
+    }
+  } catch (error) {
+    console.error(`Error charging installment ${input.paymentRecordId}:`, error)
+
+    // Handle Stripe errors
+    if (error instanceof Stripe.errors.StripeError) {
+      const errorCode = error.code || 'unknown'
+      const errorMessage = error.message
+
+      // Determine if error is transient or permanent
+      const isTransient = isTransientError(errorCode)
+      const isPermanent = isPermanentError(errorCode)
+
+      // Update payment record with failure info
+      const paymentRecord = await prisma.paymentRecord.findUnique({
+        where: { id: input.paymentRecordId },
+        include: {
+          booking: {
+            include: {
+              user: true,
+              trip: true,
+              package: true,
+            },
+          },
+        },
+      })
+
+      if (paymentRecord) {
+        const newRetryCount = paymentRecord.retryCount + 1
+        const isLastAttempt = newRetryCount >= 4
+
+        // Update retry count and failure reason
+        await prisma.paymentRecord.update({
+          where: { id: paymentRecord.id },
+          data: {
+            retryCount: newRetryCount,
+            lastAttemptAt: new Date(),
+            failureReason: errorCode,
+            // Mark as FAILED if permanent error or max retries reached
+            ...(isPermanent || isLastAttempt ? { status: 'FAILED' } : {}),
+          },
+        })
+
+        // Send customer reminder email (if transient and not last attempt)
+        if (isTransient && !isLastAttempt) {
+          await sendCustomerReminder(paymentRecord, newRetryCount)
+        }
+
+        // Send admin alert if permanent failure or max retries
+        if (isPermanent || isLastAttempt) {
+          await sendAdminAlert(paymentRecord, errorCode, errorMessage)
+        }
+      }
+
+      return {
+        success: false,
+        paymentRecordId: input.paymentRecordId,
+        errorCode,
+        errorMessage,
+        shouldRetry: isTransient,
+        isPermanentFailure: isPermanent,
+      }
+    }
+
+    // Unknown error - don't update payment record, will retry on next cron run
+    return {
+      success: false,
+      paymentRecordId: input.paymentRecordId,
+      errorCode: 'unknown_error',
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      shouldRetry: false,
+      isPermanentFailure: false,
+    }
+  }
+}
+
+/**
+ * Send customer reminder email for failed payment
+ */
+async function sendCustomerReminder(
+  paymentRecord: any,
+  newRetryCount: number
+): Promise<void> {
+  try {
+    const { booking } = paymentRecord
+    const user = booking.user
+
+    const nextRetryDate = getNextRetryDate(new Date(), newRetryCount)
+    if (!nextRetryDate) return
+
+    const emailData = {
+      firstName: user.firstName || 'Guest',
+      email: user.emailAddresses?.[0]?.emailAddress || booking.guestEmail || '',
+      bookingReference: booking.bookingReference,
+      packageName: booking.package.name,
+      tripStartDate: booking.trip?.startDate?.toISOString() || '',
+      installmentNumber: paymentRecord.installmentNumber || 0,
+      installmentAmount: paymentRecord.amountCents,
+      dueDate: paymentRecord.dueDate.toISOString(),
+      attemptNumber: newRetryCount,
+      nextRetryDate: nextRetryDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+      failureReason: paymentRecord.failureReason,
+      updatePaymentUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
+    }
+
+    const { html, text, subject } = generateInstallmentReminderEmail(emailData)
+
+    await sendEmail({
+      to: emailData.email,
+      subject,
+      html,
+      text,
+    })
+
+    console.log(`Customer reminder sent to ${emailData.email}`)
+  } catch (error) {
+    console.error('Error sending customer reminder:', error)
+    // Don't throw - email failure shouldn't break payment processing
+  }
+}
+
+/**
+ * Send admin alert for permanently failed payment
+ */
+async function sendAdminAlert(
+  paymentRecord: any,
+  errorCode: string,
+  errorMessage: string
+): Promise<void> {
+  try {
+    const { booking } = paymentRecord
+    const user = booking.user
+
+    // Collect attempt history
+    const attempts = []
+    for (let i = 1; i <= paymentRecord.retryCount; i++) {
+      attempts.push({
+        attemptNumber: i,
+        attemptDate: paymentRecord.lastAttemptAt?.toISOString() || new Date().toISOString(),
+        errorCode: paymentRecord.failureReason || errorCode,
+        errorMessage: errorMessage,
+      })
+    }
+
+    const emailData = {
+      customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown',
+      customerEmail: user.emailAddresses?.[0]?.emailAddress || booking.guestEmail || '',
+      customerPhone: user.phone,
+      bookingReference: booking.bookingReference,
+      bookingId: booking.id,
+      packageName: booking.package.name,
+      tripStartDate: booking.trip?.startDate?.toISOString() || '',
+      tripName: booking.trip?.name || 'Unknown Trip',
+      installmentNumber: paymentRecord.installmentNumber || 0,
+      installmentAmount: paymentRecord.amountCents,
+      originalDueDate: paymentRecord.dueDate.toISOString(),
+      attempts,
+      bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`,
+      customerDashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
+    }
+
+    const { html, text, subject } = generateInstallmentFailureAdminEmail(emailData)
+
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@pickleballpassport.com'
+
+    await sendEmail({
+      to: adminEmail,
+      subject,
+      html,
+      text,
+    })
+
+    console.log(`Admin alert sent to ${adminEmail}`)
+  } catch (error) {
+    console.error('Error sending admin alert:', error)
+    // Don't throw - email failure shouldn't break payment processing
+  }
+}
