@@ -103,10 +103,11 @@ describe('calculateInstallmentAmounts', () => {
       const total = 333333 // $3,333.33
       const installments = calculateInstallmentAmounts(total)
 
-      const installment1 = Math.round(333333 * 0.50) // 166667
-      const installment2 = Math.round(333333 * 0.25) // 83333
-      const installment3 = Math.round(333333 * 0.15) // 50000
-      const installment4 = 333333 - installment1 - installment2 - installment3 // 33333 (adjusted)
+      // Implementation uses: ceil for first, floor for second/third, remainder for fourth
+      const installment1 = Math.ceil(333333 * 0.50)   // 166667 (50% rounded up)
+      const installment2 = Math.floor(333333 * 0.25)  // 83333 (25% rounded down)
+      const installment3 = Math.floor(333333 * 0.15)  // 49999 (15% rounded down)
+      const installment4 = 333333 - installment1 - installment2 - installment3 // 33334 (remainder)
 
       expect(installments[0]).toBe(installment1)
       expect(installments[1]).toBe(installment2)
