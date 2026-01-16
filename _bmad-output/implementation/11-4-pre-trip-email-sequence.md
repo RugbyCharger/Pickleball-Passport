@@ -1,6 +1,6 @@
 # Story 11.4: Pre-Trip Nurture Email Sequence
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -12,80 +12,80 @@ So that I'm well-prepared and excited for my transformation journey.
 
 ### AC-1: Email Sequence Timeline
 
-- [ ] 60 days before: "Your Transformation Journey Begins Soon!" (excitement, prep overview)
-- [ ] 30 days before: "Time to Book Your Flights" (flight booking tips, visa info)
-- [ ] 14 days before: "Complete Your Pre-Trip Checklist" (document reminders, packing start)
-- [ ] 7 days before: "What to Pack for Thailand" (detailed packing list, weather tips)
-- [ ] 1 day before: "Departing Tomorrow! Final Reminders" (arrival info, emergency contacts)
+- [x] 60 days before: "Your Transformation Journey Begins Soon!" (excitement, prep overview)
+- [x] 30 days before: "Time to Book Your Flights" (flight booking tips, visa info)
+- [x] 14 days before: "Complete Your Pre-Trip Checklist" (document reminders, packing start)
+- [x] 7 days before: "What to Pack for Thailand" (detailed packing list, weather tips)
+- [x] 1 day before: "Departing Tomorrow! Final Reminders" (arrival info, emergency contacts)
 
 ### AC-2: Email Content Requirements
 
-- [ ] Each email is distinct with specific, actionable content
-- [ ] Excitement-building tone throughout the sequence
-- [ ] Clear CTAs linking to member portal
-- [ ] Guest's first name personalization
-- [ ] Trip details (dates, package, destination)
-- [ ] Mobile-responsive design
+- [x] Each email is distinct with specific, actionable content
+- [x] Excitement-building tone throughout the sequence
+- [x] Clear CTAs linking to member portal
+- [x] Guest's first name personalization
+- [x] Trip details (dates, package, destination)
+- [x] Mobile-responsive design
 
 ### AC-3: Database Tracking
 
-- [ ] Add `preTripEmailsSent` field to Booking model (String array)
-- [ ] Track which emails have been sent: ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
-- [ ] Prevent duplicate sends
-- [ ] Create Prisma migration
+- [x] Add `preTripEmailsSent` field to Booking model (String array)
+- [x] Track which emails have been sent: ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
+- [x] Prevent duplicate sends
+- [x] Create Prisma migration
 
 ### AC-4: Cron Job Implementation
 
-- [ ] New endpoint: `GET /api/cron/send-pre-trip-emails`
-- [ ] Secured with CRON_SECRET
-- [ ] Daily execution (8 AM UTC, before payment reminders)
-- [ ] Query bookings by trip.startDate for each milestone
-- [ ] Process in batches (max 100 per milestone)
-- [ ] Non-blocking: email failures don't stop processing
+- [x] New endpoint: `GET /api/cron/send-pre-trip-emails`
+- [x] Secured with CRON_SECRET
+- [x] Daily execution (7 AM UTC, before payment reminders)
+- [x] Query bookings by trip.startDate for each milestone
+- [x] Process in batches (max 100 per milestone)
+- [x] Non-blocking: email failures don't stop processing
 
 ### AC-5: Eligibility Rules
 
-- [ ] Only CONFIRMED bookings
-- [ ] Only bookings with assigned tripId
-- [ ] Skip cancelled bookings
-- [ ] Skip gift bookings that haven't been accepted
-- [ ] Skip if email already sent for that milestone
+- [x] Only CONFIRMED bookings
+- [x] Only bookings with assigned tripId
+- [x] Skip cancelled bookings
+- [x] Skip gift bookings that haven't been accepted
+- [x] Skip if email already sent for that milestone
 
 ### AC-6: Error Handling
 
-- [ ] Log email failures with context
-- [ ] Don't mark as sent if email fails
-- [ ] Continue processing other bookings on failure
-- [ ] Return summary with success/error counts
+- [x] Log email failures with context
+- [x] Don't mark as sent if email fails
+- [x] Continue processing other bookings on failure
+- [x] Return summary with success/error counts
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Database Schema Update (AC: 3)
-  - [ ] Add preTripEmailsSent field to Booking model
-  - [ ] Create Prisma migration
-  - [ ] Regenerate Prisma client
+- [x] Task 1: Database Schema Update (AC: 3)
+  - [x] Add preTripEmailsSent field to Booking model
+  - [x] Create Prisma migration
+  - [x] Regenerate Prisma client
 
-- [ ] Task 2: Email Templates (AC: 1, 2)
-  - [ ] Create lib/email/templates/pre-trip-sequence.ts
-  - [ ] Implement 60-day email (excitement, prep overview)
-  - [ ] Implement 30-day email (flights, visa)
-  - [ ] Implement 14-day email (checklist, documents)
-  - [ ] Implement 7-day email (packing list)
-  - [ ] Implement 1-day email (final reminders)
+- [x] Task 2: Email Templates (AC: 1, 2)
+  - [x] Create lib/email/templates/pre-trip-sequence.ts
+  - [x] Implement 60-day email (excitement, prep overview)
+  - [x] Implement 30-day email (flights, visa)
+  - [x] Implement 14-day email (checklist, documents)
+  - [x] Implement 7-day email (packing list)
+  - [x] Implement 1-day email (final reminders)
 
-- [ ] Task 3: Pre-Trip Email Service (AC: 4, 5, 6)
-  - [ ] Create lib/email/send-pre-trip-emails.ts
-  - [ ] Query bookings for each milestone
-  - [ ] Send appropriate email for each
-  - [ ] Update preTripEmailsSent after successful send
+- [x] Task 3: Pre-Trip Email Service (AC: 4, 5, 6)
+  - [x] Create lib/email/send-pre-trip-emails.ts
+  - [x] Query bookings for each milestone
+  - [x] Send appropriate email for each
+  - [x] Update preTripEmailsSent after successful send
 
-- [ ] Task 4: Cron Endpoint (AC: 4)
-  - [ ] Create app/api/cron/send-pre-trip-emails/route.ts
-  - [ ] Verify CRON_SECRET authorization
-  - [ ] Call service and return summary
+- [x] Task 4: Cron Endpoint (AC: 4)
+  - [x] Create app/api/cron/send-pre-trip-emails/route.ts
+  - [x] Verify CRON_SECRET authorization
+  - [x] Call service and return summary
 
-- [ ] Task 5: Vercel Cron Configuration
-  - [ ] Add to vercel.json (7 AM UTC, before other jobs)
+- [x] Task 5: Vercel Cron Configuration
+  - [x] Add to vercel.json (7 AM UTC, before other jobs)
 
 ## Dev Notes
 
