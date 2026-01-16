@@ -385,6 +385,9 @@ model Booking {
   giftStatus          GiftStatus @default(PENDING) // PENDING, SENT, ACCEPTED, DECLINED
   giftAcceptanceToken String?    @unique // Unique token for secure gift acceptance
 
+  // E11-S4: Pre-Trip Email Sequence
+  preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
