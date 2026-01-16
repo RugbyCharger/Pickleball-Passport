@@ -7,6 +7,7 @@
 
 import Stripe from 'stripe'
 import { getStripe } from './get-stripe'
+import { stripeLogger, logError } from '@/lib/logger'
 
 export interface CreateCustomerInput {
   email: string
@@ -44,7 +45,7 @@ export async function createStripeCustomer(
 
     return customer
   } catch (error) {
-    console.error('Failed to create Stripe customer:', error)
+    logError(stripeLogger, error, 'Failed to create Stripe customer', { email: input.email, userId: input.userId })
     throw new Error(
       'Unable to create customer for installment plan. Please try again or select "Pay in Full".'
     )
@@ -69,7 +70,7 @@ export async function createStripeCustomerWithRetry(
       return await createStripeCustomer(input)
     } catch (error) {
       lastError = error as Error
-      console.warn(`Customer creation attempt ${attempt + 1} failed:`, error)
+      stripeLogger.warn({ attempt: attempt + 1, error: lastError.message }, 'Customer creation attempt failed')
 
       // Wait before retry (exponential backoff)
       if (attempt < maxRetries) {
@@ -78,7 +79,7 @@ export async function createStripeCustomerWithRetry(
     }
   }
 
-  console.error('All customer creation attempts failed:', lastError)
+  logError(stripeLogger, lastError, 'All customer creation attempts failed', { email: input.email })
   return null
 }
 
@@ -102,7 +103,7 @@ export async function attachPaymentMethod(
 
     return { success: true }
   } catch (error) {
-    console.error('Failed to attach payment method:', error)
+    logError(stripeLogger, error, 'Failed to attach payment method', { customerId, paymentMethodId })
     return {
       success: false,
       error: 'Unable to save payment method for future charges.',
@@ -132,7 +133,7 @@ export async function setDefaultPaymentMethod(
 
     return { success: true }
   } catch (error) {
-    console.error('Failed to set default payment method:', error)
+    logError(stripeLogger, error, 'Failed to set default payment method', { customerId, paymentMethodId })
     return {
       success: false,
       error: 'Unable to set default payment method.',
@@ -188,7 +189,7 @@ export async function getStripeCustomer(
 
     return customer as Stripe.Customer
   } catch (error) {
-    console.error('Failed to retrieve Stripe customer:', error)
+    logError(stripeLogger, error, 'Failed to retrieve Stripe customer', { customerId })
     return null
   }
 }
@@ -228,7 +229,7 @@ export async function getCustomerDefaultPaymentMethod(
     // Otherwise fetch it
     return await stripe.paymentMethods.retrieve(defaultPaymentMethod)
   } catch (error) {
-    console.error('Failed to retrieve default payment method:', error)
+    logError(stripeLogger, error, 'Failed to retrieve default payment method', { customerId })
     return null
   }
 }

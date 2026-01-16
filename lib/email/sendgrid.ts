@@ -5,6 +5,7 @@
  */
 
 import type { MailService } from '@sendgrid/mail';
+import { emailLogger, logError } from '@/lib/logger';
 
 // Initialize SendGrid with API key
 const apiKey = process.env.SENDGRID_API_KEY;
@@ -29,7 +30,7 @@ async function getSgMail(): Promise<MailService> {
 }
 
 if (!isConfiguredFlag) {
-  console.warn('SENDGRID_API_KEY is not set. Email functionality will be disabled.');
+  emailLogger.warn('SENDGRID_API_KEY is not set. Email functionality will be disabled.');
 }
 
 const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'hello@pickleballpassport.com';
@@ -67,9 +68,9 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
 
   try {
     await sgMail.send(msg);
-    console.log(`Email sent successfully to ${Array.isArray(options.to) ? options.to.join(', ') : options.to}`);
+    emailLogger.info({ to: options.to, subject: options.subject }, 'Email sent successfully');
   } catch (error) {
-    console.error('SendGrid error:', error);
+    logError(emailLogger, error, 'SendGrid error', { to: options.to, subject: options.subject });
     if (error instanceof Error) {
       throw new Error(`Failed to send email: ${error.message}`);
     }
@@ -94,9 +95,9 @@ export async function sendBatchEmails(emails: SendEmailOptions[]): Promise<void>
 
   try {
     await sgMail.send(messages);
-    console.log(`Batch of ${emails.length} emails sent successfully`);
+    emailLogger.info({ count: emails.length }, 'Batch emails sent successfully');
   } catch (error) {
-    console.error('SendGrid batch error:', error);
+    logError(emailLogger, error, 'SendGrid batch error', { count: emails.length });
     if (error instanceof Error) {
       throw new Error(`Failed to send batch emails: ${error.message}`);
     }

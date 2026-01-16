@@ -20,6 +20,15 @@ import {
 import { createStripeCustomerWithRetry } from '@/lib/stripe/create-customer'
 import { createBookingWithPayments } from '@/lib/db/transactions'
 import { differenceInDays } from 'date-fns'
+import { bookingLogger, logError, logStripeError, emailLogger, giftLogger } from '@/lib/logger'
+import {
+  ACCOMMODATION_TIER_PRICING,
+  PARTNER_TIER_DISCOUNTS,
+  CANCELLATION_PROCESSING_FEE,
+  REFUND_POLICY,
+  INSTALLMENT_CONFIG,
+  PARTNER_POINTS_CONFIG,
+} from '@/lib/config/business-constants'
 
 // Initialize Stripe client (server-side)
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -47,14 +56,7 @@ const createPaymentIntentInput = z.object({
   paymentPlan: z.enum(['FULL', 'INSTALLMENT_4', 'FINANCING']).optional().default('FULL'),
 })
 
-/**
- * Accommodation tier pricing
- */
-const ACCOMMODATION_TIER_PRICING: Record<string, number> = {
-  LUXURY: 0,           // Four Seasons - baseline (included in package)
-  ULTRA_LUXURY: 300000, // Aman - +$3,000
-  VILLA: 500000,       // Private Villa - +$5,000
-}
+// Accommodation tier pricing imported from @/lib/config/business-constants
 
 /**
  * Generate a unique booking reference
@@ -192,15 +194,7 @@ export const bookingRouter = router({
         }
 
         // Calculate discount based on partner tier
-        // Bronze: 5%, Silver: 7.5%, Gold: 10%, Platinum: 15%
-        const discountPercentages: Record<string, number> = {
-          BRONZE: 0.05,
-          SILVER: 0.075,
-          GOLD: 0.10,
-          PLATINUM: 0.15,
-        }
-
-        const discountRate = discountPercentages[partner.tier] || 0
+        const discountRate = PARTNER_TIER_DISCOUNTS[partner.tier as keyof typeof PARTNER_TIER_DISCOUNTS] || 0
         discount = Math.round(subtotal * discountRate)
         referredByPartnerId = partner.id
       }
@@ -221,10 +215,10 @@ export const bookingRouter = router({
 
         if (trip) {
           const daysUntilTrip = differenceInDays(trip.startDate, new Date())
-          if (daysUntilTrip < 70) {
+          if (daysUntilTrip < INSTALLMENT_CONFIG.MIN_DAYS_BEFORE_TRIP) {
             throw new TRPCError({
               code: 'BAD_REQUEST',
-              message: 'Installment plans require trips starting at least 70 days from today',
+              message: `Installment plans require trips starting at least ${INSTALLMENT_CONFIG.MIN_DAYS_BEFORE_TRIP} days from today`,
             })
           }
         }
@@ -448,7 +442,7 @@ export const bookingRouter = router({
           where: { id: booking.id },
         })
 
-        console.error('Error creating payment intent:', error)
+        logError(bookingLogger, error, 'Error creating payment intent')
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create payment intent. Please try again.',
@@ -864,7 +858,7 @@ export const bookingRouter = router({
           },
         })
 
-        console.error('Error creating companion payment intent:', error)
+        logError(bookingLogger, error, 'Error creating companion payment intent')
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create payment intent. Please try again.',
@@ -1401,13 +1395,12 @@ export const bookingRouter = router({
 
       let refundAmount = 0
       let refundPercentage = 0
-      const PROCESSING_FEE = 50000 // $500 in cents
 
-      if (daysUntilTrip > 60) {
-        refundAmount = totalPriceForRefund - PROCESSING_FEE
+      if (daysUntilTrip > REFUND_POLICY.FULL_REFUND_MIN_DAYS) {
+        refundAmount = totalPriceForRefund - CANCELLATION_PROCESSING_FEE
         refundPercentage = 100
-      } else if (daysUntilTrip >= 30) {
-        refundAmount = Math.floor(totalPriceForRefund * 0.5)
+      } else if (daysUntilTrip >= REFUND_POLICY.PARTIAL_REFUND_MIN_DAYS) {
+        refundAmount = Math.floor(totalPriceForRefund * REFUND_POLICY.PARTIAL_REFUND_PERCENTAGE)
         refundPercentage = 50
       } else {
         refundAmount = 0
@@ -1446,11 +1439,11 @@ export const bookingRouter = router({
           })
 
           stripeRefundId = refund.id
-        } catch (error: any) {
-          console.error('Stripe refund error:', error)
+        } catch (error: unknown) {
+          logStripeError(error, 'Stripe refund error', { bookingId: booking.id })
           throw new TRPCError({
             code: 'INTERNAL_SERVER_ERROR',
-            message: `Refund processing failed: ${error.message || 'Unknown error'}`
+            message: `Refund processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
           })
         }
       }
@@ -1509,7 +1502,7 @@ export const bookingRouter = router({
 
       // 7. Send cancellation email (non-blocking)
       // TODO: Implement email sending in Task 4
-      // sendCancellationEmail(booking, refundAmount).catch(console.error)
+      // sendCancellationEmail(booking, refundAmount).catch(err => logError(emailLogger, err, 'Failed to send cancellation email'))
 
       return {
         success: true,
@@ -1716,11 +1709,11 @@ export const bookingRouter = router({
             }
           })
           stripePaymentIntentId = paymentIntent.id
-        } catch (error: any) {
-          console.error('Stripe payment intent error:', error)
+        } catch (error: unknown) {
+          logStripeError(error, 'Stripe payment intent error', { bookingId: booking.id })
           throw new TRPCError({
             code: 'INTERNAL_SERVER_ERROR',
-            message: `Payment processing failed: ${error.message || 'Unknown error'}`
+            message: `Payment processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
           })
         }
       } else if (priceDifference < 0) {
@@ -1739,11 +1732,11 @@ export const bookingRouter = router({
               }
             })
             stripeRefundId = refund.id
-          } catch (error: any) {
-            console.error('Stripe refund error:', error)
+          } catch (error: unknown) {
+            logStripeError(error, 'Stripe refund error', { bookingId: booking.id })
             throw new TRPCError({
               code: 'INTERNAL_SERVER_ERROR',
-              message: `Refund processing failed: ${error.message || 'Unknown error'}`
+              message: `Refund processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
             })
           }
         }
@@ -1863,7 +1856,7 @@ export const bookingRouter = router({
 
       // 9. Send reschedule confirmation email (non-blocking)
       // TODO: Implement email sending
-      // sendRescheduleEmail(booking, updatedBooking.trip!).catch(console.error)
+      // sendRescheduleEmail(booking, updatedBooking.trip!).catch(err => logError(emailLogger, err, 'Failed to send reschedule email'))
 
       return {
         success: true,
@@ -2020,11 +2013,11 @@ export const bookingRouter = router({
             clientSecret: paymentIntent.client_secret,
             amount: priceDifference
           }
-        } catch (error: any) {
-          console.error('Stripe payment intent error:', error)
+        } catch (error: unknown) {
+          logStripeError(error, 'Stripe payment intent error', { bookingId: booking.id })
           throw new TRPCError({
             code: 'INTERNAL_SERVER_ERROR',
-            message: `Payment processing failed: ${error.message || 'Unknown error'}`
+            message: `Payment processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
           })
         }
       } else if (priceDifference < 0) {
@@ -2044,11 +2037,11 @@ export const bookingRouter = router({
               }
             })
             stripeRefundId = refund.id
-          } catch (error: any) {
-            console.error('Stripe refund error:', error)
+          } catch (error: unknown) {
+            logStripeError(error, 'Stripe refund error', { bookingId: booking.id })
             throw new TRPCError({
               code: 'INTERNAL_SERVER_ERROR',
-              message: `Refund processing failed: ${error.message || 'Unknown error'}`
+              message: `Refund processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
             })
           }
         }
@@ -2137,7 +2130,7 @@ export const bookingRouter = router({
         })
       } catch (emailError) {
         // Log but don't fail mutation
-        console.error('Failed to send modification confirmation email:', emailError)
+        logError(emailLogger, emailError, 'Failed to send modification confirmation email')
       }
 
       // 6. RETURN SUCCESS RESPONSE
@@ -2474,7 +2467,7 @@ export const bookingRouter = router({
           text: purchaserEmailTemplate.text,
         })
       } catch (emailError) {
-        console.error('Failed to send gift confirmation to purchaser:', emailError)
+        logError(giftLogger, emailError, 'Failed to send gift confirmation to purchaser')
         // Don't throw - booking already created
       }
 
@@ -2522,7 +2515,7 @@ export const bookingRouter = router({
             data: { giftStatus: 'SENT' },
           })
         } catch (emailError) {
-          console.error('Failed to send gift notification to recipient:', emailError)
+          logError(giftLogger, emailError, 'Failed to send gift notification to recipient')
           // Don't throw - booking already created, gift will remain in PENDING status
         }
       }

@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { router, adminProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendEmail } from '@/lib/email/send-email';
+import { apiLogger, emailLogger, stripeLogger, logError, logStripeError } from '@/lib/logger';
 
 /**
  * Get common issues for document types to help users fix rejections
@@ -314,7 +315,7 @@ export const adminRouter = router({
             notes,
           });
         } catch (error) {
-          console.error('Failed to send document approval email:', error);
+          logError(emailLogger, error, 'Failed to send document approval email');
           // Don't fail the operation if email fails
         }
 
@@ -426,7 +427,7 @@ export const adminRouter = router({
             commonIssues,
           });
         } catch (error) {
-          console.error('Failed to send document rejection email:', error);
+          logError(emailLogger, error, 'Failed to send document rejection email');
           // Don't fail the operation if email fails
         }
 
@@ -526,7 +527,7 @@ export const adminRouter = router({
               }<p>Best regards,<br/>Pickleball Passport Team</p>`,
             });
           } catch (error) {
-            console.error('Failed to send bulk approval email:', error);
+            logError(emailLogger, error, 'Failed to send bulk approval email');
           }
         });
 
@@ -764,7 +765,7 @@ export const adminRouter = router({
               html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
             });
           } catch (error) {
-            console.error('Failed to send booking status update email:', error);
+            logError(emailLogger, error, 'Failed to send booking status update email');
           }
         }
 
@@ -1229,7 +1230,7 @@ export const adminRouter = router({
           },
         });
       } catch (error) {
-        console.error('Stripe refund error:', error);
+        logStripeError(error, 'Stripe refund error');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: error instanceof Error ? error.message : 'Failed to process refund through Stripe',
@@ -1299,12 +1300,16 @@ export const adminRouter = router({
           expectedTimeline: '5-10 business days',
         });
       } catch (emailError) {
-        console.error('Failed to send refund confirmation email:', emailError);
+        logError(emailLogger, emailError, 'Failed to send refund confirmation email');
         // Don't throw - email failure shouldn't block refund
       }
 
-      console.log(
-        `Refund processed by admin ${ctx.user?.id || 'unknown'}: $${refundAmount / 100} for payment ${payment.id} (${isFullRefund ? 'full' : 'partial'})`
+      apiLogger.info({
+        adminId: ctx.user?.id,
+        amount: refundAmount / 100,
+        paymentId: payment.id,
+        isFullRefund
+      }, 'Refund processed by admin'
       );
 
       return {

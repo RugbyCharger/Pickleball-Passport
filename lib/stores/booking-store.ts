@@ -23,6 +23,7 @@ import {
   canUseInstallmentPlan,
   calculateFullPaymentDiscount,
 } from '@/lib/utils/installment-calculator'
+import { ACCOMMODATION_TIER_PRICING } from '@/lib/config/business-constants'
 
 // Types based on Prisma schema
 export type AccommodationTier = 'LUXURY' | 'ULTRA_LUXURY' | 'VILLA'
@@ -218,12 +219,7 @@ export interface BookingState {
   isReadyForReview: () => boolean
 }
 
-// Accommodation tier pricing (additional cost per tier)
-const ACCOMMODATION_TIER_PRICING: Record<AccommodationTier, number> = {
-  LUXURY: 0,           // Four Seasons - baseline (included in package)
-  ULTRA_LUXURY: 300000, // Aman - +$3,000
-  VILLA: 500000,       // Private Villa - +$5,000
-}
+// Accommodation tier pricing imported from @/lib/config/business-constants
 
 // Initial state
 const initialState = {

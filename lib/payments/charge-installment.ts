@@ -13,6 +13,7 @@ import { isTransientError, isPermanentError, getNextRetryDate } from './retry-ca
 import { sendEmail } from '@/lib/email/send-email'
 import { generateInstallmentReminderEmail } from '@/lib/email/templates/installment-payment-reminder'
 import { generateInstallmentFailureAdminEmail } from '@/lib/email/templates/installment-failure-admin'
+import { paymentLogger, logError } from '@/lib/logger'
 
 export interface ChargeInstallmentInput {
   paymentRecordId: string
@@ -55,7 +56,7 @@ export async function chargeInstallment(
     })
 
     if (!paymentRecord) {
-      console.error(`PaymentRecord not found: ${input.paymentRecordId}`)
+      paymentLogger.error({ paymentRecordId: input.paymentRecordId }, 'PaymentRecord not found')
       return {
         success: false,
         paymentRecordId: input.paymentRecordId,
@@ -70,7 +71,7 @@ export async function chargeInstallment(
 
     // Skip if booking is cancelled
     if (booking.status === 'CANCELLED') {
-      console.log(`Skipping payment for cancelled booking: ${booking.bookingReference}`)
+      paymentLogger.info({ bookingReference: booking.bookingReference }, 'Skipping payment for cancelled booking')
       return {
         success: false,
         paymentRecordId: input.paymentRecordId,
@@ -83,7 +84,7 @@ export async function chargeInstallment(
 
     // Verify Stripe customer exists
     if (!booking.stripeCustomerId) {
-      console.error(`No Stripe customer for booking: ${booking.bookingReference}`)
+      paymentLogger.error({ bookingReference: booking.bookingReference }, 'No Stripe customer for booking')
 
       // Send admin alert
       await sendAdminAlert(paymentRecord, 'customer_not_found', 'No Stripe customer ID found')
@@ -101,7 +102,7 @@ export async function chargeInstallment(
     // Create idempotency key
     const idempotencyKey = `installment-${paymentRecord.id}-${paymentRecord.retryCount}-${paymentRecord.dueDate.toISOString().split('T')[0]}`
 
-    console.log(`Charging installment: ${booking.bookingReference} - Installment ${paymentRecord.installmentNumber}`)
+    paymentLogger.info({ bookingReference: booking.bookingReference, installmentNumber: paymentRecord.installmentNumber }, 'Charging installment')
 
     // Create payment intent with off_session confirmation
     const paymentIntent = await stripe.paymentIntents.create({
@@ -131,7 +132,7 @@ export async function chargeInstallment(
       },
     })
 
-    console.log(`Payment intent created: ${paymentIntent.id} for ${booking.bookingReference}`)
+    paymentLogger.info({ paymentIntentId: paymentIntent.id, bookingReference: booking.bookingReference }, 'Payment intent created')
 
     // Webhook will handle status update (Phase 6)
     return {
@@ -142,7 +143,7 @@ export async function chargeInstallment(
       isPermanentFailure: false,
     }
   } catch (error) {
-    console.error(`Error charging installment ${input.paymentRecordId}:`, error)
+    logError(paymentLogger, error, 'Error charging installment', { paymentRecordId: input.paymentRecordId })
 
     // Handle Stripe errors
     if (error instanceof Stripe.errors.StripeError) {
@@ -259,9 +260,9 @@ async function sendCustomerReminder(
       text,
     })
 
-    console.log(`Customer reminder sent to ${emailData.email}`)
+    paymentLogger.info({ email: emailData.email }, 'Customer reminder sent')
   } catch (error) {
-    console.error('Error sending customer reminder:', error)
+    logError(paymentLogger, error, 'Error sending customer reminder')
     // Don't throw - email failure shouldn't break payment processing
   }
 }
@@ -317,9 +318,9 @@ async function sendAdminAlert(
       text,
     })
 
-    console.log(`Admin alert sent to ${adminEmail}`)
+    paymentLogger.info({ adminEmail }, 'Admin alert sent')
   } catch (error) {
-    console.error('Error sending admin alert:', error)
+    logError(paymentLogger, error, 'Error sending admin alert')
     // Don't throw - email failure shouldn't break payment processing
   }
 }

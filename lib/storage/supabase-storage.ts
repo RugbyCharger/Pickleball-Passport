@@ -6,13 +6,14 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { storageLogger, logError } from '@/lib/logger';
 
 // Validate environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceRoleKey) {
-  console.warn(
+  storageLogger.warn(
     'Supabase Storage is not configured. NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required.'
   );
 }
@@ -80,7 +81,7 @@ export async function uploadToSupabaseStorage(
       });
 
     if (error) {
-      console.error('Supabase upload error:', error);
+      logError(storageLogger, error, 'Supabase upload error', { bucket, path });
       return {
         success: false,
         error: error.message,
@@ -108,14 +109,14 @@ export async function uploadToSupabaseStorage(
       };
     }
 
-    console.log(`File uploaded successfully to ${bucket}/${path}`);
+    storageLogger.info({ bucket, path }, 'File uploaded successfully');
 
     return {
       success: true,
       url: urlData.publicUrl,
     };
   } catch (error) {
-    console.error('Error uploading to Supabase Storage:', error);
+    logError(storageLogger, error, 'Error uploading to Supabase Storage', { bucket, path });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -137,7 +138,7 @@ export async function getSignedUrl(
   expiresIn: number = 3600
 ): Promise<string | null> {
   if (!supabase) {
-    console.error('Supabase Storage is not configured');
+    storageLogger.error('Supabase Storage is not configured');
     return null;
   }
 
@@ -147,13 +148,13 @@ export async function getSignedUrl(
       .createSignedUrl(path, expiresIn);
 
     if (error || !data?.signedUrl) {
-      console.error('Error creating signed URL:', error);
+      logError(storageLogger, error, 'Error creating signed URL', { bucket, path });
       return null;
     }
 
     return data.signedUrl;
   } catch (error) {
-    console.error('Error creating signed URL:', error);
+    logError(storageLogger, error, 'Error creating signed URL', { bucket, path });
     return null;
   }
 }
@@ -170,7 +171,7 @@ export async function deleteFromSupabaseStorage(
   path: string
 ): Promise<boolean> {
   if (!supabase) {
-    console.error('Supabase Storage is not configured');
+    storageLogger.error('Supabase Storage is not configured');
     return false;
   }
 
@@ -178,14 +179,14 @@ export async function deleteFromSupabaseStorage(
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
     if (error) {
-      console.error('Error deleting file:', error);
+      logError(storageLogger, error, 'Error deleting file', { bucket, path });
       return false;
     }
 
-    console.log(`File deleted successfully from ${bucket}/${path}`);
+    storageLogger.info({ bucket, path }, 'File deleted successfully');
     return true;
   } catch (error) {
-    console.error('Error deleting from Supabase Storage:', error);
+    logError(storageLogger, error, 'Error deleting from Supabase Storage', { bucket, path });
     return false;
   }
 }
@@ -202,7 +203,7 @@ export async function downloadFromSupabaseStorage(
   path: string
 ): Promise<Buffer | null> {
   if (!supabase) {
-    console.error('Supabase Storage is not configured');
+    storageLogger.error('Supabase Storage is not configured');
     return null;
   }
 
@@ -210,7 +211,7 @@ export async function downloadFromSupabaseStorage(
     const { data, error } = await supabase.storage.from(bucket).download(path);
 
     if (error || !data) {
-      console.error('Error downloading file:', error);
+      logError(storageLogger, error, 'Error downloading file', { bucket, path });
       return null;
     }
 
@@ -218,7 +219,7 @@ export async function downloadFromSupabaseStorage(
     const arrayBuffer = await data.arrayBuffer();
     return Buffer.from(arrayBuffer);
   } catch (error) {
-    console.error('Error downloading from Supabase Storage:', error);
+    logError(storageLogger, error, 'Error downloading from Supabase Storage', { bucket, path });
     return null;
   }
 }
@@ -239,7 +240,7 @@ async function ensureBucketExists(bucketName: string): Promise<boolean> {
     const { data: buckets, error: listError } = await supabase.storage.listBuckets();
 
     if (listError) {
-      console.error('Error listing buckets:', listError);
+      logError(storageLogger, listError, 'Error listing buckets');
       return false;
     }
 
@@ -250,7 +251,7 @@ async function ensureBucketExists(bucketName: string): Promise<boolean> {
     }
 
     // Create bucket if it doesn't exist
-    console.log(`Creating bucket: ${bucketName}`);
+    storageLogger.info({ bucketName }, 'Creating bucket');
     const { error: createError } = await supabase.storage.createBucket(bucketName, {
       public: false, // Private bucket - requires authentication
       fileSizeLimit: 1024 * 1024, // 1MB limit for PDFs
@@ -258,14 +259,14 @@ async function ensureBucketExists(bucketName: string): Promise<boolean> {
     });
 
     if (createError) {
-      console.error('Error creating bucket:', createError);
+      logError(storageLogger, createError, 'Error creating bucket', { bucketName });
       return false;
     }
 
-    console.log(`Bucket created successfully: ${bucketName}`);
+    storageLogger.info({ bucketName }, 'Bucket created successfully');
     return true;
   } catch (error) {
-    console.error('Error ensuring bucket exists:', error);
+    logError(storageLogger, error, 'Error ensuring bucket exists', { bucketName });
     return false;
   }
 }

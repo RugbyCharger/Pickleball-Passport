@@ -1,0 +1,239 @@
+/**
+ * Business Constants Configuration
+ * 
+ * Centralized configuration for all business logic constants.
+ * All monetary values are in cents unless otherwise specified.
+ * 
+ * These values control pricing, fees, discounts, and business rules
+ * across the entire application.
+ */
+
+// ============================================================================
+// ACCOMMODATION PRICING
+// ============================================================================
+
+/**
+ * Accommodation tier pricing additions (in cents)
+ * These are added to the base package price
+ */
+export const ACCOMMODATION_TIER_PRICING = {
+  /** Four Seasons - baseline (included in package) */
+  LUXURY: 0,
+  /** Aman - +$3,000 */
+  ULTRA_LUXURY: 300000,
+  /** Private Villa - +$5,000 */
+  VILLA: 500000,
+} as const
+
+export type AccommodationTier = keyof typeof ACCOMMODATION_TIER_PRICING
+
+// ============================================================================
+// PARTNER REFERRAL DISCOUNTS
+// ============================================================================
+
+/**
+ * Partner tier discount percentages
+ * Applied to subtotal when a valid referral code is used
+ */
+export const PARTNER_TIER_DISCOUNTS = {
+  /** Bronze tier: 5% discount */
+  BRONZE: 0.05,
+  /** Silver tier: 7.5% discount */
+  SILVER: 0.075,
+  /** Gold tier: 10% discount */
+  GOLD: 0.10,
+  /** Platinum tier: 15% discount */
+  PLATINUM: 0.15,
+} as const
+
+export type PartnerTier = keyof typeof PARTNER_TIER_DISCOUNTS
+
+// ============================================================================
+// PAYMENT PLAN CONFIGURATION
+// ============================================================================
+
+/**
+ * Full payment discount percentage (applied when paying in full upfront)
+ */
+export const FULL_PAYMENT_DISCOUNT_RATE = 0.02 // 2%
+
+/**
+ * Installment plan configuration
+ */
+export const INSTALLMENT_CONFIG = {
+  /** Number of installments in the plan */
+  NUM_INSTALLMENTS: 4,
+  
+  /** Percentage for each installment */
+  PERCENTAGES: {
+    FIRST: 0.50,  // 50%
+    SECOND: 0.25, // 25%
+    THIRD: 0.15,  // 15%
+    FOURTH: 0.10, // 10%
+  },
+  
+  /** Minimum days before trip to allow installment plans */
+  MIN_DAYS_BEFORE_TRIP: 70,
+  
+  /** Days before trip for each installment due date */
+  DUE_DATE_DAYS: {
+    SECOND: 60,  // 60 days before trip
+    THIRD: 30,   // 30 days before trip
+    FOURTH: 7,   // 7 days before trip
+  },
+} as const
+
+// ============================================================================
+// REFUND POLICY
+// ============================================================================
+
+/**
+ * Processing fee charged on cancellations (in cents)
+ * This fee is retained from refunds when canceling more than 60 days out
+ */
+export const CANCELLATION_PROCESSING_FEE = 50000 // $500
+
+/**
+ * Refund policy configuration by days until trip
+ */
+export const REFUND_POLICY = {
+  /** More than 60 days: 100% refund minus processing fee */
+  FULL_REFUND_MIN_DAYS: 60,
+  FULL_REFUND_PERCENTAGE: 1.0,
+  
+  /** 30-60 days: 50% refund */
+  PARTIAL_REFUND_MIN_DAYS: 30,
+  PARTIAL_REFUND_PERCENTAGE: 0.5,
+  
+  /** Less than 30 days: No refund */
+  NO_REFUND_PERCENTAGE: 0,
+} as const
+
+// ============================================================================
+// RESCHEDULE POLICY
+// ============================================================================
+
+export const RESCHEDULE_CONFIG = {
+  /** Maximum number of reschedules allowed per booking */
+  MAX_RESCHEDULES: 1,
+  
+  /** Rescheduling is only available less than 30 days before trip */
+  ELIGIBLE_DAYS_BEFORE_TRIP: 30,
+} as const
+
+// ============================================================================
+// GIFT BOOKING
+// ============================================================================
+
+export const GIFT_CONFIG = {
+  /** Number of days before gift acceptance token expires */
+  TOKEN_EXPIRY_DAYS: 90,
+} as const
+
+// ============================================================================
+// PARTNER POINTS
+// ============================================================================
+
+export const PARTNER_POINTS_CONFIG = {
+  /** Base points earned per $1,000 of booking value */
+  POINTS_PER_1000_DOLLARS: 100,
+  
+  /** Minimum points earned per referral */
+  MIN_POINTS: 500,
+  
+  /** Maximum points earned per referral */
+  MAX_POINTS: 2000,
+} as const
+
+// ============================================================================
+// DURATION OPTIONS
+// ============================================================================
+
+/**
+ * Valid trip duration options (in days)
+ */
+export const VALID_DURATIONS = [7, 10, 14, 21] as const
+
+/**
+ * Base duration for price calculation (prices are scaled proportionally)
+ */
+export const BASE_DURATION_DAYS = 14
+
+// ============================================================================
+// RATE LIMITING
+// ============================================================================
+
+export const RATE_LIMIT_CONFIG = {
+  /** Contact form: requests per minute per IP */
+  CONTACT_FORM_REQUESTS_PER_MINUTE: 3,
+  
+  /** Newsletter signup: requests per minute per IP */
+  NEWSLETTER_REQUESTS_PER_MINUTE: 5,
+} as const
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Calculate refund amount based on days until trip
+ * @param totalPrice - Total booking price in cents
+ * @param daysUntilTrip - Number of days until trip starts
+ * @returns Refund amount and percentage
+ */
+export function calculateRefund(totalPrice: number, daysUntilTrip: number): {
+  refundAmount: number
+  refundPercentage: number
+} {
+  let refundAmount = 0
+  let refundPercentage = 0
+
+  if (daysUntilTrip > REFUND_POLICY.FULL_REFUND_MIN_DAYS) {
+    refundAmount = totalPrice - CANCELLATION_PROCESSING_FEE
+    refundPercentage = 100
+  } else if (daysUntilTrip >= REFUND_POLICY.PARTIAL_REFUND_MIN_DAYS) {
+    refundAmount = Math.floor(totalPrice * REFUND_POLICY.PARTIAL_REFUND_PERCENTAGE)
+    refundPercentage = 50
+  }
+
+  // Ensure refund is never negative
+  if (refundAmount < 0) {
+    refundAmount = 0
+  }
+
+  return { refundAmount, refundPercentage }
+}
+
+/**
+ * Calculate partner discount based on tier
+ * @param tier - Partner tier
+ * @param subtotal - Subtotal in cents
+ * @returns Discount amount in cents
+ */
+export function calculatePartnerDiscount(tier: PartnerTier, subtotal: number): number {
+  const discountRate = PARTNER_TIER_DISCOUNTS[tier] || 0
+  return Math.round(subtotal * discountRate)
+}
+
+/**
+ * Calculate duration-adjusted base price
+ * @param basePrice - Base price for 14-day trip in cents
+ * @param duration - Actual duration in days
+ * @returns Adjusted price in cents
+ */
+export function calculateDurationAdjustedPrice(basePrice: number, duration: number): number {
+  return Math.round(basePrice * (duration / BASE_DURATION_DAYS))
+}
+
+/**
+ * Calculate partner points earned from a booking
+ * @param totalPrice - Total booking price in cents
+ * @returns Points earned
+ */
+export function calculatePartnerPoints(totalPrice: number): number {
+  const basePoints = Math.floor(totalPrice / 100000) * PARTNER_POINTS_CONFIG.POINTS_PER_1000_DOLLARS
+  return Math.min(
+    Math.max(basePoints, PARTNER_POINTS_CONFIG.MIN_POINTS),
+    PARTNER_POINTS_CONFIG.MAX_POINTS
+  )
+}

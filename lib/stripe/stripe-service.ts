@@ -11,6 +11,7 @@
  */
 
 import Stripe from 'stripe';
+import { stripeLogger, logError, webhookLogger } from '@/lib/logger';
 
 // Initialize Stripe client (server-side only)
 // Note: During build time, this might not be available
@@ -88,7 +89,7 @@ export async function createPaymentIntent(
       paymentIntentId: paymentIntent.id,
     };
   } catch (error) {
-    console.error('Error creating payment intent:', error);
+    logError(stripeLogger, error, 'Error creating payment intent', { bookingId, amount });
     throw new Error('Failed to create payment intent');
   }
 }
@@ -104,7 +105,7 @@ export async function getPaymentIntent(
   try {
     return await getStripe().paymentIntents.retrieve(paymentIntentId);
   } catch (error) {
-    console.error('Error retrieving payment intent:', error);
+    logError(stripeLogger, error, 'Error retrieving payment intent', { paymentIntentId });
     throw new Error('Failed to retrieve payment intent');
   }
 }
@@ -120,7 +121,7 @@ export async function cancelPaymentIntent(
   try {
     return await getStripe().paymentIntents.cancel(paymentIntentId);
   } catch (error) {
-    console.error('Error canceling payment intent:', error);
+    logError(stripeLogger, error, 'Error canceling payment intent', { paymentIntentId });
     throw new Error('Failed to cancel payment intent');
   }
 }
@@ -144,7 +145,7 @@ export async function createRefund(params: {
       reason,
     });
   } catch (error) {
-    console.error('Error creating refund:', error);
+    logError(stripeLogger, error, 'Error creating refund', { paymentIntentId, amount });
     throw new Error('Failed to create refund');
   }
 }
@@ -163,7 +164,7 @@ export function verifyWebhookSignature(
   try {
     return getStripe().webhooks.constructEvent(payload, signature, webhookSecret);
   } catch (error) {
-    console.error('Webhook signature verification failed:', error);
+    logError(webhookLogger, error, 'Webhook signature verification failed');
     throw new Error('Invalid webhook signature');
   }
 }

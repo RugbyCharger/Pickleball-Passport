@@ -68,9 +68,10 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
 
         setClientSecret(result.clientSecret)
         setBookingReference(result.bookingReference)
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Payment intent creation failed:', err)
-        setError(err.message || 'Failed to initialize payment. Please try again.')
+        const errorMessage = err instanceof Error ? err.message : 'Failed to initialize payment. Please try again.'
+        setError(errorMessage)
       }
     }
 

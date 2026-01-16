@@ -17,6 +17,7 @@ import {
   type GiftAcceptanceNotificationPurchaserData,
 } from '@/lib/email/templates/gift-acceptance-notification-purchaser'
 import { clerkClient } from '@clerk/nextjs/server'
+import { giftLogger, logError, authLogger, emailLogger, stripeLogger } from '@/lib/logger'
 
 export const giftRouter = router({
   /**
@@ -106,7 +107,7 @@ export const giftRouter = router({
         purchaserFirstName = purchaserUser.firstName || 'the purchaser'
         purchaserLastName = purchaserUser.lastName || ''
       } catch (error) {
-        console.error('Failed to fetch purchaser from Clerk:', error)
+        logError(authLogger, error, 'Failed to fetch purchaser from Clerk')
         // Continue with default values
       }
 
@@ -268,7 +269,7 @@ export const giftRouter = router({
           text: recipientEmail_template.text,
         })
       } catch (emailError) {
-        console.error('Failed to send gift acceptance confirmation to recipient:', emailError)
+        logError(emailLogger, emailError, 'Failed to send gift acceptance confirmation to recipient')
         // Don't throw - gift already accepted, email failure is not critical
       }
 
@@ -297,7 +298,7 @@ export const giftRouter = router({
           text: purchaserEmail_template.text,
         })
       } catch (emailError) {
-        console.error('Failed to send gift acceptance notification to purchaser:', emailError)
+        logError(emailLogger, emailError, 'Failed to send gift acceptance notification to purchaser')
         // Don't throw - gift already accepted, email failure is not critical
       }
 
@@ -420,7 +421,7 @@ export const giftRouter = router({
           })
         }
       } catch (refundError) {
-        console.error('Failed to process gift decline refund:', refundError)
+        logError(stripeLogger, refundError, 'Failed to process gift decline refund')
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to process refund. Please contact support.',
@@ -480,7 +481,7 @@ export const giftRouter = router({
           text: `Gift Declined - Confirmation\n\nYour gift decline request has been processed. The purchaser has been notified and refunded.`,
         })
       } catch (emailError) {
-        console.error('Failed to send gift decline emails:', emailError)
+        logError(emailLogger, emailError, 'Failed to send gift decline emails')
         // Don't throw - gift already declined, email failure is not critical
       }
 

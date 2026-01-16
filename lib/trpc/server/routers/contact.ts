@@ -19,6 +19,7 @@ import {
 } from '@/lib/email/templates/contact-admin-notification'
 import { checkRateLimit, getIpAddress } from '@/lib/rate-limit'
 import { TRPCError } from '@trpc/server'
+import { apiLogger, emailLogger, dbLogger, logError } from '@/lib/logger'
 
 /**
  * Contact form input schema with reCAPTCHA token
@@ -48,7 +49,7 @@ async function verifyRecaptcha(token: string): Promise<{
   const secretKey = process.env.RECAPTCHA_SECRET_KEY
 
   if (!secretKey) {
-    console.error('RECAPTCHA_SECRET_KEY is not configured')
+    apiLogger.error('RECAPTCHA_SECRET_KEY is not configured')
     throw new Error('reCAPTCHA is not configured')
   }
 
@@ -105,31 +106,31 @@ export const contactRouter = router({
         const recaptchaResult = await verifyRecaptcha(recaptchaToken)
 
         if (!recaptchaResult.success) {
-          console.warn('reCAPTCHA verification failed:', {
+          apiLogger.warn({
             // SECURITY: Redact email to prevent PII leakage in logs
             emailDomain: email.split('@')[1] || 'unknown',
             action: recaptchaResult.action,
-          })
+          }, 'reCAPTCHA verification failed')
           throw new Error('reCAPTCHA verification failed. Please try again.')
         }
 
         // Check score threshold (0.5 is Google's recommended starting point)
         if (recaptchaResult.score < 0.5) {
-          console.warn('reCAPTCHA score too low (possible spam):', {
+          apiLogger.warn({
             // SECURITY: Redact email to prevent PII leakage in logs
             emailDomain: email.split('@')[1] || 'unknown',
             score: recaptchaResult.score,
             action: recaptchaResult.action,
-          })
+          }, 'reCAPTCHA score too low (possible spam)')
           throw new Error('Spam detected. Please try again.')
         }
 
         // SECURITY: Don't log full email addresses - only domain for debugging
-        console.log('reCAPTCHA verification passed:', {
+        apiLogger.info({
           emailDomain: email.split('@')[1] || 'unknown',
           score: recaptchaResult.score,
           action: recaptchaResult.action,
-        })
+        }, 'reCAPTCHA verification passed')
       } catch (error) {
         if (error instanceof Error) {
           throw error
@@ -153,9 +154,9 @@ export const contactRouter = router({
         })
 
         // SECURITY: Log submission without full PII
-        console.log('Contact form submission saved to database')
+        dbLogger.info('Contact form submission saved to database')
       } catch (error) {
-        console.error('Failed to save contact form to database:', error)
+        logError(dbLogger, error, 'Failed to save contact form to database')
         throw new Error('Failed to save your message. Please try again.')
       }
 
@@ -176,10 +177,10 @@ export const contactRouter = router({
           text,
         })
 
-        console.log('Confirmation email sent to user')
+        emailLogger.info('Confirmation email sent to user')
       } catch (error) {
         // Don't fail the request if email fails, just log it
-        console.error('Failed to send confirmation email to user:', error)
+        logError(emailLogger, error, 'Failed to send confirmation email to user')
       }
 
       // Step 5: Send notification email to admin
@@ -206,10 +207,10 @@ export const contactRouter = router({
           replyTo: normalizedEmail,
         })
 
-        console.log('Admin notification email sent')
+        emailLogger.info('Admin notification email sent')
       } catch (error) {
         // Don't fail the request if email fails, just log it
-        console.error('Failed to send admin notification email:', error)
+        logError(emailLogger, error, 'Failed to send admin notification email')
       }
 
       // Step 6: Return success response
