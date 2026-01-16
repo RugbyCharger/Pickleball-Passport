@@ -200,3 +200,149 @@ export function formatAmountForStripe(amount: number): number {
 export function formatAmountFromStripe(amount: number): number {
   return amount / 100;
 }
+
+// ============================================================================
+// E4-S12: Payment Method Management
+// ============================================================================
+
+export interface CreateSetupIntentParams {
+  customerId: string;
+}
+
+export interface SetupIntentResult {
+  clientSecret: string;
+  setupIntentId: string;
+}
+
+/**
+ * Create a Stripe SetupIntent
+ *
+ * Used to securely collect and save a customer's payment method
+ * for future off-session charges (e.g., installment payments).
+ */
+export async function createSetupIntent(
+  params: CreateSetupIntentParams
+): Promise<SetupIntentResult> {
+  const { customerId } = params;
+
+  try {
+    const setupIntent = await getStripe().setupIntents.create({
+      customer: customerId,
+      payment_method_types: ['card'],
+      usage: 'off_session', // Payment method will be used for future off-session payments
+    });
+
+    stripeLogger.info({ customerId, setupIntentId: setupIntent.id }, 'SetupIntent created');
+
+    return {
+      clientSecret: setupIntent.client_secret!,
+      setupIntentId: setupIntent.id,
+    };
+  } catch (error) {
+    logError(stripeLogger, error, 'Error creating setup intent', { customerId });
+    throw new Error('Failed to create setup intent');
+  }
+}
+
+/**
+ * Update Customer Default Payment Method
+ *
+ * Sets the customer's default payment method for future charges.
+ * Used after a SetupIntent is confirmed to update the default source.
+ */
+export async function updateCustomerDefaultPaymentMethod(params: {
+  customerId: string;
+  paymentMethodId: string;
+}): Promise<Stripe.Customer> {
+  const { customerId, paymentMethodId } = params;
+
+  try {
+    // First, attach the payment method to the customer (if not already attached)
+    await getStripe().paymentMethods.attach(paymentMethodId, {
+      customer: customerId,
+    });
+
+    // Then, set it as the default payment method for invoices
+    const customer = await getStripe().customers.update(customerId, {
+      invoice_settings: {
+        default_payment_method: paymentMethodId,
+      },
+    });
+
+    stripeLogger.info(
+      { customerId, paymentMethodId },
+      'Customer default payment method updated'
+    );
+
+    return customer;
+  } catch (error) {
+    // Check if the error is because payment method is already attached
+    if (error instanceof Stripe.errors.StripeError && error.code === 'resource_already_exists') {
+      // Just update the default payment method
+      const customer = await getStripe().customers.update(customerId, {
+        invoice_settings: {
+          default_payment_method: paymentMethodId,
+        },
+      });
+      stripeLogger.info(
+        { customerId, paymentMethodId },
+        'Customer default payment method updated (already attached)'
+      );
+      return customer;
+    }
+
+    logError(stripeLogger, error, 'Error updating customer default payment method', {
+      customerId,
+      paymentMethodId,
+    });
+    throw new Error('Failed to update payment method');
+  }
+}
+
+/**
+ * Get Customer Payment Methods
+ *
+ * Retrieves all saved payment methods for a customer.
+ */
+export async function getCustomerPaymentMethods(customerId: string): Promise<Stripe.PaymentMethod[]> {
+  try {
+    const paymentMethods = await getStripe().paymentMethods.list({
+      customer: customerId,
+      type: 'card',
+    });
+
+    return paymentMethods.data;
+  } catch (error) {
+    logError(stripeLogger, error, 'Error fetching customer payment methods', { customerId });
+    throw new Error('Failed to fetch payment methods');
+  }
+}
+
+/**
+ * Get Customer Default Payment Method
+ *
+ * Retrieves the customer's default payment method details.
+ */
+export async function getCustomerDefaultPaymentMethod(
+  customerId: string
+): Promise<Stripe.PaymentMethod | null> {
+  try {
+    const customer = await getStripe().customers.retrieve(customerId);
+
+    if (customer.deleted) {
+      return null;
+    }
+
+    const defaultPaymentMethodId = customer.invoice_settings?.default_payment_method;
+
+    if (!defaultPaymentMethodId || typeof defaultPaymentMethodId !== 'string') {
+      return null;
+    }
+
+    const paymentMethod = await getStripe().paymentMethods.retrieve(defaultPaymentMethodId);
+    return paymentMethod;
+  } catch (error) {
+    logError(stripeLogger, error, 'Error fetching customer default payment method', { customerId });
+    return null;
+  }
+}

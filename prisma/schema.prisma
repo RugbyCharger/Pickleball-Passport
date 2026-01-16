@@ -525,6 +525,9 @@ model PaymentRecord {
   lastAttemptAt  DateTime?             // When last charge was attempted
   failureReason  String?               // Stripe error message for debugging
 
+  // E4-S8: Payment Reminders
+  reminderSentAt DateTime?             // When 7-day reminder was sent
+
   // Metadata
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -533,6 +536,7 @@ model PaymentRecord {
   @@index([status])
   @@index([dueDate])
   @@index([stripePaymentIntentId])
+  @@index([reminderSentAt])
 }
 
 // ============================================================================

@@ -8,7 +8,62 @@
 import { differenceInDays, subDays } from 'date-fns'
 
 /**
+ * Installment breakdown with named properties
+ */
+export interface InstallmentBreakdown {
+  first: number   // 50% - due at booking
+  second: number  // 25% - due 60 days before trip
+  third: number   // 15% - due 30 days before trip
+  fourth: number  // 10% (remainder) - due 7 days before trip
+  total: number   // Must equal input amount exactly
+}
+
+/**
+ * Installment schedule with due dates
+ */
+export interface InstallmentSchedule {
+  first: Date   // Due at booking (today)
+  second: Date  // 60 days before trip
+  third: Date   // 30 days before trip
+  fourth: Date  // 7 days before trip
+}
+
+/**
  * Calculate installment amounts for 4-payment plan
+ * Percentages: 50%, 25%, 15%, 10%
+ * Handles rounding by adjusting the last installment to match exact total
+ *
+ * @param totalCents - Total booking amount in cents
+ * @returns Object with named installment amounts in cents
+ */
+export function calculateInstallments(totalCents: number): InstallmentBreakdown {
+  if (totalCents <= 0) {
+    throw new Error('Total amount must be positive')
+  }
+
+  // First installment: 50% rounded up
+  const first = Math.ceil(totalCents * 0.50)
+
+  // Second installment: 25% rounded down
+  const second = Math.floor(totalCents * 0.25)
+
+  // Third installment: 15% rounded down
+  const third = Math.floor(totalCents * 0.15)
+
+  // Fourth installment: remainder (ensures exact total)
+  const fourth = totalCents - first - second - third
+
+  return {
+    first,
+    second,
+    third,
+    fourth,
+    total: totalCents,
+  }
+}
+
+/**
+ * Calculate installment amounts for 4-payment plan (array version)
  * Percentages: 50%, 25%, 15%, 10%
  * Handles rounding by adjusting the last installment to match exact total
  *
@@ -16,15 +71,8 @@ import { differenceInDays, subDays } from 'date-fns'
  * @returns Array of 4 installment amounts in cents [50%, 25%, 15%, 10%]
  */
 export function calculateInstallmentAmounts(totalCents: number): number[] {
-  // Calculate percentages in cents
-  const installment1 = Math.round(totalCents * 0.50) // 50%
-  const installment2 = Math.round(totalCents * 0.25) // 25%
-  const installment3 = Math.round(totalCents * 0.15) // 15%
-
-  // Calculate remaining for last installment (handles rounding)
-  const installment4 = totalCents - installment1 - installment2 - installment3
-
-  return [installment1, installment2, installment3, installment4]
+  const breakdown = calculateInstallments(totalCents)
+  return [breakdown.first, breakdown.second, breakdown.third, breakdown.fourth]
 }
 
 /**
@@ -32,15 +80,27 @@ export function calculateInstallmentAmounts(totalCents: number): number[] {
  * Schedule: Today, 60 days before, 30 days before, 7 days before
  *
  * @param tripStartDate - Date when trip starts
+ * @returns Object with named dates for each installment
+ */
+export function calculateInstallmentDates(tripStartDate: Date): InstallmentSchedule {
+  const first = new Date() // Due today at booking
+  const second = subDays(tripStartDate, 60)
+  const third = subDays(tripStartDate, 30)
+  const fourth = subDays(tripStartDate, 7)
+
+  return { first, second, third, fourth }
+}
+
+/**
+ * Calculate installment due dates based on trip start date (array version)
+ * Schedule: Today, 60 days before, 30 days before, 7 days before
+ *
+ * @param tripStartDate - Date when trip starts
  * @returns Array of 4 dates [today, -60d, -30d, -7d]
  */
-export function calculateInstallmentDates(tripStartDate: Date): Date[] {
-  const today = new Date()
-  const date60DaysBefore = subDays(tripStartDate, 60)
-  const date30DaysBefore = subDays(tripStartDate, 30)
-  const date7DaysBefore = subDays(tripStartDate, 7)
-
-  return [today, date60DaysBefore, date30DaysBefore, date7DaysBefore]
+export function calculateInstallmentDatesArray(tripStartDate: Date): Date[] {
+  const schedule = calculateInstallmentDates(tripStartDate)
+  return [schedule.first, schedule.second, schedule.third, schedule.fourth]
 }
 
 /**
@@ -57,19 +117,39 @@ export function canUseInstallmentPlan(tripStartDate: Date): boolean {
 }
 
 /**
+ * Full payment discount result
+ */
+export interface DiscountCalculation {
+  originalAmount: number
+  discountAmount: number
+  finalAmount: number
+  // Aliases for backward compatibility
+  discount: number
+  discountedTotal: number
+}
+
+/**
  * Calculate 2% discount for full payment
  *
  * @param totalCents - Total booking amount in cents
  * @returns Object with discount amount and discounted total, both in cents
  */
-export function calculateFullPaymentDiscount(totalCents: number): {
-  discount: number
-  discountedTotal: number
-} {
-  const discount = Math.round(totalCents * 0.02) // 2% discount
-  const discountedTotal = totalCents - discount
+export function calculateFullPaymentDiscount(totalCents: number): DiscountCalculation {
+  if (totalCents <= 0) {
+    throw new Error('Total amount must be positive')
+  }
 
-  return { discount, discountedTotal }
+  const discountAmount = Math.floor(totalCents * 0.02) // 2% discount, rounded down
+  const finalAmount = totalCents - discountAmount
+
+  return {
+    originalAmount: totalCents,
+    discountAmount,
+    finalAmount,
+    // Aliases for backward compatibility
+    discount: discountAmount,
+    discountedTotal: finalAmount,
+  }
 }
 
 /**

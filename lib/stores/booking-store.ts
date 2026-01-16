@@ -18,7 +18,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import {
-  calculateInstallmentAmounts,
+  calculateInstallments,
   calculateInstallmentDates,
   canUseInstallmentPlan,
   calculateFullPaymentDiscount,
@@ -327,16 +327,15 @@ export const useBookingStore = create<BookingState>()(
         if (!state.selectedTrip || state.paymentPlan !== 'INSTALLMENT_4') return []
 
         const total = state.calculateTotal()
-        const amounts = calculateInstallmentAmounts(total)
+        const amounts = calculateInstallments(total)
         const dates = calculateInstallmentDates(state.selectedTrip.startDate)
-        const percentages = ['50%', '25%', '15%', '10%']
 
-        return amounts.map((amount, index) => ({
-          number: index + 1,
-          amount,
-          dueDate: dates[index],
-          percentage: percentages[index],
-        }))
+        return [
+          { number: 1, amount: amounts.first, dueDate: dates.first, percentage: '50%' },
+          { number: 2, amount: amounts.second, dueDate: dates.second, percentage: '25%' },
+          { number: 3, amount: amounts.third, dueDate: dates.third, percentage: '15%' },
+          { number: 4, amount: amounts.fourth, dueDate: dates.fourth, percentage: '10%' },
+        ]
       },
 
       // Referral Code

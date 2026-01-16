@@ -1,5 +1,6 @@
 # Sprint Status - Pickleball Passport
 # Generated: 2025-12-29
+# Last Updated: 2026-01-16
 # Purpose: Track epic and story progress through implementation phase
 
 # STATUS DEFINITIONS:
@@ -92,19 +93,23 @@ development_status:
   epic-3-retrospective: optional
 
   # EPIC 4: Payment Processing
+  # Updated: 2026-01-16 - Reflects actual implementation status
   epic-4: in-progress
   4-1-stripe-integration-setup: done
   4-2-payment-intent-creation: done
   4-3-payment-form-ui: done
   4-4-webhook-handler: done
   4-5-payment-failure-handling: done
-  4-6-installment-payment-plans: ready-for-dev
-  4-7-scheduled-payment-processing: backlog
+  4-6-installment-payment-plans: done          # Full UI, schedule display, authorization flow
+  4-7-scheduled-payment-processing: done       # Cron job, charge logic, retry calculator, email notifications
   4-8-receipt-generation: done
+  4-8b-installment-payment-reminders: in-progress  # Proactive 7-day reminders before scheduled payments
   4-9-refund-processing: done
-  4-10-payment-history-view: backlog
-  4-11-multi-currency-support: backlog
-  4-12-stripe-connect-partner-payouts: backlog
+  4-10-payment-history-view: done              # /dashboard/payments page with filters
+  4-11-affirm-klarna-financing: backlog        # P1 - "Coming Soon" placeholder in UI
+  4-12-update-payment-method: done             # SetupIntent flow, modal UI, tRPC endpoints
+  4-13-multi-currency-support: backlog         # Phase 2
+  4-14-stripe-connect-partner-payouts: backlog # Phase 2 - Partner feature
   epic-4-retrospective: optional
 
   # EPIC 5: Admin Dashboard

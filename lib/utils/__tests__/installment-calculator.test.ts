@@ -149,44 +149,40 @@ describe('calculateInstallmentDates', () => {
       const tripStartDate = addDays(new Date(), 90)
       const dates = calculateInstallmentDates(tripStartDate)
 
-      expect(dates).toHaveLength(4)
-
       // Date 1: Today (within 1 minute tolerance)
       const now = new Date()
-      const timeDiff = Math.abs(dates[0].getTime() - now.getTime())
+      const timeDiff = Math.abs(dates.first.getTime() - now.getTime())
       expect(timeDiff).toBeLessThan(60000) // Less than 1 minute
 
       // Date 2: 60 days before trip
       const expected60Days = subDays(tripStartDate, 60)
-      expect(dates[1].toDateString()).toBe(expected60Days.toDateString())
+      expect(dates.second.toDateString()).toBe(expected60Days.toDateString())
 
       // Date 3: 30 days before trip
       const expected30Days = subDays(tripStartDate, 30)
-      expect(dates[2].toDateString()).toBe(expected30Days.toDateString())
+      expect(dates.third.toDateString()).toBe(expected30Days.toDateString())
 
       // Date 4: 7 days before trip
       const expected7Days = subDays(tripStartDate, 7)
-      expect(dates[3].toDateString()).toBe(expected7Days.toDateString())
+      expect(dates.fourth.toDateString()).toBe(expected7Days.toDateString())
     })
 
     it('should calculate dates for trip exactly 70 days away', () => {
       const tripStartDate = addDays(new Date(), 70)
       const dates = calculateInstallmentDates(tripStartDate)
 
-      expect(dates).toHaveLength(4)
-      expect(dates[1]).toEqual(subDays(tripStartDate, 60))
-      expect(dates[2]).toEqual(subDays(tripStartDate, 30))
-      expect(dates[3]).toEqual(subDays(tripStartDate, 7))
+      expect(dates.second).toEqual(subDays(tripStartDate, 60))
+      expect(dates.third).toEqual(subDays(tripStartDate, 30))
+      expect(dates.fourth).toEqual(subDays(tripStartDate, 7))
     })
 
     it('should handle trip far in the future (365 days)', () => {
       const tripStartDate = addDays(new Date(), 365)
       const dates = calculateInstallmentDates(tripStartDate)
 
-      expect(dates).toHaveLength(4)
-      expect(dates[1]).toEqual(subDays(tripStartDate, 60))
-      expect(dates[2]).toEqual(subDays(tripStartDate, 30))
-      expect(dates[3]).toEqual(subDays(tripStartDate, 7))
+      expect(dates.second).toEqual(subDays(tripStartDate, 60))
+      expect(dates.third).toEqual(subDays(tripStartDate, 30))
+      expect(dates.fourth).toEqual(subDays(tripStartDate, 7))
     })
   })
 })

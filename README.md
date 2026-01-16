@@ -16,6 +16,8 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - **Payments**: Stripe (Payment Intents + Webhooks)
 - **Email**: SendGrid (Transactional emails)
 - **Monitoring**: Sentry (Error tracking + Performance monitoring)
+- **Logging**: Pino (Structured JSON logging)
+- **Unit Testing**: Vitest (alongside Playwright for E2E)
 - **Deployment**: Vercel
 
 ## 📊 Project Status
@@ -37,8 +39,12 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 
 ✅ **Epic 4 (Payment Processing) - Key Features:**
 - E4-S4: Stripe Webhook Handler (production-ready)
+- E4-S6: Installment Payment Plans (4-payment plans with UI)
+- E4-S7: Scheduled Payment Processing (Vercel Cron job)
 - E4-S8: Receipt Generation (PDF receipts)
 - E4-S9: Refund Processing (full/partial refunds)
+- E4-S10: Payment History View (guest dashboard)
+- E4-S12: Update Payment Method (SetupIntent flow)
 
 ✅ **Epic 1 (Marketing Website) - Recent:**
 - E1-S7: Trust & Safety Section
@@ -52,10 +58,10 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 
 | Epic | Name | Status | Stories | Progress |
 |------|------|--------|---------|----------|
-| **E1** | Marketing Website | 🟡 In Progress | 9/15 | 60% |
+| **E1** | Marketing Website | ✅ Done | 15/15 | 100% |
 | **E2** | User Authentication | ✅ Done | 4/8 | 100% |
-| **E3** | Booking System | ✅ Done | 14/18 | 78% |
-| **E4** | Payment Processing | 🟡 In Progress | 5/12 | 42% |
+| **E3** | Booking System | ✅ Done | 18/18 | 100% |
+| **E4** | Payment Processing | 🟡 In Progress | 10/14 | 71% |
 | **E5** | Admin Dashboard | ✅ Done | 10/10 | 100% |
 | **E9** | Partner Portal | 🟡 In Progress | 1/20 | 5% |
 | **E11** | Communication System | 🟡 In Progress | 3/12 | 25% |
@@ -124,8 +130,20 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - ✅ Webhook handler (production-ready with event tracking)
 - ✅ Receipt generation (PDF receipts with branding)
 - ✅ Refund processing (full/partial refunds with tracking)
-- 📝 Installment payment plans (Planned)
-- 📝 Scheduled payment processing (Planned)
+- ✅ **Installment payment plans** (4-payment plans with 50/25/15/10% split)
+  - Payment plan selector UI with authorization
+  - Installment schedule display
+  - 70-day minimum validation for installments
+- ✅ **Scheduled payment processing** (Vercel Cron - daily 9 AM UTC)
+  - Automatic charging of due installments
+  - Retry logic with exponential backoff
+  - Customer reminder emails on failure
+  - Admin alerts for permanent failures
+- ✅ **Payment history view** (/dashboard/payments)
+- ✅ **Update payment method** (for installment plan customers)
+  - Stripe SetupIntent flow
+  - Modal UI with Stripe Elements
+- 📝 Affirm/Klarna financing (Phase 2)
 
 ### Communication System (Epic 11)
 - ✅ SendGrid integration
@@ -292,8 +310,15 @@ npm run db:generate  # Generate Prisma Client
 npm run db:seed      # Seed sample data (dev only)
 npm run db:migrate   # Run database migrations (production)
 
-# Testing
-npm run test         # Run tests (when implemented)
+# Unit Testing (Vitest)
+npm run test         # Run unit tests
+npm run test:unit    # Run unit tests once
+npm run test:watch   # Watch mode
+npm run test:ui      # Interactive UI
+
+# E2E Testing (Playwright)
+npm run test:e2e     # Run E2E tests
+npm run test:e2e:ui  # Interactive mode
 ```
 
 ## 📁 Project Structure
@@ -329,9 +354,20 @@ pickleball-passport/
 │   ├── dashboard/              # Dashboard components
 │   └── ui/                     # Shared UI components (Radix UI)
 ├── lib/                        # Utilities and configuration
+│   ├── config/                 # Centralized business constants
+│   │   └── business-constants.ts  # Pricing, fees, refund policies
+│   ├── logger/                 # Structured logging
+│   │   └── index.ts            # Pino logger with module loggers
 │   ├── trpc/                   # tRPC setup
 │   │   ├── client.ts           # Client-side tRPC
 │   │   └── server/routers/     # API routers
+│   │       ├── __tests__/      # Unit tests for routers
+│   │       │   ├── booking.test.ts  # 43 booking tests
+│   │       │   └── gift.test.ts     # 37 gift flow tests
+│   │       └── booking/        # Modular booking sub-routers
+│   │           ├── index.ts    # Router composition
+│   │           ├── queries.ts  # Read operations
+│   │           └── trips.ts    # Trip operations
 │   ├── stores/                 # Zustand state stores
 │   └── utils.ts                # Utility functions
 ├── prisma/                     # Database schema
@@ -379,6 +415,29 @@ pickleball-passport/
 - Radix UI primitives for accessibility
 - Tailwind CSS 4 for utility-first styling
 - Custom components in `/components/ui/`
+
+## 🔍 Code Quality
+
+### Structured Logging (Pino)
+- Module-specific loggers (booking, payment, email, gift, etc.)
+- Automatic sensitive field redaction
+- Environment-aware log levels
+- Helper functions: `logError`, `logStripeError`
+
+### Configuration Management
+- Centralized in `lib/config/business-constants.ts`
+- Accommodation pricing, partner discounts, refund policies
+- Installment plan configurations, partner points calculations
+
+### Type Safety
+- Proper error type narrowing (no `catch (error: any)`)
+- TRPCError for API error handling
+
+### Testing Infrastructure
+- **Unit Tests (Vitest)**: 80+ tests for critical tRPC routers
+  - Booking router tests (43 tests)
+  - Gift flow tests (37 tests)
+- **E2E Tests (Playwright)**: Full user journey coverage
 
 ## 🚢 Deployment
 
@@ -457,6 +516,14 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ## 📝 Recent Updates
 
+### January 16, 2026
+- ✅ **Codebase Review Implementation** - Quality improvements
+  - Added 80 unit tests for critical tRPC routers (booking, gift flows)
+  - Replaced 79 console statements with Pino structured logging
+  - Centralized magic numbers to business-constants.ts
+  - Modularized 2500-line booking router into sub-routers
+  - Improved type safety with proper error type narrowing
+
 ### January 13, 2026
 - ✅ **Sentry Integration** - Production-ready error monitoring and performance tracking
   - Real-time error tracking for client, server, and edge runtimes
@@ -508,7 +575,7 @@ This is a private project. Development workflow:
 ## 📄 License
 
 Private - All Rights Reserved
-Copyright © 2025 Pickleball Passport
+Copyright © 2025-2026 Pickleball Passport
 
 ---
 

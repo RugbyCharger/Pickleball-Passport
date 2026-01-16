@@ -34,7 +34,8 @@ import CancelBookingButton from '@/components/booking/cancel-booking-button'
 import RescheduleBookingButton from '@/components/booking/reschedule-booking-button'
 import ModifyBookingButton from '@/components/booking/modify-booking-button'
 import { PaymentScheduleDisplay } from '@/components/booking/payment-schedule-display'
-import { calculateInstallmentAmounts, calculateInstallmentDates } from '@/lib/utils/installment-calculator'
+import { UpdatePaymentMethodButton } from '@/components/booking/update-payment-method-button'
+import { calculateInstallments, calculateInstallmentDates } from '@/lib/utils/installment-calculator'
 
 interface BookingDetailPageProps {
   params: Promise<{
@@ -180,7 +181,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
   const paymentSchedule = (() => {
     if (booking.paymentPlan !== 'INSTALLMENT_4' || !booking.trip) return null
 
-    const amounts = calculateInstallmentAmounts(booking.totalPrice)
+    const amounts = calculateInstallments(booking.totalPrice)
     const dates = calculateInstallmentDates(booking.trip.startDate)
 
     // Match payments to installments
@@ -188,10 +189,17 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
       .filter(p => p.status === 'SUCCEEDED')
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
-    return amounts.map((amount, index) => {
+    const now = new Date()
+    const installments = [
+      { amount: amounts.first, dueDate: dates.first },
+      { amount: amounts.second, dueDate: dates.second },
+      { amount: amounts.third, dueDate: dates.third },
+      { amount: amounts.fourth, dueDate: dates.fourth },
+    ]
+
+    return installments.map((installment, index) => {
       const payment = successfulPayments[index]
-      const dueDate = dates[index]
-      const now = new Date()
+      const { amount, dueDate } = installment
 
       let status: 'PAID' | 'PENDING' | 'UPCOMING' | 'OVERDUE'
       if (payment) {
@@ -212,7 +220,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
         dueDate,
         status,
         paidDate: payment?.createdAt,
-        paymentIntentId: payment?.stripePaymentIntentId,
+        paymentIntentId: payment?.stripePaymentIntentId ?? undefined,
       }
     })
   })()
@@ -563,7 +571,7 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                   Your 4-installment payment plan
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
                 <PaymentScheduleDisplay
                   bookingReference={booking.bookingReference}
                   totalAmount={booking.totalPrice}
@@ -571,6 +579,21 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                   showTitle={false}
                   compact={false}
                 />
+
+                {/* E4-S12: Update Payment Method */}
+                {booking.stripeCustomerId && booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && (
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Need to update your payment method for future installments?
+                    </p>
+                    <UpdatePaymentMethodButton
+                      bookingId={booking.id}
+                      bookingReference={booking.bookingReference}
+                      paymentPlan={booking.paymentPlan}
+                      hasStripeCustomer={!!booking.stripeCustomerId}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -687,6 +710,16 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
+              {/* E4-S12: Update Payment Method for installment plans */}
+              {booking.paymentPlan === 'INSTALLMENT_4' && booking.stripeCustomerId && (
+                <UpdatePaymentMethodButton
+                  bookingId={booking.id}
+                  bookingReference={booking.bookingReference}
+                  paymentPlan={booking.paymentPlan}
+                  hasStripeCustomer={!!booking.stripeCustomerId}
+                  fullWidth
+                />
+              )}
               <Link href="/dashboard/documents">
                 <Button variant="outline" className="w-full justify-start">
                   Upload Documents

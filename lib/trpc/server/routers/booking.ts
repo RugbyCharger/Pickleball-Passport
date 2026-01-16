@@ -272,7 +272,7 @@ export const bookingRouter = router({
         dueDate: Date
         percentage: number
         installmentNumber: number
-        status: 'PENDING' | 'COMPLETED'
+        status: 'PENDING' | 'PAID' | 'FAILED'
       }> = []
 
       if (paymentPlan === 'INSTALLMENT_4' && tripId) {
