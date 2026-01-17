@@ -6,7 +6,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 
 ## 🏗️ Tech Stack
 
-- **Framework**: Next.js 16.1.1 (App Router)
+- **Framework**: Next.js 16.1.1 (App Router).
 - **Language**: TypeScript (Strict Mode)
 - **Styling**: Tailwind CSS 4 + Radix UI
 - **Database**: PostgreSQL (Supabase) + Prisma ORM
