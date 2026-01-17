@@ -24,10 +24,17 @@ import {
   Trophy,
   Target,
   ArrowRight,
+  FileText,
+  BookOpen,
+  Globe,
+  QrCode,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const TIER_COLORS = {
   BRONZE: 'bg-amber-700 text-white',
@@ -44,7 +51,9 @@ const TIER_RING_COLORS = {
 };
 
 export default function PartnerDashboardPage() {
+  const router = useRouter();
   const [copiedCode, setCopiedCode] = useState(false);
+  const [dismissedBanner, setDismissedBanner] = useState(false);
 
   // Fetch partner profile and stats
   const { data: profile, isLoading: profileLoading } =
@@ -55,6 +64,27 @@ export default function PartnerDashboardPage() {
     trpc.partner.getTierInfo.useQuery();
   const { data: referrals, isLoading: referralsLoading } =
     trpc.partner.getMyReferrals.useQuery();
+
+  // Redirect new partners to onboarding
+  useEffect(() => {
+    if (
+      profile &&
+      !profile.onboardingCompleted &&
+      !profileLoading &&
+      !dismissedBanner
+    ) {
+      // Check if this is a new partner (created in last 24 hours)
+      const createdAt = new Date(profile.createdAt);
+      const now = new Date();
+      const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+      // If created in last 24 hours, redirect to onboarding
+      if (hoursSinceCreation < 24) {
+        router.push('/dashboard/partner/onboarding');
+        return;
+      }
+    }
+  }, [profile, profileLoading, dismissedBanner, router]);
 
   const handleCopyCode = async () => {
     if (profile?.referralCode) {
@@ -82,9 +112,45 @@ export default function PartnerDashboardPage() {
     );
   }
 
+  const showOnboardingBanner =
+    profile &&
+    !profile.onboardingCompleted &&
+    !dismissedBanner &&
+    !profileLoading;
+
   return (
     <div className="min-h-screen bg-slate-50 py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Onboarding Banner */}
+        {showOnboardingBanner && (
+          <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="font-semibold text-emerald-900">
+                  Complete Your Onboarding
+                </h3>
+                <p className="mt-1 text-sm text-emerald-800">
+                  Finish setting up your partner account and learn how to get started
+                </p>
+              </div>
+              <div className="ml-4 flex items-center gap-3">
+                <Link href="/dashboard/partner/onboarding">
+                  <Button size="sm" className="gap-2">
+                    Complete Onboarding
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <button
+                  onClick={() => setDismissedBanner(true)}
+                  className="text-emerald-600 hover:text-emerald-900"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Partner Dashboard</h1>
@@ -101,6 +167,14 @@ export default function PartnerDashboardPage() {
               <p className="mt-1 text-sm text-slate-600">
                 Share this code with your club members to earn rewards
               </p>
+              <div className="mt-4 flex items-center gap-3">
+                <Link href="/dashboard/partner/referral-links">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <QrCode className="h-4 w-4" />
+                    Generate QR Code
+                  </Button>
+                </Link>
+              </div>
               <div className="mt-4 flex items-center gap-3">
                 <code className="rounded-lg bg-white px-4 py-3 text-2xl font-bold tracking-wide text-emerald-600">
                   {profile.referralCode}
@@ -171,22 +245,24 @@ export default function PartnerDashboardPage() {
           </div>
 
           {/* Points Earned */}
-          <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Current Points</p>
-                <p className="mt-2 text-3xl font-bold text-slate-900">
-                  {stats.currentPoints.toLocaleString()}
-                </p>
-                <p className="mt-1 text-xs text-emerald-600">
-                  {stats.totalPointsEarned.toLocaleString()} lifetime
-                </p>
-              </div>
-              <div className="rounded-full bg-amber-100 p-3">
-                <Award className="h-6 w-6 text-amber-600" />
+          <Link href="/dashboard/partner/points">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Current Points</p>
+                  <p className="mt-2 text-3xl font-bold text-slate-900">
+                    {stats.currentPoints.toLocaleString()}
+                  </p>
+                  <p className="mt-1 text-xs text-emerald-600">
+                    {stats.totalPointsEarned.toLocaleString()} lifetime
+                  </p>
+                </div>
+                <div className="rounded-full bg-amber-100 p-3">
+                  <Award className="h-6 w-6 text-amber-600" />
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Total Revenue */}
           <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -219,6 +295,12 @@ export default function PartnerDashboardPage() {
                 <p className="text-sm text-slate-600">Track your progress to the next level</p>
               </div>
             </div>
+            <Link href="/dashboard/partner/tiers">
+              <Button variant="outline" size="sm" className="gap-2">
+                View All Tiers
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
             <div
               className={cn(
                 'rounded-full px-4 py-2 text-sm font-bold',
@@ -303,10 +385,138 @@ export default function PartnerDashboardPage() {
           )}
         </div>
 
+        {/* Quick Actions */}
+        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8">
+          <Link href="/dashboard/partner/materials">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-blue-100 p-3">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Marketing Materials</h3>
+                  <p className="text-sm text-slate-600">Download flyers, templates & more</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/referrals">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-emerald-100 p-3">
+                  <Users className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">View All Referrals</h3>
+                  <p className="text-sm text-slate-600">Track and filter your referrals</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/leads">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-purple-100 p-3">
+                  <TrendingUp className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Lead Management</h3>
+                  <p className="text-sm text-slate-600">Track applications & bookings</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/commissions">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-green-100 p-3">
+                  <DollarSign className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Commission Reports</h3>
+                  <p className="text-sm text-slate-600">View revenue and earnings</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/training">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-indigo-100 p-3">
+                  <BookOpen className="h-6 w-6 text-indigo-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Training Resources</h3>
+                  <p className="text-sm text-slate-600">Guides, tutorials & FAQs</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/landing-pages">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-teal-100 p-3">
+                  <Globe className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Landing Pages</h3>
+                  <p className="text-sm text-slate-600">Create co-branded pages</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/analytics">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-indigo-100 p-3">
+                  <TrendingUp className="h-6 w-6 text-indigo-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Analytics</h3>
+                  <p className="text-sm text-slate-600">View performance trends</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/payouts">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-emerald-100 p-3">
+                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Payouts</h3>
+                  <p className="text-sm text-slate-600">Cash out your points</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/forum">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-orange-100 p-3">
+                  <MessageSquare className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Directors Circle</h3>
+                  <p className="text-sm text-slate-600">Partner community forum</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Recent Referrals */}
         <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-200 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
             <h2 className="text-lg font-semibold text-slate-900">Recent Referrals</h2>
+            <Link
+              href="/dashboard/partner/referrals"
+              className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+            >
+              View All
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           {referralsLoading ? (
