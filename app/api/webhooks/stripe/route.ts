@@ -472,6 +472,15 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
     // Find partner by referral code
     const partner = await prisma.partnerProfile.findUnique({
       where: { referralCode },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!partner) {
@@ -482,6 +491,16 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
     // Get booking to calculate points
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
+      include: {
+        package: true,
+        trip: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
     });
 
     if (!booking) {
@@ -500,8 +519,8 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
       },
     });
 
-    // Update partner's total points
-    await prisma.partnerProfile.update({
+    // Get updated partner profile with new points balance
+    const updatedPartner = await prisma.partnerProfile.update({
       where: { id: partner.id },
       data: {
         passportPoints: {
@@ -513,6 +532,40 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
     console.log(
       `Awarded ${pointsEarned} points to partner ${partner.id} for booking ${bookingId}`
     );
+
+    // E11-S9: Send partner booking notification
+    try {
+      const { sendPartnerBookingNotification, calculateBookingsUntilNextTier } =
+        await import('@/lib/notifications/partner-notifications');
+
+      // Get total confirmed bookings for tier progress
+      const totalBookings = await prisma.partnerReferral.count({
+        where: { partnerId: partner.id },
+      });
+
+      const tierProgress = calculateBookingsUntilNextTier(totalBookings, updatedPartner.tier);
+
+      await sendPartnerBookingNotification(partner.id, partner.user.id, {
+        partnerName: partner.user.firstName || 'Partner',
+        partnerEmail: partner.user.email,
+        guestName: `${booking.user.firstName} ${booking.user.lastName}`,
+        bookingReference: booking.bookingReference || bookingId.slice(-8).toUpperCase(),
+        packageName: booking.package.name,
+        tripDates: {
+          start: booking.trip?.startDate?.toISOString() || new Date().toISOString(),
+          end: booking.trip?.endDate?.toISOString() || new Date().toISOString(),
+        },
+        totalValue: booking.totalPrice,
+        pointsEarned,
+        newPointsBalance: updatedPartner.passportPoints,
+        currentTier: updatedPartner.tier,
+        bookingsUntilNextTier: tierProgress?.bookingsNeeded,
+        nextTier: tierProgress?.nextTier,
+      });
+    } catch (notificationError) {
+      console.error('Error sending partner booking notification:', notificationError);
+      // Non-blocking - don't throw
+    }
   } catch (error) {
     console.error('Error awarding partner points:', error);
   }

@@ -56,6 +56,13 @@ enum NotificationType {
   PAYMENT_RECEIPT
   TRIP_REMINDER
   GENERAL
+  // Partner notifications (E11-S9)
+  REFERRAL_CLICK
+  REFERRAL_APPLICATION
+  REFERRAL_BOOKING
+  POINTS_EARNED
+  TIER_CHANGE
+  COMMISSION_AVAILABLE
 }
 
 enum DocumentType {
@@ -235,6 +242,9 @@ model PartnerProfile {
   tier          PartnerTier   @default(BRONZE)
   passportPoints Int          @default(0)
   onboardingCompleted Boolean @default(false) // E9-S14: Onboarding wizard
+
+  // Notification Preferences (E11-S9)
+  notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

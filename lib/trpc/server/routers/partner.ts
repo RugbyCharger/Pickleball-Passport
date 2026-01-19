@@ -1902,6 +1902,45 @@ export const partnerRouter = router({
       onboardingCompleted: updated.onboardingCompleted,
     }
   }),
+
+  /**
+   * Update partner notification preferences
+   * E11-S9: Partner Notification System
+   */
+  updateNotificationPreferences: partnerProcedure
+    .input(
+      z.object({
+        preferences: z.record(z.boolean()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const updated = await ctx.db.partnerProfile.update({
+        where: {
+          id: profile.id,
+        },
+        data: {
+          notificationPreferences: input.preferences,
+        },
+      })
+
+      return {
+        success: true,
+        preferences: updated.notificationPreferences,
+      }
+    }),
 })
 
 /**
