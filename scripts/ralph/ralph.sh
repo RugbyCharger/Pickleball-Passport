@@ -62,7 +62,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
 
   # Run Claude Code CLI with the ralph prompt
   cd "$PROJECT_ROOT"
-  OUTPUT=$(claude -m "$(cat "$SCRIPT_DIR/prompt.md")" 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(claude --print "$(cat "$SCRIPT_DIR/prompt.md")" 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
