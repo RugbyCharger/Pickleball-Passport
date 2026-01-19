@@ -1,0 +1,49 @@
+'use client'
+
+/**
+ * Notification Bell Component
+ * E11-S7: In-App Notifications
+ *
+ * Displays notification bell icon with unread count badge
+ * Clicking navigates to notifications page
+ */
+
+import { Bell } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { trpc } from '@/lib/trpc/client'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
+export function NotificationBell() {
+  const router = useRouter()
+  const { data: counts, refetch } = trpc.notification.getCounts.useQuery(undefined, {
+    refetchInterval: 30000, // Poll every 30 seconds for new notifications
+  })
+
+  const unreadCount = counts?.unread ?? 0
+  const hasUnread = unreadCount > 0
+
+  const handleClick = () => {
+    router.push('/dashboard/notifications')
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="relative"
+      onClick={handleClick}
+      aria-label={`Notifications${hasUnread ? ` (${unreadCount} unread)` : ''}`}
+    >
+      <Bell className={cn('h-5 w-5', hasUnread && 'text-primary')} />
+      {hasUnread && (
+        <span
+          className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white"
+          aria-label={`${unreadCount} unread notifications`}
+        >
+          {unreadCount > 99 ? '99+' : unreadCount}
+        </span>
+      )}
+    </Button>
+  )
+}
