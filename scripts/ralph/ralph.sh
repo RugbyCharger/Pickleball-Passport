@@ -60,9 +60,9 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "  Ralph Iteration $i of $MAX_ITERATIONS"
   echo "═══════════════════════════════════════════════════════"
 
-  # Run Claude Code CLI with the ralph prompt
+  # Run Claude Code CLI with the ralph prompt (bypass permissions for autonomous operation)
   cd "$PROJECT_ROOT"
-  OUTPUT=$(claude --print "$(cat "$SCRIPT_DIR/prompt.md")" 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(claude --print --dangerously-skip-permissions "$(cat "$SCRIPT_DIR/prompt.md")" 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
