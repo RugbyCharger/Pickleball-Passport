@@ -1,13 +1,14 @@
 #!/bin/bash
-# Ralph Wiggum - Long-running AI agent loop
+# Ralph Wiggum - Long-running AI agent loop (Claude Code Edition)
 # Usage: ./ralph.sh [max_iterations]
 
 set -e
 
 MAX_ITERATIONS=${1:-10}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PRD_FILE="$SCRIPT_DIR/prd.json"
-PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PRD_FILE="$PROJECT_ROOT/prd-payment-retry.json"
+PROGRESS_FILE="$PROJECT_ROOT/progress.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
 LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
 
@@ -58,10 +59,11 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "═══════════════════════════════════════════════════════"
   echo "  Ralph Iteration $i of $MAX_ITERATIONS"
   echo "═══════════════════════════════════════════════════════"
-  
-  # Run amp with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
-  
+
+  # Run Claude Code CLI with the ralph prompt
+  cd "$PROJECT_ROOT"
+  OUTPUT=$(claude -m "$(cat "$SCRIPT_DIR/prompt.md")" 2>&1 | tee /dev/stderr) || true
+
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
     echo ""
@@ -69,7 +71,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
     echo "Completed at iteration $i of $MAX_ITERATIONS"
     exit 0
   fi
-  
+
   echo "Iteration $i complete. Continuing..."
   sleep 2
 done
