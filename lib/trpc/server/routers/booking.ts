@@ -1504,6 +1504,26 @@ export const bookingRouter = router({
       // TODO: Implement email sending in Task 4
       // sendCancellationEmail(booking, refundAmount).catch(err => logError(emailLogger, err, 'Failed to send cancellation email'))
 
+      // Story 11-8: Send admin cancellation alert (non-blocking)
+      const { sendBookingCancellationAlert, isAdminAlertsConfigured } = await import('@/lib/email/admin-alerts')
+      if (isAdminAlertsConfigured()) {
+        sendBookingCancellationAlert({
+          customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+          customerEmail: user.emailAddresses?.[0]?.emailAddress || '',
+          bookingReference: booking.bookingReference,
+          bookingId: booking.id,
+          cancellationReason: undefined, // Add input field if needed
+          packageName: booking.package.name,
+          tripName: booking.trip?.name || '',
+          tripStartDate: booking.trip?.startDate?.toISOString() || '',
+          totalBookingValue: totalPriceForRefund,
+          refundAmount: refundAmount,
+          refundStatus: 'pending',
+          daysUntilTrip: daysUntilTrip,
+          bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`
+        }).catch(err => logError(emailLogger, err, 'Failed to send cancellation admin alert'))
+      }
+
       return {
         success: true,
         refundAmount,

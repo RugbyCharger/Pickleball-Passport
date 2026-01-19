@@ -357,6 +357,27 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
           amountPaid,
           installmentSchedule,
         });
+
+        // Story 11-8: Send high-value booking alert (non-blocking)
+        const { sendHighValueBookingAlert, getHighValueThreshold, isAdminAlertsConfigured } = await import('@/lib/email/admin-alerts')
+        if (isAdminAlertsConfigured() && booking.totalPrice >= getHighValueThreshold()) {
+          const addOnNames = booking.bookingAddOns.map(ba => ba.addOn.name)
+          sendHighValueBookingAlert({
+            customerName: guestFirstName,
+            customerEmail: booking.user.email,
+            customerLocation: undefined, // Add if available
+            bookingReference: booking.bookingReference,
+            bookingId: booking.id,
+            packageName: booking.package.name,
+            tripName: booking.trip?.name || '',
+            tripStartDate: booking.trip?.startDate?.toISOString() || '',
+            addOns: addOnNames,
+            totalBookingValue: booking.totalPrice,
+            paymentMethod: isInstallmentPlan ? 'installments' : 'full_payment',
+            installmentPlan: isInstallmentPlan ? '4 monthly installments' : undefined,
+            bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`
+          }).catch(err => console.error('Failed to send high-value booking alert:', err))
+        }
       }
     }
 

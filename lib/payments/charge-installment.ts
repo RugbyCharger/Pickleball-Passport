@@ -12,7 +12,6 @@ import { getStripe } from '@/lib/stripe/get-stripe'
 import { isTransientError, isPermanentError, getNextRetryDate } from './retry-calculator'
 import { sendEmail } from '@/lib/email/send-email'
 import { generateInstallmentReminderEmail } from '@/lib/email/templates/installment-payment-reminder'
-import { generateInstallmentFailureAdminEmail } from '@/lib/email/templates/installment-failure-admin'
 import { paymentLogger, logError } from '@/lib/logger'
 
 export interface ChargeInstallmentInput {
@@ -269,6 +268,7 @@ async function sendCustomerReminder(
 
 /**
  * Send admin alert for permanently failed payment
+ * Story 11-8: Uses centralized admin-alerts service
  */
 async function sendAdminAlert(
   paymentRecord: any,
@@ -307,18 +307,11 @@ async function sendAdminAlert(
       customerDashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
     }
 
-    const { html, text, subject } = generateInstallmentFailureAdminEmail(emailData)
+    // Use centralized admin alerts service (Story 11-8)
+    const { sendPaymentFailureAlert } = await import('@/lib/email/admin-alerts')
+    await sendPaymentFailureAlert(emailData)
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@pickleballpassport.com'
-
-    await sendEmail({
-      to: adminEmail,
-      subject,
-      html,
-      text,
-    })
-
-    paymentLogger.info({ adminEmail }, 'Admin alert sent')
+    paymentLogger.info('Payment failure admin alert sent via admin-alerts service')
   } catch (error) {
     logError(paymentLogger, error, 'Error sending admin alert')
     // Don't throw - email failure shouldn't break payment processing
