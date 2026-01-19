@@ -220,7 +220,7 @@ development_status:
   11-5-payment-receipt-email: done
   11-6-sms-notifications-twilio: backlog
   11-7-in-app-notifications: backlog
-  11-8-admin-email-alerts: backlog
+  11-8-admin-email-alerts: ready-for-dev
   11-9-partner-notification-system: backlog
   11-10-group-chat-integration-whatsapp: backlog
   11-11-email-template-management: backlog
