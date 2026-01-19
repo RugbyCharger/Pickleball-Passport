@@ -56,6 +56,39 @@ export interface SendEmailOptions {
 
 /**
  * Send an email using SendGrid
+ *
+ * IMPORTANT: For optional (non-transactional) emails, check user preferences BEFORE calling this function:
+ *
+ * @example
+ * // For marketing emails
+ * import { canSendNotification } from '@/lib/preferences/user-preferences';
+ *
+ * if (!(await canSendNotification(userId, 'emailMarketing'))) {
+ *   emailLogger.info({ userId }, 'User opted out of marketing emails');
+ *   return;
+ * }
+ *
+ * await sendEmail({
+ *   to: userEmail,
+ *   subject: 'Special offer!',
+ *   html: emailHtml,
+ *   userId,
+ *   isMarketing: true, // Enables List-Unsubscribe header
+ * });
+ *
+ * @example
+ * // For post-trip follow-up
+ * if (!(await canSendNotification(userId, 'emailPostTripFollowUp'))) {
+ *   return;
+ * }
+ *
+ * @example
+ * // For alumni events
+ * if (!(await canSendNotification(userId, 'emailAlumniEvents'))) {
+ *   return;
+ * }
+ *
+ * Transactional emails (booking confirmations, payment receipts, etc.) should NEVER check preferences.
  */
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
   const sgMail = await getSgMail();
