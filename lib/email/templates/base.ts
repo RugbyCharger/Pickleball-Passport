@@ -9,6 +9,7 @@ export interface EmailTemplateProps {
   content: string;
   preheader?: string;
   footerText?: string;
+  preferenceToken?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ export function baseEmailTemplate({
   content,
   preheader = '',
   footerText = 'You received this email because you signed up for Pickleball Passport.',
+  preferenceToken,
 }: EmailTemplateProps): string {
   return `
 <!DOCTYPE html>
@@ -128,9 +130,28 @@ export function baseEmailTemplate({
           <tr>
             <td class="footer">
               <p style="margin: 0 0 8px 0;">${footerText}</p>
+
+              ${
+                preferenceToken
+                  ? `
+              <p style="margin: 0 0 16px 0;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/preferences?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
+                  Manage Preferences
+                </a>
+                |
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/unsubscribe?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
+                  Unsubscribe
+                </a>
+              </p>
+              `
+                  : ''
+              }
+
               <p style="margin: 0; font-size: 12px;">
                 © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.<br>
-                Chiang Mai, Thailand
+                Pickleball Passport LLC<br>
+                123 Main Street, Suite 100<br>
+                Chiang Mai, Thailand 50200
               </p>
             </td>
           </tr>
