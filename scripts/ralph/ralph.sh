@@ -7,8 +7,8 @@ set -e
 MAX_ITERATIONS=${1:-10}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PRD_FILE="$PROJECT_ROOT/prd-payment-retry.json"
-PROGRESS_FILE="$PROJECT_ROOT/progress.txt"
+PRD_FILE="$PROJECT_ROOT/prd-gift-state-machine.json"
+PROGRESS_FILE="$PROJECT_ROOT/progress-gift.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
 LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
 
