@@ -1,0 +1,47 @@
+## Codebase Patterns
+
+### General Patterns (from payment-retry implementation)
+- Use `sql<number>` template for aggregations in Prisma raw queries
+- Always use `IF NOT EXISTS` for migrations
+- Export types from actions.ts for UI components
+- State machines should be in dedicated files under lib/[domain]/
+- Test files go in __tests__ subdirectories
+- Use Vitest for testing with vi.mock() for mocking
+- Follow existing enum patterns in prisma/schema.prisma
+
+### Gift-Specific Patterns (discovered during exploration)
+- Gift states: PENDING, SENT, ACCEPTED, DECLINED (adding EXPIRED)
+- Gift tokens are UUIDs stored in giftAcceptanceToken field
+- 90-day token expiration is currently hardcoded in gift.ts
+- Gift emails use templates in lib/email/templates/gift-*.ts
+- Refunds use Stripe via existing refund utilities
+
+### Key Files for Gift State Machine
+- Schema: prisma/schema.prisma (GiftStatus enum at line 128-133)
+- Router: lib/trpc/server/routers/gift.ts
+- Tests: lib/trpc/server/routers/__tests__/gift.test.ts
+- Cron: app/api/cron/send-scheduled-gifts/route.ts
+- Email templates: lib/email/templates/gift-*.ts
+
+---
+
+## 2026-01-20 - Initial Setup
+Iteration: 0 (Setup)
+- Created prd-gift-state-machine.json with 8 stories
+- Created ralph/gift-state-machine branch
+- Updated scripts/ralph/prompt.md to point to new PRD
+- Explored existing gift implementation
+
+**Current Gift Flow:**
+1. PENDING: Gift created, waiting to send
+2. SENT: Email sent to recipient (via cron or immediate)
+3. ACCEPTED: Recipient accepted, booking transferred
+4. DECLINED: Recipient declined, refund processed
+
+**State Machine Will Add:**
+- EXPIRED state for auto-expiration
+- Centralized transition validation
+- Audit trail via GiftStateTransition table
+- Automatic expiration cron job
+
+---
