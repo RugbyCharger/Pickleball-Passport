@@ -9,8 +9,15 @@ import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure, adminProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { checkRateLimit, getIpAddress } from '@/lib/rate-limit';
-import { apiLogger, dbLogger, logError } from '@/lib/logger';
+import { apiLogger, dbLogger, emailLogger, logError } from '@/lib/logger';
 import { nanoid } from 'nanoid';
+import {
+  sendTicketCreatedEmail,
+  sendTicketAdminNotification,
+  sendTicketReplyEmail,
+  sendTicketResolvedEmail,
+  isConfigured as isEmailConfigured,
+} from '@/lib/email/sendgrid';
 
 /**
  * Generate a unique reference number for support tickets
@@ -234,8 +241,40 @@ export const supportRouter = router({
           'Public support ticket created'
         );
 
-        // TODO: Send confirmation email to user (US-004)
-        // TODO: Send notification email to admin (US-004)
+        // Send emails non-blocking (don't wait for them to complete)
+        if (isEmailConfigured()) {
+          // Send confirmation email to user
+          sendTicketCreatedEmail(normalizedEmail, {
+            name,
+            email: normalizedEmail,
+            referenceNumber,
+            category,
+            message,
+            source: 'WEBSITE_CONTACT',
+          }).catch((error) => {
+            logError(emailLogger, error, 'Failed to send ticket created email', {
+              referenceNumber,
+              email: normalizedEmail,
+            });
+          });
+
+          // Send notification email to admin
+          sendTicketAdminNotification({
+            referenceNumber,
+            name,
+            email: normalizedEmail,
+            phone: phone || null,
+            category,
+            message,
+            priority: 'NORMAL',
+            source: 'WEBSITE_CONTACT',
+            createdAt: ticket.createdAt,
+          }).catch((error) => {
+            logError(emailLogger, error, 'Failed to send ticket admin notification', {
+              referenceNumber,
+            });
+          });
+        }
 
         return {
           success: true,
@@ -320,8 +359,39 @@ export const supportRouter = router({
         'Guest support ticket created'
       );
 
-      // TODO: Send email notification to admin (US-004)
-      // TODO: Send confirmation email to user (US-004)
+      // Send emails non-blocking (don't wait for them to complete)
+      if (isEmailConfigured()) {
+        // Send confirmation email to user
+        sendTicketCreatedEmail(userEmail, {
+          name: userName || 'Guest',
+          email: userEmail,
+          referenceNumber,
+          category: input.category,
+          message: input.message,
+          source: 'GUEST_DASHBOARD',
+        }).catch((error) => {
+          logError(emailLogger, error, 'Failed to send ticket created email', {
+            referenceNumber,
+            email: userEmail,
+          });
+        });
+
+        // Send notification email to admin
+        sendTicketAdminNotification({
+          referenceNumber,
+          name: userName || 'Guest',
+          email: userEmail,
+          category: input.category,
+          message: input.message,
+          priority: input.priority,
+          source: 'GUEST_DASHBOARD',
+          createdAt: ticket.createdAt,
+        }).catch((error) => {
+          logError(emailLogger, error, 'Failed to send ticket admin notification', {
+            referenceNumber,
+          });
+        });
+      }
 
       return {
         ...ticket,
@@ -682,7 +752,28 @@ export const supportRouter = router({
         'Admin replied to support ticket'
       );
 
-      // TODO: Send email notification to user (US-004)
+      // Send email notification to ticket submitter (non-blocking)
+      if (isEmailConfigured() && ticket.email) {
+        const adminName =
+          reply.user?.firstName && reply.user?.lastName
+            ? `${reply.user.firstName} ${reply.user.lastName}`
+            : 'Pickleball Passport Support';
+
+        sendTicketReplyEmail(ticket.email, {
+          name: ticket.name || 'Guest',
+          email: ticket.email,
+          referenceNumber: ticket.referenceNumber,
+          adminName,
+          replyMessage: input.message,
+          originalSubject: ticket.subject,
+          source: ticket.source,
+        }).catch((error) => {
+          logError(emailLogger, error, 'Failed to send ticket reply email', {
+            referenceNumber: ticket.referenceNumber,
+            email: ticket.email,
+          });
+        });
+      }
 
       return reply;
     }),
@@ -737,7 +828,26 @@ export const supportRouter = router({
         'Admin updated ticket status'
       );
 
-      // TODO: Send email notification to user (US-004)
+      // Send email notification when ticket is resolved (non-blocking)
+      if (
+        isEmailConfigured() &&
+        ticket.email &&
+        input.status === 'RESOLVED' &&
+        ticket.status !== 'RESOLVED'
+      ) {
+        sendTicketResolvedEmail(ticket.email, {
+          name: ticket.name || 'Guest',
+          email: ticket.email,
+          referenceNumber: ticket.referenceNumber,
+          originalSubject: ticket.subject,
+          source: ticket.source,
+        }).catch((error) => {
+          logError(emailLogger, error, 'Failed to send ticket resolved email', {
+            referenceNumber: ticket.referenceNumber,
+            email: ticket.email,
+          });
+        });
+      }
 
       return updatedTicket;
     }),
