@@ -94,6 +94,22 @@ enum TicketPriority {
   URGENT
 }
 
+enum TicketCategory {
+  GENERAL_INQUIRY
+  BOOKING_QUESTION
+  MEDICAL_WELLNESS_QUESTION
+  PAYMENT_ISSUE
+  PARTNERSHIP_INQUIRY
+  OTHER
+}
+
+enum TicketSource {
+  WEBSITE_CONTACT
+  GUEST_DASHBOARD
+  ADMIN_CREATED
+  EMAIL
+}
+
 enum ForumCategory {
   BEST_PRACTICES
   SUCCESS_STORIES
@@ -177,6 +193,11 @@ model User {
   bookings       Booking[]
   notifications  Notification[]
   testimonials   Testimonial[]
+
+  // Support System (E1-S12)
+  supportTickets         SupportTicket[]       // Tickets created by this user
+  assignedTickets        SupportTicket[]       @relation("AssignedTickets") // Tickets assigned to admin
+  supportTicketReplies   SupportTicketReply[]  // Replies from this user
 
   @@index([email])
   @@index([role])
@@ -424,6 +445,7 @@ model Booking {
   referral        PartnerReferral?
   reminderHistory ReminderHistory[]
   tasks           Task[]
+  supportTickets  SupportTicket[] // E1-S12: Support tickets linked to this booking
 
   // Companion booking relationships
   primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
@@ -912,17 +934,93 @@ model Document {
 // ============================================================================
 
 model SupportTicket {
-  id        String         @id @default(cuid())
-  userId    String
-  subject   String
-  message   String         @db.Text
-  status    TicketStatus   @default(OPEN)
-  priority  TicketPriority @default(NORMAL)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id              String          @id @default(cuid())
+  referenceNumber String          @unique // Format: TKT-{nanoid(8)}
+
+  // Ticket Content
+  subject         String
+  message         String          @db.Text
+
+  // Classification
+  category        TicketCategory  @default(GENERAL_INQUIRY)
+  source          TicketSource    @default(WEBSITE_CONTACT)
+  status          TicketStatus    @default(OPEN)
+  priority        TicketPriority  @default(NORMAL)
+
+  // Contact Information (email required, others optional for public submissions)
+  email           String
+  name            String?
+  phone           String?
+
+  // Optional User Relations
+  userId          String?         // Null for public/unauthenticated submissions
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Optional Booking Relation
+  bookingId       String?
+  booking         Booking?        @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  // Assignment (admin handling the ticket)
+  assignedToId    String?
+  assignedTo      User?           @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  // Resolution
+  resolvedAt      DateTime?
+
+  // Timestamps
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relationships
+  replies         SupportTicketReply[]
+  attachments     SupportTicketAttachment[]
 
   @@index([userId])
+  @@index([assignedToId])
+  @@index([bookingId])
   @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([source])
+  @@index([email])
+  @@index([referenceNumber])
+  @@index([createdAt])
+}
+
+model SupportTicketReply {
+  id            String         @id @default(cuid())
+  ticketId      String
+  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // Reply author (can be guest user or admin)
+  userId        String?
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Reply content
+  message       String         @db.Text
+  isAdminReply  Boolean        @default(false)
+
+  createdAt     DateTime       @default(now())
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SupportTicketAttachment {
+  id            String         @id @default(cuid())
+  ticketId      String
+  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // File information
+  fileName      String
+  fileUrl       String         // Supabase Storage URL
+  fileSize      Int            // Bytes
+  mimeType      String
+
+  createdAt     DateTime       @default(now())
+
+  @@index([ticketId])
   @@index([createdAt])
 }
 

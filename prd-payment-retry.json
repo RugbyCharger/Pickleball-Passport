@@ -1,0 +1,104 @@
+{
+  "project": "Pickleball Passport",
+  "branchName": "ralph/payment-retry-improvements",
+  "description": "Payment Retry Loop Improvements - Enhance reliability and maintainability of installment payment retry system",
+  "userStories": [
+    {
+      "id": "PR-001",
+      "title": "Add payment retry state enum to database schema",
+      "description": "As a developer, I need explicit payment retry states so the system can track payment lifecycle clearly.",
+      "acceptanceCriteria": [
+        "Add PaymentRetryState enum to schema: NEW | PROCESSING | RETRYING | SUCCEEDED | FAILED_PERMANENT",
+        "Add retryState field to PaymentRecord model (defaults to NEW)",
+        "Generate and run Prisma migration successfully",
+        "Typecheck passes with 'npm run typecheck'"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PR-002",
+      "title": "Create payment retry state machine helper",
+      "description": "As a developer, I need a state machine to manage payment state transitions safely.",
+      "acceptanceCriteria": [
+        "Create lib/payments/payment-state-machine.ts with typed state transitions",
+        "Function validateTransition(fromState, toState) returns boolean",
+        "Function getNextState(currentState, result) returns new state",
+        "Function getAllowedTransitions(currentState) returns valid next states",
+        "Unit tests cover all state transitions",
+        "Tests pass with 'npm run test'",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PR-003",
+      "title": "Refactor chargeInstallment to use state machine",
+      "description": "As a developer, I need the payment charging logic to use the state machine for consistency.",
+      "acceptanceCriteria": [
+        "Update lib/payments/charge-installment.ts to import and use state machine",
+        "Replace manual status updates with state machine transitions",
+        "Update retryState field instead of just status field",
+        "Log state transitions for debugging",
+        "Existing tests still pass",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PR-004",
+      "title": "Add payment retry metrics tracking",
+      "description": "As a developer, I need metrics to understand retry patterns and optimize the system.",
+      "acceptanceCriteria": [
+        "Create lib/payments/retry-metrics.ts module",
+        "Track: total retries attempted, success rate by attempt number, common failure reasons",
+        "Function recordRetryAttempt(paymentId, attemptNumber, result, errorCode)",
+        "Function getRetryMetrics() returns aggregated metrics",
+        "Metrics stored in database (create RetryMetrics table if needed)",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PR-005",
+      "title": "Add admin dashboard for retry monitoring",
+      "description": "As an admin, I want to see payment retry status at a glance.",
+      "acceptanceCriteria": [
+        "Create app/admin/payments/retries/page.tsx",
+        "Display payments in RETRYING state with: booking reference, attempt count, next retry date, failure reason",
+        "Display retry metrics: total retries this week, success rate, most common failures",
+        "Add filter by retry state",
+        "Add manual retry button for admins",
+        "Typecheck passes",
+        "Verify in browser at /admin/payments/retries"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PR-006",
+      "title": "Create AGENTS.md with payment retry patterns",
+      "description": "As a developer, I need documentation of payment retry patterns for future work.",
+      "acceptanceCriteria": [
+        "Create lib/payments/AGENTS.md",
+        "Document state machine pattern and valid transitions",
+        "Document retry policy: 3 days, 7 days, 14 days with exponential backoff",
+        "Document transient vs permanent error codes",
+        "Document idempotency key pattern",
+        "Document common pitfalls (double charging, infinite retries, etc.)",
+        "Include code examples for common operations"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
