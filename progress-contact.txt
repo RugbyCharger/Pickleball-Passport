@@ -191,3 +191,31 @@ Iteration: 5
   - Check ticket.email exists before sending (public tickets always have email, but be safe)
   - Only send resolved email when status actually changes TO RESOLVED (not already resolved)
 ---
+
+## 2026-01-20 - US-005
+Iteration: 6
+- Implemented US-005: Public Ticket Status Page
+- Files changed:
+  - app/(marketing)/support/status/page.tsx - New public ticket status lookup page
+  - lib/trpc/server/routers/support.ts - Added getPublicTicketStatus public procedure
+  - lib/rate-limit/index.ts - Added ticketStatus rate limiter (10 per hour per email)
+- **What was implemented:**
+  - Public route `/support/status` for checking ticket status without authentication
+  - Form with reference number (TKT-XXXXXXXX format validation) and email fields
+  - Rate limiting: 10 lookups per email per hour to prevent enumeration attacks
+  - Verifies email + referenceNumber combo before showing details (security)
+  - Displays ticket info: subject, message, category, status badge, submitted date
+  - Shows admin replies only (filters out guest replies for public view)
+  - Status-specific messaging (Open: "Awaiting Response", In Progress, Resolved/Closed)
+  - Link back to contact form if ticket is closed
+  - Copy reference number button
+  - Responsive design with Tailwind, consistent with contact page styling
+  - Accessible form with ARIA labels and error handling
+- **Learnings for future iterations:**
+  - Use publicProcedure for unauthenticated endpoints
+  - Rate limit by email (not IP) for status lookups: `email:${normalizedEmail}`
+  - Filter replies with `where: { isAdminReply: true }` for public status view
+  - Don't return internal IDs or sensitive user info in public queries
+  - Use TRPCError NOT_FOUND with generic message to avoid revealing if reference exists
+  - Reference number regex: /^TKT-[A-Za-z0-9]{8}$/
+---
