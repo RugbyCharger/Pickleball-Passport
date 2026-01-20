@@ -18,7 +18,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": "Keep existing GiftStatus enum for backwards compatibility during migration. The new GiftState enum adds EXPIRED state. Migration should set giftExpiresAt for existing gifts."
     },
     {
@@ -39,7 +39,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Follow the same pattern as lib/payments/payment-state-machine.ts. Include tests for invalid transitions throwing errors."
     },
     {
@@ -62,7 +62,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Use existing email templates. Reuse refund logic from current gift.ts decline handler. Ensure idempotency for retries."
     },
     {
@@ -82,7 +82,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "This is a refactor - behavior should remain the same but now use state machine. Focus on maintaining backwards compatibility."
     },
     {
@@ -102,7 +102,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Similar pattern to charge-installments cron. Use 30-day expiration window (configurable). Include metrics tracking if time permits."
     },
     {
@@ -121,7 +121,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Refactor existing cron, don't create new one. Ensure giftExpiresAt is set correctly for time-based expiration."
     },
     {
@@ -140,7 +140,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Focus on clarity for 55+ users. Use clear labels, not just icons. Consider adding to existing booking detail modal."
     },
     {
@@ -161,7 +161,7 @@
         "TypeScript strict mode: 0 errors (for any code examples)"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Follow the pattern from lib/payments/AGENTS.md. This helps future Ralph loops and human developers understand the system."
     }
   ]

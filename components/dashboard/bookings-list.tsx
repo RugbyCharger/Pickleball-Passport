@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar, MapPin, DollarSign, Gift } from 'lucide-react'
 import { BookingStatus, GiftStatus } from '@prisma/client'
 import { LinkedBookingCard } from './linked-booking-card'
+import { GiftStatusBadge } from './gift-state-timeline'
 
 interface Booking {
   id: string
@@ -34,6 +35,7 @@ interface Booking {
   giftRecipientName: string | null
   giftPurchaserId: string | null
   giftAcceptedAt: Date | null
+  giftExpiresAt: Date | null
   package: {
     name: string
     slug: string
@@ -265,20 +267,21 @@ export function BookingsList({ bookings }: BookingsListProps) {
                         </div>
                       )}
 
-                      {/* Gift Status */}
+                      {/* Gift Status with Expiration Countdown (GS-007) */}
                       {booking.isGift && booking.giftStatus && booking.giftPurchaserId && (
                         <div className="pt-2 border-t">
-                          <p className="text-xs text-muted-foreground">
-                            <span className="font-medium">Gift Status:</span>{' '}
-                            <Badge variant={getGiftStatusVariant(booking.giftStatus)} className="ml-1">
-                              {getGiftStatusLabel(booking.giftStatus)}
-                            </Badge>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                            <span className="font-medium">Gift Status:</span>
+                            <GiftStatusBadge
+                              currentState={booking.giftStatus}
+                              expiresAt={booking.giftExpiresAt?.toISOString()}
+                            />
                             {booking.giftAcceptedAt && (
-                              <span className="ml-2">
+                              <span className="text-green-600">
                                 Accepted {new Date(booking.giftAcceptedAt).toLocaleDateString()}
                               </span>
                             )}
-                          </p>
+                          </div>
                         </div>
                       )}
                     </div>

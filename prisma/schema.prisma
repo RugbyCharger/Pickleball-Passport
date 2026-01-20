@@ -132,6 +132,16 @@ enum GiftStatus {
   DECLINED  // Recipient declined gift, refund processed
 }
 
+// Gift State Machine (GS-001)
+// New enum for state machine with EXPIRED state
+enum GiftState {
+  PENDING   // Payment complete, waiting to send notification
+  SENT      // Gift notification email sent to recipient
+  ACCEPTED  // Recipient accepted gift, booking transferred (terminal)
+  DECLINED  // Recipient declined gift, refund processed (terminal)
+  EXPIRED   // Gift expired after 30 days without response (terminal)
+}
+
 enum TaskPriority {
   URGENT
   IMPORTANT
@@ -410,6 +420,10 @@ model Booking {
   giftStatus          GiftStatus @default(PENDING) // PENDING, SENT, ACCEPTED, DECLINED
   giftAcceptanceToken String?    @unique // Unique token for secure gift acceptance
 
+  // Gift State Machine (GS-001)
+  giftStateChangedAt  DateTime? // Timestamp of last state transition
+  giftExpiresAt       DateTime? // When gift expires (giftDeliveryDate + 30 days or createdAt + 30 days)
+
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
 
@@ -417,13 +431,14 @@ model Booking {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookingAddOns   BookingAddOn[]
-  payments        Payment[]
-  paymentRecords  PaymentRecord[] // E4-S6: Installment payment tracking
-  documents       Document[]
-  referral        PartnerReferral?
-  reminderHistory ReminderHistory[]
-  tasks           Task[]
+  bookingAddOns        BookingAddOn[]
+  payments             Payment[]
+  paymentRecords       PaymentRecord[] // E4-S6: Installment payment tracking
+  documents            Document[]
+  referral             PartnerReferral?
+  reminderHistory      ReminderHistory[]
+  tasks                Task[]
+  giftStateTransitions GiftStateTransition[] // GS-001: Gift state audit trail
 
   // Companion booking relationships
   primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
@@ -439,6 +454,7 @@ model Booking {
   @@index([giftAcceptanceToken])
   @@index([giftStatus])
   @@index([giftDeliveryDate])
+  @@index([giftExpiresAt]) // GS-001: For expiration cron queries
 }
 
 model AddOn {
@@ -984,6 +1000,29 @@ model RefundLog {
   @@index([paymentId])
   @@index([stripeRefundId])
   @@index([processedAt])
+}
+
+// ============================================================================
+// GIFT STATE TRANSITIONS (GS-001)
+// ============================================================================
+
+model GiftStateTransition {
+  id        String    @id @default(cuid())
+  bookingId String
+  booking   Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  fromState GiftState // Previous state (PENDING, SENT, etc.)
+  toState   GiftState // New state
+
+  reason    String    // Human-readable reason for transition
+  metadata  Json?     // Additional context (triggeredBy, etc.)
+
+  createdAt DateTime  @default(now())
+
+  @@index([bookingId])
+  @@index([createdAt])
+  @@index([fromState])
+  @@index([toState])
 }
 
 // ============================================================================
