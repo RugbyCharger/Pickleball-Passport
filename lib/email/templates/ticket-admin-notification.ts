@@ -6,6 +6,7 @@
  */
 
 import { baseEmailTemplate, generatePlainText } from './base'
+import { escapeHtml, escapeHtmlAttr } from '@/lib/utils/html-escape'
 
 export interface TicketAdminNotificationData {
   referenceNumber: string
@@ -125,12 +126,12 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="padding: 4px 0; font-weight: 500; color: #374151; width: 80px;">Name:</td>
-          <td style="padding: 4px 0; color: #1f2937;">${name}</td>
+          <td style="padding: 4px 0; color: #1f2937;">${escapeHtml(name)}</td>
         </tr>
         <tr>
           <td style="padding: 4px 0; font-weight: 500; color: #374151;">Email:</td>
           <td style="padding: 4px 0;">
-            <a href="mailto:${email}" style="color: #003D5C; text-decoration: none;">${email}</a>
+            <a href="mailto:${escapeHtmlAttr(email)}" style="color: #003D5C; text-decoration: none;">${escapeHtml(email)}</a>
           </td>
         </tr>
         ${
@@ -138,7 +139,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
             ? `
         <tr>
           <td style="padding: 4px 0; font-weight: 500; color: #374151;">Phone:</td>
-          <td style="padding: 4px 0; color: #1f2937;">${phone}</td>
+          <td style="padding: 4px 0; color: #1f2937;">${escapeHtml(phone)}</td>
         </tr>
         `
             : ''
@@ -148,7 +149,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
             ? `
         <tr>
           <td style="padding: 4px 0; font-weight: 500; color: #374151;">Booking:</td>
-          <td style="padding: 4px 0; font-family: monospace; color: #1f2937;">${bookingReference}</td>
+          <td style="padding: 4px 0; font-family: monospace; color: #1f2937;">${escapeHtml(bookingReference)}</td>
         </tr>
         `
             : ''
@@ -158,7 +159,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
 
     <div style="background-color: #fffbeb; border-left: 4px solid #D4AF37; padding: 20px; margin: 24px 0; border-radius: 4px;">
       <p style="margin: 0 0 8px 0; font-weight: 600; color: #92400e;">Message:</p>
-      <p style="margin: 0; color: #78350f; white-space: pre-wrap;">${message}</p>
+      <p style="margin: 0; color: #78350f; white-space: pre-wrap;">${escapeHtml(message)}</p>
     </div>
 
     <a href="${adminUrl}" class="button" style="background-color: #003D5C;">
@@ -166,7 +167,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
     </a>
 
     <p style="margin-top: 32px; color: #6b7280; font-size: 14px;">
-      💡 Tip: This email is set up with a reply-to address, so you can click "Reply" in your email client to respond directly to ${name}.
+      💡 Tip: This email is set up with a reply-to address, so you can click "Reply" in your email client to respond directly to ${escapeHtml(name)}.
     </p>
   `
 
@@ -174,8 +175,8 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
     title: subject,
     content,
     preheader: isUrgent
-      ? `URGENT: New support ticket from ${name} requires immediate attention`
-      : `New support ticket from ${name} (${categoryLabel})`,
+      ? `URGENT: New support ticket from ${escapeHtml(name)} requires immediate attention`
+      : `New support ticket from ${escapeHtml(name)} (${categoryLabel})`,
     footerText:
       'This is an automated notification from the Pickleball Passport support system.',
   })

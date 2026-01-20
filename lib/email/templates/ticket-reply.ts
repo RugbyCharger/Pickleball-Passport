@@ -5,6 +5,7 @@
  */
 
 import { baseEmailTemplate, generatePlainText } from './base'
+import { escapeHtml } from '@/lib/utils/html-escape'
 
 export interface TicketReplyData {
   name: string
@@ -50,7 +51,7 @@ export function generateTicketReplyEmail(data: TicketReplyData): {
   const content = `
     <h1>You've Got a Reply!</h1>
 
-    <p>Hi ${name},</p>
+    <p>Hi ${escapeHtml(name)},</p>
 
     <p>Our team has responded to your support request.</p>
 
@@ -59,8 +60,8 @@ export function generateTicketReplyEmail(data: TicketReplyData): {
     </div>
 
     <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 20px; margin: 24px 0; border-radius: 4px;">
-      <p style="margin: 0 0 8px 0; font-weight: 600; color: #0369a1;">Response from ${adminName}:</p>
-      <p style="margin: 0; color: #0c4a6e; white-space: pre-wrap; line-height: 1.6;">${replyMessage}</p>
+      <p style="margin: 0 0 8px 0; font-weight: 600; color: #0369a1;">Response from ${escapeHtml(adminName)}:</p>
+      <p style="margin: 0; color: #0c4a6e; white-space: pre-wrap; line-height: 1.6;">${escapeHtml(replyMessage)}</p>
     </div>
 
     ${viewTicketSection}
