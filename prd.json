@@ -107,7 +107,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Use public procedure: support.getPublicTicketStatus. Validate email/referenceNumber combo in database."
     }
   ]
