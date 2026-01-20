@@ -29,6 +29,7 @@ import {
   Globe,
   QrCode,
   X,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -523,7 +524,7 @@ export default function PartnerDashboardPage() {
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
             </div>
-          ) : referrals && referrals.length > 0 ? (
+          ) : referrals?.referrals && referrals.referrals.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-slate-50 text-left text-xs font-medium uppercase tracking-wider text-slate-600">
@@ -537,7 +538,7 @@ export default function PartnerDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {referrals.slice(0, 10).map((referral) => (
+                  {referrals.referrals.slice(0, 10).map((referral) => (
                     <tr key={referral.id} className="hover:bg-slate-50">
                       <td className="px-6 py-4">
                         <div>

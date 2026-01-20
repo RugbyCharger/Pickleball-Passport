@@ -23,8 +23,7 @@ const getStripeClient = () => {
   }
 
   return new Stripe(apiKey, {
-    // Use supported Stripe API version; avoid future-dated versions that fail at runtime.
-    apiVersion: '2023-10-16',
+    apiVersion: '2025-12-15.clover',
     typescript: true,
   });
 };

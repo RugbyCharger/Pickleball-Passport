@@ -44,7 +44,7 @@ export function generatePartnerReferralClickEmail(data: PartnerReferralClickData
 
   const html = baseEmailTemplate({
     preheader: `${data.clickCount} ${data.clickCount === 1 ? 'person' : 'people'} clicked your referral link`,
-    heading: '🔗 Your Referral Link is Working!',
+    title: '🔗 Your Referral Link is Working!',
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

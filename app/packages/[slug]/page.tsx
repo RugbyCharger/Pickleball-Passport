@@ -10,16 +10,22 @@ interface PageProps {
 /**
  * Generate static params for all active packages
  * This enables Static Site Generation (SSG) for package detail pages
+ * Returns empty array if database is unavailable (pages render dynamically)
  */
 export async function generateStaticParams() {
-  const packages = await prisma.package.findMany({
-    where: { isActive: true },
-    select: { slug: true },
-  });
+  try {
+    const packages = await prisma.package.findMany({
+      where: { isActive: true },
+      select: { slug: true },
+    });
 
-  return packages.map((pkg) => ({
-    slug: pkg.slug,
-  }));
+    return packages.map((pkg) => ({
+      slug: pkg.slug,
+    }));
+  } catch {
+    // Database not available during build - pages will be generated on-demand
+    return [];
+  }
 }
 
 /**

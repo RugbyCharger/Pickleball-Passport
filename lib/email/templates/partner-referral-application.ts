@@ -57,7 +57,7 @@ export function generatePartnerReferralApplicationEmail(data: PartnerReferralApp
 
   const html = baseEmailTemplate({
     preheader: `${data.guestInitials} just submitted their application!`,
-    heading: '📋 New Application from Your Referral!',
+    title: '📋 New Application from Your Referral!',
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

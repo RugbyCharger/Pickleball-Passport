@@ -363,6 +363,7 @@ export default function AdminGuestsPage() {
                           id: string;
                           bookingReference: string;
                           status: 'CONFIRMED' | 'PENDING_PAYMENT' | 'CANCELLED' | string;
+                          createdAt: Date;
                           trip?: { startDate: string | null } | null;
                           totalPrice?: number | null;
                         }) => (

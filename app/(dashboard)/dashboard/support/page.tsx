@@ -295,9 +295,7 @@ export default function SupportPage() {
                     <span className="font-medium text-sm">
                       {reply.isAdminReply
                         ? 'Support Team'
-                        : reply.user
-                          ? `${reply.user.firstName || ''} ${reply.user.lastName || ''}`.trim() || 'You'
-                          : 'You'}
+                        : 'You'}
                     </span>
                     <span className="text-xs text-gray-500">
                       {formatDate(reply.createdAt)}

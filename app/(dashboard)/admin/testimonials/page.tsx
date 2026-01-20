@@ -1,21 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-type Testimonial = {
-  id: string;
-  guestName: string;
-  isFeatured: boolean;
-  isApproved: boolean;
-  packageType: string;
-  guestLocation?: string | null;
-  guestAge?: number | null;
-  thumbnailUrl?: string | null;
-  quote?: string | null;
-  viewCount?: number | null;
-  tripDate?: string | null;
-  muxPlaybackId?: string | null;
-  createdAt: string;
-};
 import { trpc } from '@/lib/trpc/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -113,7 +98,7 @@ export default function TestimonialsAdminPage() {
         </Card>
       ) : (
         <div className="grid gap-6">
-          {(testimonials ?? []).map((testimonial: Testimonial) => (
+          {(testimonials ?? []).map((testimonial) => (
             <Card key={testimonial.id}>
               <CardHeader>
                 <div className="flex items-start justify-between">

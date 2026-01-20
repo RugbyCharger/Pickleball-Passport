@@ -58,7 +58,7 @@ export function SendEmergencyAlertSMSDialog({
 
     sendSMSMutation.mutate({
       tripId,
-      message: alertMessage.trim(),
+      alertMessage: alertMessage.trim(),
       contactInfo: contactInfo.trim(),
     })
   }

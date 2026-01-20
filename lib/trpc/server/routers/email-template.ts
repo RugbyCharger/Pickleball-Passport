@@ -6,6 +6,7 @@
  */
 
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { router, adminProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import {
@@ -315,7 +316,7 @@ export const emailTemplateRouter = router({
           preheaderText: original.preheaderText,
           htmlContent: original.htmlContent,
           textContent: original.textContent,
-          variables: original.variables,
+          variables: original.variables ?? Prisma.JsonNull,
           baseTemplateId: original.baseTemplateId,
           createdBy: ctx.user.id,
           updatedBy: ctx.user.id,
@@ -444,7 +445,7 @@ export const emailTemplateRouter = router({
         textContent: z.string().optional(),
         subjectLine: z.string(),
         category: emailTemplateCategorySchema,
-        variables: z.record(z.unknown()).optional(),
+        variables: z.record(z.string(), z.unknown()).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -488,7 +489,7 @@ export const emailTemplateRouter = router({
         subjectLine: z.string().optional(),
         category: emailTemplateCategorySchema.optional(),
         recipientEmail: z.string().email('Invalid email address'),
-        testVariables: z.record(z.unknown()).optional(),
+        testVariables: z.record(z.string(), z.unknown()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

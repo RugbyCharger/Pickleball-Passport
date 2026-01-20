@@ -135,27 +135,29 @@ export default function EmailTemplateEditorPage() {
   const [showTestEmailModal, setShowTestEmailModal] = useState(false);
 
   // Fetch template if editing
-  const { isLoading: isLoadingTemplate } = trpc.emailTemplate.getById.useQuery(
+  const { data: templateData, isLoading: isLoadingTemplate } = trpc.emailTemplate.getById.useQuery(
     { id: templateId! },
     {
       enabled: !isNew && !!templateId,
-      onSuccess: (data) => {
-        if (data) {
-          setFormData({
-            name: data.name,
-            slug: data.slug,
-            description: data.description || '',
-            category: data.category as EmailTemplateCategory,
-            status: data.status as EmailTemplateStatus,
-            subjectLine: data.subjectLine,
-            preheaderText: data.preheaderText || '',
-            htmlContent: data.htmlContent,
-            textContent: data.textContent,
-          });
-        }
-      },
     }
   );
+
+  // Populate form when template data is loaded
+  useEffect(() => {
+    if (templateData && !isNew) {
+      setFormData({
+        name: templateData.name,
+        slug: templateData.slug,
+        description: templateData.description || '',
+        category: templateData.category as EmailTemplateCategory,
+        status: templateData.status as EmailTemplateStatus,
+        subjectLine: templateData.subjectLine,
+        preheaderText: templateData.preheaderText || '',
+        htmlContent: templateData.htmlContent,
+        textContent: templateData.textContent,
+      });
+    }
+  }, [templateData, isNew]);
 
   // Fetch available variables for category
   const { data: availableVariables } = trpc.emailTemplate.getVariablesForCategory.useQuery({

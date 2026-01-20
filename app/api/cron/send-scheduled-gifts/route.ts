@@ -43,7 +43,16 @@ export async function GET(request: NextRequest) {
       include: {
         package: true,
         trip: true,
-        user: true, // Purchaser
+        user: {
+          include: {
+            guestProfile: true,
+          },
+        },
+        bookingAddOns: {
+          include: {
+            addOn: true,
+          },
+        },
       },
     })
 
@@ -64,19 +73,30 @@ export async function GET(request: NextRequest) {
         const acceptanceUrl = `${baseUrl}/gift/accept?token=${gift.giftAcceptanceToken}`
 
         // Generate gift notification email
+        const packageUrl = `${baseUrl}/packages/${gift.package.slug || ''}`
+        const purchaserProfile = gift.user.guestProfile
+
         const { subject, html, text } = generateGiftNotificationRecipientEmail({
-          recipientName: gift.giftRecipientName!,
-          purchaserName: gift.user.name || 'Someone special',
+          recipientFirstName: gift.giftRecipientName!,
+          recipientEmail: gift.giftRecipientEmail!,
+          purchaserFirstName: purchaserProfile?.firstName || '',
+          purchaserLastName: purchaserProfile?.lastName || '',
+          bookingReference: gift.bookingReference,
           packageName: gift.package.name,
-          packageDescription: gift.package.tagline || '',
+          packageDescription: gift.package.description || '',
+          duration: gift.duration,
+          accommodationTier: gift.accommodationTier,
+          tripStartDate: gift.trip?.startDate?.toISOString(),
+          tripEndDate: gift.trip?.endDate?.toISOString(),
+          destination: gift.trip?.destination || 'Chiang Mai, Thailand',
+          totalValue: gift.totalPrice,
+          addOns: gift.bookingAddOns.map((a) => ({
+            name: a.addOn.name,
+            quantity: a.quantity,
+          })),
           giftMessage: gift.giftMessage || undefined,
           acceptanceUrl,
-          tripDates: gift.trip
-            ? {
-                startDate: gift.trip.startDate.toLocaleDateString(),
-                endDate: gift.trip.endDate.toLocaleDateString(),
-              }
-            : undefined,
+          packageUrl,
         })
 
         // Send gift notification email to recipient
