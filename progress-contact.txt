@@ -109,3 +109,51 @@ Iteration: 3
   - Auto-generate subject from category to simplify guest form
   - Use ctx.db.booking.findFirst with orderBy to get latest booking
 ---
+
+## 2026-01-20 - US-003
+Iteration: 4
+- Verified US-003: Support Ticket Admin Dashboard (already implemented in commit 8907d18)
+- Files implemented:
+  - app/(dashboard)/dashboard/admin/support/page.tsx - Full admin support dashboard
+  - lib/trpc/server/routers/support.ts - Admin procedures added
+- **What was implemented:**
+  - Full admin dashboard at /dashboard/admin/support (admin-only access via adminProcedure)
+  - Stats cards showing: Total, Open, In Progress, Resolved, Closed, Urgent ticket counts
+  - Ticket list view with comprehensive filters:
+    - Status filter (Open, In Progress, Resolved, Closed)
+    - Priority filter (Urgent, High, Normal, Low)
+    - Source filter (Website, Guest Portal, Admin, Email)
+    - Category filter (all TicketCategory values)
+    - Date range (From/To)
+    - Search input (searches name, email, message, subject, reference number)
+    - Clear filters button
+  - Ticket detail view with:
+    - Reference number with copy button
+    - Status and priority badges
+    - Full ticket message
+    - Category and source labels
+    - Creation date
+    - Contact info sidebar (name, email, phone)
+    - Linked booking info (if any)
+    - Timeline showing created/resolved dates
+    - Conversation section with all replies
+  - Reply form with textarea and send button
+  - Status update buttons (In Progress, Resolve, Close)
+  - Assignment dropdown (populated from adminGetAdminUsers)
+  - tRPC procedures:
+    - adminGetTickets (with filters, pagination, search)
+    - adminGetCounts (stats for dashboard)
+    - adminGetTicketDetail (full ticket with replies, attachments, relations)
+    - adminReplyToTicket (creates reply, auto-updates status to IN_PROGRESS)
+    - adminUpdateTicketStatus (with resolvedAt handling)
+    - adminAssignTicket (with admin role verification)
+    - adminGetAdminUsers (for assignment dropdown)
+  - Lint passed, dev server compiles successfully
+- **Learnings for future iterations:**
+  - Use adminProcedure for admin-only endpoints
+  - useMemo for computed filter objects to prevent unnecessary re-renders
+  - Use _count in Prisma include to get reply counts efficiently
+  - Order tickets by [priority desc, createdAt desc] for urgent-first display
+  - Auto-update ticket status to IN_PROGRESS when admin replies to OPEN ticket
+  - Set resolvedAt when status changes to RESOLVED/CLOSED, clear it when reopening
+---

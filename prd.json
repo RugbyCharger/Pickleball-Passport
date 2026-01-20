@@ -1,0 +1,114 @@
+{
+  "project": "Pickleball Passport",
+  "branchName": "ralph/contact-form-support-system",
+  "description": "Contact Form & Support System (E1-S12) - Implement comprehensive contact form and support ticket system for prospects, guests, and admins",
+  "userStories": [
+    {
+      "id": "US-000",
+      "title": "Prisma Schema Updates for Support System",
+      "description": "Enhance SupportTicket model and add required enums for the support system",
+      "acceptanceCriteria": [
+        "Add TicketCategory enum with values: GENERAL_INQUIRY, BOOKING_QUESTION, MEDICAL_WELLNESS_QUESTION, PAYMENT_ISSUE, PARTNERSHIP_INQUIRY, OTHER",
+        "Add TicketSource enum with values: WEBSITE_CONTACT, GUEST_DASHBOARD, ADMIN_CREATED, EMAIL",
+        "Enhance SupportTicket model with: category (TicketCategory), source (TicketSource), email (String), name (String?), phone (String?), bookingId (String?), assignedToId (String?), resolvedAt (DateTime?), referenceNumber (String unique)",
+        "Add SupportTicketReply model for admin/guest replies with: id, ticketId, userId, message, isAdminReply, createdAt",
+        "Add SupportTicketAttachment model for file uploads with: id, ticketId, fileName, fileUrl, fileSize, mimeType, createdAt",
+        "Add relation from SupportTicket to User for assignedTo field",
+        "Add relation from SupportTicket to Booking (optional)",
+        "Run prisma db push successfully with no errors",
+        "Generate Prisma client with no TypeScript errors"
+      ],
+      "priority": 0,
+      "passes": true,
+      "notes": "This story must be completed first as all other stories depend on the enhanced schema. Use prisma db push for development. Reference existing enum patterns in schema.prisma."
+    },
+    {
+      "id": "US-001",
+      "title": "Public Contact Form",
+      "description": "Prospects can submit inquiries from marketing site without authentication",
+      "acceptanceCriteria": [
+        "Form appears on `/contact` route (public, no auth required)",
+        "Fields: Name, Email, Phone (optional), Category (dropdown with TicketCategory values), Message, Trip Interest (dropdown), Timeline (dropdown)",
+        "Form validation: Email required, message min 20 chars, phone format validation if provided",
+        "Submit button shows loading state, success message after submission",
+        "Form submission creates SupportTicket with status=OPEN, source=WEBSITE_CONTACT",
+        "Reference number generated and displayed to user on success",
+        "Honeypot field for spam prevention (hidden field that bots fill)",
+        "Responsive design (Tailwind), accessible (ARIA labels, semantic HTML)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Use tRPC mutation: support.createPublicTicket. Generate reference number as 'TKT-' + nanoid(8). Store IP address for duplicate detection."
+    },
+    {
+      "id": "US-002",
+      "title": "Guest Support Form in Dashboard",
+      "description": "Authenticated guests can submit support requests tied to their bookings",
+      "acceptanceCriteria": [
+        "New `/dashboard/support` page accessible to guests",
+        "Form fields: Category (dropdown), Message, Priority (Normal/Urgent)",
+        "Ticket auto-links to guest's current/latest booking (if available)",
+        "Form submission shows confirmation toast with reference number",
+        "Guests can see their tickets in dashboard (readonly list with status badges)",
+        "Click on ticket shows detail view with replies",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Use tRPC mutation: support.createGuestTicket. Auto-populate email and name from session. Reuse existing UI components for consistency."
+    },
+    {
+      "id": "US-003",
+      "title": "Support Ticket Admin Dashboard",
+      "description": "Admins can view, manage, and respond to all support tickets",
+      "acceptanceCriteria": [
+        "New `/dashboard/admin/support` page (admin-only access)",
+        "Ticket list view with filters: Status, Priority, Source, Category, Date range",
+        "Ticket detail view shows: Full message, timeline of replies, guest info (if authenticated), status/priority badges",
+        "Reply form with textarea for admin responses",
+        "Inline actions: Mark In Progress, Resolve, Close",
+        "Assignment dropdown (assign to self or unassigned)",
+        "Search across ticket fields (name, email, message content, reference number)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Use tRPC: support.getTickets, support.getTicketDetail, support.replyToTicket, support.updateTicketStatus. Implement optimistic updates for status changes."
+    },
+    {
+      "id": "US-004",
+      "title": "Email Notification System",
+      "description": "Automated emails notify stakeholders of ticket activity",
+      "acceptanceCriteria": [
+        "Prospect/Guest receives confirmation email on ticket creation with reference number",
+        "Admin receives notification for new tickets",
+        "Admin receives immediate notification if Priority=URGENT",
+        "Guest receives notification when admin replies",
+        "Guest receives notification when ticket resolved",
+        "All emails include ticket reference number for tracking",
+        "All emails use existing SendGrid infrastructure"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Use existing email service patterns. Create email templates for: ticket-created, ticket-admin-notification, ticket-reply, ticket-resolved."
+    },
+    {
+      "id": "US-005",
+      "title": "Public Ticket Status Page",
+      "description": "Prospects can check ticket status without logging in",
+      "acceptanceCriteria": [
+        "Route: `/support/status` with form to enter reference number and email",
+        "Verify email + reference number match before showing details",
+        "Display: Ticket subject/message, submitted date, status, admin replies (if any)",
+        "Link back to contact form if ticket closed",
+        "No auth required, fully public access",
+        "Rate limit to 10 lookups per email per hour (spam prevention)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Use public procedure: support.getPublicTicketStatus. Validate email/referenceNumber combo in database."
+    }
+  ]
+}
