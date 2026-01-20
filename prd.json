@@ -90,7 +90,7 @@
         "All emails use existing SendGrid infrastructure"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Use existing email service patterns. Create email templates for: ticket-created, ticket-admin-notification, ticket-reply, ticket-resolved."
     },
     {

@@ -12,6 +12,9 @@
 - Use Tailwind CSS for all styling, follow existing component patterns
 - Email service uses SendGrid - check existing email templates for patterns
 - Use nanoid for generating unique reference numbers (pattern: 'TKT-' + nanoid(8))
+- Support ticket email templates: ticket-created.ts, ticket-admin-notification.ts, ticket-reply.ts, ticket-resolved.ts
+- Email functions in sendgrid.ts: sendTicketCreatedEmail(), sendTicketAdminNotification(), sendTicketReplyEmail(), sendTicketResolvedEmail()
+- Use isEmailConfigured() before sending and non-blocking .catch() for email error handling
 
 ---
 
@@ -156,4 +159,35 @@ Iteration: 4
   - Order tickets by [priority desc, createdAt desc] for urgent-first display
   - Auto-update ticket status to IN_PROGRESS when admin replies to OPEN ticket
   - Set resolvedAt when status changes to RESOLVED/CLOSED, clear it when reopening
+---
+
+## 2026-01-20 - US-004
+Iteration: 5
+- Implemented US-004: Email Notification System
+- Files changed:
+  - lib/email/templates/ticket-created.ts - New template for ticket confirmation emails
+  - lib/email/templates/ticket-admin-notification.ts - New template for admin notifications
+  - lib/email/templates/ticket-reply.ts - New template for reply notifications
+  - lib/email/templates/ticket-resolved.ts - New template for resolution notifications
+  - lib/email/sendgrid.ts - Added 4 new email sending functions
+  - lib/trpc/server/routers/support.ts - Integrated email sending into all relevant procedures
+- **What was implemented:**
+  - Confirmation email to prospect/guest on ticket creation with reference number
+  - Admin notification for new tickets (special urgent styling for Priority=URGENT)
+  - Reply notification when admin responds to ticket
+  - Resolution notification when ticket is marked resolved
+  - All emails include ticket reference number for tracking
+  - All emails use existing SendGrid infrastructure and template patterns
+  - Emails are sent non-blocking using .catch() to avoid slowing API responses
+  - Admin CC emails supported via ADMIN_ALERT_CC_EMAILS env var
+  - Reply-to set to ticket submitter's email for easy admin responses
+  - Different CTA buttons based on ticket source (dashboard vs public status page)
+- **Learnings for future iterations:**
+  - Use isEmailConfigured() check before attempting to send emails
+  - Non-blocking email sends with .catch() for error logging without failing the API call
+  - Import emailLogger from @/lib/logger for email-specific logging
+  - Admin notification uses ADMIN_ALERT_EMAIL and ADMIN_ALERT_CC_EMAILS env vars
+  - Set replyTo in SendGrid to allow easy email replies back to submitter
+  - Check ticket.email exists before sending (public tickets always have email, but be safe)
+  - Only send resolved email when status actually changes TO RESOLVED (not already resolved)
 ---
