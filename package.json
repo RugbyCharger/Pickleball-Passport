@@ -60,6 +60,8 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.26",
     "gray-matter": "^4.0.3",
+    "handlebars": "^4.7.8",
+    "html-to-text": "^9.0.5",
     "lucide-react": "^0.562.0",
     "nanoid": "^5.1.6",
     "next": "16.1.1",

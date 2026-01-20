@@ -1133,3 +1133,93 @@ model NewsletterSubscriber {
   @@index([status])
   @@index([confirmToken])
 }
+
+// ============================================================================
+// EMAIL TEMPLATE MANAGEMENT (E11-S11)
+// ============================================================================
+
+enum EmailTemplateCategory {
+  TRANSACTIONAL // Booking, payment, account
+  MARKETING     // Pre-trip, post-trip, promotions
+  NOTIFICATIONS // Admin alerts, partner notifications
+  SYSTEM        // Welcome, verification, password reset
+}
+
+enum EmailTemplateStatus {
+  DRAFT    // In progress, not live
+  ACTIVE   // Published and in use
+  ARCHIVED // No longer in use
+}
+
+model EmailTemplate {
+  id          String                @id @default(cuid())
+  name        String                // "Booking Confirmation Email"
+  slug        String                @unique // "booking-confirmation"
+  description String?               // "Sent after guest completes booking"
+  category    EmailTemplateCategory
+  status      EmailTemplateStatus   @default(DRAFT)
+
+  // Content
+  subjectLine   String  // "Your Pickleball Passport Booking Confirmed!"
+  preheaderText String? // Preview text shown in inbox
+  htmlContent   String  @db.Text // Full HTML content
+  textContent   String  @db.Text // Plain text version
+  variables     Json    // ["guestName", "bookingReference", "tripName"]
+
+  // Branding - Base template inheritance
+  baseTemplateId String?
+  baseTemplate   EmailTemplate?  @relation("TemplateToBase", fields: [baseTemplateId], references: [id])
+  childTemplates EmailTemplate[] @relation("TemplateToBase")
+
+  // Metadata
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  versions  EmailTemplateVersion[]
+  analytics EmailTemplateAnalytics?
+
+  @@index([category])
+  @@index([status])
+  @@index([slug])
+}
+
+model EmailTemplateVersion {
+  id         String        @id @default(cuid())
+  templateId String
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  versionNumber  Int     // 1, 2, 3...
+  content        Json    // Snapshot of template at this version
+  changesSummary String? // What changed in this version
+  createdBy      String
+  createdAt      DateTime @default(now())
+
+  @@unique([templateId, versionNumber])
+  @@index([templateId])
+}
+
+model EmailTemplateAnalytics {
+  id         String        @id @default(cuid())
+  templateId String        @unique
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  // Metrics (last 30 days)
+  sentCount        Int @default(0)
+  openCount        Int @default(0)
+  clickCount       Int @default(0)
+  bounceCount      Int @default(0)
+  unsubscribeCount Int @default(0)
+
+  // Calculated rates
+  openRate        Float? // openCount / sentCount
+  clickRate       Float? // clickCount / sentCount
+  bounceRate      Float? // bounceCount / sentCount
+  unsubscribeRate Float? // unsubscribeCount / sentCount
+
+  lastUpdatedAt DateTime @updatedAt
+
+  @@index([templateId])
+}
