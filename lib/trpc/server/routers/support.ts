@@ -104,6 +104,88 @@ async function verifyRecaptcha(token: string): Promise<{
 
 export const supportRouter = router({
   /**
+   * Get public ticket status by reference number and email
+   *
+   * Rate limited: 10 lookups per hour per email
+   * Used by the public ticket status page
+   */
+  getPublicTicketStatus: publicProcedure
+    .input(
+      z.object({
+        referenceNumber: z
+          .string()
+          .min(1, 'Reference number is required')
+          .regex(/^TKT-[A-Za-z0-9]{8}$/, 'Invalid reference number format'),
+        email: z.string().email('Please enter a valid email address'),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { referenceNumber, email } = input;
+      const normalizedEmail = email.toLowerCase().trim();
+
+      // Rate limiting by email (10 lookups per hour)
+      const rateLimitResult = await checkRateLimit(
+        'ticketStatus',
+        `email:${normalizedEmail}`
+      );
+
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message:
+            'Too many status lookups. Please try again later (limit: 10 per hour).',
+        });
+      }
+
+      // Find ticket by reference number AND email
+      const ticket = await ctx.db.supportTicket.findFirst({
+        where: {
+          referenceNumber,
+          email: normalizedEmail,
+        },
+        include: {
+          replies: {
+            where: {
+              isAdminReply: true,
+            },
+            orderBy: { createdAt: 'asc' },
+            select: {
+              id: true,
+              message: true,
+              createdAt: true,
+              isAdminReply: true,
+            },
+          },
+        },
+      });
+
+      if (!ticket) {
+        // Don't reveal whether the reference number exists for security
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message:
+            'No ticket found with this reference number and email combination. Please check your details and try again.',
+        });
+      }
+
+      // Return sanitized ticket info (no internal IDs, user info, etc.)
+      return {
+        referenceNumber: ticket.referenceNumber,
+        subject: ticket.subject,
+        message: ticket.message,
+        category: ticket.category,
+        status: ticket.status,
+        priority: ticket.priority,
+        createdAt: ticket.createdAt,
+        resolvedAt: ticket.resolvedAt,
+        replies: ticket.replies.map((reply) => ({
+          message: reply.message,
+          createdAt: reply.createdAt,
+        })),
+      };
+    }),
+
+  /**
    * Create a public support ticket (unauthenticated)
    *
    * Rate limited: 3 requests per minute per IP
