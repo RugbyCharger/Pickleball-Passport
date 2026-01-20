@@ -116,7 +116,7 @@ export async function uploadToSupabaseStorage(
       url: urlData.publicUrl,
     };
   } catch (error) {
-    logError(storageLogger, error, 'Error uploading to Supabase Storage', { bucket, path });
+    logError(storageLogger, error, 'Error uploading to Supabase Storage', { bucket: input.bucket, path: input.path });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

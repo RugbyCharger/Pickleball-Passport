@@ -20,7 +20,6 @@ import {
   Loader2,
   ArrowLeft,
   Heart,
-  HeartFill,
   Pin,
   TrendingUp,
   FileText,
@@ -187,7 +186,7 @@ export default function ForumThreadPage() {
                 )}
               >
                 {thread.isLiked ? (
-                  <HeartFill className="h-4 w-4 fill-emerald-600 text-emerald-600" />
+                  <Heart className="h-4 w-4 fill-emerald-600 text-emerald-600" />
                 ) : (
                   <Heart className="h-4 w-4" />
                 )}

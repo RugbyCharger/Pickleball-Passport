@@ -52,6 +52,64 @@ type FilterPriority = TicketPriority | 'ALL';
 type FilterSource = TicketSource | 'ALL';
 type FilterCategory = TicketCategory | 'ALL';
 
+// Type for ticket detail with relations (workaround for tRPC type inference)
+type TicketDetailWithRelations = {
+  id: string;
+  referenceNumber: string;
+  subject: string;
+  message: string;
+  category: TicketCategory;
+  source: TicketSource;
+  status: TicketStatus;
+  priority: TicketPriority;
+  email: string;
+  name: string | null;
+  phone: string | null;
+  userId: string | null;
+  bookingId: string | null;
+  assignedToId: string | null;
+  resolvedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  replies: Array<{
+    id: string;
+    message: string;
+    isAdminReply: boolean;
+    createdAt: Date;
+    user: {
+      id: string;
+      firstName: string | null;
+      lastName: string | null;
+      role: string;
+    } | null;
+  }>;
+  attachments: Array<{
+    id: string;
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    mimeType: string;
+  }>;
+  user: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  } | null;
+  assignedTo: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+  } | null;
+  booking: {
+    id: string;
+    bookingReference: string;
+    status: string;
+    createdAt: Date;
+    package: { name: string } | null;
+  } | null;
+};
+
 export default function AdminSupportPage() {
   // Filter states
   const [statusFilter, setStatusFilter] = useState<FilterStatus>('ALL');
@@ -91,13 +149,15 @@ export default function AdminSupportPage() {
 
   // Fetch ticket detail
   const {
-    data: ticketDetail,
+    data: ticketDetailRaw,
     isLoading: detailLoading,
     refetch: refetchDetail,
   } = trpc.support.adminGetTicketDetail.useQuery(
     { id: selectedTicketId! },
     { enabled: !!selectedTicketId }
   );
+  // Cast to proper type (workaround for tRPC type inference with Prisma includes)
+  const ticketDetail = ticketDetailRaw as TicketDetailWithRelations | undefined;
 
   // Fetch admin users for assignment
   const { data: adminUsers } = trpc.support.adminGetAdminUsers.useQuery();
@@ -516,7 +576,7 @@ export default function AdminSupportPage() {
                       <option value="">Unassigned</option>
                       {adminUsers?.map((admin) => (
                         <option key={admin.id} value={admin.id}>
-                          {admin.firstName} {admin.lastName}
+                          {admin.email}
                         </option>
                       ))}
                     </select>
@@ -857,8 +917,7 @@ export default function AdminSupportPage() {
                     <td className="px-6 py-4">
                       <span className="text-sm text-gray-600">
                         {ticket.assignedTo
-                          ? `${ticket.assignedTo.firstName || ''} ${ticket.assignedTo.lastName || ''}`.trim() ||
-                            'Unknown'
+                          ? ticket.assignedTo.email
                           : 'Unassigned'}
                       </span>
                     </td>

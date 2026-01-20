@@ -7,6 +7,9 @@
  */
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { FileText, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { generateBookingConfirmationEmail } from '@/lib/email/templates/booking-confirmation';
 import { generatePaymentReceiptEmail } from '@/lib/email/templates/payment-receipt';
 import { generateTripReminderEmail } from '@/lib/email/templates/trip-reminder';
@@ -168,11 +171,32 @@ export default function EmailPreviewPage() {
 
   return (
     <div className="space-y-6">
+      {/* Template Management Banner */}
+      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FileText className="h-5 w-5 text-emerald-600" />
+            <div>
+              <p className="font-medium text-emerald-900">New Template Management</p>
+              <p className="text-sm text-emerald-700">
+                Create and manage database-driven email templates with live preview
+              </p>
+            </div>
+          </div>
+          <Link href="/dashboard/admin/emails/templates">
+            <Button className="gap-2">
+              Manage Templates
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Email Preview</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Email Preview (Legacy)</h1>
         <p className="mt-2 text-gray-600">
-          Preview all email templates with sample data
+          Preview code-based email templates with sample data
         </p>
       </div>
 

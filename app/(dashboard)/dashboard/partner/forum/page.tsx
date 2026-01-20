@@ -22,7 +22,6 @@ import {
   Plus,
   Search,
   Heart,
-  HeartFill,
   Pin,
   TrendingUp,
   FileText,

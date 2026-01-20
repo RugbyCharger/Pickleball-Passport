@@ -394,7 +394,7 @@ export const supportRouter = router({
     .mutation(async ({ ctx, input }) => {
       // Get user email from context
       const userEmail =
-        ctx.user.emailAddresses?.[0]?.emailAddress || ctx.user.email || '';
+        ctx.user.emailAddresses?.[0]?.emailAddress || '';
       const userName =
         ctx.user.fullName ||
         `${ctx.user.firstName || ''} ${ctx.user.lastName || ''}`.trim() ||
@@ -520,8 +520,8 @@ export const supportRouter = router({
             include: {
               user: {
                 select: {
-                  firstName: true,
-                  lastName: true,
+                  id: true,
+                  email: true,
                 },
               },
             },
@@ -655,16 +655,19 @@ export const supportRouter = router({
             assignedTo: {
               select: {
                 id: true,
-                firstName: true,
-                lastName: true,
+                email: true,
               },
             },
             user: {
               select: {
                 id: true,
-                firstName: true,
-                lastName: true,
                 email: true,
+                guestProfile: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
               },
             },
             _count: {
@@ -726,8 +729,7 @@ export const supportRouter = router({
               user: {
                 select: {
                   id: true,
-                  firstName: true,
-                  lastName: true,
+                  email: true,
                   role: true,
                 },
               },
@@ -737,16 +739,13 @@ export const supportRouter = router({
           user: {
             select: {
               id: true,
-              firstName: true,
-              lastName: true,
               email: true,
             },
           },
           assignedTo: {
             select: {
               id: true,
-              firstName: true,
-              lastName: true,
+              email: true,
             },
           },
           booking: {
@@ -809,8 +808,8 @@ export const supportRouter = router({
         include: {
           user: {
             select: {
-              firstName: true,
-              lastName: true,
+              id: true,
+              email: true,
               role: true,
             },
           },
@@ -836,10 +835,7 @@ export const supportRouter = router({
 
       // Send email notification to ticket submitter (non-blocking)
       if (isEmailConfigured() && ticket.email) {
-        const adminName =
-          reply.user?.firstName && reply.user?.lastName
-            ? `${reply.user.firstName} ${reply.user.lastName}`
-            : 'Pickleball Passport Support';
+        const adminName = reply.user?.email || 'Pickleball Passport Support';
 
         sendTicketReplyEmail(ticket.email, {
           name: ticket.name || 'Guest',
@@ -980,8 +976,7 @@ export const supportRouter = router({
           assignedTo: {
             select: {
               id: true,
-              firstName: true,
-              lastName: true,
+              email: true,
             },
           },
         },
@@ -1008,11 +1003,9 @@ export const supportRouter = router({
       where: { role: 'ADMIN' },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
         email: true,
       },
-      orderBy: { firstName: 'asc' },
+      orderBy: { email: 'asc' },
     });
 
     return admins;

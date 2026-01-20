@@ -476,7 +476,6 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
         user: {
           select: {
             id: true,
-            firstName: true,
             email: true,
           },
         },
@@ -496,8 +495,7 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
         trip: true,
         user: {
           select: {
-            firstName: true,
-            lastName: true,
+            email: true,
           },
         },
       },
@@ -546,9 +544,9 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
       const tierProgress = calculateBookingsUntilNextTier(totalBookings, updatedPartner.tier);
 
       await sendPartnerBookingNotification(partner.id, partner.user.id, {
-        partnerName: partner.user.firstName || 'Partner',
+        partnerName: partner.user.email.split('@')[0] || 'Partner',
         partnerEmail: partner.user.email,
-        guestName: `${booking.user.firstName} ${booking.user.lastName}`,
+        guestName: booking.user.email.split('@')[0],
         bookingReference: booking.bookingReference || bookingId.slice(-8).toUpperCase(),
         packageName: booking.package.name,
         tripDates: {
