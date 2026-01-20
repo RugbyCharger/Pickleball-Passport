@@ -253,23 +253,21 @@ export const supportRouter = router({
 
   /**
    * Create a new support ticket (authenticated users)
+   * Auto-links to the guest's latest booking if available
    */
   create: protectedProcedure
     .input(
       z.object({
-        subject: z.string().min(5, 'Subject must be at least 5 characters'),
         message: z.string().min(20, 'Message must be at least 20 characters'),
         priority: z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']).default('NORMAL'),
-        category: z
-          .enum([
-            'GENERAL_INQUIRY',
-            'BOOKING_QUESTION',
-            'MEDICAL_WELLNESS_QUESTION',
-            'PAYMENT_ISSUE',
-            'PARTNERSHIP_INQUIRY',
-            'OTHER',
-          ])
-          .default('GENERAL_INQUIRY'),
+        category: z.enum([
+          'GENERAL_INQUIRY',
+          'BOOKING_QUESTION',
+          'MEDICAL_WELLNESS_QUESTION',
+          'PAYMENT_ISSUE',
+          'PARTNERSHIP_INQUIRY',
+          'OTHER',
+        ]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -283,11 +281,25 @@ export const supportRouter = router({
 
       const referenceNumber = generateReferenceNumber();
 
+      // Auto-link to the guest's latest booking (if available)
+      const latestBooking = await ctx.db.booking.findFirst({
+        where: { userId: ctx.user.id },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true },
+      });
+
+      // Build subject from category
+      const categoryLabel = input.category
+        .replace(/_/g, ' ')
+        .toLowerCase()
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+      const subject = `${categoryLabel} - Guest Dashboard`;
+
       const ticket = await ctx.db.supportTicket.create({
         data: {
           referenceNumber,
           userId: ctx.user.id,
-          subject: input.subject,
+          subject,
           message: input.message,
           priority: input.priority,
           category: input.category,
@@ -295,13 +307,26 @@ export const supportRouter = router({
           status: 'OPEN',
           email: userEmail,
           name: userName,
+          bookingId: latestBooking?.id || null,
         },
       });
 
-      // TODO: Send email notification to admin
-      // TODO: Send confirmation email to user
+      dbLogger.info(
+        {
+          referenceNumber,
+          category: input.category,
+          hasBooking: !!latestBooking,
+        },
+        'Guest support ticket created'
+      );
 
-      return ticket;
+      // TODO: Send email notification to admin (US-004)
+      // TODO: Send confirmation email to user (US-004)
+
+      return {
+        ...ticket,
+        referenceNumber: ticket.referenceNumber,
+      };
     }),
 
   /**
@@ -330,13 +355,33 @@ export const supportRouter = router({
     }),
 
   /**
-   * Get single support ticket by ID
+   * Get single support ticket by ID with replies
    */
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const ticket = await ctx.db.supportTicket.findUnique({
         where: { id: input.id },
+        include: {
+          replies: {
+            orderBy: { createdAt: 'asc' },
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+          booking: {
+            select: {
+              id: true,
+              status: true,
+              createdAt: true,
+            },
+          },
+        },
       });
 
       if (!ticket) {
