@@ -2381,7 +2381,6 @@ export const adminRouter = router({
       averageRating: averageRating._avg.rating ? Math.round(averageRating._avg.rating * 10) / 10 : 0,
     };
   }),
-    }),
 
   // ============================================================================
   // REFERRAL ANALYTICS (Epic 10 - US-006)
@@ -2889,4 +2888,5 @@ export const adminRouter = router({
         },
         utmSource: input?.utmSource || null,
       };
+    }),
 });
