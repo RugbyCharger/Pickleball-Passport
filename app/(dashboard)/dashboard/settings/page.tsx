@@ -1,11 +1,13 @@
 /**
- * Profile Settings Page
+ * Settings Page
  *
- * Allows guests to manage their profile settings including:
- * - Personal information (Clerk managed)
+ * Story 2-8: Session Management
+ *
+ * Allows guests to manage their account settings including:
+ * - Personal information (Clerk managed, links to profile page)
  * - Email preferences
- * - Phone number
- * - Emergency contact
+ * - Session management (view active sessions, sign out all devices)
+ * - Security settings
  */
 
 import { currentUser } from '@clerk/nextjs/server'
@@ -13,8 +15,9 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { User, Mail, Phone, AlertCircle, Lock } from 'lucide-react'
+import { User, Mail, AlertCircle, Lock, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { SessionManagement } from '@/components/auth/session-management'
 
 export default async function SettingsPage() {
   const user = await currentUser()
@@ -30,13 +33,13 @@ export default async function SettingsPage() {
     <div className="space-y-6 max-w-4xl">
       {/* Page Header */}
       <div>
-        <h2 className="text-xl font-semibold mb-2">Settings</h2>
+        <h2 className="text-2xl font-semibold mb-2">Settings</h2>
         <p className="text-muted-foreground">
-          Manage your profile and account preferences
+          Manage your account settings and preferences
         </p>
       </div>
 
-      {/* Profile Information */}
+      {/* Profile Information - Link to Profile Page */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -49,6 +52,12 @@ export default async function SettingsPage() {
                 Your personal details and account information
               </CardDescription>
             </div>
+            <Button asChild>
+              <Link href="/dashboard/profile">
+                Edit Profile
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -80,24 +89,11 @@ export default async function SettingsPage() {
             <p className="text-sm text-muted-foreground mb-1">Phone Number</p>
             <p className="font-medium">{primaryPhone?.phoneNumber || 'Not set'}</p>
           </div>
-
-          {/* Clerk Profile Link */}
-          <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground mb-3">
-              To update your name, email, or add a phone number, please use the user profile menu in the top-right corner.
-            </p>
-            <Button variant="outline" size="sm" asChild>
-              <a href="#" onClick={(e) => {
-                e.preventDefault()
-                const userButton = document.querySelector('[data-clerk-user-button]') as HTMLElement
-                userButton?.click()
-              }}>
-                Open Profile Settings
-              </a>
-            </Button>
-          </div>
         </CardContent>
       </Card>
+
+      {/* Session Management - Story 2-8 */}
+      <SessionManagement />
 
       {/* Email Preferences */}
       <Card>
@@ -154,50 +150,42 @@ export default async function SettingsPage() {
           </div>
 
           <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground">
-              Email preferences will be fully customizable in a future update.
-            </p>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/dashboard/notifications">
+                Manage Notification Preferences
+              </Link>
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Emergency Contact */}
+      {/* Emergency Contact - Link to Profile */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            Emergency Contact
-          </CardTitle>
-          <CardDescription>
-            This information will only be used in case of emergency during your trip
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                Emergency Contact
+              </CardTitle>
+              <CardDescription>
+                This information will only be used in case of emergency during your trip
+              </CardDescription>
+            </div>
+            <Button variant="outline" asChild>
+              <Link href="/dashboard/profile">
+                Edit
+              </Link>
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Contact Name</p>
-              <p className="font-medium text-muted-foreground">Not configured</p>
-            </div>
-
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Contact Phone</p>
-              <p className="font-medium text-muted-foreground">Not configured</p>
-            </div>
-
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Relationship</p>
-              <p className="font-medium text-muted-foreground">Not configured</p>
-            </div>
-
-            <div className="pt-4 border-t">
-              <p className="text-sm text-muted-foreground mb-3">
-                Emergency contact management will be available in a future update.
-              </p>
-              <Button variant="outline" size="sm" disabled>
-                Add Emergency Contact
-              </Button>
-            </div>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Emergency contact information can be managed on your{' '}
+            <Link href="/dashboard/profile" className="text-primary hover:underline">
+              profile page
+            </Link>.
+          </p>
         </CardContent>
       </Card>
 
@@ -214,18 +202,14 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p className="font-medium mb-1">Password</p>
+            <p className="font-medium mb-1">Password & Two-Factor Authentication</p>
             <p className="text-sm text-muted-foreground mb-3">
-              Use the profile menu to change your password or enable two-factor authentication.
+              Change your password or enable two-factor authentication for enhanced security.
             </p>
             <Button variant="outline" size="sm" asChild>
-              <a href="#" onClick={(e) => {
-                e.preventDefault()
-                const userButton = document.querySelector('[data-clerk-user-button]') as HTMLElement
-                userButton?.click()
-              }}>
+              <Link href="/dashboard/profile">
                 Manage Security Settings
-              </a>
+              </Link>
             </Button>
           </div>
 
@@ -243,7 +227,7 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Account Actions */}
+      {/* Account Actions - Link to Profile for Deletion */}
       <Card>
         <CardHeader>
           <CardTitle>Account Actions</CardTitle>
@@ -252,17 +236,23 @@ export default async function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div>
-            <Button variant="outline" size="sm" disabled className="mr-2">
-              Download My Data
-            </Button>
-            <span className="text-sm text-muted-foreground">Coming soon</span>
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <p className="font-medium">Download My Data</p>
+              <p className="text-sm text-muted-foreground">Export a copy of your personal data</p>
+            </div>
+            <Badge variant="secondary">Coming Soon</Badge>
           </div>
-          <div>
-            <Button variant="outline" size="sm" disabled className="mr-2">
-              Delete Account
+          <div className="flex items-center justify-between py-2 border-t">
+            <div>
+              <p className="font-medium text-destructive">Delete Account</p>
+              <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+            </div>
+            <Button variant="destructive" size="sm" asChild>
+              <Link href="/dashboard/profile">
+                Delete Account
+              </Link>
             </Button>
-            <span className="text-sm text-muted-foreground">Contact support for account deletion</span>
           </div>
         </CardContent>
       </Card>
