@@ -75,3 +75,32 @@ Files changed:
 - Always validate referral codes against both PartnerProfile and User tables
 - Use try/catch around referral logic to not fail the main operation on referral errors
 ---
+
+## 2026-01-21 - US-003: Referral Attribution at Booking
+Iteration: 4
+- Modified createPaymentIntent mutation to check for referral_code cookie
+- Manual referral code input takes precedence over cookie when both exist
+- Added validateAnyReferralCode endpoint to validate both partner and guest codes
+- Updated referral-code-input.tsx to accept guest codes (FIRSTNAME-YEAR format)
+- Creates ReferralEvent with type BOOKING on successful attribution
+- Awards points based on package value: 1000 pts < $15K, 1500 pts >= $15K
+- Updates booking.referredBy with the referral code
+- Creates GuestReferral record with status BOOKED
+- Sends notification email to guest referrer
+- Added GUEST_REFERRAL_POINTS_CONFIG and calculateGuestReferralPoints helper
+- Created guest-referral-booking.ts email template
+
+Files changed:
+- lib/trpc/server/routers/booking.ts (referral attribution logic in createPaymentIntent)
+- lib/trpc/server/routers/partner.ts (validateAnyReferralCode endpoint)
+- components/booking/referral-code-input.tsx (support both partner and guest codes)
+- lib/config/business-constants.ts (GUEST_REFERRAL_POINTS_CONFIG)
+- lib/email/templates/guest-referral-booking.ts (new)
+
+**Learnings for future iterations:**
+- Booking referral attribution happens in createPaymentIntent, not after payment
+- Partner codes provide discounts, guest codes only provide attribution (no discount)
+- When checking both partner and guest codes, use Promise.all for parallel queries
+- referralAttributed flag is returned to client to indicate cookie should be cleared
+- Guest referral points use a different calculation than partner points (flat 1000/1500 vs scaled)
+---

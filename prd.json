@@ -53,7 +53,7 @@
       "id": "US-003",
       "title": "Referral Attribution at Booking",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Modify booking flow to check for referral_code cookie",
         "Optional manual referral code input field at booking (fallback)",
