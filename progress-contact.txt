@@ -28,4 +28,26 @@ Files changed:
 - GuestReferral uses @unique on referredUserId (one-to-one relationship)
 - ReferralEvent is independent - no foreign key to User to allow anonymous tracking
 - prisma db push requires DATABASE_URL and DIRECT_URL env vars (may fail locally)
+- Cookie name for referrals: `referral_code` (used throughout the referral system)
+- Next.js 14+ route params are async: use `{ params }: { params: Promise<{ code: string }> }` and `await params`
+---
+
+## 2026-01-21 - US-001: Referral Link Tracking (Cookie-Based)
+Iteration: 2
+- Created /r/[code] dynamic route at app/r/[code]/route.ts
+- Sets referral_code cookie with 30-day expiration (httpOnly, secure, sameSite: lax)
+- Stores click event in ReferralEvent table with IP address, user agent, UTM params
+- Increments referralCodeClickCount on PartnerProfile for partner codes
+- First-click attribution: checks existing cookie and doesn't overwrite
+- Validates codes against both PartnerProfile.referralCode and User.referralCode
+- Graceful error handling: invalid codes redirect to homepage without errors
+
+Files changed:
+- app/r/[code]/route.ts (new)
+
+**Learnings for future iterations:**
+- Route params in Next.js App Router are now async (Promise<{ param: type }>)
+- Use x-forwarded-for header (split by comma for first IP) for IP address extraction
+- Partner codes tracked via PartnerProfile.referralCodeClickCount, guest codes tracked via ReferralEvent only
+- Cookie settings: httpOnly for security, secure in production, sameSite: lax for redirect compatibility
 ---

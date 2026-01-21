@@ -22,7 +22,7 @@
       "id": "US-001",
       "title": "Referral Link Tracking (Cookie-Based)",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create /r/[code] dynamic route that handles referral redirects",
         "On visit: Set referral_code cookie with 30-day expiration",
