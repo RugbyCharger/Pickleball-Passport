@@ -507,3 +507,20 @@ Iteration: 8
   - Show result view after broadcast with option to send another
   - WhatsApp messages are sent sequentially to respect rate limits (100ms delay)
 ---
+
+## 2026-01-21 - US-008
+Iteration: 9
+- Verified US-008: tRPC WhatsApp Router (already implemented)
+- All acceptance criteria were already met in previous stories:
+  - lib/trpc/server/routers/whatsapp.ts exists (created in US-005)
+  - adminGetWhatsAppGroups, adminGetWhatsAppGroupDetails - implemented in US-006
+  - adminSetGroupInviteLink, adminArchiveGroup - implemented in US-006
+  - adminSendBroadcast - implemented in US-007
+  - markGroupJoined - implemented in US-005
+  - getGuestWhatsAppGroup - implemented in US-005
+  - Router registered in lib/trpc/server/root.ts (done in US-005)
+  - All admin procedures use adminProcedure (verified)
+- **Learnings for future iterations:**
+  - Story ordering can sometimes result in earlier stories implementing later story requirements
+  - Always check what's already implemented before starting a story
+---
