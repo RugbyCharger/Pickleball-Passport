@@ -649,11 +649,11 @@ export const packageCmsRouter = router({
         ...(input.packageId && { packageId: { not: input.packageId } }),
         ...(input.search && {
           OR: [
-            { name: { contains: input.search, mode: 'insensitive' } },
-            { slug: { contains: input.search, mode: 'insensitive' } },
+            { name: { contains: input.search, mode: 'insensitive' as const } },
+            { slug: { contains: input.search, mode: 'insensitive' as const } },
           ],
         }),
-        ...(input.type && { type: input.type }),
+        ...(input.type && { type: input.type as Prisma.EnumContentBlockTypeFilter['equals'] }),
       }
 
       const blocks = await ctx.db.contentBlock.findMany({
