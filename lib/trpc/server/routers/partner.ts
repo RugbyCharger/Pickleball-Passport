@@ -3254,8 +3254,6 @@ export const partnerRouter = router({
         user: {
           select: {
             email: true,
-            firstName: true,
-            lastName: true,
           },
         },
       },
@@ -3288,8 +3286,6 @@ export const partnerRouter = router({
     const { accountId, accountType } = await createConnectAccount({
       partnerId: profile.id,
       email: profile.user.email,
-      firstName: profile.user.firstName || undefined,
-      lastName: profile.user.lastName || undefined,
       businessName: profile.clubName,
       accountType: 'express',
     })
