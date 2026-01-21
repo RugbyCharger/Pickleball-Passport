@@ -1461,4 +1461,140 @@ export const adminRouter = router({
         message: 'SMS feature not yet implemented - no messages were sent',
       };
     }),
+
+  // ============================================================================
+  // E9-S15: Partner Agreement Management
+  // ============================================================================
+
+  /**
+   * Get all partner agreements with filtering and pagination
+   */
+  getPartnerAgreements: adminProcedure
+    .input(
+      z
+        .object({
+          partnerId: z.string().optional(),
+          version: z.string().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+        ...(input?.version && { version: input.version }),
+      };
+
+      const [agreements, total] = await Promise.all([
+        ctx.db.partnerAgreement.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                clubLocation: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            signedAt: 'desc',
+          },
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerAgreement.count({ where }),
+      ]);
+
+      return {
+        agreements,
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Get single partner agreement by ID
+   */
+  getPartnerAgreementById: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const agreement = await ctx.db.partnerAgreement.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+              referralCode: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!agreement) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agreement not found',
+        });
+      }
+
+      return agreement;
+    }),
+
+  /**
+   * Get partner agreement statistics
+   */
+  getPartnerAgreementStats: adminProcedure.query(async ({ ctx }) => {
+    const currentVersion = '1.0';
+
+    const [
+      totalPartners,
+      partnersWithCurrentAgreement,
+      totalAgreements,
+      recentAgreements,
+    ] = await Promise.all([
+      ctx.db.partnerProfile.count(),
+      ctx.db.partnerAgreement.groupBy({
+        by: ['partnerId'],
+        where: {
+          version: currentVersion,
+        },
+      }),
+      ctx.db.partnerAgreement.count(),
+      ctx.db.partnerAgreement.count({
+        where: {
+          signedAt: {
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+          },
+        },
+      }),
+    ]);
+
+    return {
+      totalPartners,
+      partnersWithSignedAgreement: partnersWithCurrentAgreement.length,
+      partnersWithoutAgreement: totalPartners - partnersWithCurrentAgreement.length,
+      totalAgreements,
+      recentAgreements,
+      currentVersion,
+      complianceRate: totalPartners > 0
+        ? Math.round((partnersWithCurrentAgreement.length / totalPartners) * 100)
+        : 0,
+    };
+  }),
 });

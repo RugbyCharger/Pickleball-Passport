@@ -1941,6 +1941,147 @@ export const partnerRouter = router({
         preferences: updated.notificationPreferences,
       }
     }),
+
+  // ============================================================================
+  // E9-S15: Partner Agreement E-Signature
+  // ============================================================================
+
+  /**
+   * Get current agreement status and text
+   * Returns the agreement document and whether the partner has signed it
+   */
+  getAgreement: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+      include: {
+        agreements: {
+          orderBy: {
+            signedAt: 'desc',
+          },
+          take: 1,
+        },
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    // Current agreement version
+    const currentVersion = '1.0'
+    const latestSignedAgreement = profile.agreements[0]
+    const hasSigned = latestSignedAgreement?.version === currentVersion
+
+    return {
+      currentVersion,
+      hasSigned,
+      signedAgreement: latestSignedAgreement || null,
+      partnerId: profile.id,
+      clubName: profile.clubName,
+    }
+  }),
+
+  /**
+   * Sign the partner agreement
+   * Records the signature, timestamp, and IP address
+   */
+  signAgreement: partnerProcedure
+    .input(
+      z.object({
+        signature: z.string().min(1, 'Signature is required'),
+        agreedToTerms: z.boolean().refine((val) => val === true, {
+          message: 'You must agree to the terms',
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+        include: {
+          agreements: {
+            orderBy: {
+              signedAt: 'desc',
+            },
+            take: 1,
+          },
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Current agreement version
+      const currentVersion = '1.0'
+
+      // Check if already signed current version
+      if (profile.agreements[0]?.version === currentVersion) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'You have already signed the current agreement version',
+        })
+      }
+
+      // Get IP address from headers
+      const ipAddress = getIpAddress(ctx.headers)
+
+      // Create the agreement record
+      const agreement = await ctx.db.partnerAgreement.create({
+        data: {
+          partnerId: profile.id,
+          version: currentVersion,
+          signedAt: new Date(),
+          ipAddress,
+          signature: input.signature,
+          documentUrl: '/content/partner-agreement.md',
+        },
+      })
+
+      return {
+        success: true,
+        agreementId: agreement.id,
+        signedAt: agreement.signedAt,
+      }
+    }),
+
+  /**
+   * Get all agreements for current partner (history)
+   */
+  getMyAgreements: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    const agreements = await ctx.db.partnerAgreement.findMany({
+      where: {
+        partnerId: profile.id,
+      },
+      orderBy: {
+        signedAt: 'desc',
+      },
+    })
+
+    return agreements
+  }),
 })
 
 /**

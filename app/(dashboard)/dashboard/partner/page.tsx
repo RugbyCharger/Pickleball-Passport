@@ -30,6 +30,8 @@ import {
   QrCode,
   X,
   MessageSquare,
+  PenTool,
+  AlertTriangle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -65,6 +67,8 @@ export default function PartnerDashboardPage() {
     trpc.partner.getTierInfo.useQuery();
   const { data: referrals, isLoading: referralsLoading } =
     trpc.partner.getMyReferrals.useQuery();
+  // E9-S15: Check agreement status
+  const { data: agreementStatus } = trpc.partner.getAgreement.useQuery();
 
   // Redirect new partners to onboarding
   useEffect(() => {
@@ -147,6 +151,33 @@ export default function PartnerDashboardPage() {
                 >
                   <X className="h-5 w-5" />
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* E9-S15: Agreement Banner - Show if not signed */}
+        {agreementStatus && !agreementStatus.hasSigned && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-amber-900">
+                    Partner Agreement Required
+                  </h3>
+                  <p className="mt-1 text-sm text-amber-800">
+                    Please review and sign the Partner Agreement to unlock all features and start earning commissions.
+                  </p>
+                </div>
+              </div>
+              <div className="ml-4">
+                <Link href="/dashboard/partner/agreement">
+                  <Button size="sm" className="gap-2 bg-amber-600 hover:bg-amber-700">
+                    <PenTool className="h-4 w-4" />
+                    Sign Agreement
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
