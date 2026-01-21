@@ -126,7 +126,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "For MVP: Focus on manual group management (admin creates group externally, enters link here). Automated creation can be added later."
     },
     {

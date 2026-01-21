@@ -422,3 +422,42 @@ Iteration: 6
   - Use window.open(url, '_blank', 'noopener,noreferrer') for secure external links
   - markGuestJoined from group-manager.ts handles updating booking AND incrementing trip member count
 ---
+
+## 2026-01-21 - US-006
+Iteration: 7
+- Implemented US-006: Admin WhatsApp Groups Management
+- Files changed:
+  - lib/trpc/server/routers/whatsapp.ts - Added admin procedures for group management
+  - app/(dashboard)/dashboard/admin/whatsapp-groups/page.tsx - New admin management page
+- **What was implemented:**
+  - Admin tRPC procedures for WhatsApp group management:
+    - adminGetWhatsAppGroups - List trips with WhatsApp status, filtering, pagination
+    - adminGetWhatsAppGroupCounts - Dashboard stats (total, pending, active, archived)
+    - adminGetWhatsAppGroupDetails - Trip detail with member list and join status
+    - adminSetGroupInviteLink - Manually set group invite link for a trip
+    - adminArchiveGroup - Archive completed trip groups
+    - adminRefreshInviteLink - Update expired invite links
+    - adminActivateGroup - Force group activation (for testing/override)
+  - Admin page at /dashboard/admin/whatsapp-groups with:
+    - Stats cards showing group status counts (Total, Pending, Active, Archived)
+    - Filterable list view of all trips with group status
+    - Search by trip name or destination
+    - Status filter dropdown
+    - Detail view with full member list showing:
+      - Guest name, email, phone
+      - Invitation status (pending/sent/joined/failed)
+      - Join timestamp
+    - Actions: set invite link, activate, archive, refresh link
+    - Modal for entering WhatsApp group invite links
+    - Link validation (must start with https://chat.whatsapp.com/)
+  - All admin procedures protected with adminProcedure
+- TypeScript strict mode passed with 0 errors in new files
+- ESLint passed with no warnings in new files
+- **Learnings for future iterations:**
+  - Use z.nativeEnum(WhatsAppGroupStatus) for Zod enum validation from Prisma
+  - Admin pages follow pattern: list view with filters, detail view with actions
+  - Modal pattern: fixed inset-0 with bg-black/50 overlay and centered white box
+  - Use ctx.db.trip._count.bookings with nested where for conditional counts
+  - WhatsApp invite link format validation: url().refine() for custom checks
+  - Extract invite code from link with split('/').pop()
+---
