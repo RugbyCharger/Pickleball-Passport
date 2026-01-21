@@ -25,7 +25,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import type { StripeError } from '@stripe/stripe-js'
-import { AlertCircle, CreditCard, Loader2, Lock, RefreshCw, Info, Calendar } from 'lucide-react'
+import { AlertCircle, CreditCard, Loader2, Lock, RefreshCw, Info, Calendar, Building2, ExternalLink } from 'lucide-react'
 import { useBookingStore } from '@/lib/stores/booking-store'
 import {
   categorizePaymentError,
@@ -232,9 +232,59 @@ export function PaymentForm({
                 on future installment due dates. You can manage your payment method anytime from your dashboard.
               </p>
             )}
+            {paymentPlan === 'FINANCING' && (
+              <p className="text-xs text-emerald-700 mt-2">
+                <strong>Affirm Financing:</strong> You&apos;ll be redirected to Affirm to complete a quick credit check
+                and select your payment terms. Your Affirm payments are managed directly through Affirm.
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      {/* E4-S11: Affirm Financing Info */}
+      {paymentPlan === 'FINANCING' && (
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Building2 className="h-5 w-5 text-purple-600" />
+            <h3 className="text-lg font-bold text-purple-900">Affirm Financing</h3>
+          </div>
+          <p className="text-sm text-purple-700 mb-4">
+            Pay over time with monthly payments. 0% APR available on select terms.
+          </p>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700">1</span>
+              <span className="text-purple-800">Select Affirm as your payment method below</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700">2</span>
+              <span className="text-purple-800">Complete a quick application (no hard credit check)</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700">3</span>
+              <span className="text-purple-800">Choose your payment plan (3, 6, 12, or 18 months)</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700">4</span>
+              <span className="text-purple-800">Get an instant decision and confirm your booking</span>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-purple-200 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-purple-900">Total to Finance</p>
+              <p className="text-xs text-purple-600">Affirm handles all payments</p>
+            </div>
+            <p className="text-xl font-bold text-purple-900">{formatPrice(amount, currency)}</p>
+          </div>
+
+          <p className="text-xs text-gray-500 mt-3">
+            Available in US and Canada. Minimum order $50 USD. Subject to Affirm approval.
+          </p>
+        </div>
+      )}
 
       {/* Installment Plan Info */}
       {paymentPlan === 'INSTALLMENT_4' && installmentSchedule.length > 0 && (
@@ -286,7 +336,11 @@ export function PaymentForm({
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-600">
-              {paymentPlan === 'INSTALLMENT_4' ? 'Due Today (First Installment)' : 'Total Amount'}
+              {paymentPlan === 'INSTALLMENT_4'
+                ? 'Due Today (First Installment)'
+                : paymentPlan === 'FINANCING'
+                ? 'Total to Finance with Affirm'
+                : 'Total Amount'}
             </p>
             <p className="text-xs text-slate-500 mt-1">Booking: {bookingReference}</p>
           </div>
@@ -308,19 +362,35 @@ export function PaymentForm({
         <button
           type="submit"
           disabled={!stripe || isProcessing}
-          className="flex-1 rounded-lg bg-gradient-to-r from-emerald-600 to-blue-600 px-6 py-4 text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className={`flex-1 rounded-lg px-6 py-4 text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
+            paymentPlan === 'FINANCING'
+              ? 'bg-gradient-to-r from-purple-600 to-indigo-600'
+              : 'bg-gradient-to-r from-emerald-600 to-blue-600'
+          }`}
         >
           {isProcessing ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="h-5 w-5 animate-spin" />
-              Processing Payment...
+              {paymentPlan === 'FINANCING' ? 'Redirecting to Affirm...' : 'Processing Payment...'}
             </span>
           ) : (
             <span className="flex items-center justify-center gap-2">
-              <Lock className="h-5 w-5" />
-              {paymentPlan === 'INSTALLMENT_4'
-                ? `Pay First Installment ${formatPrice(amount, currency)}`
-                : `Pay ${formatPrice(amount, currency)}`}
+              {paymentPlan === 'FINANCING' ? (
+                <>
+                  <ExternalLink className="h-5 w-5" />
+                  Continue with Affirm
+                </>
+              ) : paymentPlan === 'INSTALLMENT_4' ? (
+                <>
+                  <Lock className="h-5 w-5" />
+                  Pay First Installment {formatPrice(amount, currency)}
+                </>
+              ) : (
+                <>
+                  <Lock className="h-5 w-5" />
+                  Pay {formatPrice(amount, currency)}
+                </>
+              )}
             </span>
           )}
         </button>

@@ -443,12 +443,18 @@ export const bookingRouter = router({
 
       // 16. Create Stripe payment intent (first installment or full amount)
       try {
+        // E4-S11: For financing, use Affirm payment method with card as fallback
+        // Affirm requirements: USD/CAD currency, minimum $50 USD, US/Canada only
+        const paymentMethodTypes = paymentPlan === 'FINANCING' ? ['affirm', 'card'] : undefined
+
         const paymentIntent = await createStripePaymentIntent({
           amount: paymentAmount, // E4-S6: First installment or full amount
           bookingId: booking.id,
           guestEmail,
           guestName,
           currency: currency.toLowerCase(), // E4-S13: Pass currency to Stripe
+          // E4-S11: Use explicit payment method types for financing
+          ...(paymentMethodTypes && { paymentMethodTypes }),
           // E4-S6: For installment plans, attach customer and save payment method
           ...(paymentPlan === 'INSTALLMENT_4' && stripeCustomerId && {
             customerId: stripeCustomerId,

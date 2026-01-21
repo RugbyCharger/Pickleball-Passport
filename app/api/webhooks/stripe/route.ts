@@ -270,14 +270,21 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       // Send payment receipt email
       const { sendPaymentReceipt } = await import('@/lib/email/sendgrid');
 
+      // E4-S11: Detect Affirm financing payment method
+      const isAffirmFinancing = paymentIntent.payment_method_types?.includes('affirm') ||
+        paymentIntent.metadata.paymentPlan === 'FINANCING';
+      const paymentMethodDisplay = isAffirmFinancing
+        ? 'Affirm Financing'
+        : paymentIntent.payment_method_types?.[0]
+          ? `${paymentIntent.payment_method_types[0].charAt(0).toUpperCase()}${paymentIntent.payment_method_types[0].slice(1)}`
+          : 'Card';
+
       await sendPaymentReceipt(booking.user.email, {
         firstName: guestFirstName,
         email: booking.user.email,
         receiptNumber: `RCPT-${payment.id.slice(-8).toUpperCase()}`,
         paymentDate: new Date().toISOString(),
-        paymentMethod: paymentIntent.payment_method_types?.[0]
-          ? `${paymentIntent.payment_method_types[0].charAt(0).toUpperCase()}${paymentIntent.payment_method_types[0].slice(1)}`
-          : 'Card',
+        paymentMethod: paymentMethodDisplay,
         bookingReference: bookingId.slice(-8).toUpperCase(),
         packageName: booking.package.name,
         items: [
