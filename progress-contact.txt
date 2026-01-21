@@ -51,3 +51,27 @@ Files changed:
 - Partner codes tracked via PartnerProfile.referralCodeClickCount, guest codes tracked via ReferralEvent only
 - Cookie settings: httpOnly for security, secure in production, sameSite: lax for redirect compatibility
 ---
+
+## 2026-01-21 - US-002: Referral Attribution at Application
+Iteration: 3
+- Added referralCode field to Application model in Prisma schema with index
+- Modified application.create mutation to read referral_code cookie from headers
+- Created ReferralEvent with type APPLICATION when valid referral code exists
+- Awards 100 points to referrer: passportPoints for partners, referralPointsBalance for guests
+- Sends notification email to partner referrers via existing template
+- Created /api/referral/clear-cookie endpoint to delete cookie after successful attribution
+- Updated application-form.tsx to call clear-cookie endpoint when referralAttributed is true
+
+Files changed:
+- prisma/schema.prisma (added referralCode to Application model)
+- lib/trpc/server/routers/application.ts (referral attribution logic)
+- components/forms/application-form.tsx (cookie clearing after submission)
+- app/api/referral/clear-cookie/route.ts (new)
+
+**Learnings for future iterations:**
+- tRPC context includes headers, so cookies can be parsed from ctx.headers.get('cookie')
+- httpOnly cookies cannot be cleared from client JS, need server-side endpoint
+- Partner referrers receive passportPoints, guest referrers receive referralPointsBalance
+- Always validate referral codes against both PartnerProfile and User tables
+- Use try/catch around referral logic to not fail the main operation on referral errors
+---

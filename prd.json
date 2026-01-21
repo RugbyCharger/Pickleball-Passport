@@ -38,7 +38,7 @@
       "id": "US-002",
       "title": "Referral Attribution at Application",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Modify application submission to check for referral_code cookie",
         "If cookie exists: Create ReferralEvent with type APPLICATION",
