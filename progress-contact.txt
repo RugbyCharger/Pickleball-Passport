@@ -16,6 +16,12 @@
 - Email functions in sendgrid.ts: sendTicketCreatedEmail(), sendTicketAdminNotification(), sendTicketReplyEmail(), sendTicketResolvedEmail()
 - Use isEmailConfigured() before sending and non-blocking .catch() for email error handling
 
+### WhatsApp Group Integration (E11-S10) Patterns
+- WhatsAppGroupStatus enum at schema.prisma:144-148 with values: PENDING, ACTIVE, ARCHIVED
+- Trip model has whatsappGroupId (unique), whatsappGroupInviteLink, whatsappGroupCreatedAt, whatsappGroupStatus, whatsappGroupMemberCount
+- Booking model has whatsappInvitationSentAt, whatsappGroupJoinedAt, whatsappInvitationStatus (pending/sent/joined/failed), whatsappMilestonesSent (Json)
+- WhatsApp invite link format: https://chat.whatsapp.com/{inviteCode}
+
 ---
 
 # Contact Form Epic Progress Log
@@ -218,4 +224,32 @@ Iteration: 6
   - Don't return internal IDs or sensitive user info in public queries
   - Use TRPCError NOT_FOUND with generic message to avoid revealing if reference exists
   - Reference number regex: /^TKT-[A-Za-z0-9]{8}$/
+---
+
+# WhatsApp Group Chat Epic Progress Log (E11-S10)
+
+## 2026-01-21 - US-000
+Iteration: 1
+- Implemented US-000: Prisma Schema Updates for WhatsApp Groups
+- Files changed: prisma/schema.prisma
+- **What was implemented:**
+  - Added WhatsAppGroupStatus enum with values: PENDING (group not yet created), ACTIVE (group accepting members), ARCHIVED (trip completed)
+  - Extended Trip model with WhatsApp fields:
+    - whatsappGroupId (String? @unique) - External WhatsApp group ID
+    - whatsappGroupInviteLink (String?) - https://chat.whatsapp.com/{inviteCode}
+    - whatsappGroupCreatedAt (DateTime?) - When group was created
+    - whatsappGroupStatus (WhatsAppGroupStatus @default(PENDING))
+    - whatsappGroupMemberCount (Int @default(0))
+  - Extended Booking model with WhatsApp fields:
+    - whatsappInvitationSentAt (DateTime?) - When invitation was sent
+    - whatsappGroupJoinedAt (DateTime?) - When guest joined group
+    - whatsappInvitationStatus (String? @default("pending")) - pending/sent/joined/failed
+    - whatsappMilestonesSent (Json?) - Tracks sent milestones
+  - Added indexes: @@index([whatsappGroupStatus]) on Trip, @@index([whatsappInvitationStatus]) on Booking
+- Prisma format passed, Prisma generate succeeded with 0 TypeScript errors
+- **Learnings for future iterations:**
+  - whatsappGroupId on Trip is unique since each trip should only have one WhatsApp group
+  - whatsappMilestonesSent uses Json type to flexibly track milestones: { "60_DAYS": true, "30_DAYS": true, ... }
+  - WhatsApp invite links follow format: https://chat.whatsapp.com/{inviteCode}
+  - Build fails without env vars (STRIPE_SECRET_KEY) but this is pre-existing, not from schema changes
 ---

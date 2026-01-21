@@ -1,114 +1,239 @@
 {
   "project": "Pickleball Passport",
-  "branchName": "ralph/contact-form-support-system",
-  "description": "Contact Form & Support System (E1-S12) - Implement comprehensive contact form and support ticket system for prospects, guests, and admins",
+  "branchName": "feature/story-11-10-whatsapp-group-chat",
+  "description": "Story 11-10: Group Chat Integration (WhatsApp) - Enable guests to communicate with fellow travelers and trip organizers through WhatsApp group chat before departure.",
   "userStories": [
     {
       "id": "US-000",
-      "title": "Prisma Schema Updates for Support System",
-      "description": "Enhance SupportTicket model and add required enums for the support system",
+      "title": "Prisma Schema Updates for WhatsApp Groups",
+      "description": "Add WhatsApp group fields to Trip and Booking models",
       "acceptanceCriteria": [
-        "Add TicketCategory enum with values: GENERAL_INQUIRY, BOOKING_QUESTION, MEDICAL_WELLNESS_QUESTION, PAYMENT_ISSUE, PARTNERSHIP_INQUIRY, OTHER",
-        "Add TicketSource enum with values: WEBSITE_CONTACT, GUEST_DASHBOARD, ADMIN_CREATED, EMAIL",
-        "Enhance SupportTicket model with: category (TicketCategory), source (TicketSource), email (String), name (String?), phone (String?), bookingId (String?), assignedToId (String?), resolvedAt (DateTime?), referenceNumber (String unique)",
-        "Add SupportTicketReply model for admin/guest replies with: id, ticketId, userId, message, isAdminReply, createdAt",
-        "Add SupportTicketAttachment model for file uploads with: id, ticketId, fileName, fileUrl, fileSize, mimeType, createdAt",
-        "Add relation from SupportTicket to User for assignedTo field",
-        "Add relation from SupportTicket to Booking (optional)",
+        "Add WhatsAppGroupStatus enum with values: PENDING, ACTIVE, ARCHIVED",
+        "Extend Trip model with: whatsappGroupId (String? unique), whatsappGroupInviteLink (String?), whatsappGroupCreatedAt (DateTime?), whatsappGroupStatus (WhatsAppGroupStatus default PENDING), whatsappGroupMemberCount (Int default 0)",
+        "Extend Booking model with: whatsappInvitationSentAt (DateTime?), whatsappGroupJoinedAt (DateTime?), whatsappInvitationStatus (String? default 'pending' - values: pending, sent, joined, failed)",
         "Run prisma db push successfully with no errors",
         "Generate Prisma client with no TypeScript errors"
       ],
       "priority": 0,
       "passes": true,
-      "notes": "This story must be completed first as all other stories depend on the enhanced schema. Use prisma db push for development. Reference existing enum patterns in schema.prisma."
+      "notes": "Schema must be completed first. All other stories depend on these models. Follow existing enum and model patterns in schema.prisma."
     },
     {
       "id": "US-001",
-      "title": "Public Contact Form",
-      "description": "Prospects can submit inquiries from marketing site without authentication",
+      "title": "WhatsApp Business API Client",
+      "description": "Create service module for WhatsApp Business API integration",
       "acceptanceCriteria": [
-        "Form appears on `/contact` route (public, no auth required)",
-        "Fields: Name, Email, Phone (optional), Category (dropdown with TicketCategory values), Message, Trip Interest (dropdown), Timeline (dropdown)",
-        "Form validation: Email required, message min 20 chars, phone format validation if provided",
-        "Submit button shows loading state, success message after submission",
-        "Form submission creates SupportTicket with status=OPEN, source=WEBSITE_CONTACT",
-        "Reference number generated and displayed to user on success",
-        "Honeypot field for spam prevention (hidden field that bots fill)",
-        "Responsive design (Tailwind), accessible (ARIA labels, semantic HTML)",
+        "Create lib/whatsapp/client.ts with WhatsAppClient class",
+        "Add environment variables: WHATSAPP_API_KEY, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_BUSINESS_ACCOUNT_ID, WHATSAPP_WEBHOOK_VERIFY_TOKEN",
+        "Update .env.example with new WhatsApp variables",
+        "Implement isConfigured() method to check if WhatsApp is properly configured",
+        "Implement sendMessage(to: string, message: string) for sending text messages",
+        "Implement sendTemplateMessage(to: string, templateName: string, parameters: Record<string, string>) for template messages",
+        "Follow existing service patterns from lib/email/sendgrid.ts and lib/sms/twilio.ts",
+        "Non-blocking error handling - WhatsApp failures should not block other operations",
+        "Comprehensive logging with context using existing logger",
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 1,
-      "passes": true,
-      "notes": "Use tRPC mutation: support.createPublicTicket. Generate reference number as 'TKT-' + nanoid(8). Store IP address for duplicate detection."
+      "passes": false,
+      "notes": "Use axios for API calls. Base URL: https://graph.facebook.com/v18.0. Reference lib/sms/twilio.ts for similar third-party API integration pattern."
     },
     {
       "id": "US-002",
-      "title": "Guest Support Form in Dashboard",
-      "description": "Authenticated guests can submit support requests tied to their bookings",
+      "title": "WhatsApp Message Templates",
+      "description": "Create message templates for WhatsApp communications",
       "acceptanceCriteria": [
-        "New `/dashboard/support` page accessible to guests",
-        "Form fields: Category (dropdown), Message, Priority (Normal/Urgent)",
-        "Ticket auto-links to guest's current/latest booking (if available)",
-        "Form submission shows confirmation toast with reference number",
-        "Guests can see their tickets in dashboard (readonly list with status badges)",
-        "Click on ticket shows detail view with replies",
+        "Create lib/whatsapp/templates/trip-group-invitation.ts - invitation message with trip details and join link",
+        "Create lib/whatsapp/templates/group-welcome-message.ts - personalized welcome when guest joins group",
+        "Create lib/whatsapp/templates/milestone-messages.ts - templates for 60/30/14/7/1 day pre-trip messages",
+        "Each template is a function that takes typed parameters and returns formatted string",
+        "Include trip name, dates, destination, invite link where applicable",
+        "Include emojis for engagement (WhatsApp supports emojis)",
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "Use tRPC mutation: support.createGuestTicket. Auto-populate email and name from session. Reuse existing UI components for consistency."
+      "passes": false,
+      "notes": "WhatsApp uses plain text only (no HTML). Keep messages concise and mobile-friendly."
     },
     {
       "id": "US-003",
-      "title": "Support Ticket Admin Dashboard",
-      "description": "Admins can view, manage, and respond to all support tickets",
+      "title": "Group Manager Service",
+      "description": "Create service module for trip group lifecycle management",
       "acceptanceCriteria": [
-        "New `/dashboard/admin/support` page (admin-only access)",
-        "Ticket list view with filters: Status, Priority, Source, Category, Date range",
-        "Ticket detail view shows: Full message, timeline of replies, guest info (if authenticated), status/priority badges",
-        "Reply form with textarea for admin responses",
-        "Inline actions: Mark In Progress, Resolve, Close",
-        "Assignment dropdown (assign to self or unassigned)",
-        "Search across ticket fields (name, email, message content, reference number)",
+        "Create lib/whatsapp/group-manager.ts with group management functions",
+        "Implement createTripGroup(tripId: string) - creates WhatsApp group when trip has 3+ confirmed bookings",
+        "Implement inviteGuestToGroup(bookingId: string, guestData: TripGroupInvitationData) - sends invitation after booking",
+        "Implement sendGroupBroadcast(tripId: string, message: string) - admin broadcast to trip group",
+        "Update booking record with whatsappInvitationSentAt and whatsappInvitationStatus on invite send",
+        "Non-blocking: WhatsApp failures don't block booking completion",
+        "Retry logic for failed sends (3 attempts with exponential backoff)",
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "Use tRPC: support.getTickets, support.getTicketDetail, support.replyToTicket, support.updateTicketStatus. Implement optimistic updates for status changes."
+      "passes": false,
+      "notes": "For MVP: Group creation can be manual (admin creates group, enters invite link in admin UI). Automated group creation via API requires WhatsApp Business Platform which may take time to set up."
     },
     {
       "id": "US-004",
-      "title": "Email Notification System",
-      "description": "Automated emails notify stakeholders of ticket activity",
+      "title": "WhatsApp Webhook Endpoint",
+      "description": "Create webhook endpoint for incoming WhatsApp messages and status updates",
       "acceptanceCriteria": [
-        "Prospect/Guest receives confirmation email on ticket creation with reference number",
-        "Admin receives notification for new tickets",
-        "Admin receives immediate notification if Priority=URGENT",
-        "Guest receives notification when admin replies",
-        "Guest receives notification when ticket resolved",
-        "All emails include ticket reference number for tracking",
-        "All emails use existing SendGrid infrastructure"
+        "Create app/api/webhooks/whatsapp/route.ts",
+        "Implement GET handler for webhook verification (Meta webhook challenge)",
+        "Implement POST handler for incoming events (message status updates, delivery confirmations)",
+        "Verify webhook signature using WHATSAPP_WEBHOOK_VERIFY_TOKEN",
+        "Update booking whatsappGroupJoinedAt when guest clicks invite link (if trackable)",
+        "Log all webhook events for debugging",
+        "Return 200 OK for all valid events (Meta requires quick response)",
+        "TypeScript strict mode: 0 errors"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "Use existing email service patterns. Create email templates for: ticket-created, ticket-admin-notification, ticket-reply, ticket-resolved."
+      "passes": false,
+      "notes": "Meta webhooks require quick 200 response. Process events async if needed. Reference existing webhook patterns in app/api/webhooks/."
     },
     {
       "id": "US-005",
-      "title": "Public Ticket Status Page",
-      "description": "Prospects can check ticket status without logging in",
+      "title": "Guest Dashboard WhatsApp Card",
+      "description": "Add WhatsApp group card to guest dashboard",
       "acceptanceCriteria": [
-        "Route: `/support/status` with form to enter reference number and email",
-        "Verify email + reference number match before showing details",
-        "Display: Ticket subject/message, submitted date, status, admin replies (if any)",
-        "Link back to contact form if ticket closed",
-        "No auth required, fully public access",
-        "Rate limit to 10 lookups per email per hour (spam prevention)",
+        "Create components/guest/whatsapp-group-card.tsx",
+        "Display card only if guest has active booking with a trip that has WhatsApp group",
+        "Show: Group name, member count (if available), 'Join WhatsApp Group' button",
+        "Join button is a deep link to WhatsApp group: https://chat.whatsapp.com/{inviteCode}",
+        "Show QR code option for mobile scanning (use qrcode library or similar)",
+        "Track when guest clicks join button (update whatsappGroupJoinedAt)",
+        "Add card to guest dashboard at app/dashboard/page.tsx",
+        "Responsive design using Tailwind CSS",
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "Use public procedure: support.getPublicTicketStatus. Validate email/referenceNumber combo in database."
+      "passes": false,
+      "notes": "Use existing UI component patterns. Card should be visually prominent but not overwhelming. Consider using shadcn/ui Card component if available."
+    },
+    {
+      "id": "US-006",
+      "title": "Admin WhatsApp Groups Management",
+      "description": "Create admin interface for viewing and managing WhatsApp groups",
+      "acceptanceCriteria": [
+        "Create app/admin/communication/whatsapp-groups/page.tsx",
+        "List all trips with their WhatsApp group status (Pending, Active, Archived)",
+        "Show: Trip name, dates, member count, group status, creation date",
+        "Actions per group: View details, Archive, Refresh invite link",
+        "View details shows: member list with join status, group invite link, option to manually add invite link",
+        "Create group manually button - allows admin to enter WhatsApp group invite link for a trip",
+        "Archive group after trip completion (+30 days)",
+        "Protect route with admin role check",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "For MVP: Focus on manual group management (admin creates group externally, enters link here). Automated creation can be added later."
+    },
+    {
+      "id": "US-007",
+      "title": "Admin Broadcast Interface",
+      "description": "Create admin interface for broadcasting messages to trip groups",
+      "acceptanceCriteria": [
+        "Create app/admin/communication/broadcast/page.tsx",
+        "Select destination: specific trip group, all active trips, upcoming trips only",
+        "Compose message textarea with character count",
+        "Preview message before sending",
+        "Confirmation modal warning this cannot be undone",
+        "Send via WhatsApp Business API using sendGroupBroadcast function",
+        "Log all broadcasts (tripId, message, sentAt, sentBy)",
+        "Show success/error feedback after send",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Broadcasts are sent as individual messages to each group member, not a group message (WhatsApp API limitation). Consider rate limiting."
+    },
+    {
+      "id": "US-008",
+      "title": "tRPC WhatsApp Router",
+      "description": "Create tRPC router for WhatsApp functionality",
+      "acceptanceCriteria": [
+        "Create lib/trpc/server/routers/whatsapp.ts",
+        "Admin queries: getWhatsAppGroups, getWhatsAppGroupDetails(tripId)",
+        "Admin mutations: setGroupInviteLink(tripId, inviteLink), archiveGroup(tripId), sendBroadcast(tripId, message)",
+        "Guest mutations: markGroupJoined(bookingId) - called when guest clicks join button",
+        "Query: getGuestWhatsAppGroup(bookingId) - get group info for guest dashboard card",
+        "All admin procedures require admin role",
+        "Register router in app router",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Follow existing tRPC router patterns. Use Zod for input validation."
+    },
+    {
+      "id": "US-009",
+      "title": "Booking Integration - Send WhatsApp Invitation",
+      "description": "Integrate WhatsApp invitation sending after booking confirmation",
+      "acceptanceCriteria": [
+        "Find booking confirmation flow (likely in Stripe webhook or booking tRPC router)",
+        "After successful booking payment, call inviteGuestToGroup if trip has WhatsApp group",
+        "Non-blocking: WhatsApp invitation failure should not fail the booking",
+        "Check user notification preferences before sending (respect whatsappEnabled preference from Story 11-12)",
+        "Log invitation send status",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Find the existing booking confirmation logic first. May be in app/api/webhooks/stripe/route.ts or lib/trpc/server/routers/booking.ts"
+    },
+    {
+      "id": "US-010",
+      "title": "Pre-Trip Milestone Messages Job",
+      "description": "Create background job for sending automated milestone messages",
+      "acceptanceCriteria": [
+        "Create lib/jobs/whatsapp-milestone-messages.ts",
+        "Function checkAndSendMilestoneMessages() - checks all upcoming trips and sends appropriate messages",
+        "Send messages at milestones: 60 days, 30 days, 14 days, 7 days, 1 day before trip",
+        "Only send to guests who have joined WhatsApp group (whatsappGroupJoinedAt is set)",
+        "Track sent milestones to avoid duplicates (add whatsappMilestonesSent field to Booking if needed)",
+        "Create API route app/api/cron/whatsapp-milestones/route.ts for scheduled execution",
+        "Log all milestone messages sent",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Can be triggered by cron job (Vercel cron) or manual admin trigger for testing. Add whatsappMilestonesSent Json field to Booking model if needed to track sent milestones."
+    },
+    {
+      "id": "US-011",
+      "title": "Unit Tests for WhatsApp Services",
+      "description": "Write unit tests for WhatsApp functionality",
+      "acceptanceCriteria": [
+        "Create lib/whatsapp/__tests__/client.test.ts - test WhatsAppClient methods with mocked axios",
+        "Create lib/whatsapp/__tests__/group-manager.test.ts - test group management functions with mocked db and client",
+        "Test isConfigured() returns correct values based on env vars",
+        "Test sendMessage() makes correct API call",
+        "Test inviteGuestToGroup() sends message and updates booking",
+        "Test error handling and retry logic",
+        "All tests pass with npm test",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Use vitest (already in project). Mock external dependencies (axios, db). Follow existing test patterns."
+    },
+    {
+      "id": "US-012",
+      "title": "Final Integration and PR",
+      "description": "Complete integration, run all tests, create PR",
+      "acceptanceCriteria": [
+        "All WhatsApp features working end-to-end",
+        "All tests pass (npm test)",
+        "TypeScript compilation succeeds (npm run build or tsc)",
+        "No console errors or warnings",
+        "Update _bmad-output/implementation/sprint-status.yaml to mark 11-10 as in-progress or complete",
+        "Create PR with comprehensive description listing all implemented features",
+        "PR title: feat(E11-S10): WhatsApp Group Chat Integration"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "Run full test suite. Check for any TypeScript errors. Create PR targeting main branch."
     }
   ]
 }

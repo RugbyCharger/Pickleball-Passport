@@ -23,25 +23,25 @@ enum Role {
 }
 
 enum BookingStatus {
-  DRAFT           // User is configuring package
+  DRAFT // User is configuring package
   PENDING_PAYMENT // Booking created, awaiting payment
-  CONFIRMED       // Payment received, booking confirmed
-  CANCELLED       // Booking cancelled
-  COMPLETED       // Trip completed
+  CONFIRMED // Payment received, booking confirmed
+  CANCELLED // Booking cancelled
+  COMPLETED // Trip completed
 }
 
 enum PaymentStatus {
-  PENDING   // Payment not yet processed
+  PENDING // Payment not yet processed
   SUCCEEDED // Payment successful
-  FAILED    // Payment failed
-  REFUNDED  // Payment refunded
+  FAILED // Payment failed
+  REFUNDED // Payment refunded
 }
 
 enum ApplicationStatus {
   SUBMITTED // Application submitted by guest
   REVIEWING // Admin is reviewing
-  APPROVED  // Application approved
-  REJECTED  // Application rejected
+  APPROVED // Application approved
+  REJECTED // Application rejected
 }
 
 enum PartnerTier {
@@ -141,11 +141,17 @@ enum SubscriberStatus {
   BOUNCED
 }
 
+enum WhatsAppGroupStatus {
+  PENDING // Group not yet created
+  ACTIVE // Group is active and accepting members
+  ARCHIVED // Trip completed, group archived
+}
+
 enum GiftStatus {
-  PENDING   // Payment complete, waiting to send notification
-  SENT      // Gift notification email sent to recipient
-  ACCEPTED  // Recipient accepted gift, booking transferred
-  DECLINED  // Recipient declined gift, refund processed
+  PENDING // Payment complete, waiting to send notification
+  SENT // Gift notification email sent to recipient
+  ACCEPTED // Recipient accepted gift, booking transferred
+  DECLINED // Recipient declined gift, refund processed
 }
 
 enum TaskPriority {
@@ -161,15 +167,15 @@ enum TaskStatus {
 }
 
 enum PaymentPlan {
-  FULL          // Pay in full (2% discount)
+  FULL // Pay in full (2% discount)
   INSTALLMENT_4 // 4 payments (50%, 25%, 15%, 10%)
-  FINANCING     // Affirm financing (future)
+  FINANCING // Affirm financing (future)
 }
 
 enum PaymentRecordStatus {
-  PAID    // Payment completed successfully
+  PAID // Payment completed successfully
   PENDING // Payment scheduled but not yet processed
-  FAILED  // Payment attempt failed
+  FAILED // Payment attempt failed
 }
 
 // ============================================================================
@@ -195,9 +201,9 @@ model User {
   testimonials   Testimonial[]
 
   // Support System (E1-S12)
-  supportTickets         SupportTicket[]       // Tickets created by this user
-  assignedTickets        SupportTicket[]       @relation("AssignedTickets") // Tickets assigned to admin
-  supportTicketReplies   SupportTicketReply[]  // Replies from this user
+  supportTickets       SupportTicket[] // Tickets created by this user
+  assignedTickets      SupportTicket[]      @relation("AssignedTickets") // Tickets assigned to admin
+  supportTicketReplies SupportTicketReply[] // Replies from this user
 
   @@index([email])
   @@index([role])
@@ -209,9 +215,9 @@ model User {
 // ============================================================================
 
 model GuestProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Personal Information
   firstName String
@@ -249,9 +255,9 @@ model GuestProfile {
 // ============================================================================
 
 model PartnerProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Club Information
   clubName     String
@@ -259,10 +265,10 @@ model PartnerProfile {
   jobTitle     String?
 
   // Partner Program
-  referralCode  String        @unique // e.g., "VILLAGES-JEN-2025"
-  tier          PartnerTier   @default(BRONZE)
-  passportPoints Int          @default(0)
-  onboardingCompleted Boolean @default(false) // E9-S14: Onboarding wizard
+  referralCode        String      @unique // e.g., "VILLAGES-JEN-2025"
+  tier                PartnerTier @default(BRONZE)
+  passportPoints      Int         @default(0)
+  onboardingCompleted Boolean     @default(false) // E9-S14: Onboarding wizard
 
   // Notification Preferences (E11-S9)
   notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
@@ -271,13 +277,13 @@ model PartnerProfile {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  referrals PartnerReferral[]
-  landingPages PartnerLandingPage[]
-  payouts PartnerPayout[]
-  payoutMethod PartnerPayoutMethod?
-  forumThreads ForumThread[]
-  forumReplies ForumReply[]
-  forumLikes ForumLike[]
+  referrals       PartnerReferral[]
+  landingPages    PartnerLandingPage[]
+  payouts         PartnerPayout[]
+  payoutMethod    PartnerPayoutMethod?
+  forumThreads    ForumThread[]
+  forumReplies    ForumReply[]
+  forumLikes      ForumLike[]
   forumReplyLikes ForumReplyLike[]
 
   @@index([userId])
@@ -290,11 +296,11 @@ model PartnerProfile {
 // ============================================================================
 
 model Package {
-  id          String   @id @default(cuid())
-  slug        String   @unique // URL-friendly name
-  name        String   // e.g., "Pure Play", "Smile Makeover"
+  id          String  @id @default(cuid())
+  slug        String  @unique // URL-friendly name
+  name        String // e.g., "Pure Play", "Smile Makeover"
   tagline     String?
-  description String   @db.Text // Markdown content
+  description String  @db.Text // Markdown content
 
   // Pricing
   basePrice Int // Base price in USD cents (e.g., 1500000 = $15,000)
@@ -323,7 +329,7 @@ model Package {
 }
 
 model Itinerary {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   packageId String
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
 
@@ -340,9 +346,9 @@ model Itinerary {
 }
 
 model Trip {
-  id          String   @id @default(cuid())
-  name        String   // e.g., "Phuket January 2026"
-  destination String   // Thailand location
+  id          String @id @default(cuid())
+  name        String // e.g., "Phuket January 2026"
+  destination String // Thailand location
 
   // Dates
   startDate DateTime
@@ -355,6 +361,13 @@ model Trip {
   // Status
   isActive Boolean @default(true)
 
+  // WhatsApp Group (E11-S10)
+  whatsappGroupId          String?             @unique // External WhatsApp group ID
+  whatsappGroupInviteLink  String? // https://chat.whatsapp.com/{inviteCode}
+  whatsappGroupCreatedAt   DateTime? // When group was created
+  whatsappGroupStatus      WhatsAppGroupStatus @default(PENDING)
+  whatsappGroupMemberCount Int                 @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -364,6 +377,7 @@ model Trip {
   @@index([startDate])
   @@index([isActive])
   @@index([isActive, startDate, currentBookings]) // Composite index for getAvailable query
+  @@index([whatsappGroupStatus])
 }
 
 // ============================================================================
@@ -371,20 +385,20 @@ model Trip {
 // ============================================================================
 
 model Booking {
-  id               String        @id @default(cuid())
-  bookingReference String        @unique // PBP-{YEAR}-{6-DIGIT}
+  id               String  @id @default(cuid())
+  bookingReference String  @unique // PBP-{YEAR}-{6-DIGIT}
   userId           String
-  user             User          @relation(fields: [userId], references: [id])
+  user             User    @relation(fields: [userId], references: [id])
   packageId        String
-  package          Package       @relation(fields: [packageId], references: [id])
+  package          Package @relation(fields: [packageId], references: [id])
   tripId           String?
-  trip             Trip?         @relation(fields: [tripId], references: [id])
+  trip             Trip?   @relation(fields: [tripId], references: [id])
 
   status BookingStatus @default(DRAFT)
 
   // Configuration
-  duration           Int    // Days selected (7, 10, 14, 21)
-  accommodationTier  String // Luxury, Ultra-Luxury, Villa
+  duration          Int // Days selected (7, 10, 14, 21)
+  accommodationTier String // Luxury, Ultra-Luxury, Villa
 
   // Pricing
   basePrice          Int // Snapshot of package base price
@@ -402,7 +416,7 @@ model Booking {
   // Rescheduling
   rescheduleCount Int       @default(0) // Track number of reschedules (max: 1)
   rescheduledAt   DateTime? // Last reschedule timestamp
-  originalTripId  String?   // Original trip before reschedule (audit trail)
+  originalTripId  String? // Original trip before reschedule (audit trail)
 
   // Companion Booking (E3-S17)
   isCompanionBooking  Boolean @default(false) // True if this is a companion booking
@@ -434,6 +448,12 @@ model Booking {
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
 
+  // E11-S10: WhatsApp Group Integration
+  whatsappInvitationSentAt DateTime? // When WhatsApp invitation was sent
+  whatsappGroupJoinedAt    DateTime? // When guest clicked join link
+  whatsappInvitationStatus String?   @default("pending") // pending, sent, joined, failed
+  whatsappMilestonesSent   Json? // Tracks sent milestones: { "60_DAYS": true, "30_DAYS": true, ... }
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -461,6 +481,7 @@ model Booking {
   @@index([giftAcceptanceToken])
   @@index([giftStatus])
   @@index([giftDeliveryDate])
+  @@index([whatsappInvitationStatus])
 }
 
 model AddOn {
@@ -487,14 +508,14 @@ model AddOn {
 }
 
 model BookingAddOn {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   addOnId   String
   addOn     AddOn   @relation(fields: [addOnId], references: [id])
 
-  quantity Int     @default(1) // For things like veneers (multiple teeth)
-  price    Int     // Snapshot of price at booking time
+  quantity Int @default(1) // For things like veneers (multiple teeth)
+  price    Int // Snapshot of price at booking time
 
   createdAt DateTime @default(now())
 
@@ -508,9 +529,9 @@ model BookingAddOn {
 // ============================================================================
 
 model Payment {
-  id        String        @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   amount Int // Amount in cents
   status PaymentStatus @default(PENDING)
@@ -520,20 +541,20 @@ model Payment {
   stripeCustomerId      String?
 
   // Installment Plan
-  isInstallment   Boolean   @default(false)
-  installmentNumber Int?    // 1 of 4, 2 of 4, etc.
-  scheduledDate   DateTime? // When installment is due
+  isInstallment     Boolean   @default(false)
+  installmentNumber Int? // 1 of 4, 2 of 4, etc.
+  scheduledDate     DateTime? // When installment is due
 
   // Metadata
   failureReason String? // Error message if payment failed
 
   // Receipt Generation (E4-S8)
-  receiptUrl         String?   // Supabase Storage URL
+  receiptUrl         String? // Supabase Storage URL
   receiptNumber      String?   @unique // Format: RCPT-YYYYMMDD-XXXXX
   receiptGeneratedAt DateTime? // When PDF was generated
 
   // Refund Tracking (E4-S4, E4-S9)
-  refundedAmount Int?    // Amount refunded in cents
+  refundedAmount Int? // Amount refunded in cents
   stripeRefundId String? // Stripe refund ID (re_...)
 
   // Relations
@@ -553,30 +574,30 @@ model Payment {
 // ============================================================================
 
 model PaymentRecord {
-  id        String              @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   // Amount and Status
-  amountCents Int                 // Payment amount in cents
+  amountCents Int // Payment amount in cents
   status      PaymentRecordStatus @default(PENDING)
 
   // Installment Details
-  dueDate            DateTime  // When this payment is due
-  paidDate           DateTime? // When payment was completed
-  percentage         Int?      // Percentage of total (50, 25, 15, 10)
-  installmentNumber  Int?      // Which installment (1, 2, 3, 4)
+  dueDate           DateTime // When this payment is due
+  paidDate          DateTime? // When payment was completed
+  percentage        Int? // Percentage of total (50, 25, 15, 10)
+  installmentNumber Int? // Which installment (1, 2, 3, 4)
 
   // Stripe Integration
   stripePaymentIntentId String? @unique // Stripe payment intent for this installment
 
   // E4-S6 Phase 8: Retry Logic
-  retryCount     Int      @default(0)  // Track retry attempts (0-3)
-  lastAttemptAt  DateTime?             // When last charge was attempted
-  failureReason  String?               // Stripe error message for debugging
+  retryCount    Int       @default(0) // Track retry attempts (0-3)
+  lastAttemptAt DateTime? // When last charge was attempted
+  failureReason String? // Stripe error message for debugging
 
   // E4-S8: Payment Reminders
-  reminderSentAt DateTime?             // When 7-day reminder was sent
+  reminderSentAt DateTime? // When 7-day reminder was sent
 
   // Metadata
   createdAt DateTime @default(now())
@@ -594,9 +615,9 @@ model PaymentRecord {
 // ============================================================================
 
 model Application {
-  id     String            @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
-  user   User              @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   status ApplicationStatus @default(SUBMITTED)
 
@@ -616,10 +637,10 @@ model Application {
   interests String[] // dental, cosmetic, wellness, spiritual, pure_play
 
   // Step 4: Travel Preferences
-  preferredDuration  String   // 7, 10, 14, 21 days
-  preferredDates     String?  // Rough timeframe
-  travelingAlone     Boolean
-  budgetRange        String?  // e.g., "$10-15K"
+  preferredDuration String // 7, 10, 14, 21 days
+  preferredDates    String? // Rough timeframe
+  travelingAlone    Boolean
+  budgetRange       String? // e.g., "$10-15K"
 
   // Step 5: Discovery
   referralSource String // How did you hear about us?
@@ -645,11 +666,11 @@ model Testimonial {
   user   User   @relation(fields: [userId], references: [id])
 
   // Guest Info (snapshot for display)
-  guestName    String
-  guestAge     Int?
+  guestName     String
+  guestAge      Int?
   guestLocation String?
-  packageType  String // Which package they booked
-  tripDate     DateTime?
+  packageType   String // Which package they booked
+  tripDate      DateTime?
 
   // Video (Mux integration)
   muxAssetId    String? @unique
@@ -660,9 +681,9 @@ model Testimonial {
   quote String? @db.Text
 
   // Metadata
-  isFeatured Boolean  @default(false)
-  isApproved Boolean  @default(false)
-  viewCount  Int      @default(0)
+  isFeatured Boolean @default(false)
+  isApproved Boolean @default(false)
+  viewCount  Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -677,7 +698,7 @@ model Testimonial {
 // ============================================================================
 
 model PartnerReferral {
-  id        String @id @default(cuid())
+  id        String         @id @default(cuid())
   partnerId String
   partner   PartnerProfile @relation(fields: [partnerId], references: [id])
   bookingId String         @unique
@@ -698,33 +719,33 @@ model PartnerReferral {
 
 // E9-S8: Co-Branded Landing Pages
 model PartnerLandingPage {
-  id          String   @id @default(cuid())
-  partnerId   String
-  partner     PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Basic Info
   name        String
-  slug        String   @unique
-  isPublished Boolean  @default(false)
-  
+  slug        String  @unique
+  isPublished Boolean @default(false)
+
   // Branding
-  clubLogoUrl String?
-  primaryColor String?  @default("#003D5C")
+  clubLogoUrl    String?
+  primaryColor   String? @default("#003D5C")
   secondaryColor String? @default("#D4AF37")
-  
+
   // Content
   headline    String?
   subheadline String?
   clubContact String?
-  
+
   // Analytics
-  viewCount     Int @default(0)
-  clickCount    Int @default(0)
+  viewCount       Int @default(0)
+  clickCount      Int @default(0)
   conversionCount Int @default(0)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@index([partnerId])
   @@index([slug])
 }
@@ -739,73 +760,73 @@ enum PayoutStatus {
 }
 
 model PartnerPayout {
-  id            String       @id @default(cuid())
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Payout Details
-  pointsRedeemed Int         // Points converted to cash
-  amountInCents  Int         // Amount in cents ($0.80/point)
-  
+  pointsRedeemed Int // Points converted to cash
+  amountInCents  Int // Amount in cents ($0.80/point)
+
   // Status
-  status        PayoutStatus @default(PENDING)
-  
+  status PayoutStatus @default(PENDING)
+
   // Bank Account (masked for display)
   bankAccountLast4 String?
-  
+
   // Processing
-  requestedAt   DateTime     @default(now())
+  requestedAt   DateTime  @default(now())
   processedAt   DateTime?
-  transactionId String?      // External transaction ID
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  transactionId String? // External transaction ID
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([partnerId])
   @@index([status])
 }
 
 model PartnerPayoutMethod {
-  id            String   @id @default(cuid())
-  partnerId     String   @unique
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String         @unique
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Bank Account (encrypted storage in production)
   bankName      String
-  accountNumber String   // TODO: Encrypt in production
-  routingNumber String   // TODO: Encrypt in production
-  
+  accountNumber String // TODO: Encrypt in production
+  routingNumber String // TODO: Encrypt in production
+
   // Display
-  accountLast4  String   // Last 4 digits for display
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  accountLast4 String // Last 4 digits for display
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // E9-S13: Directors Circle (Community Forum)
 model ForumThread {
-  id            String       @id @default(cuid())
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Thread Content
-  title         String
-  category      ForumCategory
-  content       String       @db.Text
-  
+  title    String
+  category ForumCategory
+  content  String        @db.Text
+
   // Metadata
-  replyCount    Int          @default(0)
-  likeCount     Int          @default(0)
-  isPinned      Boolean      @default(false)
-  isAnnouncement Boolean     @default(false)
-  
+  replyCount     Int     @default(0)
+  likeCount      Int     @default(0)
+  isPinned       Boolean @default(false)
+  isAnnouncement Boolean @default(false)
+
   // Relationships
-  replies       ForumReply[]
-  likes         ForumLike[]
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  replies ForumReply[]
+  likes   ForumLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([partnerId])
   @@index([category])
   @@index([createdAt])
@@ -813,49 +834,49 @@ model ForumThread {
 }
 
 model ForumReply {
-  id            String       @id @default(cuid())
-  threadId      String
-  thread        ForumThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  content       String       @db.Text
-  
-  likeCount     Int          @default(0)
-  
+  id        String         @id @default(cuid())
+  threadId  String
+  thread    ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  content String @db.Text
+
+  likeCount Int @default(0)
+
   // Relationships
-  likes         ForumReplyLike[]
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  likes ForumReplyLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([threadId])
   @@index([partnerId])
 }
 
 model ForumLike {
-  id            String       @id @default(cuid())
-  threadId      String
-  thread        ForumThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  createdAt     DateTime     @default(now())
-  
+  id        String         @id @default(cuid())
+  threadId  String
+  thread    ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+
   @@unique([threadId, partnerId])
   @@index([threadId])
   @@index([partnerId])
 }
 
 model ForumReplyLike {
-  id            String       @id @default(cuid())
-  replyId       String
-  reply         ForumReply   @relation(fields: [replyId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  createdAt     DateTime     @default(now())
-  
+  id        String         @id @default(cuid())
+  replyId   String
+  reply     ForumReply     @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+
   @@unique([replyId, partnerId])
   @@index([replyId])
   @@index([partnerId])
@@ -866,9 +887,9 @@ model ForumReplyLike {
 // ============================================================================
 
 model Notification {
-  id     String           @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
-  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   type    NotificationType
   title   String
@@ -889,13 +910,13 @@ model Notification {
 }
 
 model ReminderHistory {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   reminderType String // "30_DAY", "7_DAY", "1_DAY"
   sentAt       DateTime @default(now())
-  sentBy       String   // Admin user ID who triggered it
+  sentBy       String // Admin user ID who triggered it
 
   @@index([bookingId])
   @@index([reminderType])
@@ -908,18 +929,18 @@ model ReminderHistory {
 
 model Document {
   id         String         @id @default(cuid())
-  userId     String         // Clerk user ID
-  bookingId  String?        // Optional link to booking
+  userId     String // Clerk user ID
+  bookingId  String? // Optional link to booking
   type       DocumentType
   fileName   String
-  fileUrl    String         // Supabase Storage URL
-  fileSize   Int            // Bytes
+  fileUrl    String // Supabase Storage URL
+  fileSize   Int // Bytes
   mimeType   String
   status     DocumentStatus @default(PENDING_REVIEW)
   uploadedAt DateTime       @default(now())
   reviewedAt DateTime?
-  reviewedBy String?        // Admin user ID
-  notes      String?        // Admin notes
+  reviewedBy String? // Admin user ID
+  notes      String? // Admin notes
 
   booking Booking? @relation(fields: [bookingId], references: [id])
 
@@ -934,46 +955,46 @@ model Document {
 // ============================================================================
 
 model SupportTicket {
-  id              String          @id @default(cuid())
-  referenceNumber String          @unique // Format: TKT-{nanoid(8)}
+  id              String @id @default(cuid())
+  referenceNumber String @unique // Format: TKT-{nanoid(8)}
 
   // Ticket Content
-  subject         String
-  message         String          @db.Text
+  subject String
+  message String @db.Text
 
   // Classification
-  category        TicketCategory  @default(GENERAL_INQUIRY)
-  source          TicketSource    @default(WEBSITE_CONTACT)
-  status          TicketStatus    @default(OPEN)
-  priority        TicketPriority  @default(NORMAL)
+  category TicketCategory @default(GENERAL_INQUIRY)
+  source   TicketSource   @default(WEBSITE_CONTACT)
+  status   TicketStatus   @default(OPEN)
+  priority TicketPriority @default(NORMAL)
 
   // Contact Information (email required, others optional for public submissions)
-  email           String
-  name            String?
-  phone           String?
+  email String
+  name  String?
+  phone String?
 
   // Optional User Relations
-  userId          String?         // Null for public/unauthenticated submissions
-  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? // Null for public/unauthenticated submissions
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   // Optional Booking Relation
-  bookingId       String?
-  booking         Booking?        @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   // Assignment (admin handling the ticket)
-  assignedToId    String?
-  assignedTo      User?           @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   // Resolution
-  resolvedAt      DateTime?
+  resolvedAt DateTime?
 
   // Timestamps
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relationships
-  replies         SupportTicketReply[]
-  attachments     SupportTicketAttachment[]
+  replies     SupportTicketReply[]
+  attachments SupportTicketAttachment[]
 
   @@index([userId])
   @@index([assignedToId])
@@ -988,19 +1009,19 @@ model SupportTicket {
 }
 
 model SupportTicketReply {
-  id            String         @id @default(cuid())
-  ticketId      String
-  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   // Reply author (can be guest user or admin)
-  userId        String?
-  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   // Reply content
-  message       String         @db.Text
-  isAdminReply  Boolean        @default(false)
+  message      String  @db.Text
+  isAdminReply Boolean @default(false)
 
-  createdAt     DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([ticketId])
   @@index([userId])
@@ -1008,17 +1029,17 @@ model SupportTicketReply {
 }
 
 model SupportTicketAttachment {
-  id            String         @id @default(cuid())
-  ticketId      String
-  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   // File information
-  fileName      String
-  fileUrl       String         // Supabase Storage URL
-  fileSize      Int            // Bytes
-  mimeType      String
+  fileName String
+  fileUrl  String // Supabase Storage URL
+  fileSize Int // Bytes
+  mimeType String
 
-  createdAt     DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([ticketId])
   @@index([createdAt])
@@ -1035,7 +1056,7 @@ model Message {
   name    String
   email   String
   phone   String?
-  message String @db.Text
+  message String  @db.Text
 
   // Status
   isRead    Boolean   @default(false)
@@ -1054,7 +1075,7 @@ model Message {
 model WebhookEvent {
   id            String   @id @default(cuid())
   stripeEventId String   @unique // Stripe event ID (evt_...)
-  type          String   // Event type (charge.refunded, etc.)
+  type          String // Event type (charge.refunded, etc.)
   processed     Boolean  @default(true)
   processedAt   DateTime @default(now())
   createdAt     DateTime @default(now())
@@ -1072,11 +1093,11 @@ model RefundLog {
   id             String   @id @default(cuid())
   paymentId      String
   payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  amount         Int      // Refund amount in cents
+  amount         Int // Refund amount in cents
   stripeRefundId String   @unique // Stripe refund ID (re_...)
-  reason         String   // RefundReason enum value
-  notes          String?  // Admin notes (optional)
-  processedBy    String   // Admin user ID (Clerk ID)
+  reason         String // RefundReason enum value
+  notes          String? // Admin notes (optional)
+  processedBy    String // Admin user ID (Clerk ID)
   processedAt    DateTime @default(now())
 
   @@index([paymentId])
@@ -1099,8 +1120,8 @@ model Task {
   // Relations
   bookingId        String?
   booking          Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  assignedToUserId String?  // User ID who is assigned this task
-  createdByUserId  String   // User ID who created this task (admin)
+  assignedToUserId String? // User ID who is assigned this task
+  createdByUserId  String // User ID who created this task (admin)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1120,10 +1141,10 @@ model Task {
 model NewsletterSubscriber {
   id             String           @id @default(cuid())
   email          String           @unique
-  firstName      String?          // Optional for single-opt-in
+  firstName      String? // Optional for single-opt-in
   status         SubscriberStatus @default(PENDING)
   confirmToken   String?          @unique // For double opt-in confirmation
-  confirmedAt    DateTime?        // When user confirmed subscription
+  confirmedAt    DateTime? // When user confirmed subscription
   subscribedAt   DateTime         @default(now())
   unsubscribedAt DateTime?
   createdAt      DateTime         @default(now())
@@ -1140,31 +1161,31 @@ model NewsletterSubscriber {
 
 enum EmailTemplateCategory {
   TRANSACTIONAL // Booking, payment, account
-  MARKETING     // Pre-trip, post-trip, promotions
+  MARKETING // Pre-trip, post-trip, promotions
   NOTIFICATIONS // Admin alerts, partner notifications
-  SYSTEM        // Welcome, verification, password reset
+  SYSTEM // Welcome, verification, password reset
 }
 
 enum EmailTemplateStatus {
-  DRAFT    // In progress, not live
-  ACTIVE   // Published and in use
+  DRAFT // In progress, not live
+  ACTIVE // Published and in use
   ARCHIVED // No longer in use
 }
 
 model EmailTemplate {
   id          String                @id @default(cuid())
-  name        String                // "Booking Confirmation Email"
+  name        String // "Booking Confirmation Email"
   slug        String                @unique // "booking-confirmation"
-  description String?               // "Sent after guest completes booking"
+  description String? // "Sent after guest completes booking"
   category    EmailTemplateCategory
   status      EmailTemplateStatus   @default(DRAFT)
 
   // Content
-  subjectLine   String  // "Your Pickleball Passport Booking Confirmed!"
+  subjectLine   String // "Your Pickleball Passport Booking Confirmed!"
   preheaderText String? // Preview text shown in inbox
   htmlContent   String  @db.Text // Full HTML content
   textContent   String  @db.Text // Plain text version
-  variables     Json    // ["guestName", "bookingReference", "tripName"]
+  variables     Json // ["guestName", "bookingReference", "tripName"]
 
   // Branding - Base template inheritance
   baseTemplateId String?
@@ -1191,8 +1212,8 @@ model EmailTemplateVersion {
   templateId String
   template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
-  versionNumber  Int     // 1, 2, 3...
-  content        Json    // Snapshot of template at this version
+  versionNumber  Int // 1, 2, 3...
+  content        Json // Snapshot of template at this version
   changesSummary String? // What changed in this version
   createdBy      String
   createdAt      DateTime @default(now())
