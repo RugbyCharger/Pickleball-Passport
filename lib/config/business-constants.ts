@@ -162,6 +162,9 @@ export const GUEST_REFERRAL_POINTS_CONFIG = {
 
   /** Threshold for high-value bookings (in cents) */
   HIGH_VALUE_THRESHOLD: 1500000, // $15,000
+
+  /** Bonus points awarded when referred guest completes their trip */
+  COMPLETION_BONUS_POINTS: 500,
 } as const
 
 // ============================================================================
