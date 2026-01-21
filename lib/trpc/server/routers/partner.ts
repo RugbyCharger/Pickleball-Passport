@@ -995,6 +995,82 @@ export const partnerRouter = router({
     }),
 
   /**
+   * Validate any referral code (partner or guest)
+   * Epic 10 - US-003: Support both partner and guest referral codes at booking
+   * Public procedure (no auth required)
+   */
+  validateAnyReferralCode: publicProcedure
+    .input(
+      z.object({
+        code: z.string().min(3).max(50).trim(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Rate limiting to prevent code enumeration
+      const ip = getIpAddress(ctx.headers)
+      const rateLimitResult = await checkRateLimit('api', ip)
+
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many validation attempts. Please try again later.',
+        })
+      }
+
+      // Convert to uppercase for case-insensitive matching
+      const normalizedCode = input.code.toUpperCase()
+
+      // Check both partner and guest referral codes in parallel
+      const [partner, guestUser] = await Promise.all([
+        ctx.db.partnerProfile.findUnique({
+          where: { referralCode: normalizedCode },
+          select: {
+            id: true,
+            clubName: true,
+            clubLocation: true,
+            tier: true,
+          },
+        }),
+        ctx.db.user.findUnique({
+          where: { referralCode: normalizedCode },
+          select: {
+            id: true,
+            email: true,
+          },
+        }),
+      ])
+
+      // Partner code takes precedence if both exist (shouldn't happen)
+      if (partner) {
+        return {
+          isValid: true,
+          type: 'partner' as const,
+          partnerId: partner.id,
+          partnerName: partner.clubName,
+          clubName: partner.clubName,
+          clubLocation: partner.clubLocation,
+          tier: partner.tier,
+        }
+      }
+
+      if (guestUser) {
+        // Get the guest's first name for display (from email prefix)
+        const firstName = guestUser.email?.split('@')[0] || 'Pickleball Friend'
+        return {
+          isValid: true,
+          type: 'guest' as const,
+          referrerUserId: guestUser.id,
+          referrerName: firstName,
+        }
+      }
+
+      return {
+        isValid: false,
+        message: 'Invalid referral code. Please check and try again.',
+      }
+    }),
+
+  /**
    * Partner signup - create new partner account
    * SECURITY: Changed to protectedProcedure - userId comes from authenticated session
    * Previously accepted userId as input which allowed spoofing

@@ -2,15 +2,18 @@
  * Referral Code Input Component
  *
  * E3-S7: Booking Review Page
+ * Epic 10 - US-003: Updated to support both partner and guest referral codes
  *
- * Allows users to enter and validate partner referral codes for discounts.
+ * Allows users to enter and validate referral codes for discounts (partners)
+ * or referral attribution (guests).
  * Client-side validation for UX; server-side validation happens during payment.
  *
  * Features:
  * - Input field with validation
  * - Loading state during validation
  * - Error/success feedback
- * - Discount display
+ * - Discount display (for partner codes)
+ * - Referral attribution display (for guest codes)
  * - Integration with booking store
  */
 
@@ -19,7 +22,7 @@
 import React, { useState } from 'react'
 import { useBookingStore } from '@/lib/stores/booking-store'
 import { trpc } from '@/lib/trpc/client'
-import { AlertCircle, CheckCircle2, Loader2, Tag } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Loader2, Tag, Users } from 'lucide-react'
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -43,12 +46,15 @@ export function ReferralCodeInput() {
   const [inputValue, setInputValue] = useState(referralCode || '')
   const [shouldValidate, setShouldValidate] = useState(false)
   const [isValid, setIsValid] = useState(!!referralCode)
+  // Track referral type for UI display
+  const [referralType, setReferralType] = useState<'partner' | 'guest' | null>(null)
+  const [guestReferrerName, setGuestReferrerName] = useState<string | null>(null)
 
-  // tRPC query for validation - only runs when shouldValidate is true
-  const { data: validationResult, isLoading, error } = trpc.partner.validateReferralCode.useQuery(
+  // tRPC query for validation - uses the new endpoint that validates both partner and guest codes
+  const { data: validationResult, isLoading, error } = trpc.partner.validateAnyReferralCode.useQuery(
     { code: inputValue },
     {
-      enabled: shouldValidate && inputValue.length >= 5,
+      enabled: shouldValidate && inputValue.length >= 3,
       retry: false,
     }
   )
@@ -60,18 +66,32 @@ export function ReferralCodeInput() {
     if (validationResult) {
       if (validationResult.isValid) {
         setReferralCode(inputValue.toUpperCase())
-        setReferralPartnerId(validationResult.partnerId!)
-        setReferralPartnerInfo({
-          partnerName: validationResult.partnerName!,
-          clubName: validationResult.clubName!,
-          clubLocation: validationResult.clubLocation!,
-        })
         setIsValid(true)
+
+        if (validationResult.type === 'partner') {
+          // Partner referral - set partner info for discount
+          setReferralPartnerId(validationResult.partnerId!)
+          setReferralPartnerInfo({
+            partnerName: validationResult.partnerName!,
+            clubName: validationResult.clubName!,
+            clubLocation: validationResult.clubLocation!,
+          })
+          setReferralType('partner')
+          setGuestReferrerName(null)
+        } else if (validationResult.type === 'guest') {
+          // Guest referral - no discount, just attribution
+          setReferralPartnerId(null)
+          setReferralPartnerInfo(null)
+          setReferralType('guest')
+          setGuestReferrerName(validationResult.referrerName || 'A Pickleball Friend')
+        }
       } else {
         setIsValid(false)
         setReferralCode(null)
         setReferralPartnerId(null)
         setReferralPartnerInfo(null)
+        setReferralType(null)
+        setGuestReferrerName(null)
       }
       setShouldValidate(false)
     }
@@ -81,6 +101,8 @@ export function ReferralCodeInput() {
       setReferralCode(null)
       setReferralPartnerId(null)
       setReferralPartnerInfo(null)
+      setReferralType(null)
+      setGuestReferrerName(null)
       setShouldValidate(false)
     }
   }, [validationResult, error, shouldValidate, isLoading, inputValue, setReferralCode, setReferralPartnerId, setReferralPartnerInfo])
@@ -92,9 +114,13 @@ export function ReferralCodeInput() {
       return
     }
 
-    // Basic format check: CODE-NAME-YEAR pattern
-    const codePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
-    if (!codePattern.test(code)) {
+    // Accept two formats:
+    // Partner codes: LOCATION-NAME-YEAR (e.g., VILLAGES-JEN-2025)
+    // Guest codes: FIRSTNAME-YEAR (e.g., SUSAN-2026)
+    const partnerCodePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
+    const guestCodePattern = /^[A-Z]+-\d{4}$/
+
+    if (!partnerCodePattern.test(code) && !guestCodePattern.test(code)) {
       // Invalid format - don't call API
       return
     }
@@ -109,6 +135,8 @@ export function ReferralCodeInput() {
     setReferralDiscount(0)
     setReferralPartnerId(null)
     setReferralPartnerInfo(null)
+    setReferralType(null)
+    setGuestReferrerName(null)
     setIsValid(false)
   }
 
@@ -122,9 +150,11 @@ export function ReferralCodeInput() {
   const validationError = error?.message || (!validationResult?.isValid && validationResult?.message)
 
   // Check format for client-side validation
+  // Accept both partner (LOCATION-NAME-YEAR) and guest (FIRSTNAME-YEAR) formats
   const code = inputValue.trim().toUpperCase()
-  const codePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
-  const hasInvalidFormat = inputValue.length > 0 && !codePattern.test(code)
+  const partnerCodePattern = /^[A-Z0-9]+-[A-Z0-9]+-\d{4}$/
+  const guestCodePattern = /^[A-Z]+-\d{4}$/
+  const hasInvalidFormat = inputValue.length > 0 && !partnerCodePattern.test(code) && !guestCodePattern.test(code)
 
   return (
     <div className="space-y-3">
@@ -187,7 +217,7 @@ export function ReferralCodeInput() {
           <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-medium text-red-900">
-              Invalid code format. Expected format: LOCATION-NAME-YEAR
+              Invalid code format. Expected: LOCATION-NAME-YEAR or FIRSTNAME-YEAR
             </p>
           </div>
         </div>
@@ -200,19 +230,19 @@ export function ReferralCodeInput() {
           <div className="flex-1">
             <p className="text-sm font-medium text-red-900">{validationError}</p>
             <p className="text-xs text-red-700 mt-1">
-              Referral codes are provided by our partner facilities. Contact your partner for a valid code.
+              Check your code and try again, or contact the person who gave you the code.
             </p>
           </div>
         </div>
       )}
 
-      {/* Success Message */}
-      {isValid && validationResult?.isValid && (
+      {/* Success Message - Partner Referral */}
+      {isValid && referralType === 'partner' && validationResult?.isValid && validationResult.type === 'partner' && (
         <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-200 p-3" role="status">
           <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-emerald-900">
-              Code applied! Referred by {validationResult.partnerName}
+              Partner code applied! Referred by {validationResult.partnerName}
             </p>
             <p className="text-xs text-emerald-700 mt-1">
               {validationResult.clubName}, {validationResult.clubLocation}
@@ -221,10 +251,25 @@ export function ReferralCodeInput() {
         </div>
       )}
 
+      {/* Success Message - Guest Referral */}
+      {isValid && referralType === 'guest' && (
+        <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 p-3" role="status">
+          <Users className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-blue-900">
+              Referral code applied! Referred by {guestReferrerName}
+            </p>
+            <p className="text-xs text-blue-700 mt-1">
+              Your friend will earn rewards when you complete your booking.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Help Text */}
       {!isValid && !validationError && !hasInvalidFormat && (
         <p className="text-xs text-slate-500">
-          Have a referral code from one of our partner facilities? Enter it here.
+          Have a referral code from a partner facility or a friend who traveled with us? Enter it here.
         </p>
       )}
     </div>
