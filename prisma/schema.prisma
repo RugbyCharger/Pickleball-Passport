@@ -154,6 +154,21 @@ enum GiftStatus {
   DECLINED // Recipient declined gift, refund processed
 }
 
+// Guest Referral System (Epic 10)
+enum GuestReferralStatus {
+  CLICKED // Referral link was clicked
+  APPLIED // Referred person submitted application
+  BOOKED // Referred person completed booking
+  COMPLETED // Referred person completed their trip
+}
+
+enum ReferralEventType {
+  CLICK // Link clicked
+  APPLICATION // Application submitted
+  BOOKING // Booking completed
+  COMPLETION // Trip completed
+}
+
 enum TaskPriority {
   URGENT
   IMPORTANT
@@ -192,6 +207,10 @@ model User {
   // Stripe Integration (E4-S6)
   stripeCustomerId String? // Stripe customer ID for installment plans
 
+  // Guest Referral System (Epic 10)
+  referralCode          String? @unique // Format: FIRSTNAME-YEAR (e.g., SUSAN-2026)
+  referralPointsBalance Int     @default(0) // Points earned from guest referrals
+
   // Notification Preferences (E11-S12)
   notificationPreferences    Json?     @default("{\"emailPreTripSequence\":true,\"emailPostTripFollowUp\":true,\"emailAlumniEvents\":true,\"emailMarketing\":false,\"emailNewsletter\":false,\"smsEnabled\":true,\"inAppEnabled\":true,\"whatsappEnabled\":true}")
   preferenceEmailToken       String?   @unique
@@ -206,6 +225,10 @@ model User {
   notifications  Notification[]
   testimonials   Testimonial[]
 
+  // Guest Referral Relationships (Epic 10)
+  referralsMade    GuestReferral[] @relation("ReferrerUser") // Referrals this user made
+  referralReceived GuestReferral?  @relation("ReferredUser") // How this user was referred (if any)
+
   // Support System (E1-S12)
   supportTickets       SupportTicket[] // Tickets created by this user
   assignedTickets      SupportTicket[]      @relation("AssignedTickets") // Tickets assigned to admin
@@ -215,6 +238,7 @@ model User {
   @@index([role])
   @@index([stripeCustomerId])
   @@index([preferenceEmailToken])
+  @@index([referralCode])
 }
 
 // ============================================================================
@@ -276,6 +300,9 @@ model PartnerProfile {
   tier                PartnerTier @default(BRONZE)
   passportPoints      Int         @default(0)
   onboardingCompleted Boolean     @default(false) // E9-S14: Onboarding wizard
+
+  // Referral Tracking (Epic 10)
+  referralCodeClickCount Int @default(0) // Track total clicks on this partner's referral code
 
   // Notification Preferences (E11-S9)
   notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
@@ -423,6 +450,11 @@ model Booking {
   // Referral
   referredBy String? // Partner referral code
 
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
+
   // Payment Plan (E4-S6)
   paymentPlan      PaymentPlan @default(FULL)
   stripeCustomerId String? // Stripe customer ID for installment plans
@@ -496,6 +528,7 @@ model Booking {
   @@index([giftStatus])
   @@index([giftDeliveryDate])
   @@index([whatsappInvitationStatus])
+  @@index([utmSource])
 }
 
 model AddOn {
@@ -659,6 +692,14 @@ model Application {
   // Step 5: Discovery
   referralSource String // How did you hear about us?
 
+  // Guest Referral Attribution (Epic 10)
+  referralCode String? // Referral code used when submitting application (from cookie)
+
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
+
   // Admin Notes
   adminNotes String? @db.Text
 
@@ -668,6 +709,8 @@ model Application {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([referralCode])
+  @@index([utmSource])
 }
 
 // ============================================================================
@@ -1422,4 +1465,48 @@ model PartnerTestimonial {
   @@index([isApproved])
   @@index([isFeatured])
   @@index([createdAt])
+}
+
+// ============================================================================
+// GUEST REFERRAL SYSTEM (Epic 10)
+// ============================================================================
+
+model GuestReferral {
+  id             String              @id @default(cuid())
+  referrerUserId String // User who made the referral (alumni guest)
+  referrerUser   User                @relation("ReferrerUser", fields: [referrerUserId], references: [id], onDelete: Cascade)
+  referredUserId String              @unique // New guest who was referred
+  referredUser   User                @relation("ReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  referralCode   String // Code used for this referral
+  status         GuestReferralStatus @default(CLICKED)
+  pointsEarned   Int                 @default(0) // Total points earned from this referral
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([referrerUserId])
+  @@index([referredUserId])
+  @@index([referralCode])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ReferralEvent {
+  id           String            @id @default(cuid())
+  referralCode String // Code that triggered this event
+  eventType    ReferralEventType
+  userId       String? // User ID if known (null for anonymous clicks)
+  ipAddress    String? // IP address of the visitor
+  userAgent    String? // Browser user agent
+  utmSource    String? // UTM tracking: source
+  utmMedium    String? // UTM tracking: medium
+  utmCampaign  String? // UTM tracking: campaign
+
+  createdAt DateTime @default(now())
+
+  @@index([referralCode])
+  @@index([eventType])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([utmSource])
 }

@@ -1,0 +1,164 @@
+{
+  "projectName": "Epic 10 Guest Referral System",
+  "branchName": "feature/epic-10-guest-referral-system",
+  "description": "Implement guest referral tracking, cookie-based attribution, referral codes for alumni, and referral analytics",
+  "userStories": [
+    {
+      "id": "US-000",
+      "title": "Prisma Schema Updates for Guest Referral System",
+      "priority": 0,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Add GuestReferral model: id, referrerUserId (User who referred), referredUserId (new guest), referralCode used, status (CLICKED/APPLIED/BOOKED/COMPLETED), pointsEarned, createdAt",
+        "Add ReferralEvent model: id, referralCode, eventType (CLICK/APPLICATION/BOOKING/COMPLETION), userId (if known), ipAddress, userAgent, utm_source, utm_medium, utm_campaign, createdAt",
+        "Add referralCode field to User model (unique, nullable) - format: FIRSTNAME-YEAR",
+        "Add referralPointsBalance Int to User model for guest referral points",
+        "Add referralCodeClickCount Int to PartnerProfile for tracking",
+        "Run prisma generate and prisma db push",
+        "All TypeScript compiles without errors"
+      ]
+    },
+    {
+      "id": "US-001",
+      "title": "Referral Link Tracking (Cookie-Based)",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Create /r/[code] dynamic route that handles referral redirects",
+        "On visit: Set referral_code cookie with 30-day expiration",
+        "Store click event in ReferralEvent table with: code, timestamp, IP, user agent, UTM params",
+        "Increment click count on partner profile or user profile",
+        "First-click attribution: Don't overwrite existing cookie",
+        "Redirect to homepage after setting cookie",
+        "Handle invalid codes gracefully (redirect to homepage, no error)",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "Referral Attribution at Application",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Modify application submission to check for referral_code cookie",
+        "If cookie exists: Create ReferralEvent with type APPLICATION",
+        "Link application record to referral code (add referralCode field to Application model if needed)",
+        "Award 100 points to referrer (partner or guest)",
+        "Create points transaction record",
+        "Clear referral cookie after successful attribution",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "Referral Attribution at Booking",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Modify booking flow to check for referral_code cookie",
+        "Optional manual referral code input field at booking (fallback)",
+        "Manual code takes precedence over cookie if both exist",
+        "Validate referral code against database",
+        "Create ReferralEvent with type BOOKING",
+        "Award points based on package value: 1000 pts for packages under $15K, 1500 pts for $15K+",
+        "Update booking.referredBy with the referral code",
+        "Send notification email to referrer about successful booking",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "Guest Referral Code Generation",
+      "priority": 4,
+      "passes": true,
+      "acceptanceCriteria": [
+        "After guest's first trip completes: Auto-generate referral code",
+        "Code format: FIRSTNAME-YEAR (e.g., SUSAN-2026)",
+        "Ensure uniqueness by appending number if duplicate exists",
+        "Store in User.referralCode field",
+        "Send email to guest with their new referral code",
+        "Create /dashboard/referrals page for guests to see their code and stats",
+        "Display: referral code, shareable link, clicks, applications, bookings",
+        "Copy to clipboard button for referral link",
+        "tRPC procedures: user.getMyReferralCode, user.getReferralStats",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "Post-Trip Completion Bonus",
+      "priority": 5,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Create daily cron job at /api/cron/referral-completion-bonus",
+        "Check for trips that ended yesterday",
+        "For each completed booking with referredBy: Award 500 bonus points",
+        "Create ReferralEvent with type COMPLETION",
+        "Send email notification to referrer about completion bonus",
+        "Prevent duplicate bonus awards (check if already awarded)",
+        "Update referral status to COMPLETED",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-006",
+      "title": "Referral Analytics Admin Dashboard",
+      "priority": 6,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Create /dashboard/admin/referral-analytics page",
+        "Referral funnel visualization: Clicks -> Applications -> Bookings -> Completed",
+        "Conversion rates at each stage",
+        "Top 10 performing referrers (partners and guests combined)",
+        "Referral source breakdown chart (partner vs guest vs organic)",
+        "Date range filter (last 7 days, 30 days, 90 days, all time)",
+        "Total points awarded summary",
+        "tRPC procedures: admin.getReferralFunnelStats, admin.getTopReferrers, admin.getReferralSourceBreakdown",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-007",
+      "title": "UTM Parameter Tracking",
+      "priority": 7,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Capture UTM parameters (utm_source, utm_medium, utm_campaign) on all pages",
+        "Store UTM params in referral events and application/booking records",
+        "Display UTM data in admin referral analytics",
+        "Filter analytics by UTM source",
+        "All tests pass, TypeScript compiles"
+      ]
+    },
+    {
+      "id": "US-008",
+      "title": "Unit Tests for Referral System",
+      "priority": 8,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Tests for referral link cookie setting",
+        "Tests for referral attribution at application",
+        "Tests for referral attribution at booking",
+        "Tests for guest referral code generation",
+        "Tests for completion bonus cron job",
+        "Tests for referral analytics queries",
+        "Minimum 80% coverage on new referral code",
+        "All tests pass with vitest"
+      ]
+    },
+    {
+      "id": "US-009",
+      "title": "Final Integration and PR Creation",
+      "priority": 9,
+      "passes": true,
+      "acceptanceCriteria": [
+        "All TypeScript compiles without errors (npm run typecheck)",
+        "All ESLint rules pass (npm run lint)",
+        "All tests pass (npm run test)",
+        "Update sprint-status.yaml to mark Epic 10 stories as done",
+        "Create PR with title: feat(E10): Guest Referral System - Cookie Tracking, Attribution, Analytics",
+        "PR description includes summary of all features implemented"
+      ]
+    }
+  ]
+}

@@ -2381,4 +2381,512 @@ export const adminRouter = router({
       averageRating: averageRating._avg.rating ? Math.round(averageRating._avg.rating * 10) / 10 : 0,
     };
   }),
+    }),
+
+  // ============================================================================
+  // REFERRAL ANALYTICS (Epic 10 - US-006)
+  // ============================================================================
+
+  /**
+   * Get referral funnel statistics
+   * Shows Clicks -> Applications -> Bookings -> Completed with conversion rates
+   */
+  getReferralFunnelStats: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      // Get counts for each event type
+      const [clicks, applications, bookings, completed] = await Promise.all([
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'CLICK',
+            ...dateFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'APPLICATION',
+            ...dateFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'BOOKING',
+            ...dateFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'COMPLETION',
+            ...dateFilter,
+          },
+        }),
+      ]);
+
+      // Calculate conversion rates
+      const clickToApplication = clicks > 0 ? Math.round((applications / clicks) * 100) : 0;
+      const applicationToBooking = applications > 0 ? Math.round((bookings / applications) * 100) : 0;
+      const bookingToCompletion = bookings > 0 ? Math.round((completed / bookings) * 100) : 0;
+      const overallConversion = clicks > 0 ? Math.round((completed / clicks) * 100) : 0;
+
+      return {
+        funnel: {
+          clicks,
+          applications,
+          bookings,
+          completed,
+        },
+        conversionRates: {
+          clickToApplication,
+          applicationToBooking,
+          bookingToCompletion,
+          overallConversion,
+        },
+      };
+    }),
+
+  /**
+   * Get top performing referrers (partners and guests combined)
+   */
+  getTopReferrers: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        limit: z.number().min(1).max(50).default(10),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      // Get top partner referrers
+      const topPartners = await ctx.db.partnerProfile.findMany({
+        where: {
+          referralCodeClickCount: { gt: 0 },
+        },
+        select: {
+          id: true,
+          clubName: true,
+          referralCode: true,
+          referralCodeClickCount: true,
+          passportPoints: true,
+          user: {
+            select: {
+              email: true,
+              guestProfile: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          referralCodeClickCount: 'desc',
+        },
+        take: input?.limit || 10,
+      });
+
+      // Get top guest referrers
+      const topGuests = await ctx.db.user.findMany({
+        where: {
+          referralCode: { not: null },
+          referralPointsBalance: { gt: 0 },
+        },
+        select: {
+          id: true,
+          email: true,
+          referralCode: true,
+          referralPointsBalance: true,
+          guestProfile: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: {
+          referralPointsBalance: 'desc',
+        },
+        take: input?.limit || 10,
+      });
+
+      // Get referral event counts for each code
+      const allCodes = [
+        ...topPartners.map(p => p.referralCode),
+        ...topGuests.filter(g => g.referralCode).map(g => g.referralCode!),
+      ];
+
+      const eventCounts = await ctx.db.referralEvent.groupBy({
+        by: ['referralCode', 'eventType'],
+        where: {
+          referralCode: { in: allCodes },
+          ...dateFilter,
+        },
+        _count: true,
+      });
+
+      // Map event counts by code
+      const eventsByCode: Record<string, { clicks: number; applications: number; bookings: number; completed: number }> = {};
+      for (const event of eventCounts) {
+        if (!eventsByCode[event.referralCode]) {
+          eventsByCode[event.referralCode] = { clicks: 0, applications: 0, bookings: 0, completed: 0 };
+        }
+        if (event.eventType === 'CLICK') eventsByCode[event.referralCode].clicks = event._count;
+        if (event.eventType === 'APPLICATION') eventsByCode[event.referralCode].applications = event._count;
+        if (event.eventType === 'BOOKING') eventsByCode[event.referralCode].bookings = event._count;
+        if (event.eventType === 'COMPLETION') eventsByCode[event.referralCode].completed = event._count;
+      }
+
+      // Combine and format results
+      const partnerReferrers = topPartners.map(p => ({
+        id: p.id,
+        type: 'partner' as const,
+        name: p.clubName,
+        email: p.user.email,
+        referralCode: p.referralCode,
+        totalClicks: p.referralCodeClickCount,
+        totalPoints: p.passportPoints,
+        stats: eventsByCode[p.referralCode] || { clicks: 0, applications: 0, bookings: 0, completed: 0 },
+      }));
+
+      const guestReferrers = topGuests.filter(g => g.referralCode).map(g => ({
+        id: g.id,
+        type: 'guest' as const,
+        name: g.guestProfile ? `${g.guestProfile.firstName} ${g.guestProfile.lastName}` : g.email,
+        email: g.email,
+        referralCode: g.referralCode!,
+        totalClicks: eventsByCode[g.referralCode!]?.clicks || 0,
+        totalPoints: g.referralPointsBalance,
+        stats: eventsByCode[g.referralCode!] || { clicks: 0, applications: 0, bookings: 0, completed: 0 },
+      }));
+
+      // Combine and sort by total bookings, then points
+      const allReferrers = [...partnerReferrers, ...guestReferrers]
+        .sort((a, b) => {
+          // Sort by bookings first, then by points
+          const bookingDiff = b.stats.bookings - a.stats.bookings;
+          if (bookingDiff !== 0) return bookingDiff;
+          return b.totalPoints - a.totalPoints;
+        })
+        .slice(0, input?.limit || 10);
+
+      return allReferrers;
+    }),
+
+  /**
+   * Get referral source breakdown (partner vs guest vs organic)
+   */
+  getReferralSourceBreakdown: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      // Get all referral events with their codes
+      const allEvents = await ctx.db.referralEvent.findMany({
+        where: dateFilter,
+        select: {
+          referralCode: true,
+          eventType: true,
+        },
+      });
+
+      // Get all partner codes
+      const partnerCodes = await ctx.db.partnerProfile.findMany({
+        select: { referralCode: true },
+      });
+      const partnerCodeSet = new Set(partnerCodes.map(p => p.referralCode));
+
+      // Get all guest codes
+      const guestCodes = await ctx.db.user.findMany({
+        where: { referralCode: { not: null } },
+        select: { referralCode: true },
+      });
+      const guestCodeSet = new Set(guestCodes.filter(g => g.referralCode).map(g => g.referralCode!));
+
+      // Categorize events by source
+      const breakdown = {
+        partner: { clicks: 0, applications: 0, bookings: 0, completed: 0 },
+        guest: { clicks: 0, applications: 0, bookings: 0, completed: 0 },
+        unknown: { clicks: 0, applications: 0, bookings: 0, completed: 0 },
+      };
+
+      for (const event of allEvents) {
+        let source: 'partner' | 'guest' | 'unknown' = 'unknown';
+        if (partnerCodeSet.has(event.referralCode)) {
+          source = 'partner';
+        } else if (guestCodeSet.has(event.referralCode)) {
+          source = 'guest';
+        }
+
+        if (event.eventType === 'CLICK') breakdown[source].clicks++;
+        if (event.eventType === 'APPLICATION') breakdown[source].applications++;
+        if (event.eventType === 'BOOKING') breakdown[source].bookings++;
+        if (event.eventType === 'COMPLETION') breakdown[source].completed++;
+      }
+
+      // Calculate totals
+      const totals = {
+        clicks: breakdown.partner.clicks + breakdown.guest.clicks + breakdown.unknown.clicks,
+        applications: breakdown.partner.applications + breakdown.guest.applications + breakdown.unknown.applications,
+        bookings: breakdown.partner.bookings + breakdown.guest.bookings + breakdown.unknown.bookings,
+        completed: breakdown.partner.completed + breakdown.guest.completed + breakdown.unknown.completed,
+      };
+
+      // Calculate percentages
+      const percentages = {
+        partner: {
+          clicks: totals.clicks > 0 ? Math.round((breakdown.partner.clicks / totals.clicks) * 100) : 0,
+          bookings: totals.bookings > 0 ? Math.round((breakdown.partner.bookings / totals.bookings) * 100) : 0,
+        },
+        guest: {
+          clicks: totals.clicks > 0 ? Math.round((breakdown.guest.clicks / totals.clicks) * 100) : 0,
+          bookings: totals.bookings > 0 ? Math.round((breakdown.guest.bookings / totals.bookings) * 100) : 0,
+        },
+      };
+
+      // Get total points awarded
+      const totalPointsAwarded = await ctx.db.$queryRaw<[{ total: bigint | null }]>`
+        SELECT COALESCE(
+          (SELECT SUM("passportPoints") FROM "PartnerProfile") +
+          (SELECT SUM("referralPointsBalance") FROM "User" WHERE "referralCode" IS NOT NULL),
+          0
+        ) as total
+      `;
+
+      return {
+        breakdown,
+        totals,
+        percentages,
+        totalPointsAwarded: Number(totalPointsAwarded[0]?.total || 0),
+      };
+    }),
+
+  // ============================================================================
+  // UTM ANALYTICS (Epic 10 - US-007)
+  // ============================================================================
+
+  /**
+   * Get UTM source breakdown from referral events
+   * Shows distribution of UTM sources and their conversion rates
+   */
+  getUtmBreakdown: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      // Get UTM source counts from ReferralEvent
+      const utmSourceCounts = await ctx.db.referralEvent.groupBy({
+        by: ['utmSource', 'eventType'],
+        where: {
+          utmSource: { not: null },
+          ...dateFilter,
+        },
+        _count: true,
+      });
+
+      // Process into a structured format
+      const sourceMap: Record<string, {
+        clicks: number;
+        applications: number;
+        bookings: number;
+        completed: number;
+      }> = {};
+
+      for (const row of utmSourceCounts) {
+        const source = row.utmSource || 'unknown';
+        if (!sourceMap[source]) {
+          sourceMap[source] = { clicks: 0, applications: 0, bookings: 0, completed: 0 };
+        }
+        if (row.eventType === 'CLICK') sourceMap[source].clicks = row._count;
+        if (row.eventType === 'APPLICATION') sourceMap[source].applications = row._count;
+        if (row.eventType === 'BOOKING') sourceMap[source].bookings = row._count;
+        if (row.eventType === 'COMPLETION') sourceMap[source].completed = row._count;
+      }
+
+      // Convert to array and sort by clicks
+      const sources = Object.entries(sourceMap)
+        .map(([source, stats]) => ({
+          source,
+          ...stats,
+          conversionRate: stats.clicks > 0
+            ? Math.round((stats.bookings / stats.clicks) * 100)
+            : 0,
+        }))
+        .sort((a, b) => b.clicks - a.clicks);
+
+      // Calculate totals for events with UTM source
+      const totals = sources.reduce(
+        (acc, s) => ({
+          clicks: acc.clicks + s.clicks,
+          applications: acc.applications + s.applications,
+          bookings: acc.bookings + s.bookings,
+          completed: acc.completed + s.completed,
+        }),
+        { clicks: 0, applications: 0, bookings: 0, completed: 0 }
+      );
+
+      // Get total events without UTM source for comparison
+      const eventsWithoutUtm = await ctx.db.referralEvent.groupBy({
+        by: ['eventType'],
+        where: {
+          utmSource: null,
+          ...dateFilter,
+        },
+        _count: true,
+      });
+
+      const noUtmStats = { clicks: 0, applications: 0, bookings: 0, completed: 0 };
+      for (const row of eventsWithoutUtm) {
+        if (row.eventType === 'CLICK') noUtmStats.clicks = row._count;
+        if (row.eventType === 'APPLICATION') noUtmStats.applications = row._count;
+        if (row.eventType === 'BOOKING') noUtmStats.bookings = row._count;
+        if (row.eventType === 'COMPLETION') noUtmStats.completed = row._count;
+      }
+
+      return {
+        sources,
+        totals,
+        withoutUtm: noUtmStats,
+      };
+    }),
+
+  /**
+   * Get list of all UTM sources for filter dropdown
+   */
+  getUtmSourceList: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      const sources = await ctx.db.referralEvent.findMany({
+        where: {
+          utmSource: { not: null },
+          ...dateFilter,
+        },
+        select: {
+          utmSource: true,
+        },
+        distinct: ['utmSource'],
+        orderBy: {
+          utmSource: 'asc',
+        },
+      });
+
+      return sources
+        .map(s => s.utmSource)
+        .filter((s): s is string => s !== null);
+    }),
+
+  /**
+   * Get referral funnel stats filtered by UTM source
+   */
+  getReferralFunnelStatsByUtm: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        utmSource: z.string().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      const utmFilter = input?.utmSource
+        ? { utmSource: input.utmSource }
+        : {};
+
+      // Get counts for each event type with optional UTM filter
+      const [clicks, applications, bookings, completed] = await Promise.all([
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'CLICK',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'APPLICATION',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'BOOKING',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'COMPLETION',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+      ]);
+
+      // Calculate conversion rates
+      const clickToApplication = clicks > 0 ? Math.round((applications / clicks) * 100) : 0;
+      const applicationToBooking = applications > 0 ? Math.round((bookings / applications) * 100) : 0;
+      const bookingToCompletion = bookings > 0 ? Math.round((completed / bookings) * 100) : 0;
+      const overallConversion = clicks > 0 ? Math.round((completed / clicks) * 100) : 0;
+
+      return {
+        funnel: {
+          clicks,
+          applications,
+          bookings,
+          completed,
+        },
+        conversionRates: {
+          clickToApplication,
+          applicationToBooking,
+          bookingToCompletion,
+          overallConversion,
+        },
+        utmSource: input?.utmSource || null,
+      };
 });

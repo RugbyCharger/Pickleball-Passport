@@ -137,12 +137,34 @@ export const GIFT_CONFIG = {
 export const PARTNER_POINTS_CONFIG = {
   /** Base points earned per $1,000 of booking value */
   POINTS_PER_1000_DOLLARS: 100,
-  
+
   /** Minimum points earned per referral */
   MIN_POINTS: 500,
-  
+
   /** Maximum points earned per referral */
   MAX_POINTS: 2000,
+} as const
+
+// ============================================================================
+// GUEST REFERRAL POINTS (Epic 10)
+// ============================================================================
+
+/**
+ * Guest referral points configuration
+ * Points awarded when referred guest completes a booking
+ */
+export const GUEST_REFERRAL_POINTS_CONFIG = {
+  /** Points for bookings under $15,000 */
+  STANDARD_POINTS: 1000,
+
+  /** Points for bookings $15,000 or more */
+  HIGH_VALUE_POINTS: 1500,
+
+  /** Threshold for high-value bookings (in cents) */
+  HIGH_VALUE_THRESHOLD: 1500000, // $15,000
+
+  /** Bonus points awarded when referred guest completes their trip */
+  COMPLETION_BONUS_POINTS: 500,
 } as const
 
 // ============================================================================
@@ -236,4 +258,16 @@ export function calculatePartnerPoints(totalPrice: number): number {
     Math.max(basePoints, PARTNER_POINTS_CONFIG.MIN_POINTS),
     PARTNER_POINTS_CONFIG.MAX_POINTS
   )
+}
+
+/**
+ * Calculate guest referral points earned from a booking
+ * Epic 10 - US-003: Points based on package value
+ * @param totalPrice - Total booking price in cents
+ * @returns Points earned (1000 for < $15K, 1500 for >= $15K)
+ */
+export function calculateGuestReferralPoints(totalPrice: number): number {
+  return totalPrice >= GUEST_REFERRAL_POINTS_CONFIG.HIGH_VALUE_THRESHOLD
+    ? GUEST_REFERRAL_POINTS_CONFIG.HIGH_VALUE_POINTS
+    : GUEST_REFERRAL_POINTS_CONFIG.STANDARD_POINTS
 }

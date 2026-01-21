@@ -122,7 +122,7 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
   // Handle form submission
   const onSubmit = async (data: ApplicationFormData) => {
     try {
-      await createApplicationMutation.mutateAsync({
+      const result = await createApplicationMutation.mutateAsync({
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
@@ -141,6 +141,15 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
 
       // Clear draft from localStorage
       localStorage.removeItem(STORAGE_KEY);
+
+      // Epic 10: Clear referral cookie after successful attribution
+      if (result.referralAttributed) {
+        try {
+          await fetch('/api/referral/clear-cookie', { method: 'POST' });
+        } catch (err) {
+          console.error('Failed to clear referral cookie:', err);
+        }
+      }
 
       toast.success('Application submitted successfully!');
       onSuccess();
