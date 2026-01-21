@@ -7,6 +7,8 @@
 import { z } from 'zod'
 import { router, publicProcedure, protectedProcedure, adminProcedure } from '../trpc'
 import { PickleballSkillLevel } from '@prisma/client'
+import { sendEmail } from '@/lib/email/send-email'
+import { generateGuestReferralCodeEmail } from '@/lib/email/templates/guest-referral-code'
 
 export const userRouter = router({
   /**
@@ -182,4 +184,265 @@ export const userRouter = router({
 
       return { success: true, guestProfile }
     }),
+
+  /**
+   * Get current user's referral code
+   * Returns the referral code and shareable link if the user has one
+   */
+  getMyReferralCode: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: {
+        referralCode: true,
+        referralPointsBalance: true,
+        guestProfile: {
+          select: {
+            firstName: true,
+          },
+        },
+      },
+    })
+
+    if (!user) {
+      return { hasCode: false, referralCode: null, shareableLink: null, pointsBalance: 0 }
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+    const shareableLink = user.referralCode
+      ? `${baseUrl}/r/${user.referralCode}`
+      : null
+
+    return {
+      hasCode: !!user.referralCode,
+      referralCode: user.referralCode,
+      shareableLink,
+      pointsBalance: user.referralPointsBalance,
+      firstName: user.guestProfile?.firstName ?? null,
+    }
+  }),
+
+  /**
+   * Get referral statistics for the current user
+   * Includes clicks, applications, bookings, and completed trips
+   */
+  getReferralStats: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { referralCode: true, referralPointsBalance: true },
+    })
+
+    if (!user?.referralCode) {
+      return {
+        hasCode: false,
+        clicks: 0,
+        applications: 0,
+        bookings: 0,
+        completed: 0,
+        totalPointsEarned: 0,
+        currentBalance: 0,
+        referrals: [],
+      }
+    }
+
+    // Get event counts from ReferralEvent table
+    const [clickCount, applicationCount, bookingCount, completionCount] = await Promise.all([
+      ctx.db.referralEvent.count({
+        where: { referralCode: user.referralCode, eventType: 'CLICK' },
+      }),
+      ctx.db.referralEvent.count({
+        where: { referralCode: user.referralCode, eventType: 'APPLICATION' },
+      }),
+      ctx.db.referralEvent.count({
+        where: { referralCode: user.referralCode, eventType: 'BOOKING' },
+      }),
+      ctx.db.referralEvent.count({
+        where: { referralCode: user.referralCode, eventType: 'COMPLETION' },
+      }),
+    ])
+
+    // Get total points earned from GuestReferral records
+    const referrals = await ctx.db.guestReferral.findMany({
+      where: { referrerUserId: ctx.user.id },
+      include: {
+        referredUser: {
+          select: {
+            id: true,
+            email: true,
+            guestProfile: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const totalPointsEarned = referrals.reduce(
+      (sum, ref) => sum + ref.pointsEarned,
+      0
+    )
+
+    return {
+      hasCode: true,
+      clicks: clickCount,
+      applications: applicationCount,
+      bookings: bookingCount,
+      completed: completionCount,
+      totalPointsEarned,
+      currentBalance: user.referralPointsBalance,
+      referrals: referrals.map((ref) => ({
+        id: ref.id,
+        status: ref.status,
+        pointsEarned: ref.pointsEarned,
+        createdAt: ref.createdAt,
+        referredUser: {
+          firstName: ref.referredUser.guestProfile?.firstName ?? null,
+          lastName: ref.referredUser.guestProfile?.lastName ?? null,
+        },
+      })),
+    }
+  }),
+
+  /**
+   * Generate a referral code for the current user (alumni guest)
+   * Called after a guest completes their first trip
+   * Code format: FIRSTNAME-YEAR (e.g., SUSAN-2026)
+   */
+  generateReferralCode: protectedProcedure.mutation(async ({ ctx }) => {
+    // Check if user already has a referral code
+    const existingUser = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: {
+        referralCode: true,
+        email: true,
+        guestProfile: {
+          select: {
+            firstName: true,
+          },
+        },
+      },
+    })
+
+    if (existingUser?.referralCode) {
+      return {
+        success: true,
+        referralCode: existingUser.referralCode,
+        alreadyHadCode: true,
+      }
+    }
+
+    // Verify user has completed at least one trip
+    const completedBooking = await ctx.db.booking.findFirst({
+      where: {
+        userId: ctx.user.id,
+        status: 'COMPLETED',
+      },
+    })
+
+    if (!completedBooking) {
+      throw new Error('You must complete at least one trip before getting a referral code')
+    }
+
+    // Generate referral code: FIRSTNAME-YEAR
+    const firstName = existingUser?.guestProfile?.firstName?.toUpperCase() || 'GUEST'
+    const year = new Date().getFullYear()
+    const baseCode = `${firstName}-${year}`
+    let referralCode = baseCode
+    let counter = 1
+
+    // Ensure uniqueness by appending number if duplicate exists
+    while (true) {
+      const existing = await ctx.db.user.findUnique({
+        where: { referralCode },
+        select: { id: true },
+      })
+
+      if (!existing) {
+        break
+      }
+
+      counter++
+      referralCode = `${baseCode}-${counter}`
+    }
+
+    // Update user with new referral code
+    const updatedUser = await ctx.db.user.update({
+      where: { id: ctx.user.id },
+      data: { referralCode },
+      select: {
+        referralCode: true,
+        email: true,
+        guestProfile: {
+          select: {
+            firstName: true,
+          },
+        },
+      },
+    })
+
+    // Send email notification with new referral code
+    if (updatedUser.email && updatedUser.guestProfile?.firstName) {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+        const emailData = generateGuestReferralCodeEmail({
+          guestName: updatedUser.guestProfile.firstName,
+          referralCode: referralCode,
+          shareableLink: `${baseUrl}/r/${referralCode}`,
+          dashboardUrl: `${baseUrl}/dashboard/referrals`,
+        })
+
+        await sendEmail({
+          to: updatedUser.email,
+          subject: emailData.subject,
+          html: emailData.html,
+          text: emailData.text,
+        })
+      } catch (error) {
+        // Log but don't fail the mutation
+        console.error('Failed to send referral code email:', error)
+      }
+    }
+
+    return {
+      success: true,
+      referralCode,
+      alreadyHadCode: false,
+    }
+  }),
+
+  /**
+   * Check if user is eligible for a referral code
+   * User must have completed at least one trip
+   */
+  checkReferralCodeEligibility: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.user.id },
+      select: { referralCode: true },
+    })
+
+    if (user?.referralCode) {
+      return { eligible: true, hasCode: true, reason: null }
+    }
+
+    // Check for completed bookings
+    const completedBooking = await ctx.db.booking.findFirst({
+      where: {
+        userId: ctx.user.id,
+        status: 'COMPLETED',
+      },
+    })
+
+    if (completedBooking) {
+      return { eligible: true, hasCode: false, reason: null }
+    }
+
+    return {
+      eligible: false,
+      hasCode: false,
+      reason: 'Complete your first trip to unlock your referral code',
+    }
+  }),
 })
