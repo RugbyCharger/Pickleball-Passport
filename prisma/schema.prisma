@@ -446,6 +446,7 @@ model Booking {
   accommodationPrice Int // Additional cost for tier
   addOnsTotal        Int // Sum of all add-ons
   totalPrice         Int // Final total price in cents
+  currency           String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
 
   // Referral
   referredBy String? // Partner referral code
@@ -580,8 +581,9 @@ model Payment {
   bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  amount Int // Amount in cents
-  status PaymentStatus @default(PENDING)
+  amount   Int    // Amount in cents
+  currency String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
+  status   PaymentStatus @default(PENDING)
 
   // Stripe Integration
   stripePaymentIntentId String? @unique
@@ -626,7 +628,8 @@ model PaymentRecord {
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   // Amount and Status
-  amountCents Int // Payment amount in cents
+  amountCents Int    // Payment amount in cents
+  currency    String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
   status      PaymentRecordStatus @default(PENDING)
 
   // Installment Details

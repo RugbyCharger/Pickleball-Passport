@@ -47,12 +47,13 @@ interface PaymentFormProps {
   totalAmount: number // in cents - total booking amount
   paymentPlan: 'FULL' | 'INSTALLMENT_4' | 'FINANCING'
   installmentSchedule: InstallmentScheduleItem[]
+  currency?: string // E4-S13: Currency code for display
 }
 
-function formatPrice(cents: number): string {
+function formatPrice(cents: number, currencyCode: string = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(cents / 100)
@@ -64,6 +65,7 @@ export function PaymentForm({
   totalAmount,
   paymentPlan,
   installmentSchedule,
+  currency = 'USD',
 }: PaymentFormProps) {
   const stripe = useStripe()
   const elements = useElements()
@@ -240,7 +242,7 @@ export function PaymentForm({
           <div className="mb-4">
             <h3 className="text-lg font-bold text-blue-900">4-Payment Installment Plan</h3>
             <p className="text-sm text-blue-700 mt-1">
-              Pay {formatPrice(amount)} today, then 3 more automatic payments
+              Pay {formatPrice(amount, currency)} today, then 3 more automatic payments
             </p>
           </div>
 
@@ -265,7 +267,7 @@ export function PaymentForm({
                     <p className="text-xs text-slate-600">{installment.percentage} of total</p>
                   </div>
                 </div>
-                <p className="text-lg font-bold text-slate-900">{formatPrice(installment.amount)}</p>
+                <p className="text-lg font-bold text-slate-900">{formatPrice(installment.amount, currency)}</p>
               </div>
             ))}
           </div>
@@ -273,7 +275,7 @@ export function PaymentForm({
           <div className="mt-4 pt-4 border-t border-blue-200">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-blue-900">Total Booking Amount</p>
-              <p className="text-xl font-bold text-blue-900">{formatPrice(totalAmount)}</p>
+              <p className="text-xl font-bold text-blue-900">{formatPrice(totalAmount, currency)}</p>
             </div>
           </div>
         </div>
@@ -288,7 +290,7 @@ export function PaymentForm({
             </p>
             <p className="text-xs text-slate-500 mt-1">Booking: {bookingReference}</p>
           </div>
-          <p className="text-3xl font-bold text-slate-900">{formatPrice(amount)}</p>
+          <p className="text-3xl font-bold text-slate-900">{formatPrice(amount, currency)}</p>
         </div>
       </div>
 
@@ -317,8 +319,8 @@ export function PaymentForm({
             <span className="flex items-center justify-center gap-2">
               <Lock className="h-5 w-5" />
               {paymentPlan === 'INSTALLMENT_4'
-                ? `Pay First Installment ${formatPrice(amount)}`
-                : `Pay ${formatPrice(amount)}`}
+                ? `Pay First Installment ${formatPrice(amount, currency)}`
+                : `Pay ${formatPrice(amount, currency)}`}
             </span>
           )}
         </button>
