@@ -1865,4 +1865,312 @@ export const adminRouter = router({
       requiresAttention: open + highPriority,
     };
   }),
+
+  // ============================================================================
+  // E9-S17: Partner Event Management (Admin)
+  // ============================================================================
+
+  /**
+   * Get all partner events
+   */
+  getPartnerEvents: adminProcedure
+    .input(
+      z
+        .object({
+          eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+          isActive: z.boolean().optional(),
+          includePast: z.boolean().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const now = new Date();
+      const where = {
+        ...(input?.eventType && { eventType: input.eventType }),
+        ...(input?.isActive !== undefined && { isActive: input.isActive }),
+        ...(input?.includePast
+          ? {}
+          : { endDate: { gte: now } }),
+      };
+
+      const [events, total] = await Promise.all([
+        ctx.db.partnerEvent.findMany({
+          where,
+          include: {
+            _count: {
+              select: {
+                registrations: true,
+              },
+            },
+          },
+          orderBy: {
+            startDate: 'asc',
+          },
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerEvent.count({ where }),
+      ]);
+
+      return {
+        events: events.map((e) => ({
+          ...e,
+          registrationCount: e._count.registrations,
+          spotsRemaining: e.maxAttendees ? e.maxAttendees - e._count.registrations : null,
+        })),
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Get single partner event by ID
+   */
+  getPartnerEvent: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          registrations: {
+            include: {
+              partner: {
+                select: {
+                  id: true,
+                  clubName: true,
+                  clubLocation: true,
+                  tier: true,
+                  user: {
+                    select: {
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              registeredAt: 'asc',
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return {
+        ...event,
+        registrationCount: event._count.registrations,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+      };
+    }),
+
+  /**
+   * Create a new partner event
+   */
+  createPartnerEvent: adminProcedure
+    .input(
+      z.object({
+        title: z.string().min(1, 'Title is required').max(200),
+        description: z.string().min(1, 'Description is required'),
+        eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']),
+        startDate: z.date(),
+        endDate: z.date(),
+        location: z.string().optional(),
+        isVirtual: z.boolean().default(false),
+        registrationUrl: z.string().url().optional().nullable(),
+        maxAttendees: z.number().int().positive().optional().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Validate dates
+      if (input.endDate <= input.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be after start date',
+        });
+      }
+
+      const event = await ctx.db.partnerEvent.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          eventType: input.eventType,
+          startDate: input.startDate,
+          endDate: input.endDate,
+          location: input.location || null,
+          isVirtual: input.isVirtual,
+          registrationUrl: input.registrationUrl || null,
+          maxAttendees: input.maxAttendees || null,
+          isActive: true,
+        },
+      });
+
+      return event;
+    }),
+
+  /**
+   * Update a partner event
+   */
+  updatePartnerEvent: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1).max(200).optional(),
+        description: z.string().min(1).optional(),
+        eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        location: z.string().optional().nullable(),
+        isVirtual: z.boolean().optional(),
+        registrationUrl: z.string().url().optional().nullable(),
+        maxAttendees: z.number().int().positive().optional().nullable(),
+        isActive: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+
+      const existingEvent = await ctx.db.partnerEvent.findUnique({
+        where: { id },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!existingEvent) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      // Validate dates if both provided
+      const startDate = data.startDate || existingEvent.startDate;
+      const endDate = data.endDate || existingEvent.endDate;
+
+      if (endDate <= startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be after start date',
+        });
+      }
+
+      // Validate max attendees isn't less than current registrations
+      if (
+        data.maxAttendees !== undefined &&
+        data.maxAttendees !== null &&
+        data.maxAttendees < existingEvent._count.registrations
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot reduce max attendees below current registrations (${existingEvent._count.registrations})`,
+        });
+      }
+
+      const event = await ctx.db.partnerEvent.update({
+        where: { id },
+        data,
+      });
+
+      return event;
+    }),
+
+  /**
+   * Delete a partner event
+   */
+  deletePartnerEvent: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      if (event._count.registrations > 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot delete event with ${event._count.registrations} registrations. Set to inactive instead.`,
+        });
+      }
+
+      await ctx.db.partnerEvent.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
+  /**
+   * Get partner event statistics
+   */
+  getPartnerEventStats: adminProcedure.query(async ({ ctx }) => {
+    const now = new Date();
+
+    const [total, upcoming, active, totalRegistrations] = await Promise.all([
+      ctx.db.partnerEvent.count(),
+      ctx.db.partnerEvent.count({
+        where: {
+          startDate: { gte: now },
+          isActive: true,
+        },
+      }),
+      ctx.db.partnerEvent.count({
+        where: { isActive: true },
+      }),
+      ctx.db.partnerEventRegistration.count(),
+    ]);
+
+    // Get events by type
+    const eventsByType = await ctx.db.partnerEvent.groupBy({
+      by: ['eventType'],
+      _count: {
+        id: true,
+      },
+    });
+
+    return {
+      total,
+      upcoming,
+      active,
+      totalRegistrations,
+      eventsByType: eventsByType.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.eventType]: item._count.id,
+        }),
+        {} as Record<string, number>
+      ),
+    };
+  }),
 });

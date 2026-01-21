@@ -2392,6 +2392,347 @@ export const partnerRouter = router({
 
       return updatedTicket
     }),
+
+  // ============================================================================
+  // E9-S17: Partner Event Calendar
+  // ============================================================================
+
+  /**
+   * Get all upcoming partner events
+   */
+  getEvents: partnerProcedure
+    .input(
+      z
+        .object({
+          eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          includeRegistered: z.boolean().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const now = new Date()
+      const where = {
+        isActive: true,
+        startDate: {
+          gte: input?.startDate || now,
+          ...(input?.endDate && { lte: input.endDate }),
+        },
+        ...(input?.eventType && { eventType: input.eventType }),
+      }
+
+      const events = await ctx.db.partnerEvent.findMany({
+        where,
+        include: {
+          registrations: {
+            where: {
+              partnerId: profile.id,
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+        orderBy: {
+          startDate: 'asc',
+        },
+      })
+
+      return events.map((event) => ({
+        ...event,
+        isRegistered: event.registrations.length > 0,
+        registrationId: event.registrations[0]?.id || null,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+        isFull: event.maxAttendees
+          ? event._count.registrations >= event.maxAttendees
+          : false,
+      }))
+    }),
+
+  /**
+   * Get a single event by ID
+   */
+  getEvent: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          registrations: {
+            where: {
+              partnerId: profile.id,
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      })
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        })
+      }
+
+      return {
+        ...event,
+        isRegistered: event.registrations.length > 0,
+        registrationId: event.registrations[0]?.id || null,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+        isFull: event.maxAttendees
+          ? event._count.registrations >= event.maxAttendees
+          : false,
+      }
+    }),
+
+  /**
+   * Register for an event
+   */
+  registerForEvent: partnerProcedure
+    .input(z.object({ eventId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Get event with current registrations
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.eventId },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      })
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        })
+      }
+
+      if (!event.isActive) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event is no longer active',
+        })
+      }
+
+      // Check if already registered
+      const existingRegistration = await ctx.db.partnerEventRegistration.findUnique({
+        where: {
+          eventId_partnerId: {
+            eventId: input.eventId,
+            partnerId: profile.id,
+          },
+        },
+      })
+
+      if (existingRegistration) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'You are already registered for this event',
+        })
+      }
+
+      // Check capacity
+      if (
+        event.maxAttendees &&
+        event._count.registrations >= event.maxAttendees
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event is at full capacity',
+        })
+      }
+
+      // Check if event hasn't started yet
+      if (new Date() > event.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event has already started',
+        })
+      }
+
+      const registration = await ctx.db.partnerEventRegistration.create({
+        data: {
+          eventId: input.eventId,
+          partnerId: profile.id,
+        },
+      })
+
+      return registration
+    }),
+
+  /**
+   * Unregister from an event
+   */
+  unregisterFromEvent: partnerProcedure
+    .input(z.object({ eventId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const registration = await ctx.db.partnerEventRegistration.findUnique({
+        where: {
+          eventId_partnerId: {
+            eventId: input.eventId,
+            partnerId: profile.id,
+          },
+        },
+        include: {
+          event: true,
+        },
+      })
+
+      if (!registration) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Registration not found',
+        })
+      }
+
+      // Check if event hasn't started yet
+      if (new Date() > registration.event.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot unregister from an event that has already started',
+        })
+      }
+
+      await ctx.db.partnerEventRegistration.delete({
+        where: {
+          id: registration.id,
+        },
+      })
+
+      return { success: true }
+    }),
+
+  /**
+   * Get partner's registered events
+   */
+  getMyRegistrations: partnerProcedure
+    .input(
+      z
+        .object({
+          includesPast: z.boolean().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const now = new Date()
+      const registrations = await ctx.db.partnerEventRegistration.findMany({
+        where: {
+          partnerId: profile.id,
+          ...(input?.includesPast
+            ? {}
+            : {
+                event: {
+                  endDate: { gte: now },
+                },
+              }),
+        },
+        include: {
+          event: {
+            include: {
+              _count: {
+                select: {
+                  registrations: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          event: {
+            startDate: 'asc',
+          },
+        },
+      })
+
+      return registrations.map((reg) => ({
+        ...reg,
+        event: {
+          ...reg.event,
+          spotsRemaining: reg.event.maxAttendees
+            ? reg.event.maxAttendees - reg.event._count.registrations
+            : null,
+        },
+      }))
+    }),
 })
 
 /**
