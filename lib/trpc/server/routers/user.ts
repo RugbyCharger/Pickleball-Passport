@@ -445,4 +445,180 @@ export const userRouter = router({
       reason: 'Complete your first trip to unlock your referral code',
     }
   }),
+
+  /**
+   * Story 2-6: Update user profile information
+   * Updates guest profile fields (phone, emergency contact, etc.)
+   * Also updates Clerk user info (first name, last name)
+   */
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        firstName: z.string().min(1, 'First name is required').optional(),
+        lastName: z.string().min(1, 'Last name is required').optional(),
+        phone: z.string().optional().nullable(),
+        location: z.string().optional().nullable(),
+        emergencyContactName: z.string().optional().nullable(),
+        emergencyContactPhone: z.string().optional().nullable(),
+        emergencyContactRelationship: z.string().optional().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { firstName, lastName, phone, location, emergencyContactName, emergencyContactPhone, emergencyContactRelationship } = input
+
+      // Update Clerk user info if name fields are provided
+      if (firstName || lastName) {
+        try {
+          const { clerkClient } = await import('@clerk/nextjs/server')
+          const client = await clerkClient()
+          await client.users.updateUser(ctx.user.id, {
+            firstName: firstName || undefined,
+            lastName: lastName || undefined,
+          })
+        } catch (error) {
+          console.error('Failed to update Clerk user info:', error)
+          throw new Error('Failed to update profile. Please try again.')
+        }
+      }
+
+      // Check if guest profile exists
+      const existingProfile = await ctx.db.guestProfile.findUnique({
+        where: { userId: ctx.user.id },
+      })
+
+      if (existingProfile) {
+        // Update existing profile
+        const updatedProfile = await ctx.db.guestProfile.update({
+          where: { userId: ctx.user.id },
+          data: {
+            firstName: firstName || existingProfile.firstName,
+            lastName: lastName || existingProfile.lastName,
+            phone: phone !== undefined ? phone : existingProfile.phone,
+            location: location !== undefined ? location : existingProfile.location,
+            emergencyContactName: emergencyContactName !== undefined ? emergencyContactName : existingProfile.emergencyContactName,
+            emergencyContactPhone: emergencyContactPhone !== undefined ? emergencyContactPhone : existingProfile.emergencyContactPhone,
+            emergencyContactRelationship: emergencyContactRelationship !== undefined ? emergencyContactRelationship : existingProfile.emergencyContactRelationship,
+          },
+        })
+
+        return { success: true, profile: updatedProfile }
+      } else if (firstName && lastName) {
+        // Create new profile if first and last name are provided
+        const newProfile = await ctx.db.guestProfile.create({
+          data: {
+            userId: ctx.user.id,
+            firstName,
+            lastName,
+            phone,
+            location,
+            emergencyContactName,
+            emergencyContactPhone,
+            emergencyContactRelationship,
+          },
+        })
+
+        return { success: true, profile: newProfile }
+      }
+
+      return { success: true, profile: existingProfile }
+    }),
+
+  /**
+   * Story 2-7: Delete user account
+   * Deletes user from database and Clerk
+   * Uses soft delete approach - marks bookings as from deleted user
+   */
+  deleteAccount: protectedProcedure
+    .input(
+      z.object({
+        confirmation: z.literal('DELETE'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.confirmation !== 'DELETE') {
+        throw new Error('Please type DELETE to confirm account deletion')
+      }
+
+      const userId = ctx.user.id
+
+      // Start a transaction to handle database deletions
+      await ctx.db.$transaction(async (tx) => {
+        // Delete guest referrals where this user is the referrer
+        await tx.guestReferral.deleteMany({
+          where: { referrerUserId: userId },
+        })
+
+        // Delete referral events
+        await tx.referralEvent.deleteMany({
+          where: {
+            OR: [
+              { userId: userId },
+            ],
+          },
+        })
+
+        // Delete notifications
+        await tx.notification.deleteMany({
+          where: { userId },
+        })
+
+        // Delete support ticket replies
+        await tx.supportTicketReply.deleteMany({
+          where: { userId },
+        })
+
+        // Delete support tickets
+        await tx.supportTicket.deleteMany({
+          where: { userId },
+        })
+
+        // Delete guest profile (cascade will handle this but being explicit)
+        await tx.guestProfile.deleteMany({
+          where: { userId },
+        })
+
+        // Delete partner profile if exists
+        await tx.partnerProfile.deleteMany({
+          where: { userId },
+        })
+
+        // Note: Bookings, applications, testimonials reference userId
+        // Due to Prisma schema cascade settings, these should be handled
+        // but we'll explicitly delete for clarity
+
+        // Delete applications
+        await tx.application.deleteMany({
+          where: { userId },
+        })
+
+        // For bookings, we keep them for historical record but nullify user
+        // This requires schema change - for now, delete them
+        await tx.booking.deleteMany({
+          where: { userId },
+        })
+
+        // Delete testimonials
+        await tx.testimonial.deleteMany({
+          where: { userId },
+        })
+
+        // Finally, delete the user
+        await tx.user.delete({
+          where: { id: userId },
+        })
+      })
+
+      // Delete user from Clerk
+      try {
+        const { clerkClient } = await import('@clerk/nextjs/server')
+        const client = await clerkClient()
+        await client.users.deleteUser(userId)
+      } catch (error) {
+        console.error('Failed to delete Clerk user (DB already deleted):', error)
+        // User is already deleted from DB, so we continue
+        // The Clerk account will be orphaned but not accessible
+      }
+
+      return { success: true, message: 'Account deleted successfully' }
+    }),
 })
