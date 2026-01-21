@@ -796,7 +796,7 @@ export const blogRouter = router({
           data: {
             ...(data.title && { title: data.title }),
             ...(data.slug && { slug: data.slug }),
-            ...(data.content && { content: data.content as Prisma.InputJsonValue }),
+            ...(data.content !== undefined && { content: data.content as Prisma.InputJsonValue }),
             ...(plainText !== undefined && { plainText }),
             ...(data.excerpt !== undefined && { excerpt: data.excerpt }),
             ...(data.featuredImage !== undefined && { featuredImage: data.featuredImage }),
