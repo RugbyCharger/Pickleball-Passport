@@ -258,3 +258,25 @@ Files changed:
 ## EPIC 10 COMPLETE
 All 10 user stories (US-000 through US-009) have been implemented and pass.
 PR created: https://github.com/RugbyCharger/Pickleball-Passport/pull/12
+
+---
+---
+
+# E4-S14: Stripe Connect Partner Payouts
+Started: 2026-01-21
+
+## Additional Patterns for Stripe Connect
+- Stripe Connect service is at lib/stripe/stripe-connect.ts
+- Partner Stripe Connect tRPC endpoints already added: getStripeConnectStatus, createStripeConnectAccount, getStripeConnectOnboardingLink, getStripeConnectDashboardLink
+- PartnerProfile has Stripe Connect fields: stripeConnectAccountId, stripeConnectOnboardingComplete, stripeConnectAccountType, stripeConnectPayoutsEnabled
+- PartnerPayout has Stripe fields: stripeTransferId, stripePayoutId, payoutMethod ('manual' or 'stripe_connect'), stripeError
+- Use adminProcedure for admin-only endpoints in admin.ts
+- Existing webhook handler at app/api/webhooks/stripe/route.ts uses Stripe webhook signature verification
+- Partner payouts page is at app/dashboard/partner/payouts/page.tsx
+
+## Pre-completed Work (Before Ralph)
+- Prisma schema updated with all stripeConnect fields
+- lib/stripe/stripe-connect.ts service fully implemented with: createConnectAccount, createAccountLink, getConnectAccountStatus, createLoginLink, createTransfer, getPlatformBalance, parseAccountUpdatedEvent, parseTransferEvent
+- Partner tRPC endpoints added to lib/trpc/server/routers/partner.ts
+
+---
