@@ -227,7 +227,7 @@ export function validateTestimonialFile(
   }
 
   // Check file type
-  if (!allowedTypes.includes(file.type as any)) {
+  if (!(allowedTypes as readonly string[]).includes(file.type)) {
     const allowedExtensions = fileType === 'video'
       ? 'MP4, MOV, WebM, AVI'
       : 'JPEG, PNG, WebP, HEIC';

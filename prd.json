@@ -43,7 +43,7 @@
       "id": "E12-S3",
       "title": "Blog Posts System",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "description": "Create a blog system for content marketing with rich text editing",
       "acceptanceCriteria": [
         "Add BlogPost model to Prisma: id, title, slug, content, excerpt, featuredImage, author, status (DRAFT/PUBLISHED), publishedAt, tags, createdAt, updatedAt",
@@ -62,7 +62,7 @@
       "id": "E12-S4",
       "title": "FAQ Management System",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "description": "Admin interface to manage FAQs displayed on the website",
       "acceptanceCriteria": [
         "Add FAQ model to Prisma: id, question, answer (rich text), category, order, isPublished, createdAt, updatedAt",
@@ -79,7 +79,7 @@
       "id": "E12-S5",
       "title": "Testimonial Moderation System",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "description": "Review, approve, and manage guest testimonials",
       "acceptanceCriteria": [
         "Add Testimonial model if not exists: id, guestId, type (VIDEO/WRITTEN/PHOTO), content, mediaUrl, status (PENDING/APPROVED/PUBLISHED/REJECTED), rating, tripId, createdAt",
