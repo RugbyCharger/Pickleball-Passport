@@ -283,15 +283,22 @@ model PartnerProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Leaderboard Settings (E9-S19)
+  showOnLeaderboard Boolean @default(true) // Partners can opt-out of leaderboard
+
   // Relationships
-  referrals       PartnerReferral[]
-  landingPages    PartnerLandingPage[]
-  payouts         PartnerPayout[]
-  payoutMethod    PartnerPayoutMethod?
-  forumThreads    ForumThread[]
-  forumReplies    ForumReply[]
-  forumLikes      ForumLike[]
-  forumReplyLikes ForumReplyLike[]
+  referrals          PartnerReferral[]
+  landingPages       PartnerLandingPage[]
+  payouts            PartnerPayout[]
+  payoutMethod       PartnerPayoutMethod?
+  forumThreads       ForumThread[]
+  forumReplies       ForumReply[]
+  forumLikes         ForumLike[]
+  forumReplyLikes    ForumReplyLike[]
+  agreements         PartnerAgreement[] // E9-S15
+  supportTickets     PartnerSupportTicket[] // E9-S16
+  eventRegistrations PartnerEventRegistration[] // E9-S17
+  testimonials       PartnerTestimonial[] // E9-S18
 
   @@index([userId])
   @@index([referralCode])
@@ -1250,4 +1257,169 @@ model EmailTemplateAnalytics {
   lastUpdatedAt DateTime @updatedAt
 
   @@index([templateId])
+}
+
+// ============================================================================
+// PARTNER PORTAL COMPLETION (Epic 9)
+// ============================================================================
+
+// Partner Event Types
+enum PartnerEventType {
+  WEBINAR
+  MEETUP
+  TRAINING
+  SUMMIT
+}
+
+// Partner Support Ticket Status (separate from guest support)
+enum PartnerTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+// Partner Support Ticket Priority
+enum PartnerTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// E9-S15: Partner Agreement E-Signature
+model PartnerAgreement {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Agreement Details
+  version     String // e.g., "1.0", "2.0"
+  signedAt    DateTime
+  ipAddress   String // IP address at time of signing
+  signature   String   @db.Text // Base64-encoded signature image
+  documentUrl String? // URL to the agreement document
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([version])
+}
+
+// E9-S16: Partner Support Ticket
+model PartnerSupportTicket {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Ticket Content
+  subject     String
+  description String @db.Text
+
+  // Classification
+  status   PartnerTicketStatus   @default(OPEN)
+  priority PartnerTicketPriority @default(MEDIUM)
+
+  // Resolution
+  resolvedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  replies PartnerSupportReply[]
+
+  @@index([partnerId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+// E9-S16: Partner Support Ticket Reply
+model PartnerSupportReply {
+  id       String               @id @default(cuid())
+  ticketId String
+  ticket   PartnerSupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // Reply author
+  userId  String // User ID (can be partner or admin)
+  message String  @db.Text
+  isStaff Boolean @default(false) // True if reply is from staff
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// E9-S17: Partner Event
+model PartnerEvent {
+  id String @id @default(cuid())
+
+  // Event Details
+  title           String
+  description     String           @db.Text
+  eventType       PartnerEventType
+  startDate       DateTime
+  endDate         DateTime
+  location        String? // Physical location or null if virtual
+  isVirtual       Boolean          @default(false)
+  registrationUrl String? // External registration URL if applicable
+  maxAttendees    Int? // Null means unlimited
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  registrations PartnerEventRegistration[]
+
+  @@index([eventType])
+  @@index([startDate])
+  @@index([isActive])
+}
+
+// E9-S17: Partner Event Registration
+model PartnerEventRegistration {
+  id        String         @id @default(cuid())
+  eventId   String
+  event     PartnerEvent   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Registration Details
+  registeredAt DateTime  @default(now())
+  attendedAt   DateTime? // Marked when partner attends
+
+  @@unique([eventId, partnerId]) // Partner can only register once per event
+  @@index([eventId])
+  @@index([partnerId])
+}
+
+// E9-S18: Partner Testimonial
+model PartnerTestimonial {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Testimonial Content
+  content String @db.Text // Max 500 chars enforced at application level
+  rating  Int // 1-5 star rating
+
+  // Status
+  isApproved Boolean   @default(false)
+  isFeatured Boolean   @default(false)
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([isApproved])
+  @@index([isFeatured])
+  @@index([createdAt])
 }
