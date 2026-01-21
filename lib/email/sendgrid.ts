@@ -6,6 +6,7 @@
 
 import type { MailService } from '@sendgrid/mail';
 import { emailLogger, logError } from '@/lib/logger';
+import { generateEmailToken } from '@/lib/preferences/email-token';
 
 // Initialize SendGrid with API key
 const apiKey = process.env.SENDGRID_API_KEY;
@@ -48,13 +49,67 @@ export interface SendEmailOptions {
     type: string; // MIME type
     disposition?: string; // 'attachment' or 'inline'
   }>;
+  userId?: string; // For token generation (if preferenceToken not provided)
+  preferenceToken?: string; // Pre-generated token (E11-S12)
+  isMarketing?: boolean; // For List-Unsubscribe header
 }
 
 /**
  * Send an email using SendGrid
+ *
+ * IMPORTANT: For optional (non-transactional) emails, check user preferences BEFORE calling this function:
+ *
+ * @example
+ * // For marketing emails
+ * import { canSendNotification } from '@/lib/preferences/user-preferences';
+ *
+ * if (!(await canSendNotification(userId, 'emailMarketing'))) {
+ *   emailLogger.info({ userId }, 'User opted out of marketing emails');
+ *   return;
+ * }
+ *
+ * await sendEmail({
+ *   to: userEmail,
+ *   subject: 'Special offer!',
+ *   html: emailHtml,
+ *   userId,
+ *   isMarketing: true, // Enables List-Unsubscribe header
+ * });
+ *
+ * @example
+ * // For post-trip follow-up
+ * if (!(await canSendNotification(userId, 'emailPostTripFollowUp'))) {
+ *   return;
+ * }
+ *
+ * @example
+ * // For alumni events
+ * if (!(await canSendNotification(userId, 'emailAlumniEvents'))) {
+ *   return;
+ * }
+ *
+ * Transactional emails (booking confirmations, payment receipts, etc.) should NEVER check preferences.
  */
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
   const sgMail = await getSgMail();
+
+  // Use provided token or generate from userId
+  let preferenceToken: string | undefined = options.preferenceToken;
+  if (!preferenceToken && options.userId) {
+    try {
+      preferenceToken = await generateEmailToken(options.userId);
+    } catch (error) {
+      emailLogger.warn({ userId: options.userId }, 'Failed to generate email token, continuing without preference links');
+    }
+  }
+
+  // Add List-Unsubscribe header for marketing emails
+  const headers: Record<string, string> = {};
+  if (options.isMarketing && preferenceToken) {
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/unsubscribe?token=${preferenceToken}`;
+    headers['List-Unsubscribe'] = `<${unsubscribeUrl}>`;
+    headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
+  }
 
   const msg = {
     to: options.to,
@@ -64,6 +119,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
     text: options.text || '', // SendGrid requires text field
     replyTo: options.replyTo,
     attachments: options.attachments,
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
   };
 
   try {
@@ -170,14 +226,30 @@ export async function sendTripReminder(
   to: string,
   data: import('./templates/trip-reminder').TripReminderData
 ): Promise<void> {
+  // Generate preference token if userId provided (E11-S12)
+  let dataWithToken = data;
+  let preferenceToken: string | undefined;
+  if (data.userId && !data.preferenceToken) {
+    try {
+      preferenceToken = await generateEmailToken(data.userId);
+      dataWithToken = { ...data, preferenceToken };
+    } catch (error) {
+      emailLogger.warn({ userId: data.userId }, 'Failed to generate token for trip reminder');
+    }
+  } else {
+    preferenceToken = data.preferenceToken;
+  }
+
   const { generateTripReminderEmail } = await import('./templates/trip-reminder');
-  const { html, text, subject } = generateTripReminderEmail(data);
+  const { html, text, subject } = generateTripReminderEmail(dataWithToken);
 
   await sendEmail({
     to,
     subject,
     html,
     text,
+    preferenceToken,
+    isMarketing: false, // Trip reminders are not marketing emails
   });
 }
 

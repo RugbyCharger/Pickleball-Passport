@@ -8,6 +8,7 @@ import { baseEmailTemplate, generatePlainText } from './base';
 
 export interface TripReminderData {
   // Guest details
+  userId?: string; // Optional userId for preference token generation (E11-S12)
   firstName: string;
   email: string;
 
@@ -36,6 +37,9 @@ export interface TripReminderData {
     name: string;
     quantity: number;
   }>;
+
+  // Preference token for footer links (E11-S12)
+  preferenceToken?: string;
 }
 
 /**
@@ -244,6 +248,7 @@ export function generateTripReminderEmail(data: TripReminderData): {
     content,
     preheader: `Your trip starts ${data.daysUntilTrip === 0 ? 'today' : data.daysUntilTrip === 1 ? 'tomorrow' : `in ${data.daysUntilTrip} days`}! Here's what you need to know.`,
     footerText: `This is a trip reminder for your Pickleball Passport booking.`,
+    preferenceToken: data.preferenceToken,
   });
 
   const text = generatePlainText(content);
