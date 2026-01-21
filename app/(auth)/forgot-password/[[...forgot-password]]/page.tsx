@@ -1,31 +1,33 @@
 /**
- * Sign-In Page
- *
- * This page renders the Clerk SignIn component for user authentication.
- * Users can sign in with:
- * - Email/password
- * - Google OAuth
- * - Apple OAuth
- * - Magic link
+ * Forgot Password Page
  *
  * Story 2-5: Password Reset Flow
- * - "Forgot password?" link is available both in Clerk's component and below
- * - Links to dedicated /forgot-password route for better UX
+ *
+ * This page provides a dedicated route for password reset functionality.
+ * Clerk handles the entire password reset flow:
+ * 1. User enters email address
+ * 2. Clerk sends password reset email
+ * 3. User clicks link in email
+ * 4. User sets new password
+ * 5. Redirected to login after successful reset
+ *
+ * The SignIn component automatically shows the forgot password view
+ * when initialValues.mode is set to 'forgot_password'.
  */
 
 import { SignIn } from '@clerk/nextjs'
 import Link from 'next/link'
 
-export default function SignInPage() {
+export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="font-playfair text-4xl font-bold text-primary mb-2">
-            Welcome Back
+            Reset Password
           </h1>
           <p className="text-muted-foreground">
-            Sign in to access your Pickleball Passport account
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
         </div>
 
@@ -40,15 +42,15 @@ export default function SignInPage() {
             },
           }}
           routing="path"
-          path="/sign-in"
-          forceRedirectUrl="/redirect"
+          path="/forgot-password"
+          forceRedirectUrl="/sign-in"
         />
 
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            Trouble signing in?{' '}
-            <Link href="/forgot-password" className="text-primary hover:underline font-medium">
-              Reset your password
+            Remember your password?{' '}
+            <Link href="/sign-in" className="text-primary hover:underline font-medium">
+              Sign in
             </Link>
           </p>
         </div>

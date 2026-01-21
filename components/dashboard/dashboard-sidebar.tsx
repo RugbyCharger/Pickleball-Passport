@@ -25,7 +25,8 @@ import {
   Bell,
   HelpCircle,
   Menu,
-  X
+  X,
+  UserCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -64,6 +65,11 @@ const navigationItems = [
     name: 'Support',
     href: '/dashboard/support',
     icon: HelpCircle,
+  },
+  {
+    name: 'Profile',
+    href: '/dashboard/profile',
+    icon: UserCircle,
   },
   {
     name: 'Settings',
