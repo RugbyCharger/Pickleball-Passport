@@ -192,6 +192,12 @@ model User {
   // Stripe Integration (E4-S6)
   stripeCustomerId String? // Stripe customer ID for installment plans
 
+  // Notification Preferences (E11-S12)
+  notificationPreferences    Json?     @default("{\"emailPreTripSequence\":true,\"emailPostTripFollowUp\":true,\"emailAlumniEvents\":true,\"emailMarketing\":false,\"emailNewsletter\":false,\"smsEnabled\":true,\"inAppEnabled\":true,\"whatsappEnabled\":true}")
+  preferenceEmailToken       String?   @unique
+  preferenceEmailTokenExpiry DateTime?
+  preferenceUpdatedAt        DateTime?
+
   // Relationships
   guestProfile   GuestProfile?
   partnerProfile PartnerProfile?
@@ -208,6 +214,7 @@ model User {
   @@index([email])
   @@index([role])
   @@index([stripeCustomerId])
+  @@index([preferenceEmailToken])
 }
 
 // ============================================================================

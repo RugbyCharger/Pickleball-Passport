@@ -5,6 +5,7 @@
  */
 
 import { baseEmailTemplate, generatePlainText } from './base'
+import { escapeHtml } from '@/lib/utils/html-escape'
 
 export interface TicketResolvedData {
   name: string
@@ -49,7 +50,7 @@ export function generateTicketResolvedEmail(data: TicketResolvedData): {
   const content = `
     <h1>Your Request Has Been Resolved</h1>
 
-    <p>Hi ${name},</p>
+    <p>Hi ${escapeHtml(name)},</p>
 
     <p>Great news! Your support request has been marked as resolved by our team.</p>
 
@@ -61,7 +62,7 @@ export function generateTicketResolvedEmail(data: TicketResolvedData): {
         </tr>
         <tr>
           <td style="padding: 4px 0; font-weight: 600; color: #047857;">Subject:</td>
-          <td style="padding: 4px 0; color: #065f46;">${originalSubject}</td>
+          <td style="padding: 4px 0; color: #065f46;">${escapeHtml(originalSubject)}</td>
         </tr>
         <tr>
           <td style="padding: 4px 0; font-weight: 600; color: #047857;">Status:</td>
