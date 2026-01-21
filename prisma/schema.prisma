@@ -1513,3 +1513,185 @@ model ReferralEvent {
   @@index([createdAt])
   @@index([utmSource])
 }
+
+// ============================================================================
+// CMS - CONTENT MANAGEMENT SYSTEM (Epic 12)
+// ============================================================================
+
+// Content status for draft/publish workflow
+enum ContentStatus {
+  DRAFT // Content is being edited, not visible publicly
+  PUBLISHED // Content is live and visible
+  ARCHIVED // Content removed from public view but preserved
+}
+
+// Content block types for different content structures
+enum ContentBlockType {
+  TEXT // Rich text content
+  HERO // Hero section with title/image
+  FEATURE // Feature highlight block
+  TESTIMONIAL // Testimonial display
+  CTA // Call to action section
+  FAQ // FAQ accordion
+  GALLERY // Image gallery
+  VIDEO // Video embed
+  CUSTOM // Custom HTML/component
+}
+
+// Content categories for organization
+model ContentCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique // URL-friendly identifier
+  description String?
+  parentId    String? // For nested categories
+  parent      ContentCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    ContentCategory[] @relation("CategoryHierarchy")
+  sortOrder   Int    @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  pages  ContentPage[]
+  blocks ContentBlock[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([sortOrder])
+}
+
+// Content pages represent full pages in the CMS
+model ContentPage {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique // URL path
+  description String? // Meta description
+  status      ContentStatus @default(DRAFT)
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String? // Open Graph image URL
+
+  // Page settings
+  template    String? // Page template to use
+  isHomepage  Boolean @default(false) // Homepage flag
+  publishedAt DateTime? // When page was published
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Category
+  categoryId String?
+  category   ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Audit
+  createdBy String // User ID who created
+  updatedBy String // User ID who last updated
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  blocks   ContentBlock[]
+  versions ContentPageVersion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@index([deletedAt])
+  @@index([isHomepage])
+}
+
+// Content blocks are reusable content components
+model ContentBlock {
+  id          String           @id @default(cuid())
+  name        String // Internal name for reference
+  slug        String           @unique // Unique identifier for lookup
+  type        ContentBlockType @default(TEXT)
+  status      ContentStatus    @default(DRAFT)
+
+  // Content stored as JSON (TipTap native format)
+  content     Json // Rich text content in TipTap JSON format
+  plainText   String? @db.Text // Plain text extraction for search
+
+  // Settings and metadata
+  settings    Json? // Type-specific settings
+  sortOrder   Int  @default(0) // For ordering within pages
+
+  // Page association (optional - blocks can be standalone)
+  pageId String?
+  page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: SetNull)
+
+  // Category for organization
+  categoryId String?
+  category   ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Publish timestamp
+  publishedAt DateTime?
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  versions ContentBlockVersion[]
+
+  @@index([slug])
+  @@index([type])
+  @@index([status])
+  @@index([pageId])
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@index([deletedAt])
+  @@index([publishedAt])
+}
+
+// Version history for content pages (keep last 5)
+model ContentPageVersion {
+  id            String      @id @default(cuid())
+  pageId        String
+  page          ContentPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of page data at this version
+  content       Json // Full page data snapshot
+  changesSummary String? // Description of changes
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([pageId, versionNumber])
+  @@index([pageId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
+
+// Version history for content blocks (keep last 5)
+model ContentBlockVersion {
+  id            String       @id @default(cuid())
+  blockId       String
+  block         ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of block data at this version
+  content       Json // Block content snapshot
+  settings      Json? // Block settings snapshot
+  changesSummary String?
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([blockId, versionNumber])
+  @@index([blockId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
