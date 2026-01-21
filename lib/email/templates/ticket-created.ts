@@ -6,6 +6,7 @@
  */
 
 import { baseEmailTemplate, generatePlainText } from './base'
+import { escapeHtml } from '@/lib/utils/html-escape'
 
 export interface TicketCreatedData {
   name: string
@@ -53,7 +54,7 @@ export function generateTicketCreatedEmail(data: TicketCreatedData): {
   `
 
   const content = `
-    <h1>Thanks for Reaching Out, ${name}!</h1>
+    <h1>Thanks for Reaching Out, ${escapeHtml(name)}!</h1>
 
     <p>We've received your support request and our team will get back to you within 24 hours during business days.</p>
 
@@ -75,7 +76,7 @@ export function generateTicketCreatedEmail(data: TicketCreatedData): {
 
     <div style="background-color: #fffbeb; border-left: 4px solid #D4AF37; padding: 20px; margin: 24px 0; border-radius: 4px;">
       <p style="margin: 0 0 8px 0; font-weight: 600; color: #92400e;">Your Message:</p>
-      <p style="margin: 0; color: #78350f; white-space: pre-wrap;">${message}</p>
+      <p style="margin: 0; color: #78350f; white-space: pre-wrap;">${escapeHtml(message)}</p>
     </div>
 
     ${trackingSection}
