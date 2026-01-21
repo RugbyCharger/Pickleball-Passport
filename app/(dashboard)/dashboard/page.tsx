@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar, CreditCard, FileText, Bell, ArrowRight, MapPin, CheckSquare } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { GuestTaskSection } from './guest-task-section'
+import { WhatsAppGroupsSection } from './whatsapp-groups-section'
 
 export default async function DashboardPage() {
   const user = await currentUser()
@@ -41,6 +42,8 @@ export default async function DashboardPage() {
           startDate: true,
           endDate: true,
           destination: true,
+          whatsappGroupInviteLink: true,
+          whatsappGroupStatus: true,
         },
       },
     },
@@ -183,6 +186,18 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* WhatsApp Groups Section */}
+      <WhatsAppGroupsSection
+        bookingIds={activeBookings
+          .filter(
+            (b) =>
+              b.status === 'CONFIRMED' &&
+              b.trip?.whatsappGroupInviteLink &&
+              b.trip?.whatsappGroupStatus === 'ACTIVE'
+          )
+          .map((b) => b.id)}
+      />
 
       {/* Tasks Section */}
       <GuestTaskSection userId={user.id} />
