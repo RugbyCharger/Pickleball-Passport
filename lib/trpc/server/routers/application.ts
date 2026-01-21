@@ -62,9 +62,14 @@ export const applicationRouter = router({
 
         const userId = ctx.user.id;
 
-        // Epic 10: Extract referral code from cookie
+        // Epic 10: Extract referral code and UTM params from cookies
         let referralCode: string | null = null;
         let referralAttributed = false;
+
+        // UTM Tracking (Epic 10 - US-007)
+        let utmSource: string | null = null;
+        let utmMedium: string | null = null;
+        let utmCampaign: string | null = null;
 
         // Parse cookies from headers
         const cookieHeader = ctx.headers.get('cookie');
@@ -74,12 +79,21 @@ export const applicationRouter = router({
             const [name, value] = cookie.split('=');
             if (name === REFERRAL_COOKIE_NAME && value) {
               referralCode = decodeURIComponent(value);
-              break;
+            }
+            // Extract UTM params from cookies
+            if (name === 'utm_source' && value) {
+              utmSource = decodeURIComponent(value);
+            }
+            if (name === 'utm_medium' && value) {
+              utmMedium = decodeURIComponent(value);
+            }
+            if (name === 'utm_campaign' && value) {
+              utmCampaign = decodeURIComponent(value);
             }
           }
         }
 
-        // Create application with referral code if present
+        // Create application with referral code and UTM params if present
         const application = await prisma.application.create({
           data: {
             userId,
@@ -98,6 +112,10 @@ export const applicationRouter = router({
             budgetRange: input.budgetRange,
             referralSource: input.referralSource,
             referralCode: referralCode, // Epic 10: Store referral code
+            // Epic 10 - US-007: Store UTM params
+            utmSource,
+            utmMedium,
+            utmCampaign,
             status: 'SUBMITTED',
           },
         });

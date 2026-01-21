@@ -443,6 +443,11 @@ model Booking {
   // Referral
   referredBy String? // Partner referral code
 
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
+
   // Payment Plan (E4-S6)
   paymentPlan      PaymentPlan @default(FULL)
   stripeCustomerId String? // Stripe customer ID for installment plans
@@ -516,6 +521,7 @@ model Booking {
   @@index([giftStatus])
   @@index([giftDeliveryDate])
   @@index([whatsappInvitationStatus])
+  @@index([utmSource])
 }
 
 model AddOn {
@@ -682,6 +688,11 @@ model Application {
   // Guest Referral Attribution (Epic 10)
   referralCode String? // Referral code used when submitting application (from cookie)
 
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
+
   // Admin Notes
   adminNotes String? @db.Text
 
@@ -692,6 +703,7 @@ model Application {
   @@index([status])
   @@index([createdAt])
   @@index([referralCode])
+  @@index([utmSource])
 }
 
 // ============================================================================

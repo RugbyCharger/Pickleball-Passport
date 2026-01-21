@@ -1,6 +1,7 @@
 /**
  * Admin Referral Analytics Dashboard
  * Epic 10 - US-006: Referral Analytics Admin Dashboard
+ * Epic 10 - US-007: UTM Parameter Tracking
  *
  * Features:
  * - Referral funnel visualization: Clicks -> Applications -> Bookings -> Completed
@@ -9,6 +10,7 @@
  * - Referral source breakdown chart (partner vs guest)
  * - Date range filter (last 7 days, 30 days, 90 days, all time)
  * - Total points awarded summary
+ * - UTM source breakdown and filtering (US-007)
  */
 
 'use client';
@@ -27,6 +29,8 @@ import {
   ArrowRight,
   Building2,
   User,
+  Link2,
+  X,
 } from 'lucide-react';
 
 // ============================================================================
@@ -268,15 +272,85 @@ function SourceBreakdownBar({
 }
 
 // ============================================================================
+// UTM SOURCE FILTER COMPONENT
+// ============================================================================
+
+function UtmSourceFilter({
+  sources,
+  selectedSource,
+  onChange,
+  loading,
+}: {
+  sources: string[];
+  selectedSource: string | null;
+  onChange: (source: string | null) => void;
+  loading: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      <Link2 className="h-4 w-4 text-gray-500" />
+      <span className="text-sm text-gray-600">UTM Source:</span>
+      {loading ? (
+        <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+      ) : (
+        <>
+          <button
+            onClick={() => onChange(null)}
+            className={`px-2 py-1 text-xs rounded ${
+              selectedSource === null
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            All
+          </button>
+          {sources.slice(0, 8).map((source) => (
+            <button
+              key={source}
+              onClick={() => onChange(source)}
+              className={`px-2 py-1 text-xs rounded ${
+                selectedSource === source
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {source}
+            </button>
+          ))}
+          {selectedSource && (
+            <button
+              onClick={() => onChange(null)}
+              className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+            >
+              <X className="h-3 w-3" />
+              Clear
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 export default function ReferralAnalyticsPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
+  const [selectedUtmSource, setSelectedUtmSource] = useState<string | null>(null);
 
-  // Fetch analytics data
-  const { data: funnelStats, isLoading: loadingFunnel } =
-    trpc.admin.getReferralFunnelStats.useQuery(dateRange);
+  // Fetch UTM source list for filter
+  const { data: utmSources, isLoading: loadingUtmSources } =
+    trpc.admin.getUtmSourceList.useQuery(dateRange);
+
+  // Fetch analytics data - use UTM-filtered version when a source is selected
+  const { data: funnelStats, isLoading: loadingFunnel } = selectedUtmSource
+    ? trpc.admin.getReferralFunnelStatsByUtm.useQuery({
+        ...dateRange,
+        utmSource: selectedUtmSource,
+      })
+    : trpc.admin.getReferralFunnelStats.useQuery(dateRange);
 
   const { data: topReferrers, isLoading: loadingReferrers } =
     trpc.admin.getTopReferrers.useQuery({
@@ -286,6 +360,10 @@ export default function ReferralAnalyticsPage() {
 
   const { data: sourceBreakdown, isLoading: loadingBreakdown } =
     trpc.admin.getReferralSourceBreakdown.useQuery(dateRange);
+
+  // Fetch UTM breakdown data
+  const { data: utmBreakdown, isLoading: loadingUtmBreakdown } =
+    trpc.admin.getUtmBreakdown.useQuery(dateRange);
 
   return (
     <div className="space-y-8">
@@ -299,6 +377,23 @@ export default function ReferralAnalyticsPage() {
 
       {/* Date Range Filter */}
       <DateRangeFilterComponent onChange={setDateRange} />
+
+      {/* UTM Source Filter */}
+      {utmSources && utmSources.length > 0 && (
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+          <UtmSourceFilter
+            sources={utmSources || []}
+            selectedSource={selectedUtmSource}
+            onChange={setSelectedUtmSource}
+            loading={loadingUtmSources}
+          />
+          {selectedUtmSource && (
+            <p className="mt-2 text-sm text-blue-600">
+              Showing data filtered by UTM source: <strong>{selectedUtmSource}</strong>
+            </p>
+          )}
+        </div>
+      )}
 
       {/* ================================================================ */}
       {/* REFERRAL FUNNEL */}
@@ -450,6 +545,106 @@ export default function ReferralAnalyticsPage() {
             </div>
           </div>
         ) : null}
+      </div>
+
+      {/* ================================================================ */}
+      {/* UTM BREAKDOWN (US-007) */}
+      {/* ================================================================ */}
+
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">UTM Source Breakdown</h2>
+        <p className="text-sm text-gray-600 mb-4">
+          Track performance by marketing channel (utm_source parameter)
+        </p>
+
+        {loadingUtmBreakdown ? (
+          <div className="flex items-center justify-center h-40">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          </div>
+        ) : utmBreakdown && utmBreakdown.sources.length > 0 ? (
+          <div className="space-y-4">
+            {/* UTM Sources Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Source</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Clicks</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Applications</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Bookings</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Completed</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Conv. Rate</th>
+                    <th className="text-center py-3 px-4 font-semibold text-gray-700">Filter</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {utmBreakdown.sources.map((source) => (
+                    <tr key={source.source} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <Link2 className="h-4 w-4 text-gray-400" />
+                          <span className="font-medium text-gray-900">{source.source}</span>
+                        </div>
+                      </td>
+                      <td className="text-right py-3 px-4 text-gray-600">{source.clicks.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-600">{source.applications.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-600">{source.bookings.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-600">{source.completed.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4">
+                        <span className={`font-medium ${source.conversionRate > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                          {source.conversionRate}%
+                        </span>
+                      </td>
+                      <td className="text-center py-3 px-4">
+                        <button
+                          onClick={() => setSelectedUtmSource(source.source)}
+                          className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                        >
+                          Filter
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {/* Show row for events without UTM */}
+                  {utmBreakdown.withoutUtm.clicks > 0 && (
+                    <tr className="border-b border-gray-100 bg-gray-50">
+                      <td className="py-3 px-4">
+                        <span className="text-gray-500 italic">No UTM source</span>
+                      </td>
+                      <td className="text-right py-3 px-4 text-gray-500">{utmBreakdown.withoutUtm.clicks.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-500">{utmBreakdown.withoutUtm.applications.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-500">{utmBreakdown.withoutUtm.bookings.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-500">{utmBreakdown.withoutUtm.completed.toLocaleString()}</td>
+                      <td className="text-right py-3 px-4 text-gray-500">-</td>
+                      <td className="text-center py-3 px-4">-</td>
+                    </tr>
+                  )}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-gray-100 font-semibold">
+                    <td className="py-3 px-4 text-gray-700">Total (with UTM)</td>
+                    <td className="text-right py-3 px-4 text-gray-700">{utmBreakdown.totals.clicks.toLocaleString()}</td>
+                    <td className="text-right py-3 px-4 text-gray-700">{utmBreakdown.totals.applications.toLocaleString()}</td>
+                    <td className="text-right py-3 px-4 text-gray-700">{utmBreakdown.totals.bookings.toLocaleString()}</td>
+                    <td className="text-right py-3 px-4 text-gray-700">{utmBreakdown.totals.completed.toLocaleString()}</td>
+                    <td className="text-right py-3 px-4 text-gray-700">
+                      {utmBreakdown.totals.clicks > 0
+                        ? Math.round((utmBreakdown.totals.bookings / utmBreakdown.totals.clicks) * 100)
+                        : 0}%
+                    </td>
+                    <td className="text-center py-3 px-4">-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            <Link2 className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+            <p>No UTM tracking data available</p>
+            <p className="text-sm mt-1">UTM parameters are captured when visitors arrive with utm_source in the URL</p>
+          </div>
+        )}
       </div>
 
       {/* ================================================================ */}

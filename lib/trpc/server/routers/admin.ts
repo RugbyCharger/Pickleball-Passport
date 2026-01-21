@@ -1761,4 +1761,212 @@ export const adminRouter = router({
         totalPointsAwarded: Number(totalPointsAwarded[0]?.total || 0),
       };
     }),
+
+  // ============================================================================
+  // UTM ANALYTICS (Epic 10 - US-007)
+  // ============================================================================
+
+  /**
+   * Get UTM source breakdown from referral events
+   * Shows distribution of UTM sources and their conversion rates
+   */
+  getUtmBreakdown: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      // Get UTM source counts from ReferralEvent
+      const utmSourceCounts = await ctx.db.referralEvent.groupBy({
+        by: ['utmSource', 'eventType'],
+        where: {
+          utmSource: { not: null },
+          ...dateFilter,
+        },
+        _count: true,
+      });
+
+      // Process into a structured format
+      const sourceMap: Record<string, {
+        clicks: number;
+        applications: number;
+        bookings: number;
+        completed: number;
+      }> = {};
+
+      for (const row of utmSourceCounts) {
+        const source = row.utmSource || 'unknown';
+        if (!sourceMap[source]) {
+          sourceMap[source] = { clicks: 0, applications: 0, bookings: 0, completed: 0 };
+        }
+        if (row.eventType === 'CLICK') sourceMap[source].clicks = row._count;
+        if (row.eventType === 'APPLICATION') sourceMap[source].applications = row._count;
+        if (row.eventType === 'BOOKING') sourceMap[source].bookings = row._count;
+        if (row.eventType === 'COMPLETION') sourceMap[source].completed = row._count;
+      }
+
+      // Convert to array and sort by clicks
+      const sources = Object.entries(sourceMap)
+        .map(([source, stats]) => ({
+          source,
+          ...stats,
+          conversionRate: stats.clicks > 0
+            ? Math.round((stats.bookings / stats.clicks) * 100)
+            : 0,
+        }))
+        .sort((a, b) => b.clicks - a.clicks);
+
+      // Calculate totals for events with UTM source
+      const totals = sources.reduce(
+        (acc, s) => ({
+          clicks: acc.clicks + s.clicks,
+          applications: acc.applications + s.applications,
+          bookings: acc.bookings + s.bookings,
+          completed: acc.completed + s.completed,
+        }),
+        { clicks: 0, applications: 0, bookings: 0, completed: 0 }
+      );
+
+      // Get total events without UTM source for comparison
+      const eventsWithoutUtm = await ctx.db.referralEvent.groupBy({
+        by: ['eventType'],
+        where: {
+          utmSource: null,
+          ...dateFilter,
+        },
+        _count: true,
+      });
+
+      const noUtmStats = { clicks: 0, applications: 0, bookings: 0, completed: 0 };
+      for (const row of eventsWithoutUtm) {
+        if (row.eventType === 'CLICK') noUtmStats.clicks = row._count;
+        if (row.eventType === 'APPLICATION') noUtmStats.applications = row._count;
+        if (row.eventType === 'BOOKING') noUtmStats.bookings = row._count;
+        if (row.eventType === 'COMPLETION') noUtmStats.completed = row._count;
+      }
+
+      return {
+        sources,
+        totals,
+        withoutUtm: noUtmStats,
+      };
+    }),
+
+  /**
+   * Get list of all UTM sources for filter dropdown
+   */
+  getUtmSourceList: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      const sources = await ctx.db.referralEvent.findMany({
+        where: {
+          utmSource: { not: null },
+          ...dateFilter,
+        },
+        select: {
+          utmSource: true,
+        },
+        distinct: ['utmSource'],
+        orderBy: {
+          utmSource: 'asc',
+        },
+      });
+
+      return sources
+        .map(s => s.utmSource)
+        .filter((s): s is string => s !== null);
+    }),
+
+  /**
+   * Get referral funnel stats filtered by UTM source
+   */
+  getReferralFunnelStatsByUtm: adminProcedure
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        utmSource: z.string().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const dateFilter = {
+        ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+        ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+      };
+
+      const utmFilter = input?.utmSource
+        ? { utmSource: input.utmSource }
+        : {};
+
+      // Get counts for each event type with optional UTM filter
+      const [clicks, applications, bookings, completed] = await Promise.all([
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'CLICK',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'APPLICATION',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'BOOKING',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+        ctx.db.referralEvent.count({
+          where: {
+            eventType: 'COMPLETION',
+            ...dateFilter,
+            ...utmFilter,
+          },
+        }),
+      ]);
+
+      // Calculate conversion rates
+      const clickToApplication = clicks > 0 ? Math.round((applications / clicks) * 100) : 0;
+      const applicationToBooking = applications > 0 ? Math.round((bookings / applications) * 100) : 0;
+      const bookingToCompletion = bookings > 0 ? Math.round((completed / bookings) * 100) : 0;
+      const overallConversion = clicks > 0 ? Math.round((completed / clicks) * 100) : 0;
+
+      return {
+        funnel: {
+          clicks,
+          applications,
+          bookings,
+          completed,
+        },
+        conversionRates: {
+          clickToApplication,
+          applicationToBooking,
+          bookingToCompletion,
+          overallConversion,
+        },
+        utmSource: input?.utmSource || null,
+      };
+    }),
 });

@@ -187,6 +187,11 @@ export const bookingRouter = router({
       let guestReferralCode: string | undefined
       let guestReferrerUserId: string | undefined
 
+      // Epic 10 - US-007: Extract UTM params from cookies
+      let utmSource: string | null = null
+      let utmMedium: string | null = null
+      let utmCampaign: string | null = null
+
       // Get referral code from cookie if no manual code provided
       // Manual code takes precedence over cookie
       let effectiveReferralCode: string | undefined
@@ -200,7 +205,36 @@ export const bookingRouter = router({
             const [name, value] = cookie.split('=')
             if (name === REFERRAL_COOKIE_NAME && value) {
               effectiveReferralCode = decodeURIComponent(value).toUpperCase()
-              break
+            }
+            // Extract UTM params from cookies
+            if (name === 'utm_source' && value) {
+              utmSource = decodeURIComponent(value)
+            }
+            if (name === 'utm_medium' && value) {
+              utmMedium = decodeURIComponent(value)
+            }
+            if (name === 'utm_campaign' && value) {
+              utmCampaign = decodeURIComponent(value)
+            }
+          }
+        }
+      }
+
+      // Also parse cookies for UTM params even if we have a manual referral code
+      if (referralCode) {
+        const cookieHeader = ctx.headers.get('cookie')
+        if (cookieHeader) {
+          const cookies = cookieHeader.split(';').map(c => c.trim())
+          for (const cookie of cookies) {
+            const [name, value] = cookie.split('=')
+            if (name === 'utm_source' && value) {
+              utmSource = decodeURIComponent(value)
+            }
+            if (name === 'utm_medium' && value) {
+              utmMedium = decodeURIComponent(value)
+            }
+            if (name === 'utm_campaign' && value) {
+              utmCampaign = decodeURIComponent(value)
             }
           }
         }
@@ -376,6 +410,10 @@ export const bookingRouter = router({
         referredBy: referredByPartnerId || null,
         paymentPlan,
         stripeCustomerId,
+        // Epic 10 - US-007: Store UTM params
+        utmSource,
+        utmMedium,
+        utmCampaign,
       }
 
       // E4-S6: Use transaction wrapper for installment plans to ensure atomicity
