@@ -524,3 +524,25 @@ Iteration: 9
   - Story ordering can sometimes result in earlier stories implementing later story requirements
   - Always check what's already implemented before starting a story
 ---
+
+## 2026-01-21 - US-009
+Iteration: 10
+- Implemented US-009: Booking Integration - Send WhatsApp Invitation
+- Files changed:
+  - app/api/webhooks/stripe/route.ts - Added WhatsApp invitation after booking confirmation
+- **What was implemented:**
+  - Located booking confirmation flow in Stripe webhook handler (handlePaymentSuccess)
+  - Added inviteGuestByBookingId call after booking is confirmed (isFullyPaid && shouldSendBookingConfirmation)
+  - Integration is non-blocking: uses .then()/.catch() pattern
+  - Only sends if trip has ACTIVE whatsappGroupStatus and whatsappGroupInviteLink
+  - Logs success with bookingId and messageId
+  - Logs warnings/errors for failures without blocking booking
+  - Added TODO comment for notification preferences check (Story 11-12 not yet implemented)
+- TypeScript strict mode passed with 0 errors in modified files
+- ESLint passed with no warnings in modified files
+- **Learnings for future iterations:**
+  - Stripe webhook handlePaymentSuccess is the right place for post-booking integrations
+  - Follow existing patterns: non-blocking .then()/.catch() like sendHighValueBookingAlert
+  - booking.trip is included in the Prisma query (line 178-195), includes whatsappGroupStatus
+  - Notification preferences (Story 11-12) should gate WhatsApp sending when implemented
+---

@@ -179,7 +179,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Find the existing booking confirmation logic first. May be in app/api/webhooks/stripe/route.ts or lib/trpc/server/routers/booking.ts"
     },
     {
