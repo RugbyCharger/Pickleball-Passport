@@ -2733,6 +2733,220 @@ export const partnerRouter = router({
         },
       }))
     }),
+
+  // ============================================================================
+  // E9-S18: Partner Testimonials System
+  // ============================================================================
+
+  /**
+   * Submit a new testimonial
+   */
+  submitTestimonial: partnerProcedure
+    .input(
+      z.object({
+        content: z.string().min(1, 'Content is required').max(500, 'Maximum 500 characters'),
+        rating: z.number().int().min(1, 'Rating must be 1-5').max(5, 'Rating must be 1-5'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const testimonial = await ctx.db.partnerTestimonial.create({
+        data: {
+          partnerId: profile.id,
+          content: input.content,
+          rating: input.rating,
+          isApproved: false,
+          isFeatured: false,
+        },
+      })
+
+      return testimonial
+    }),
+
+  /**
+   * Get all testimonials for current partner
+   */
+  getMyTestimonials: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    const testimonials = await ctx.db.partnerTestimonial.findMany({
+      where: {
+        partnerId: profile.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return testimonials
+  }),
+
+  /**
+   * Update a pending testimonial
+   * Partners can only edit their own pending testimonials
+   */
+  updateTestimonial: partnerProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string().min(1, 'Content is required').max(500, 'Maximum 500 characters').optional(),
+        rating: z.number().int().min(1).max(5).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ownership and status
+      const testimonial = await ctx.db.partnerTestimonial.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        })
+      }
+
+      // Can only edit pending (not approved) testimonials
+      if (testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot edit approved testimonials',
+        })
+      }
+
+      const { id, ...updateData } = input
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: updateData,
+      })
+
+      return updatedTestimonial
+    }),
+
+  /**
+   * Delete a pending testimonial
+   * Partners can only delete their own pending testimonials
+   */
+  deleteTestimonial: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ownership
+      const testimonial = await ctx.db.partnerTestimonial.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        })
+      }
+
+      // Can only delete pending (not approved) testimonials
+      if (testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot delete approved testimonials',
+        })
+      }
+
+      await ctx.db.partnerTestimonial.delete({
+        where: { id: input.id },
+      })
+
+      return { success: true }
+    }),
+
+  /**
+   * Get featured testimonials (public procedure for marketing page)
+   */
+  getFeaturedTestimonials: publicProcedure
+    .input(
+      z
+        .object({
+          limit: z.number().min(1).max(20).default(6),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const testimonials = await ctx.db.partnerTestimonial.findMany({
+        where: {
+          isApproved: true,
+          isFeatured: true,
+        },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+            },
+          },
+        },
+        orderBy: [
+          { rating: 'desc' },
+          { createdAt: 'desc' },
+        ],
+        take: input?.limit || 6,
+      })
+
+      return testimonials
+    }),
 })
 
 /**

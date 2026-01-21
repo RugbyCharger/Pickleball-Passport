@@ -623,3 +623,65 @@ Pickleball Passport Partner Support
     text,
   });
 }
+
+export interface PartnerTestimonialApprovedData {
+  partnerEmail: string;
+  partnerName: string;
+}
+
+/**
+ * Send notification to partner when their testimonial is approved
+ */
+export async function sendPartnerTestimonialApproved(data: PartnerTestimonialApprovedData): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #003D5C; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">Your Testimonial Has Been Approved!</h1>
+      </div>
+      <div style="padding: 24px; background: #f9fafb;">
+        <p>Hi ${data.partnerName},</p>
+
+        <p>Great news! Your testimonial has been reviewed and approved by our team.</p>
+
+        <div style="background: white; border-radius: 8px; padding: 20px; margin: 16px 0;">
+          <p style="margin: 0;">Thank you for sharing your experience with the Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.</p>
+        </div>
+
+        <a href="${appUrl}/dashboard/partner/testimonials"
+           style="display: inline-block; background: #D4AF37; color: #003D5C; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+          View Your Testimonials
+        </a>
+
+        <p style="margin-top: 24px; color: #6b7280; font-size: 14px;">
+          Your testimonial may be featured on our marketing materials and partner page.
+        </p>
+      </div>
+      <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
+        <p>Pickleball Passport Partner Program</p>
+      </div>
+    </div>
+  `;
+
+  const text = `
+Hi ${data.partnerName},
+
+Great news! Your testimonial has been reviewed and approved by our team.
+
+Thank you for sharing your experience with the Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.
+
+View your testimonials: ${appUrl}/dashboard/partner/testimonials
+
+Your testimonial may be featured on our marketing materials and partner page.
+
+Pickleball Passport Partner Program
+  `.trim();
+
+  await sendEmail({
+    to: data.partnerEmail,
+    subject: 'Your Testimonial Has Been Approved - Pickleball Passport',
+    html,
+    text,
+  });
+}

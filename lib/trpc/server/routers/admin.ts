@@ -2173,4 +2173,212 @@ export const adminRouter = router({
       ),
     };
   }),
+
+  // ============================================================================
+  // E9-S18: Partner Testimonials Management (Admin)
+  // ============================================================================
+
+  /**
+   * Get all testimonials with filtering
+   */
+  getTestimonials: adminProcedure
+    .input(
+      z
+        .object({
+          isApproved: z.boolean().optional(),
+          isFeatured: z.boolean().optional(),
+          partnerId: z.string().optional(),
+          minRating: z.number().min(1).max(5).optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.isApproved !== undefined && { isApproved: input.isApproved }),
+        ...(input?.isFeatured !== undefined && { isFeatured: input.isFeatured }),
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+        ...(input?.minRating && { rating: { gte: input.minRating } }),
+      };
+
+      const [testimonials, total] = await Promise.all([
+        ctx.db.partnerTestimonial.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                clubLocation: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: [
+            { isApproved: 'asc' }, // Pending first
+            { createdAt: 'desc' },
+          ],
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerTestimonial.count({ where }),
+      ]);
+
+      return {
+        testimonials,
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Approve a testimonial
+   */
+  approveTestimonial: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: {
+          isApproved: true,
+          approvedAt: new Date(),
+        },
+      });
+
+      // Send email notification to partner (non-blocking)
+      try {
+        const { sendPartnerTestimonialApproved } = await import('@/lib/email/sendgrid');
+        await sendPartnerTestimonialApproved({
+          partnerEmail: testimonial.partner.user.email,
+          partnerName: testimonial.partner.clubName,
+        });
+      } catch (error) {
+        logError(emailLogger, error, 'Failed to send testimonial approval email');
+        // Don't fail the operation if email fails
+      }
+
+      return updatedTestimonial;
+    }),
+
+  /**
+   * Feature or unfeature a testimonial
+   * Testimonial must be approved first
+   */
+  featureTestimonial: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isFeatured: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      // Can only feature approved testimonials
+      if (input.isFeatured && !testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Testimonial must be approved before featuring',
+        });
+      }
+
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: {
+          isFeatured: input.isFeatured,
+        },
+      });
+
+      return updatedTestimonial;
+    }),
+
+  /**
+   * Reject/delete a testimonial (admin)
+   */
+  deleteTestimonial: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      await ctx.db.partnerTestimonial.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
+  /**
+   * Get testimonial statistics
+   */
+  getTestimonialStats: adminProcedure.query(async ({ ctx }) => {
+    const [total, pending, approved, featured, averageRating] = await Promise.all([
+      ctx.db.partnerTestimonial.count(),
+      ctx.db.partnerTestimonial.count({ where: { isApproved: false } }),
+      ctx.db.partnerTestimonial.count({ where: { isApproved: true } }),
+      ctx.db.partnerTestimonial.count({ where: { isFeatured: true } }),
+      ctx.db.partnerTestimonial.aggregate({
+        _avg: {
+          rating: true,
+        },
+        where: {
+          isApproved: true,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      pending,
+      approved,
+      featured,
+      averageRating: averageRating._avg.rating ? Math.round(averageRating._avg.rating * 10) / 10 : 0,
+    };
+  }),
 });
