@@ -343,6 +343,14 @@ model Package {
   tagline     String?
   description String  @db.Text // Markdown content
 
+  // CMS Rich Text Content (Epic 12-2)
+  cmsDescription     Json?   // TipTap JSON content for rich description
+  cmsPricingText     String? @db.Text // Custom pricing display text
+  cmsDurationText    String? @db.Text // Custom duration options text
+  cmsHighlights      Json?   // Array of highlight items
+  cmsIncludedItems   Json?   // What's included list
+  cmsNotIncludedItems Json?  // What's not included list
+
   // Pricing
   basePrice Int // Base price in USD cents (e.g., 1500000 = $15,000)
 
@@ -362,8 +370,10 @@ model Package {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookings    Booking[]
-  itineraries Itinerary[]
+  bookings        Booking[]
+  itineraries     Itinerary[]
+  contentBlocks   ContentBlock[]    // CMS content blocks linked to this package
+  contentVersions PackageContentVersion[] // Audit log of content changes
 
   @@index([slug])
   @@index([isActive])
@@ -1624,6 +1634,10 @@ model ContentBlock {
   pageId String?
   page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: SetNull)
 
+  // Package association (Epic 12-2 - blocks can be linked to packages)
+  packageId String?
+  package   Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+
   // Category for organization
   categoryId String?
   category   ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
@@ -1647,6 +1661,7 @@ model ContentBlock {
   @@index([type])
   @@index([status])
   @@index([pageId])
+  @@index([packageId])
   @@index([categoryId])
   @@index([sortOrder])
   @@index([deletedAt])
@@ -1694,4 +1709,30 @@ model ContentBlockVersion {
   @@index([blockId])
   @@index([versionNumber])
   @@index([createdAt])
+}
+
+// ============================================================================
+// PACKAGE CONTENT VERSIONS (Epic 12-2 - Audit Log)
+// ============================================================================
+
+// Audit log for package content changes
+model PackageContentVersion {
+  id            String  @id @default(cuid())
+  packageId     String
+  package       Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of package content data at this version
+  content       Json // Full package content snapshot (all CMS fields)
+  changesSummary String? // Description of what changed
+
+  // Audit
+  createdBy String // User ID who made the change
+  createdAt DateTime @default(now())
+
+  @@unique([packageId, versionNumber])
+  @@index([packageId])
+  @@index([versionNumber])
+  @@index([createdAt])
+  @@index([createdBy])
 }
