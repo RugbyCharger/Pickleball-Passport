@@ -15,6 +15,8 @@ import { headers } from 'next/headers';
 import { verifyWebhookSignature } from '@/lib/stripe/stripe-service';
 import { prisma } from '@/lib/db';
 import { sendBookingConfirmation } from '@/lib/email/sendgrid';
+import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
+import { whatsappLogger } from '@/lib/logger';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
@@ -378,6 +380,33 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
             bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`
           }).catch(err => console.error('Failed to send high-value booking alert:', err))
         }
+      }
+
+      // Story 11-10: Send WhatsApp group invitation (non-blocking)
+      // Only send if trip has an active WhatsApp group
+      if (booking.trip?.whatsappGroupStatus === 'ACTIVE' && booking.trip?.whatsappGroupInviteLink) {
+        // TODO: Check user notification preferences (whatsappEnabled) when Story 11-12 is implemented
+        // For now, send to all guests who have a phone number on file
+        inviteGuestByBookingId(booking.id)
+          .then((result) => {
+            if (result.success) {
+              whatsappLogger.info(
+                { bookingId: booking.id, messageId: result.messageId },
+                'WhatsApp group invitation sent after booking confirmation'
+              );
+            } else {
+              whatsappLogger.warn(
+                { bookingId: booking.id, error: result.error },
+                'Failed to send WhatsApp group invitation after booking'
+              );
+            }
+          })
+          .catch((err) => {
+            whatsappLogger.error(
+              { bookingId: booking.id, error: err instanceof Error ? err.message : String(err) },
+              'Error sending WhatsApp group invitation'
+            );
+          });
       }
     }
 

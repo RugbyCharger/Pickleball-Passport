@@ -29,6 +29,7 @@ import { paymentRouter } from './routers/payment'
 import { forumRouter } from './routers/forum'
 import { preferencesRouter } from './routers/preferences'
 import { emailTemplateRouter } from './routers/email-template'
+import { whatsappRouter } from './routers/whatsapp'
 
 export const appRouter = router({
   user: userRouter,
@@ -54,6 +55,7 @@ export const appRouter = router({
   forum: forumRouter,
   preferences: preferencesRouter,
   emailTemplate: emailTemplateRouter,
+  whatsapp: whatsappRouter,
 })
 
 // Export type definition for the router

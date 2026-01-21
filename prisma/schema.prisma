@@ -141,6 +141,12 @@ enum SubscriberStatus {
   BOUNCED
 }
 
+enum WhatsAppGroupStatus {
+  PENDING // Group not yet created
+  ACTIVE // Group is active and accepting members
+  ARCHIVED // Trip completed, group archived
+}
+
 enum GiftStatus {
   PENDING // Payment complete, waiting to send notification
   SENT // Gift notification email sent to recipient
@@ -201,9 +207,9 @@ model User {
   testimonials   Testimonial[]
 
   // Support System (E1-S12)
-  supportTickets         SupportTicket[]       // Tickets created by this user
-  assignedTickets        SupportTicket[]       @relation("AssignedTickets") // Tickets assigned to admin
-  supportTicketReplies   SupportTicketReply[]  // Replies from this user
+  supportTickets       SupportTicket[] // Tickets created by this user
+  assignedTickets      SupportTicket[]      @relation("AssignedTickets") // Tickets assigned to admin
+  supportTicketReplies SupportTicketReply[] // Replies from this user
 
   @@index([email])
   @@index([role])
@@ -362,6 +368,13 @@ model Trip {
   // Status
   isActive Boolean @default(true)
 
+  // WhatsApp Group (E11-S10)
+  whatsappGroupId          String?             @unique // External WhatsApp group ID
+  whatsappGroupInviteLink  String? // https://chat.whatsapp.com/{inviteCode}
+  whatsappGroupCreatedAt   DateTime? // When group was created
+  whatsappGroupStatus      WhatsAppGroupStatus @default(PENDING)
+  whatsappGroupMemberCount Int                 @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -371,6 +384,7 @@ model Trip {
   @@index([startDate])
   @@index([isActive])
   @@index([isActive, startDate, currentBookings]) // Composite index for getAvailable query
+  @@index([whatsappGroupStatus])
 }
 
 // ============================================================================
@@ -441,6 +455,12 @@ model Booking {
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
 
+  // E11-S10: WhatsApp Group Integration
+  whatsappInvitationSentAt DateTime? // When WhatsApp invitation was sent
+  whatsappGroupJoinedAt    DateTime? // When guest clicked join link
+  whatsappInvitationStatus String?   @default("pending") // pending, sent, joined, failed
+  whatsappMilestonesSent   Json? // Tracks sent milestones: { "60_DAYS": true, "30_DAYS": true, ... }
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -468,6 +488,7 @@ model Booking {
   @@index([giftAcceptanceToken])
   @@index([giftStatus])
   @@index([giftDeliveryDate])
+  @@index([whatsappInvitationStatus])
 }
 
 model AddOn {
@@ -941,46 +962,46 @@ model Document {
 // ============================================================================
 
 model SupportTicket {
-  id              String          @id @default(cuid())
-  referenceNumber String          @unique // Format: TKT-{nanoid(8)}
+  id              String @id @default(cuid())
+  referenceNumber String @unique // Format: TKT-{nanoid(8)}
 
   // Ticket Content
-  subject         String
-  message         String          @db.Text
+  subject String
+  message String @db.Text
 
   // Classification
-  category        TicketCategory  @default(GENERAL_INQUIRY)
-  source          TicketSource    @default(WEBSITE_CONTACT)
-  status          TicketStatus    @default(OPEN)
-  priority        TicketPriority  @default(NORMAL)
+  category TicketCategory @default(GENERAL_INQUIRY)
+  source   TicketSource   @default(WEBSITE_CONTACT)
+  status   TicketStatus   @default(OPEN)
+  priority TicketPriority @default(NORMAL)
 
   // Contact Information (email required, others optional for public submissions)
-  email           String
-  name            String?
-  phone           String?
+  email String
+  name  String?
+  phone String?
 
   // Optional User Relations
-  userId          String?         // Null for public/unauthenticated submissions
-  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? // Null for public/unauthenticated submissions
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   // Optional Booking Relation
-  bookingId       String?
-  booking         Booking?        @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   // Assignment (admin handling the ticket)
-  assignedToId    String?
-  assignedTo      User?           @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   // Resolution
-  resolvedAt      DateTime?
+  resolvedAt DateTime?
 
   // Timestamps
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relationships
-  replies         SupportTicketReply[]
-  attachments     SupportTicketAttachment[]
+  replies     SupportTicketReply[]
+  attachments SupportTicketAttachment[]
 
   @@index([userId])
   @@index([assignedToId])
@@ -995,19 +1016,19 @@ model SupportTicket {
 }
 
 model SupportTicketReply {
-  id            String         @id @default(cuid())
-  ticketId      String
-  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   // Reply author (can be guest user or admin)
-  userId        String?
-  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   // Reply content
-  message       String         @db.Text
-  isAdminReply  Boolean        @default(false)
+  message      String  @db.Text
+  isAdminReply Boolean @default(false)
 
-  createdAt     DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([ticketId])
   @@index([userId])
@@ -1015,17 +1036,17 @@ model SupportTicketReply {
 }
 
 model SupportTicketAttachment {
-  id            String         @id @default(cuid())
-  ticketId      String
-  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   // File information
-  fileName      String
-  fileUrl       String         // Supabase Storage URL
-  fileSize      Int            // Bytes
-  mimeType      String
+  fileName String
+  fileUrl  String // Supabase Storage URL
+  fileSize Int // Bytes
+  mimeType String
 
-  createdAt     DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([ticketId])
   @@index([createdAt])
@@ -1147,31 +1168,31 @@ model NewsletterSubscriber {
 
 enum EmailTemplateCategory {
   TRANSACTIONAL // Booking, payment, account
-  MARKETING     // Pre-trip, post-trip, promotions
+  MARKETING // Pre-trip, post-trip, promotions
   NOTIFICATIONS // Admin alerts, partner notifications
-  SYSTEM        // Welcome, verification, password reset
+  SYSTEM // Welcome, verification, password reset
 }
 
 enum EmailTemplateStatus {
-  DRAFT    // In progress, not live
-  ACTIVE   // Published and in use
+  DRAFT // In progress, not live
+  ACTIVE // Published and in use
   ARCHIVED // No longer in use
 }
 
 model EmailTemplate {
   id          String                @id @default(cuid())
-  name        String                // "Booking Confirmation Email"
+  name        String // "Booking Confirmation Email"
   slug        String                @unique // "booking-confirmation"
-  description String?               // "Sent after guest completes booking"
+  description String? // "Sent after guest completes booking"
   category    EmailTemplateCategory
   status      EmailTemplateStatus   @default(DRAFT)
 
   // Content
-  subjectLine   String  // "Your Pickleball Passport Booking Confirmed!"
+  subjectLine   String // "Your Pickleball Passport Booking Confirmed!"
   preheaderText String? // Preview text shown in inbox
   htmlContent   String  @db.Text // Full HTML content
   textContent   String  @db.Text // Plain text version
-  variables     Json    // ["guestName", "bookingReference", "tripName"]
+  variables     Json // ["guestName", "bookingReference", "tripName"]
 
   // Branding - Base template inheritance
   baseTemplateId String?
@@ -1198,8 +1219,8 @@ model EmailTemplateVersion {
   templateId String
   template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
-  versionNumber  Int     // 1, 2, 3...
-  content        Json    // Snapshot of template at this version
+  versionNumber  Int // 1, 2, 3...
+  content        Json // Snapshot of template at this version
   changesSummary String? // What changed in this version
   createdBy      String
   createdAt      DateTime @default(now())
