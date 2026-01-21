@@ -338,7 +338,6 @@ export function VisualEmailEditor({
  */
 function createBlock(type: EmailBlockType, order: number): EmailBlock {
   const id = generateBlockId(type)
-  const settings = DEFAULT_BLOCK_SETTINGS[type]
 
   switch (type) {
     case 'HEADER':
@@ -353,10 +352,9 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
         settings: {
           backgroundColor: '#059669',
           textColor: '#ffffff',
-          alignment: 'center',
+          alignment: 'center' as const,
           paddingTop: 32,
           paddingBottom: 32,
-          ...settings,
         },
       }
     case 'TEXT':
@@ -376,7 +374,6 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
           paddingBottom: 16,
           paddingLeft: 24,
           paddingRight: 24,
-          ...settings,
         },
       }
     case 'IMAGE':
@@ -389,12 +386,11 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
           alt: 'Image description',
         },
         settings: {
-          width: 'full',
-          alignment: 'center',
+          width: 'full' as const,
+          alignment: 'center' as const,
           borderRadius: 0,
           paddingTop: 16,
           paddingBottom: 16,
-          ...settings,
         },
       }
     case 'BUTTON':
@@ -410,13 +406,12 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
           backgroundColor: '#059669',
           textColor: '#ffffff',
           borderRadius: 6,
-          width: 'auto',
-          alignment: 'center',
+          width: 'auto' as const,
+          alignment: 'center' as const,
           paddingTop: 16,
           paddingBottom: 16,
           fontSize: 16,
-          fontWeight: 'bold',
-          ...settings,
+          fontWeight: 'bold' as const,
         },
       }
     case 'DIVIDER':
@@ -426,13 +421,12 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
         order,
         content: {},
         settings: {
-          style: 'solid',
+          style: 'solid' as const,
           color: '#e5e7eb',
           thickness: 1,
           width: 100,
           marginTop: 24,
           marginBottom: 24,
-          ...settings,
         },
       }
     case 'FOOTER':
@@ -449,10 +443,9 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
           backgroundColor: '#f9fafb',
           textColor: '#6b7280',
           fontSize: 12,
-          alignment: 'center',
+          alignment: 'center' as const,
           paddingTop: 24,
           paddingBottom: 24,
-          ...settings,
         },
       }
     default:
