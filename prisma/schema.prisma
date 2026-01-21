@@ -371,10 +371,11 @@ model Package {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookings        Booking[]
-  itineraries     Itinerary[]
-  contentBlocks   ContentBlock[]    // CMS content blocks linked to this package
-  contentVersions PackageContentVersion[] // Audit log of content changes
+  bookings            Booking[]
+  itineraries         Itinerary[]
+  contentBlocks       ContentBlock[]    // CMS content blocks linked to this package
+  contentVersions     PackageContentVersion[] // Audit log of content changes
+  itineraryTemplates  ItineraryTemplate[]
 
   @@index([slug])
   @@index([isActive])
@@ -1605,6 +1606,83 @@ model GuestTestimonial {
   @@index([publishedAt])
   @@index([isFeatured])
   @@index([bookingId])
+}
+
+// ============================================================================
+// ITINERARY TEMPLATES (Epic 12-7)
+// ============================================================================
+
+// Activity types for itinerary activities
+enum ItineraryActivityType {
+  PICKLEBALL
+  MEDICAL
+  WELLNESS
+  CULTURAL
+  MEAL
+  FREE_TIME
+}
+
+// Itinerary template - defines a reusable day-by-day schedule for packages
+model ItineraryTemplate {
+  id          String  @id @default(cuid())
+  name        String // e.g., "7-Day Pure Play Itinerary"
+  packageId   String?
+  package     Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  duration    Int // Total number of days
+  description String? @db.Text // Rich text description
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  days ItineraryDay[]
+
+  @@index([packageId])
+  @@index([duration])
+  @@index([isActive])
+}
+
+// Itinerary day - represents a single day within a template
+model ItineraryDay {
+  id         String            @id @default(cuid())
+  templateId String
+  template   ItineraryTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  dayNumber  Int // 1, 2, 3, etc.
+  title      String // e.g., "Arrival & Welcome"
+  activities String? @db.Text // JSON array of activity references (legacy, deprecated)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  itineraryActivities ItineraryActivity[]
+
+  @@unique([templateId, dayNumber])
+  @@index([templateId])
+  @@index([dayNumber])
+}
+
+// Itinerary activity - a single activity within a day
+model ItineraryActivity {
+  id          String                @id @default(cuid())
+  dayId       String
+  day         ItineraryDay          @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  time        String? // e.g., "09:00", "14:30"
+  title       String // e.g., "Morning Pickleball Session"
+  description String?   @db.Text // Rich text description
+  location    String? // e.g., "Main Resort Courts"
+  type        ItineraryActivityType // Activity category
+  sortOrder   Int       @default(0) // For drag-and-drop ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dayId])
+  @@index([type])
+  @@index([sortOrder])
 }
 
 // ============================================================================
