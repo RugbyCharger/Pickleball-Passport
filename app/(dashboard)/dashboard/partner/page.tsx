@@ -30,6 +30,10 @@ import {
   QrCode,
   X,
   MessageSquare,
+  PenTool,
+  AlertTriangle,
+  Medal,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -65,6 +69,8 @@ export default function PartnerDashboardPage() {
     trpc.partner.getTierInfo.useQuery();
   const { data: referrals, isLoading: referralsLoading } =
     trpc.partner.getMyReferrals.useQuery();
+  // E9-S15: Check agreement status
+  const { data: agreementStatus } = trpc.partner.getAgreement.useQuery();
 
   // Redirect new partners to onboarding
   useEffect(() => {
@@ -147,6 +153,33 @@ export default function PartnerDashboardPage() {
                 >
                   <X className="h-5 w-5" />
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* E9-S15: Agreement Banner - Show if not signed */}
+        {agreementStatus && !agreementStatus.hasSigned && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-amber-900">
+                    Partner Agreement Required
+                  </h3>
+                  <p className="mt-1 text-sm text-amber-800">
+                    Please review and sign the Partner Agreement to unlock all features and start earning commissions.
+                  </p>
+                </div>
+              </div>
+              <div className="ml-4">
+                <Link href="/dashboard/partner/agreement">
+                  <Button size="sm" className="gap-2 bg-amber-600 hover:bg-amber-700">
+                    <PenTool className="h-4 w-4" />
+                    Sign Agreement
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -501,6 +534,32 @@ export default function PartnerDashboardPage() {
                 <div>
                   <h3 className="font-semibold text-slate-900">Directors Circle</h3>
                   <p className="text-sm text-slate-600">Partner community forum</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/leaderboard">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-purple-100 p-3">
+                  <Medal className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Leaderboard</h3>
+                  <p className="text-sm text-slate-600">See top partners</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/settings">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-slate-100 p-3">
+                  <Settings className="h-6 w-6 text-slate-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Settings</h3>
+                  <p className="text-sm text-slate-600">Manage preferences</p>
                 </div>
               </div>
             </div>

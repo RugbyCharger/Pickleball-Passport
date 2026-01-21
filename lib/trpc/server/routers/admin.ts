@@ -1461,4 +1461,924 @@ export const adminRouter = router({
         message: 'SMS feature not yet implemented - no messages were sent',
       };
     }),
+
+  // ============================================================================
+  // E9-S15: Partner Agreement Management
+  // ============================================================================
+
+  /**
+   * Get all partner agreements with filtering and pagination
+   */
+  getPartnerAgreements: adminProcedure
+    .input(
+      z
+        .object({
+          partnerId: z.string().optional(),
+          version: z.string().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+        ...(input?.version && { version: input.version }),
+      };
+
+      const [agreements, total] = await Promise.all([
+        ctx.db.partnerAgreement.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                clubLocation: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            signedAt: 'desc',
+          },
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerAgreement.count({ where }),
+      ]);
+
+      return {
+        agreements,
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Get single partner agreement by ID
+   */
+  getPartnerAgreementById: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const agreement = await ctx.db.partnerAgreement.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+              referralCode: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!agreement) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agreement not found',
+        });
+      }
+
+      return agreement;
+    }),
+
+  /**
+   * Get partner agreement statistics
+   */
+  getPartnerAgreementStats: adminProcedure.query(async ({ ctx }) => {
+    const currentVersion = '1.0';
+
+    const [
+      totalPartners,
+      partnersWithCurrentAgreement,
+      totalAgreements,
+      recentAgreements,
+    ] = await Promise.all([
+      ctx.db.partnerProfile.count(),
+      ctx.db.partnerAgreement.groupBy({
+        by: ['partnerId'],
+        where: {
+          version: currentVersion,
+        },
+      }),
+      ctx.db.partnerAgreement.count(),
+      ctx.db.partnerAgreement.count({
+        where: {
+          signedAt: {
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+          },
+        },
+      }),
+    ]);
+
+    return {
+      totalPartners,
+      partnersWithSignedAgreement: partnersWithCurrentAgreement.length,
+      partnersWithoutAgreement: totalPartners - partnersWithCurrentAgreement.length,
+      totalAgreements,
+      recentAgreements,
+      currentVersion,
+      complianceRate: totalPartners > 0
+        ? Math.round((partnersWithCurrentAgreement.length / totalPartners) * 100)
+        : 0,
+    };
+  }),
+
+  // ============================================================================
+  // E9-S16: Partner Support Ticketing System (Admin)
+  // ============================================================================
+
+  /**
+   * Get all partner support tickets with filters
+   */
+  getPartnerTickets: adminProcedure
+    .input(
+      z
+        .object({
+          status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']).optional(),
+          priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(),
+          partnerId: z.string().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.status && { status: input.status }),
+        ...(input?.priority && { priority: input.priority }),
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+      };
+
+      const [tickets, total] = await Promise.all([
+        ctx.db.partnerSupportTicket.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+            replies: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+              select: {
+                createdAt: true,
+                isStaff: true,
+              },
+            },
+            _count: {
+              select: {
+                replies: true,
+              },
+            },
+          },
+          orderBy: [
+            { status: 'asc' }, // OPEN first
+            { priority: 'desc' }, // HIGH priority first
+            { updatedAt: 'desc' },
+          ],
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerSupportTicket.count({ where }),
+      ]);
+
+      return {
+        tickets: tickets.map((t) => ({
+          ...t,
+          lastReply: t.replies[0] || null,
+          replyCount: t._count.replies,
+        })),
+        total,
+        hasMore: (input?.offset || 0) + (input?.limit || 50) < total,
+      };
+    }),
+
+  /**
+   * Get single partner support ticket
+   */
+  getPartnerTicket: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+              referralCode: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+          replies: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      return ticket;
+    }),
+
+  /**
+   * Reply to a partner support ticket (admin)
+   */
+  replyToPartnerTicket: adminProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        message: z.string().min(1, 'Message is required').max(5000),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.ticketId },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      // Create reply
+      const reply = await ctx.db.partnerSupportReply.create({
+        data: {
+          ticketId: input.ticketId,
+          userId: ctx.user!.id,
+          message: input.message,
+          isStaff: true,
+        },
+      });
+
+      // Update ticket status to IN_PROGRESS if it was OPEN
+      if (ticket.status === 'OPEN') {
+        await ctx.db.partnerSupportTicket.update({
+          where: { id: input.ticketId },
+          data: {
+            status: 'IN_PROGRESS',
+            updatedAt: new Date(),
+          },
+        });
+      } else {
+        await ctx.db.partnerSupportTicket.update({
+          where: { id: input.ticketId },
+          data: { updatedAt: new Date() },
+        });
+      }
+
+      // Send email notification to partner (non-blocking)
+      try {
+        const { sendPartnerTicketReplyNotification } = await import('@/lib/email/sendgrid');
+        await sendPartnerTicketReplyNotification({
+          ticketId: ticket.id,
+          subject: ticket.subject,
+          partnerName: ticket.partner.clubName,
+          partnerEmail: ticket.partner.user.email,
+        });
+      } catch (error) {
+        logError(emailLogger, error, 'Failed to send ticket reply notification email');
+        // Don't fail the operation if email fails
+      }
+
+      return reply;
+    }),
+
+  /**
+   * Update partner ticket status
+   */
+  updatePartnerTicketStatus: adminProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.ticketId },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      const updateData: { status: typeof input.status; resolvedAt?: Date | null } = {
+        status: input.status,
+      };
+
+      // Set resolvedAt when marking as resolved
+      if (input.status === 'RESOLVED') {
+        updateData.resolvedAt = new Date();
+      } else if (input.status === 'OPEN' || input.status === 'IN_PROGRESS') {
+        updateData.resolvedAt = null;
+      }
+
+      const updatedTicket = await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: updateData,
+      });
+
+      return updatedTicket;
+    }),
+
+  /**
+   * Get partner support ticket statistics
+   */
+  getPartnerTicketStats: adminProcedure.query(async ({ ctx }) => {
+    const [total, open, inProgress, resolved, closed, highPriority] = await Promise.all([
+      ctx.db.partnerSupportTicket.count(),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'OPEN' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'IN_PROGRESS' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'RESOLVED' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'CLOSED' } }),
+      ctx.db.partnerSupportTicket.count({
+        where: {
+          priority: 'HIGH',
+          status: { in: ['OPEN', 'IN_PROGRESS'] },
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      open,
+      inProgress,
+      resolved,
+      closed,
+      highPriority,
+      requiresAttention: open + highPriority,
+    };
+  }),
+
+  // ============================================================================
+  // E9-S17: Partner Event Management (Admin)
+  // ============================================================================
+
+  /**
+   * Get all partner events
+   */
+  getPartnerEvents: adminProcedure
+    .input(
+      z
+        .object({
+          eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+          isActive: z.boolean().optional(),
+          includePast: z.boolean().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const now = new Date();
+      const where = {
+        ...(input?.eventType && { eventType: input.eventType }),
+        ...(input?.isActive !== undefined && { isActive: input.isActive }),
+        ...(input?.includePast
+          ? {}
+          : { endDate: { gte: now } }),
+      };
+
+      const [events, total] = await Promise.all([
+        ctx.db.partnerEvent.findMany({
+          where,
+          include: {
+            _count: {
+              select: {
+                registrations: true,
+              },
+            },
+          },
+          orderBy: {
+            startDate: 'asc',
+          },
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerEvent.count({ where }),
+      ]);
+
+      return {
+        events: events.map((e) => ({
+          ...e,
+          registrationCount: e._count.registrations,
+          spotsRemaining: e.maxAttendees ? e.maxAttendees - e._count.registrations : null,
+        })),
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Get single partner event by ID
+   */
+  getPartnerEvent: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          registrations: {
+            include: {
+              partner: {
+                select: {
+                  id: true,
+                  clubName: true,
+                  clubLocation: true,
+                  tier: true,
+                  user: {
+                    select: {
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              registeredAt: 'asc',
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return {
+        ...event,
+        registrationCount: event._count.registrations,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+      };
+    }),
+
+  /**
+   * Create a new partner event
+   */
+  createPartnerEvent: adminProcedure
+    .input(
+      z.object({
+        title: z.string().min(1, 'Title is required').max(200),
+        description: z.string().min(1, 'Description is required'),
+        eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']),
+        startDate: z.date(),
+        endDate: z.date(),
+        location: z.string().optional(),
+        isVirtual: z.boolean().default(false),
+        registrationUrl: z.string().url().optional().nullable(),
+        maxAttendees: z.number().int().positive().optional().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Validate dates
+      if (input.endDate <= input.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be after start date',
+        });
+      }
+
+      const event = await ctx.db.partnerEvent.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          eventType: input.eventType,
+          startDate: input.startDate,
+          endDate: input.endDate,
+          location: input.location || null,
+          isVirtual: input.isVirtual,
+          registrationUrl: input.registrationUrl || null,
+          maxAttendees: input.maxAttendees || null,
+          isActive: true,
+        },
+      });
+
+      return event;
+    }),
+
+  /**
+   * Update a partner event
+   */
+  updatePartnerEvent: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1).max(200).optional(),
+        description: z.string().min(1).optional(),
+        eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        location: z.string().optional().nullable(),
+        isVirtual: z.boolean().optional(),
+        registrationUrl: z.string().url().optional().nullable(),
+        maxAttendees: z.number().int().positive().optional().nullable(),
+        isActive: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+
+      const existingEvent = await ctx.db.partnerEvent.findUnique({
+        where: { id },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!existingEvent) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      // Validate dates if both provided
+      const startDate = data.startDate || existingEvent.startDate;
+      const endDate = data.endDate || existingEvent.endDate;
+
+      if (endDate <= startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be after start date',
+        });
+      }
+
+      // Validate max attendees isn't less than current registrations
+      if (
+        data.maxAttendees !== undefined &&
+        data.maxAttendees !== null &&
+        data.maxAttendees < existingEvent._count.registrations
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot reduce max attendees below current registrations (${existingEvent._count.registrations})`,
+        });
+      }
+
+      const event = await ctx.db.partnerEvent.update({
+        where: { id },
+        data,
+      });
+
+      return event;
+    }),
+
+  /**
+   * Delete a partner event
+   */
+  deletePartnerEvent: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      if (event._count.registrations > 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot delete event with ${event._count.registrations} registrations. Set to inactive instead.`,
+        });
+      }
+
+      await ctx.db.partnerEvent.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
+  /**
+   * Get partner event statistics
+   */
+  getPartnerEventStats: adminProcedure.query(async ({ ctx }) => {
+    const now = new Date();
+
+    const [total, upcoming, active, totalRegistrations] = await Promise.all([
+      ctx.db.partnerEvent.count(),
+      ctx.db.partnerEvent.count({
+        where: {
+          startDate: { gte: now },
+          isActive: true,
+        },
+      }),
+      ctx.db.partnerEvent.count({
+        where: { isActive: true },
+      }),
+      ctx.db.partnerEventRegistration.count(),
+    ]);
+
+    // Get events by type
+    const eventsByType = await ctx.db.partnerEvent.groupBy({
+      by: ['eventType'],
+      _count: {
+        id: true,
+      },
+    });
+
+    return {
+      total,
+      upcoming,
+      active,
+      totalRegistrations,
+      eventsByType: eventsByType.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.eventType]: item._count.id,
+        }),
+        {} as Record<string, number>
+      ),
+    };
+  }),
+
+  // ============================================================================
+  // E9-S18: Partner Testimonials Management (Admin)
+  // ============================================================================
+
+  /**
+   * Get all testimonials with filtering
+   */
+  getTestimonials: adminProcedure
+    .input(
+      z
+        .object({
+          isApproved: z.boolean().optional(),
+          isFeatured: z.boolean().optional(),
+          partnerId: z.string().optional(),
+          minRating: z.number().min(1).max(5).optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.isApproved !== undefined && { isApproved: input.isApproved }),
+        ...(input?.isFeatured !== undefined && { isFeatured: input.isFeatured }),
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+        ...(input?.minRating && { rating: { gte: input.minRating } }),
+      };
+
+      const [testimonials, total] = await Promise.all([
+        ctx.db.partnerTestimonial.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                clubLocation: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: [
+            { isApproved: 'asc' }, // Pending first
+            { createdAt: 'desc' },
+          ],
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerTestimonial.count({ where }),
+      ]);
+
+      return {
+        testimonials,
+        total,
+        hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+      };
+    }),
+
+  /**
+   * Approve a testimonial
+   */
+  approveTestimonial: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: {
+          isApproved: true,
+          approvedAt: new Date(),
+        },
+      });
+
+      // Send email notification to partner (non-blocking)
+      try {
+        const { sendPartnerTestimonialApproved } = await import('@/lib/email/sendgrid');
+        await sendPartnerTestimonialApproved({
+          partnerEmail: testimonial.partner.user.email,
+          partnerName: testimonial.partner.clubName,
+        });
+      } catch (error) {
+        logError(emailLogger, error, 'Failed to send testimonial approval email');
+        // Don't fail the operation if email fails
+      }
+
+      return updatedTestimonial;
+    }),
+
+  /**
+   * Feature or unfeature a testimonial
+   * Testimonial must be approved first
+   */
+  featureTestimonial: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isFeatured: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      // Can only feature approved testimonials
+      if (input.isFeatured && !testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Testimonial must be approved before featuring',
+        });
+      }
+
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: {
+          isFeatured: input.isFeatured,
+        },
+      });
+
+      return updatedTestimonial;
+    }),
+
+  /**
+   * Reject/delete a testimonial (admin)
+   */
+  deleteTestimonial: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const testimonial = await ctx.db.partnerTestimonial.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        });
+      }
+
+      await ctx.db.partnerTestimonial.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
+  /**
+   * Get testimonial statistics
+   */
+  getTestimonialStats: adminProcedure.query(async ({ ctx }) => {
+    const [total, pending, approved, featured, averageRating] = await Promise.all([
+      ctx.db.partnerTestimonial.count(),
+      ctx.db.partnerTestimonial.count({ where: { isApproved: false } }),
+      ctx.db.partnerTestimonial.count({ where: { isApproved: true } }),
+      ctx.db.partnerTestimonial.count({ where: { isFeatured: true } }),
+      ctx.db.partnerTestimonial.aggregate({
+        _avg: {
+          rating: true,
+        },
+        where: {
+          isApproved: true,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      pending,
+      approved,
+      featured,
+      averageRating: averageRating._avg.rating ? Math.round(averageRating._avg.rating * 10) / 10 : 0,
+    };
+  }),
 });

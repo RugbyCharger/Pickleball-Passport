@@ -1941,6 +1941,1172 @@ export const partnerRouter = router({
         preferences: updated.notificationPreferences,
       }
     }),
+
+  // ============================================================================
+  // E9-S15: Partner Agreement E-Signature
+  // ============================================================================
+
+  /**
+   * Get current agreement status and text
+   * Returns the agreement document and whether the partner has signed it
+   */
+  getAgreement: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+      include: {
+        agreements: {
+          orderBy: {
+            signedAt: 'desc',
+          },
+          take: 1,
+        },
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    // Current agreement version
+    const currentVersion = '1.0'
+    const latestSignedAgreement = profile.agreements[0]
+    const hasSigned = latestSignedAgreement?.version === currentVersion
+
+    return {
+      currentVersion,
+      hasSigned,
+      signedAgreement: latestSignedAgreement || null,
+      partnerId: profile.id,
+      clubName: profile.clubName,
+    }
+  }),
+
+  /**
+   * Sign the partner agreement
+   * Records the signature, timestamp, and IP address
+   */
+  signAgreement: partnerProcedure
+    .input(
+      z.object({
+        signature: z.string().min(1, 'Signature is required'),
+        agreedToTerms: z.boolean().refine((val) => val === true, {
+          message: 'You must agree to the terms',
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+        include: {
+          agreements: {
+            orderBy: {
+              signedAt: 'desc',
+            },
+            take: 1,
+          },
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Current agreement version
+      const currentVersion = '1.0'
+
+      // Check if already signed current version
+      if (profile.agreements[0]?.version === currentVersion) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'You have already signed the current agreement version',
+        })
+      }
+
+      // Get IP address from headers
+      const ipAddress = getIpAddress(ctx.headers)
+
+      // Create the agreement record
+      const agreement = await ctx.db.partnerAgreement.create({
+        data: {
+          partnerId: profile.id,
+          version: currentVersion,
+          signedAt: new Date(),
+          ipAddress,
+          signature: input.signature,
+          documentUrl: '/content/partner-agreement.md',
+        },
+      })
+
+      return {
+        success: true,
+        agreementId: agreement.id,
+        signedAt: agreement.signedAt,
+      }
+    }),
+
+  /**
+   * Get all agreements for current partner (history)
+   */
+  getMyAgreements: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    const agreements = await ctx.db.partnerAgreement.findMany({
+      where: {
+        partnerId: profile.id,
+      },
+      orderBy: {
+        signedAt: 'desc',
+      },
+    })
+
+    return agreements
+  }),
+
+  // ============================================================================
+  // E9-S16: Partner Support Ticketing System
+  // ============================================================================
+
+  /**
+   * Create a new support ticket
+   */
+  createTicket: partnerProcedure
+    .input(
+      z.object({
+        subject: z.string().min(1, 'Subject is required').max(200),
+        description: z.string().min(1, 'Description is required').max(5000),
+        priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).default('MEDIUM'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.create({
+        data: {
+          partnerId: profile.id,
+          subject: input.subject,
+          description: input.description,
+          priority: input.priority,
+          status: 'OPEN',
+        },
+      })
+
+      // Send email notification to admin (non-blocking)
+      try {
+        const { sendPartnerTicketNotification } = await import('@/lib/email/sendgrid')
+        await sendPartnerTicketNotification({
+          ticketId: ticket.id,
+          subject: input.subject,
+          partnerName: profile.clubName,
+          partnerEmail: profile.user.email,
+          priority: input.priority,
+        })
+      } catch (error) {
+        console.error('Failed to send ticket notification email:', error)
+        // Don't fail the operation if email fails
+      }
+
+      return ticket
+    }),
+
+  /**
+   * Get all support tickets for current partner
+   */
+  getTickets: partnerProcedure
+    .input(
+      z
+        .object({
+          status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']).optional(),
+          limit: z.number().min(1).max(100).default(20),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const where = {
+        partnerId: profile.id,
+        ...(input?.status && { status: input.status }),
+      }
+
+      const [tickets, total] = await Promise.all([
+        ctx.db.partnerSupportTicket.findMany({
+          where,
+          include: {
+            replies: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+              select: {
+                createdAt: true,
+                isStaff: true,
+              },
+            },
+            _count: {
+              select: {
+                replies: true,
+              },
+            },
+          },
+          orderBy: {
+            updatedAt: 'desc',
+          },
+          take: input?.limit || 20,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerSupportTicket.count({ where }),
+      ])
+
+      return {
+        tickets: tickets.map((t) => ({
+          ...t,
+          lastReply: t.replies[0] || null,
+          replyCount: t._count.replies,
+        })),
+        total,
+        hasMore: (input?.offset || 0) + (input?.limit || 20) < total,
+      }
+    }),
+
+  /**
+   * Get single ticket with full conversation thread
+   */
+  getTicket: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+        include: {
+          replies: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      return ticket
+    }),
+
+  /**
+   * Reply to a support ticket
+   */
+  replyToTicket: partnerProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        message: z.string().min(1, 'Message is required').max(5000),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ticket belongs to partner
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.ticketId,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      // Don't allow replies to closed tickets
+      if (ticket.status === 'CLOSED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot reply to a closed ticket',
+        })
+      }
+
+      // Create reply and update ticket
+      const reply = await ctx.db.partnerSupportReply.create({
+        data: {
+          ticketId: input.ticketId,
+          userId: ctx.user!.id,
+          message: input.message,
+          isStaff: false,
+        },
+      })
+
+      // Update ticket updatedAt
+      await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: { updatedAt: new Date() },
+      })
+
+      return reply
+    }),
+
+  /**
+   * Reopen a resolved ticket (within 7 days)
+   */
+  reopenTicket: partnerProcedure
+    .input(z.object({ ticketId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.ticketId,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      // Can only reopen RESOLVED tickets
+      if (ticket.status !== 'RESOLVED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Can only reopen resolved tickets',
+        })
+      }
+
+      // Check if within 7 days of resolution
+      if (ticket.resolvedAt) {
+        const daysSinceResolution = Math.floor(
+          (Date.now() - ticket.resolvedAt.getTime()) / (1000 * 60 * 60 * 24)
+        )
+        if (daysSinceResolution > 7) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Tickets can only be reopened within 7 days of resolution',
+          })
+        }
+      }
+
+      const updatedTicket = await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: {
+          status: 'OPEN',
+          resolvedAt: null,
+        },
+      })
+
+      return updatedTicket
+    }),
+
+  // ============================================================================
+  // E9-S17: Partner Event Calendar
+  // ============================================================================
+
+  /**
+   * Get all upcoming partner events
+   */
+  getEvents: partnerProcedure
+    .input(
+      z
+        .object({
+          eventType: z.enum(['WEBINAR', 'MEETUP', 'TRAINING', 'SUMMIT']).optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          includeRegistered: z.boolean().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const now = new Date()
+      const where = {
+        isActive: true,
+        startDate: {
+          gte: input?.startDate || now,
+          ...(input?.endDate && { lte: input.endDate }),
+        },
+        ...(input?.eventType && { eventType: input.eventType }),
+      }
+
+      const events = await ctx.db.partnerEvent.findMany({
+        where,
+        include: {
+          registrations: {
+            where: {
+              partnerId: profile.id,
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+        orderBy: {
+          startDate: 'asc',
+        },
+      })
+
+      return events.map((event) => ({
+        ...event,
+        isRegistered: event.registrations.length > 0,
+        registrationId: event.registrations[0]?.id || null,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+        isFull: event.maxAttendees
+          ? event._count.registrations >= event.maxAttendees
+          : false,
+      }))
+    }),
+
+  /**
+   * Get a single event by ID
+   */
+  getEvent: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.id },
+        include: {
+          registrations: {
+            where: {
+              partnerId: profile.id,
+            },
+          },
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      })
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        })
+      }
+
+      return {
+        ...event,
+        isRegistered: event.registrations.length > 0,
+        registrationId: event.registrations[0]?.id || null,
+        spotsRemaining: event.maxAttendees
+          ? event.maxAttendees - event._count.registrations
+          : null,
+        isFull: event.maxAttendees
+          ? event._count.registrations >= event.maxAttendees
+          : false,
+      }
+    }),
+
+  /**
+   * Register for an event
+   */
+  registerForEvent: partnerProcedure
+    .input(z.object({ eventId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Get event with current registrations
+      const event = await ctx.db.partnerEvent.findUnique({
+        where: { id: input.eventId },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+            },
+          },
+        },
+      })
+
+      if (!event) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Event not found',
+        })
+      }
+
+      if (!event.isActive) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event is no longer active',
+        })
+      }
+
+      // Check if already registered
+      const existingRegistration = await ctx.db.partnerEventRegistration.findUnique({
+        where: {
+          eventId_partnerId: {
+            eventId: input.eventId,
+            partnerId: profile.id,
+          },
+        },
+      })
+
+      if (existingRegistration) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'You are already registered for this event',
+        })
+      }
+
+      // Check capacity
+      if (
+        event.maxAttendees &&
+        event._count.registrations >= event.maxAttendees
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event is at full capacity',
+        })
+      }
+
+      // Check if event hasn't started yet
+      if (new Date() > event.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This event has already started',
+        })
+      }
+
+      const registration = await ctx.db.partnerEventRegistration.create({
+        data: {
+          eventId: input.eventId,
+          partnerId: profile.id,
+        },
+      })
+
+      return registration
+    }),
+
+  /**
+   * Unregister from an event
+   */
+  unregisterFromEvent: partnerProcedure
+    .input(z.object({ eventId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const registration = await ctx.db.partnerEventRegistration.findUnique({
+        where: {
+          eventId_partnerId: {
+            eventId: input.eventId,
+            partnerId: profile.id,
+          },
+        },
+        include: {
+          event: true,
+        },
+      })
+
+      if (!registration) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Registration not found',
+        })
+      }
+
+      // Check if event hasn't started yet
+      if (new Date() > registration.event.startDate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot unregister from an event that has already started',
+        })
+      }
+
+      await ctx.db.partnerEventRegistration.delete({
+        where: {
+          id: registration.id,
+        },
+      })
+
+      return { success: true }
+    }),
+
+  /**
+   * Get partner's registered events
+   */
+  getMyRegistrations: partnerProcedure
+    .input(
+      z
+        .object({
+          includesPast: z.boolean().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const now = new Date()
+      const registrations = await ctx.db.partnerEventRegistration.findMany({
+        where: {
+          partnerId: profile.id,
+          ...(input?.includesPast
+            ? {}
+            : {
+                event: {
+                  endDate: { gte: now },
+                },
+              }),
+        },
+        include: {
+          event: {
+            include: {
+              _count: {
+                select: {
+                  registrations: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          event: {
+            startDate: 'asc',
+          },
+        },
+      })
+
+      return registrations.map((reg) => ({
+        ...reg,
+        event: {
+          ...reg.event,
+          spotsRemaining: reg.event.maxAttendees
+            ? reg.event.maxAttendees - reg.event._count.registrations
+            : null,
+        },
+      }))
+    }),
+
+  // ============================================================================
+  // E9-S18: Partner Testimonials System
+  // ============================================================================
+
+  /**
+   * Submit a new testimonial
+   */
+  submitTestimonial: partnerProcedure
+    .input(
+      z.object({
+        content: z.string().min(1, 'Content is required').max(500, 'Maximum 500 characters'),
+        rating: z.number().int().min(1, 'Rating must be 1-5').max(5, 'Rating must be 1-5'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const testimonial = await ctx.db.partnerTestimonial.create({
+        data: {
+          partnerId: profile.id,
+          content: input.content,
+          rating: input.rating,
+          isApproved: false,
+          isFeatured: false,
+        },
+      })
+
+      return testimonial
+    }),
+
+  /**
+   * Get all testimonials for current partner
+   */
+  getMyTestimonials: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: {
+        userId: ctx.user!.id,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    const testimonials = await ctx.db.partnerTestimonial.findMany({
+      where: {
+        partnerId: profile.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return testimonials
+  }),
+
+  /**
+   * Update a pending testimonial
+   * Partners can only edit their own pending testimonials
+   */
+  updateTestimonial: partnerProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string().min(1, 'Content is required').max(500, 'Maximum 500 characters').optional(),
+        rating: z.number().int().min(1).max(5).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ownership and status
+      const testimonial = await ctx.db.partnerTestimonial.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        })
+      }
+
+      // Can only edit pending (not approved) testimonials
+      if (testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot edit approved testimonials',
+        })
+      }
+
+      const { id, ...updateData } = input
+      const updatedTestimonial = await ctx.db.partnerTestimonial.update({
+        where: { id: input.id },
+        data: updateData,
+      })
+
+      return updatedTestimonial
+    }),
+
+  /**
+   * Delete a pending testimonial
+   * Partners can only delete their own pending testimonials
+   */
+  deleteTestimonial: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ownership
+      const testimonial = await ctx.db.partnerTestimonial.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!testimonial) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Testimonial not found',
+        })
+      }
+
+      // Can only delete pending (not approved) testimonials
+      if (testimonial.isApproved) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot delete approved testimonials',
+        })
+      }
+
+      await ctx.db.partnerTestimonial.delete({
+        where: { id: input.id },
+      })
+
+      return { success: true }
+    }),
+
+  /**
+   * Get featured testimonials (public procedure for marketing page)
+   */
+  getFeaturedTestimonials: publicProcedure
+    .input(
+      z
+        .object({
+          limit: z.number().min(1).max(20).default(6),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const testimonials = await ctx.db.partnerTestimonial.findMany({
+        where: {
+          isApproved: true,
+          isFeatured: true,
+        },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+            },
+          },
+        },
+        orderBy: [
+          { rating: 'desc' },
+          { createdAt: 'desc' },
+        ],
+        take: input?.limit || 6,
+      })
+
+      return testimonials
+    }),
+
+  // ============================================================================
+  // E9-S19: Partner Leaderboard
+  // ============================================================================
+
+  /**
+   * Get partner leaderboard
+   * Shows top performing partners ranked by points
+   */
+  getLeaderboard: partnerProcedure
+    .input(
+      z
+        .object({
+          timeframe: z.enum(['monthly', 'alltime']).default('monthly'),
+          limit: z.number().min(1).max(100).default(50),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const timeframe = input?.timeframe || 'monthly'
+      const limit = input?.limit || 50
+
+      // Get current partner's profile for highlighting
+      const currentPartner = await ctx.db.partnerProfile.findUnique({
+        where: { userId: ctx.user!.id },
+        select: { id: true, showOnLeaderboard: true },
+      })
+
+      if (!currentPartner) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Build date filter for monthly leaderboard
+      let dateFilter: { gte?: Date } = {}
+      if (timeframe === 'monthly') {
+        const startOfMonth = new Date()
+        startOfMonth.setDate(1)
+        startOfMonth.setHours(0, 0, 0, 0)
+        dateFilter = { gte: startOfMonth }
+      }
+
+      // Get all partners with their referral data
+      const partners = await ctx.db.partnerProfile.findMany({
+        select: {
+          id: true,
+          clubName: true,
+          clubLocation: true,
+          tier: true,
+          passportPoints: true,
+          showOnLeaderboard: true,
+          referrals: {
+            where: timeframe === 'monthly' ? { createdAt: dateFilter } : {},
+            select: {
+              pointsEarned: true,
+              createdAt: true,
+            },
+          },
+        },
+      })
+
+      // Calculate points for each partner based on timeframe
+      const partnerPoints = partners.map((partner) => {
+        const points =
+          timeframe === 'monthly'
+            ? partner.referrals.reduce((sum, r) => sum + r.pointsEarned, 0)
+            : partner.passportPoints
+
+        return {
+          id: partner.id,
+          clubName: partner.showOnLeaderboard ? partner.clubName : 'Anonymous Partner',
+          clubLocation: partner.showOnLeaderboard ? partner.clubLocation : null,
+          tier: partner.tier,
+          points,
+          isCurrentPartner: partner.id === currentPartner.id,
+          isAnonymous: !partner.showOnLeaderboard,
+        }
+      })
+
+      // Sort by points (descending)
+      partnerPoints.sort((a, b) => b.points - a.points)
+
+      // Assign ranks (handle ties)
+      let currentRank = 1
+      let previousPoints = -1
+      const rankedPartners = partnerPoints.map((partner, index) => {
+        if (partner.points !== previousPoints) {
+          currentRank = index + 1
+        }
+        previousPoints = partner.points
+        return {
+          ...partner,
+          rank: currentRank,
+        }
+      })
+
+      // Find current partner's rank (even if not in top results)
+      const currentPartnerEntry = rankedPartners.find((p) => p.isCurrentPartner)
+      const currentPartnerRank = currentPartnerEntry?.rank || null
+
+      // Return top partners and current partner info
+      return {
+        leaderboard: rankedPartners.slice(0, limit),
+        currentPartnerRank,
+        currentPartnerPoints: currentPartnerEntry?.points || 0,
+        currentPartnerShowOnLeaderboard: currentPartner.showOnLeaderboard,
+        timeframe,
+        totalPartners: rankedPartners.length,
+      }
+    }),
+
+  /**
+   * Update partner's leaderboard visibility preference
+   */
+  updateLeaderboardVisibility: partnerProcedure
+    .input(
+      z.object({
+        showOnLeaderboard: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: { userId: ctx.user!.id },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      await ctx.db.partnerProfile.update({
+        where: { id: profile.id },
+        data: { showOnLeaderboard: input.showOnLeaderboard },
+      })
+
+      return { success: true, showOnLeaderboard: input.showOnLeaderboard }
+    }),
+
+  /**
+   * Get partner's leaderboard settings
+   */
+  getLeaderboardSettings: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      select: { showOnLeaderboard: true },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    return { showOnLeaderboard: profile.showOnLeaderboard }
+  }),
 })
 
 /**
