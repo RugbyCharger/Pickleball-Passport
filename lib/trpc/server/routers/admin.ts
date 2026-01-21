@@ -2896,6 +2896,79 @@ export const adminRouter = router({
   // ============================================================================
 
   /**
+   * Get partner payouts with filtering options
+   */
+  getPartnerPayouts: adminProcedure
+    .input(
+      z.object({
+        status: z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED']).optional(),
+        limit: z.number().min(1).max(100).default(50),
+        offset: z.number().min(0).default(0),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const { status, limit = 50, offset = 0 } = input || {};
+
+      const where = status ? { status } : {};
+
+      const [payouts, total] = await Promise.all([
+        ctx.db.partnerPayout.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                tier: true,
+                stripeConnectAccountId: true,
+                stripeConnectOnboardingComplete: true,
+                stripeConnectPayoutsEnabled: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            requestedAt: 'desc',
+          },
+          take: limit,
+          skip: offset,
+        }),
+        ctx.db.partnerPayout.count({ where }),
+      ]);
+
+      return {
+        payouts,
+        total,
+        hasMore: offset + payouts.length < total,
+      };
+    }),
+
+  /**
+   * Get partner payout stats for admin dashboard
+   */
+  getPartnerPayoutStats: adminProcedure.query(async ({ ctx }) => {
+    const [pending, processing, completed, failed, total] = await Promise.all([
+      ctx.db.partnerPayout.count({ where: { status: 'PENDING' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'PROCESSING' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'COMPLETED' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'FAILED' } }),
+      ctx.db.partnerPayout.count(),
+    ]);
+
+    return {
+      pending,
+      processing,
+      completed,
+      failed,
+      total,
+    };
+  }),
+
+  /**
    * Process a partner payout via Stripe Connect transfer
    *
    * This endpoint validates the payout, checks platform balance,
