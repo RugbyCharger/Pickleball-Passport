@@ -1282,21 +1282,21 @@ describe('Partner Portal Features', () => {
 
     describe('Top 3 special styling', () => {
       it('should identify rank 1 as gold', () => {
-        const rank = 1
+        const rank: number = 1
         const styling = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'
 
         expect(styling).toBe('gold')
       })
 
       it('should identify rank 2 as silver', () => {
-        const rank = 2
+        const rank: number = 2
         const styling = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'
 
         expect(styling).toBe('silver')
       })
 
       it('should identify rank 3 as bronze', () => {
-        const rank = 3
+        const rank: number = 3
         const styling = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'
 
         expect(styling).toBe('bronze')
