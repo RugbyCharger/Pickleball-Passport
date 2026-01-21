@@ -16,6 +16,7 @@ export default defineConfig({
       '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
       '**/tests/**', // Exclude Playwright tests
       '**/e2e/**', // Exclude E2E tests
+      '**/.worktrees/**', // Exclude git worktrees
     ],
   },
   resolve: {
