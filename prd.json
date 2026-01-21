@@ -104,7 +104,7 @@
       "id": "US-006",
       "title": "Referral Analytics Admin Dashboard",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create /dashboard/admin/referral-analytics page",
         "Referral funnel visualization: Clicks -> Applications -> Bookings -> Completed",

@@ -152,3 +152,29 @@ Files changed:
 - Both partner and guest referrers get completion bonus (check both PartnerProfile and User tables)
 - Email sending should be in try/catch to not fail the main operation if email fails
 ---
+
+## 2026-01-21 - US-006: Referral Analytics Admin Dashboard
+Iteration: 7
+- Created /dashboard/admin/referral-analytics page for admins
+- Added three new tRPC admin procedures:
+  - admin.getReferralFunnelStats: Returns clicks, applications, bookings, completed counts with conversion rates
+  - admin.getTopReferrers: Returns top 10 referrers (partners and guests combined) sorted by bookings then points
+  - admin.getReferralSourceBreakdown: Returns breakdown by partner vs guest source with percentages
+- Implemented referral funnel visualization with stages: Clicks -> Applications -> Bookings -> Completed
+- Added conversion rate calculations at each funnel stage
+- Created visual source breakdown bar showing partner vs guest referral distribution
+- Implemented date range filter (All Time, Last 90 Days, Last 30 Days, Last 7 Days)
+- Displayed total points awarded summary across all referrers
+
+Files changed:
+- lib/trpc/server/routers/admin.ts (added 3 new procedures for referral analytics)
+- app/(dashboard)/dashboard/admin/referral-analytics/page.tsx (new)
+
+**Learnings for future iterations:**
+- Admin analytics procedures use adminProcedure for authorization
+- ReferralEvent.eventType enum values: CLICK, APPLICATION, BOOKING, COMPLETION
+- To combine partner and guest referrers, query both tables separately and merge results
+- Use groupBy with _count for aggregating events by code
+- Partner codes have referralCodeClickCount on PartnerProfile, guest codes track via ReferralEvent only
+- Raw SQL queries can be used for complex aggregations (e.g., summing points across tables)
+---
