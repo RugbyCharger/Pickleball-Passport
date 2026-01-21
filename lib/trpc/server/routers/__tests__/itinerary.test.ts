@@ -566,7 +566,7 @@ describe('Itinerary Router', () => {
           { ...mockPackage, id: 'pkg_456', name: 'Wellness Retreat', slug: 'wellness' },
         ]
 
-        vi.mocked(prisma.package.findMany).mockResolvedValue(packages)
+        vi.mocked(prisma.package.findMany).mockResolvedValue(packages as never)
 
         const result = await prisma.package.findMany({
           where: { isActive: true },
