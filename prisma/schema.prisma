@@ -593,8 +593,8 @@ model Payment {
   bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  amount   Int    // Amount in cents
-  currency String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
+  amount   Int // Amount in cents
+  currency String        @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
   status   PaymentStatus @default(PENDING)
 
   // Stripe Integration
@@ -640,8 +640,8 @@ model PaymentRecord {
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   // Amount and Status
-  amountCents Int    // Payment amount in cents
-  currency    String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
+  amountCents Int // Payment amount in cents
+  currency    String              @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
   status      PaymentRecordStatus @default(PENDING)
 
   // Installment Details
@@ -1259,6 +1259,12 @@ model EmailTemplate {
   textContent   String  @db.Text // Plain text version
   variables     Json // ["guestName", "bookingReference", "tripName"]
 
+  // Visual Editor (E12-S8)
+  useVisualEditor Boolean @default(false) // Toggle between visual/code editor
+  visualBlocks    Json? // Array of visual block definitions
+  // Block schema: [{ id, type, order, content, settings }]
+  // Types: HEADER, TEXT, IMAGE, BUTTON, DIVIDER, FOOTER
+
   // Branding - Base template inheritance
   baseTemplateId String?
   baseTemplate   EmailTemplate?  @relation("TemplateToBase", fields: [baseTemplateId], references: [id])
@@ -1711,14 +1717,14 @@ enum ContentBlockType {
 
 // Content categories for organization
 model ContentCategory {
-  id          String @id @default(cuid())
+  id          String            @id @default(cuid())
   name        String
-  slug        String @unique // URL-friendly identifier
+  slug        String            @unique // URL-friendly identifier
   description String?
   parentId    String? // For nested categories
   parent      ContentCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children    ContentCategory[] @relation("CategoryHierarchy")
-  sortOrder   Int    @default(0) // For custom ordering
+  sortOrder   Int               @default(0) // For custom ordering
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1747,7 +1753,7 @@ model ContentPage {
 
   // Page settings
   template    String? // Page template to use
-  isHomepage  Boolean @default(false) // Homepage flag
+  isHomepage  Boolean   @default(false) // Homepage flag
   publishedAt DateTime? // When page was published
 
   // Soft delete
@@ -1777,19 +1783,19 @@ model ContentPage {
 
 // Content blocks are reusable content components
 model ContentBlock {
-  id          String           @id @default(cuid())
-  name        String // Internal name for reference
-  slug        String           @unique // Unique identifier for lookup
-  type        ContentBlockType @default(TEXT)
-  status      ContentStatus    @default(DRAFT)
+  id     String           @id @default(cuid())
+  name   String // Internal name for reference
+  slug   String           @unique // Unique identifier for lookup
+  type   ContentBlockType @default(TEXT)
+  status ContentStatus    @default(DRAFT)
 
   // Content stored as JSON (TipTap native format)
-  content     Json // Rich text content in TipTap JSON format
-  plainText   String? @db.Text // Plain text extraction for search
+  content   Json // Rich text content in TipTap JSON format
+  plainText String? @db.Text // Plain text extraction for search
 
   // Settings and metadata
-  settings    Json? // Type-specific settings
-  sortOrder   Int  @default(0) // For ordering within pages
+  settings  Json? // Type-specific settings
+  sortOrder Int   @default(0) // For ordering within pages
 
   // Page association (optional - blocks can be standalone)
   pageId String?
@@ -1837,7 +1843,7 @@ model ContentPageVersion {
   versionNumber Int
 
   // Snapshot of page data at this version
-  content       Json // Full page data snapshot
+  content        Json // Full page data snapshot
   changesSummary String? // Description of changes
 
   // Audit
@@ -1858,8 +1864,8 @@ model ContentBlockVersion {
   versionNumber Int
 
   // Snapshot of block data at this version
-  content       Json // Block content snapshot
-  settings      Json? // Block settings snapshot
+  content        Json // Block content snapshot
+  settings       Json? // Block settings snapshot
   changesSummary String?
 
   // Audit
