@@ -27,7 +27,7 @@
       "id": "E12-S2",
       "title": "Package Content Editing",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "description": "Allow admins to edit package descriptions, images, and details through the CMS",
       "acceptanceCriteria": [
         "Create admin page at /dashboard/admin/packages for managing package content",
