@@ -77,14 +77,14 @@ export function PaymentPlanSelector() {
     },
     {
       value: 'FINANCING',
-      title: 'Financing',
-      description: 'Monthly payments with Affirm',
+      title: 'Affirm Financing',
+      description: 'Monthly payments with Affirm (0% APR available)',
       icon: <Building2 className="h-5 w-5" />,
       badge: {
-        text: 'Coming Soon',
-        variant: 'secondary',
+        text: 'Available',
+        variant: 'primary',
       },
-      disabled: true,
+      disabled: false,
     },
   ]
 
@@ -188,6 +188,17 @@ export function PaymentPlanSelector() {
                   </div>
                 )}
 
+                {/* E4-S11: Affirm Financing Amount Display */}
+                {option.value === 'FINANCING' && !isDisabled && (
+                  <div className="mt-4" data-testid="payment-plan-financing-amount">
+                    <p className="text-sm text-gray-500">Monthly payments from:</p>
+                    <p className="text-lg font-bold text-gray-900">
+                      ~{formatCentsAsDollars(Math.round(total / 12))}/mo*
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">*12 month estimate, final terms by Affirm</p>
+                  </div>
+                )}
+
                 {/* Disabled Message */}
                 {isDisabled && option.value === 'INSTALLMENT_4' && (
                   <p className="mt-4 text-xs text-gray-500">
@@ -256,6 +267,47 @@ export function PaymentPlanSelector() {
         </div>
       )}
 
+      {/* E4-S11: Affirm Financing Information */}
+      {paymentPlan === 'FINANCING' && (
+        <div className="space-y-4">
+          <div className="rounded-lg border-2 border-purple-200 bg-purple-50 p-6">
+            <div className="flex items-start space-x-3">
+              <Building2 className="h-6 w-6 text-purple-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 space-y-3">
+                <div>
+                  <h4 className="text-sm font-semibold text-purple-900">Pay Over Time with Affirm</h4>
+                  <p className="text-xs text-purple-700 mt-1">
+                    Choose monthly payments with 0% APR available on select terms. Quick approval process with no impact on your credit score to check your rate.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="rounded-md bg-white p-3 text-center">
+                    <p className="text-xs text-gray-500">Total Amount</p>
+                    <p className="text-lg font-bold text-gray-900">{formatCentsAsDollars(total)}</p>
+                  </div>
+                  <div className="rounded-md bg-white p-3 text-center">
+                    <p className="text-xs text-gray-500">Monthly from</p>
+                    <p className="text-lg font-bold text-purple-700">~{formatCentsAsDollars(Math.round(total / 12))}/mo</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-purple-200">
+                  <p className="text-xs text-purple-600">
+                    <strong>How it works:</strong> Select Affirm at checkout, complete a quick application, and get an instant decision. If approved, Affirm pays us directly and you pay Affirm over time.
+                  </p>
+                </div>
+
+                <div className="text-xs text-gray-500 space-y-1">
+                  <p>* Payment options: 3, 6, 12, or 18 months (determined by Affirm based on eligibility)</p>
+                  <p>* Available in US and Canada only • Minimum order $50 USD</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Help Text */}
       <div className="rounded-lg bg-blue-50 p-4">
         <p className="text-sm text-blue-900">
@@ -263,6 +315,11 @@ export function PaymentPlanSelector() {
           {paymentPlan === 'INSTALLMENT_4' && (
             <span className="ml-1">
               Remaining installments will be automatically charged to your saved payment method on scheduled dates.
+            </span>
+          )}
+          {paymentPlan === 'FINANCING' && (
+            <span className="ml-1">
+              You&apos;ll be redirected to Affirm to complete your application after clicking the payment button.
             </span>
           )}
         </p>

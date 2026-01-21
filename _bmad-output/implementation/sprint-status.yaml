@@ -106,7 +106,7 @@ development_status:
   4-8b-installment-payment-reminders: done         # Proactive 7-day reminders before scheduled payments
   4-9-refund-processing: done
   4-10-payment-history-view: done              # /dashboard/payments page with filters
-  4-11-affirm-klarna-financing: backlog        # P1 - "Coming Soon" placeholder in UI
+  4-11-affirm-klarna-financing: done            # Completed 2026-01-21 - Affirm financing integration via Stripe
   4-12-update-payment-method: done             # SetupIntent flow, modal UI, tRPC endpoints
   4-13-multi-currency-support: done             # Completed 2026-01-21 - Multi-currency support with USD, EUR, GBP, CAD, AUD
   4-14-stripe-connect-partner-payouts: backlog # Phase 2 - Partner feature
