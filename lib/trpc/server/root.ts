@@ -32,6 +32,7 @@ import { emailTemplateRouter } from './routers/email-template'
 import { whatsappRouter } from './routers/whatsapp'
 import { cmsRouter } from './routers/cms'
 import { packageCmsRouter } from './routers/package-cms'
+import { blogRouter } from './routers/blog'
 
 export const appRouter = router({
   user: userRouter,
@@ -60,6 +61,7 @@ export const appRouter = router({
   whatsapp: whatsappRouter,
   cms: cmsRouter,
   packageCms: packageCmsRouter,
+  blog: blogRouter,
 })
 
 // Export type definition for the router

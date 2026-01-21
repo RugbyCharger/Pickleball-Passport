@@ -1736,3 +1736,143 @@ model PackageContentVersion {
   @@index([createdAt])
   @@index([createdBy])
 }
+
+// ============================================================================
+// BLOG SYSTEM (Epic 12-3)
+// ============================================================================
+
+// Blog post status for draft/scheduled/published workflow
+enum BlogPostStatus {
+  DRAFT       // Post is being edited, not visible publicly
+  SCHEDULED   // Post is scheduled for future publication
+  PUBLISHED   // Post is live and visible
+  ARCHIVED    // Post removed from public view but preserved
+}
+
+// Blog category for organizing posts
+model BlogCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique // URL-friendly identifier
+  description String?
+  color       String? // Optional color for UI display (hex code)
+  sortOrder   Int    @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts BlogPost[]
+
+  @@index([slug])
+  @@index([sortOrder])
+}
+
+// Blog post model with full content marketing features
+model BlogPost {
+  id     String         @id @default(cuid())
+  title  String
+  slug   String         @unique // URL path for /blog/[slug]
+  status BlogPostStatus @default(DRAFT)
+
+  // Content
+  content     Json     @db.Json // Rich text content in TipTap JSON format
+  excerpt     String?  @db.Text // Short summary for listings and SEO
+  plainText   String?  @db.Text // Plain text extraction for search
+
+  // Featured image
+  featuredImage    String? // URL to featured image
+  featuredImageAlt String? // Alt text for accessibility
+
+  // Author (admin user ID)
+  authorId String
+
+  // Publication timing
+  publishedAt DateTime? // When post was/will be published
+  scheduledAt DateTime? // For scheduled posts
+
+  // SEO fields
+  metaTitle       String? // Custom meta title (defaults to title if null)
+  metaDescription String? // Custom meta description (defaults to excerpt if null)
+  metaKeywords    String[] // SEO keywords array
+
+  // Open Graph
+  ogImage String? // Custom OG image (defaults to featuredImage if null)
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  categoryId String?
+  category   BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags       BlogPostTag[]
+  versions   BlogPostVersion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([scheduledAt])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([deletedAt])
+  @@index([status, publishedAt]) // For public listing query
+}
+
+// Blog tags for flexible categorization
+model BlogTag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique // URL-friendly identifier
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts BlogPostTag[]
+
+  @@index([slug])
+}
+
+// Many-to-many relation between posts and tags
+model BlogPostTag {
+  id     String   @id @default(cuid())
+  postId String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, tagId])
+  @@index([postId])
+  @@index([tagId])
+}
+
+// Version history for blog posts (keep last 5)
+model BlogPostVersion {
+  id            String   @id @default(cuid())
+  postId        String
+  post          BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of post data at this version
+  content        Json // Post content snapshot
+  title          String
+  excerpt        String?
+  changesSummary String?
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([postId, versionNumber])
+  @@index([postId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
