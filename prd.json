@@ -134,7 +134,7 @@
       "id": "US-008",
       "title": "Unit Tests for Referral System",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Tests for referral link cookie setting",
         "Tests for referral attribution at application",

@@ -208,3 +208,30 @@ Files changed:
 - To add filters to existing queries, pass optional params and spread them into where clause
 - Reuse existing components (DateRangeFilter) for consistency in admin pages
 ---
+
+## 2026-01-21 - US-008: Unit Tests for Referral System
+Iteration: 9
+- Created 127 new tests across 4 test files covering all Epic 10 referral functionality
+- Referral link tests: code validation, click tracking, UTM capture, first-click attribution
+- Application attribution tests: event creation, points awarding
+- Booking attribution tests: points calculation (1000/<$15K, 1500/>=$15K), GuestReferral creation
+- Guest referral code generation tests: FIRSTNAME-YEAR format, eligibility, uniqueness
+- Completion bonus cron tests: date calculation, duplicate prevention, transaction handling
+- Referral analytics tests: funnel stats, conversion rates, top referrers, source breakdown
+- UTM tracking tests: capture, breakdown processing, per-source conversion rates
+- Email template tests: booking notification, code generation, completion bonus emails
+- Business constants tests: calculateGuestReferralPoints function, threshold boundaries
+
+Files changed:
+- lib/trpc/server/routers/__tests__/referral.test.ts (new - 41 tests)
+- app/api/cron/__tests__/referral-completion-bonus.test.ts (new - 24 tests)
+- lib/email/templates/__tests__/guest-referral-templates.test.ts (new - 34 tests)
+- lib/config/__tests__/guest-referral-points.test.ts (new - 28 tests)
+
+**Learnings for future iterations:**
+- Use vi.mock('@/lib/db') pattern for mocking Prisma in tests
+- Mock functions return value with vi.mocked(fn).mockResolvedValue() for async
+- Test files follow existing patterns with `as any` for complex mock returns
+- Pre-existing lint errors with @typescript-eslint/no-explicit-any are acceptable in test files
+- Focus on testing logic/calculations, not full database integration
+---
