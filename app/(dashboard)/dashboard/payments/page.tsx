@@ -45,6 +45,9 @@ type PaymentView = {
   installmentNumber?: number | null;
   scheduledDate?: string | null;
   failureReason?: string | null;
+  receiptUrl?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeCustomerId?: string | null;
   booking: {
     id: string;
     bookingReference: string;
@@ -97,12 +100,15 @@ export default function PaymentsPage() {
         id: payment.id,
         amount: payment.amount,
         status: payment.status as PaymentStatus,
-        createdAt: payment.createdAt,
+        createdAt: payment.createdAt instanceof Date ? payment.createdAt.toISOString() : payment.createdAt,
         paymentMethod: (payment as { paymentMethod?: string | null }).paymentMethod,
         isInstallment: payment.isInstallment,
         installmentNumber: payment.installmentNumber,
-        scheduledDate: payment.scheduledDate,
+        scheduledDate: payment.scheduledDate instanceof Date ? payment.scheduledDate.toISOString() : payment.scheduledDate,
         failureReason: payment.failureReason,
+        receiptUrl: (payment as { receiptUrl?: string | null }).receiptUrl,
+        stripePaymentIntentId: (payment as { stripePaymentIntentId?: string | null }).stripePaymentIntentId,
+        stripeCustomerId: (payment as { stripeCustomerId?: string | null }).stripeCustomerId,
         booking: {
           id: booking.id,
           bookingReference: booking.bookingReference,
@@ -160,7 +166,7 @@ export default function PaymentsPage() {
     }).format(cents / 100);
   };
 
-  const formatDate = (date: Date): string => {
+  const formatDate = (date: Date | string): string => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -168,7 +174,7 @@ export default function PaymentsPage() {
     });
   };
 
-  const formatTime = (date: Date): string => {
+  const formatTime = (date: Date | string): string => {
     return new Date(date).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',

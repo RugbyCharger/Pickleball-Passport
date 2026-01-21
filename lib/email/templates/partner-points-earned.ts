@@ -34,7 +34,7 @@ export function generatePartnerPointsEarnedEmail(data: PartnerPointsEarnedData):
 
   const html = baseEmailTemplate({
     preheader: `${data.reason}`,
-    heading: '🎁 Points Added to Your Account!',
+    title: '🎁 Points Added to Your Account!',
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

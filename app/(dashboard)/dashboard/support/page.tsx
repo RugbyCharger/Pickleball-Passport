@@ -3,19 +3,21 @@
 /**
  * Support & Help Center
  * E5-S8: Support & Help Center (3 pts)
+ * US-002: Guest Support Form in Dashboard
  *
  * Features:
- * - Contact form with validation
- * - Email integration via SendGrid (placeholder)
+ * - Contact form with category, priority, validation
+ * - Ticket auto-links to guest's latest booking
+ * - Confirmation toast with reference number
+ * - Ticket history list with status badges
+ * - Ticket detail view with replies
  * - FAQ section (static content)
- * - Chat widget placeholder
- * - Support ticket history
- * - Response tracking
  */
 
 import { useState } from 'react';
 import type { ComponentType } from 'react';
 import { trpc } from '@/lib/trpc/client';
+import { toast } from 'sonner';
 import {
   MessageSquare,
   Mail,
@@ -27,10 +29,21 @@ import {
   ChevronDown,
   ChevronUp,
   HelpCircle,
+  Loader2,
+  ArrowLeft,
+  Copy,
+  Tag,
 } from 'lucide-react';
 
 type TicketPriority = 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
 type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+type TicketCategory =
+  | 'GENERAL_INQUIRY'
+  | 'BOOKING_QUESTION'
+  | 'MEDICAL_WELLNESS_QUESTION'
+  | 'PAYMENT_ISSUE'
+  | 'PARTNERSHIP_INQUIRY'
+  | 'OTHER';
 
 const PRIORITY_CONFIG: Record<
   TicketPriority,
@@ -68,6 +81,15 @@ const STATUS_CONFIG: Record<
   },
 };
 
+const CATEGORY_OPTIONS: { value: TicketCategory; label: string }[] = [
+  { value: 'GENERAL_INQUIRY', label: 'General Inquiry' },
+  { value: 'BOOKING_QUESTION', label: 'Booking Question' },
+  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Medical/Wellness Question' },
+  { value: 'PAYMENT_ISSUE', label: 'Payment Issue' },
+  { value: 'PARTNERSHIP_INQUIRY', label: 'Partnership Inquiry' },
+  { value: 'OTHER', label: 'Other' },
+];
+
 const FAQ_ITEMS = [
   {
     question: 'What documents do I need for my trip?',
@@ -104,27 +126,46 @@ const FAQ_ITEMS = [
 export default function SupportPage() {
   const [activeTab, setActiveTab] = useState<'contact' | 'tickets'>('contact');
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    subject: '',
     message: '',
     priority: 'NORMAL' as TicketPriority,
+    category: 'GENERAL_INQUIRY' as TicketCategory,
   });
   const [formErrors, setFormErrors] = useState<{
-    subject?: string;
     message?: string;
   }>({});
 
   // tRPC queries
   const { data: tickets = [], refetch } = trpc.support.list.useQuery();
   const { data: counts } = trpc.support.getCounts.useQuery();
+  const { data: selectedTicket, isLoading: isLoadingTicket } =
+    trpc.support.getById.useQuery(
+      { id: selectedTicketId! },
+      { enabled: !!selectedTicketId }
+    );
 
   // tRPC mutations
   const createTicket = trpc.support.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
-      setFormData({ subject: '', message: '', priority: 'NORMAL' });
+      setFormData({ message: '', priority: 'NORMAL', category: 'GENERAL_INQUIRY' });
       setActiveTab('tickets');
-      alert('Support ticket submitted successfully! We\'ll respond within 24 hours.');
+      toast.success(
+        <div>
+          <p className="font-medium">Support ticket submitted!</p>
+          <p className="text-sm mt-1">
+            Reference: <code className="font-mono font-bold">{data.referenceNumber}</code>
+          </p>
+          <p className="text-xs mt-1 text-gray-500">We&apos;ll respond within 24 hours.</p>
+        </div>,
+        {
+          duration: 8000,
+        }
+      );
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to submit ticket. Please try again.');
     },
   });
 
@@ -133,9 +174,6 @@ export default function SupportPage() {
 
     // Validate
     const errors: typeof formErrors = {};
-    if (formData.subject.length < 5) {
-      errors.subject = 'Subject must be at least 5 characters';
-    }
     if (formData.message.length < 20) {
       errors.message = 'Message must be at least 20 characters';
     }
@@ -151,7 +189,6 @@ export default function SupportPage() {
       await createTicket.mutateAsync(formData);
     } catch (error) {
       console.error('Failed to submit ticket:', error);
-      alert('Failed to submit ticket. Please try again.');
     }
   };
 
@@ -164,6 +201,134 @@ export default function SupportPage() {
       minute: '2-digit',
     });
   };
+
+  const copyReferenceNumber = (refNumber: string) => {
+    navigator.clipboard.writeText(refNumber);
+    toast.success('Reference number copied!');
+  };
+
+  // Ticket Detail View
+  if (selectedTicketId && selectedTicket) {
+    const StatusIcon = STATUS_CONFIG[selectedTicket.status].icon;
+    return (
+      <div className="space-y-6">
+        {/* Back Button */}
+        <button
+          onClick={() => setSelectedTicketId(null)}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          Back to tickets
+        </button>
+
+        {/* Ticket Header */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {selectedTicket.subject}
+                </h1>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-gray-500">
+                <button
+                  onClick={() => copyReferenceNumber(selectedTicket.referenceNumber)}
+                  className="flex items-center gap-1 hover:text-gray-700"
+                  title="Copy reference number"
+                >
+                  <Tag className="h-4 w-4" />
+                  <code className="font-mono">{selectedTicket.referenceNumber}</code>
+                  <Copy className="h-3 w-3" />
+                </button>
+                <span>•</span>
+                <span>{formatDate(selectedTicket.createdAt)}</span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 items-end">
+              <div
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${STATUS_CONFIG[selectedTicket.status].color}`}
+              >
+                <StatusIcon className="h-4 w-4" />
+                {STATUS_CONFIG[selectedTicket.status].label}
+              </div>
+              <div
+                className={`px-3 py-1.5 rounded-full text-sm font-medium ${PRIORITY_CONFIG[selectedTicket.priority].color}`}
+              >
+                {PRIORITY_CONFIG[selectedTicket.priority].label} Priority
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Original Message */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="font-semibold text-gray-900 mb-4">Your Message</h2>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.message}</p>
+          </div>
+          {selectedTicket.booking && (
+            <div className="mt-4 text-sm text-gray-500">
+              <span className="font-medium">Linked Booking:</span> Created{' '}
+              {formatDate(selectedTicket.booking.createdAt)} (
+              {selectedTicket.booking.status})
+            </div>
+          )}
+        </div>
+
+        {/* Replies */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="font-semibold text-gray-900 mb-4">
+            Conversation ({selectedTicket.replies?.length || 0})
+          </h2>
+          {selectedTicket.replies && selectedTicket.replies.length > 0 ? (
+            <div className="space-y-4">
+              {selectedTicket.replies.map((reply) => (
+                <div
+                  key={reply.id}
+                  className={`p-4 rounded-lg ${
+                    reply.isAdminReply
+                      ? 'bg-blue-50 border border-blue-100'
+                      : 'bg-gray-50 border border-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-sm">
+                      {reply.isAdminReply
+                        ? 'Support Team'
+                        : 'You'}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {formatDate(reply.createdAt)}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 text-sm whitespace-pre-wrap">
+                    {reply.message}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <MessageSquare className="h-10 w-10 mx-auto text-gray-300 mb-3" />
+              <p>No replies yet</p>
+              <p className="text-sm">
+                Our support team will respond within 24 hours.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state for ticket detail
+  if (selectedTicketId && isLoadingTicket) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -263,33 +428,44 @@ export default function SupportPage() {
         {/* Contact Form */}
         {activeTab === 'contact' && (
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            {/* Subject */}
+            {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Subject
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Category <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                value={formData.subject}
+              <select
+                id="category"
+                value={formData.category}
                 onChange={(e) =>
-                  setFormData({ ...formData, subject: e.target.value })
+                  setFormData({
+                    ...formData,
+                    category: e.target.value as TicketCategory,
+                  })
                 }
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  formErrors.subject ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Brief description of your issue"
-              />
-              {formErrors.subject && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.subject}</p>
-              )}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                aria-required="true"
+              >
+                {CATEGORY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Priority */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="priority"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Priority
               </label>
               <select
+                id="priority"
                 value={formData.priority}
                 onChange={(e) =>
                   setFormData({
@@ -299,19 +475,24 @@ export default function SupportPage() {
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="LOW">Low - General inquiry</option>
                 <option value="NORMAL">Normal - Standard support</option>
-                <option value="HIGH">High - Important issue</option>
                 <option value="URGENT">Urgent - Critical issue</option>
               </select>
+              <p className="mt-1 text-sm text-gray-500">
+                Select Urgent only for time-sensitive issues
+              </p>
             </div>
 
             {/* Message */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Message
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Message <span className="text-red-500">*</span>
               </label>
               <textarea
+                id="message"
                 value={formData.message}
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
@@ -321,12 +502,25 @@ export default function SupportPage() {
                   formErrors.message ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Please provide details about your question or issue..."
+                aria-required="true"
+                aria-invalid={formErrors.message ? 'true' : 'false'}
+                aria-describedby={formErrors.message ? 'message-error' : undefined}
               />
               {formErrors.message && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.message}</p>
+                <p id="message-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {formErrors.message}
+                </p>
               )}
               <p className="mt-1 text-sm text-gray-500">
                 Minimum 20 characters ({formData.message.length}/20)
+              </p>
+            </div>
+
+            {/* Auto-link note */}
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> Your ticket will automatically be linked to your
+                most recent booking (if any) to help our team assist you faster.
               </p>
             </div>
 
@@ -334,11 +528,11 @@ export default function SupportPage() {
             <button
               type="submit"
               disabled={createTicket.isPending}
-              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createTicket.isPending ? (
                 <>
-                  <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Submitting...
                 </>
               ) : (
@@ -367,24 +561,33 @@ export default function SupportPage() {
                 {tickets.map((ticket) => {
                   const StatusIcon = STATUS_CONFIG[ticket.status].icon;
                   return (
-                    <div
+                    <button
                       key={ticket.id}
-                      className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                      onClick={() => setSelectedTicketId(ticket.id)}
+                      className="w-full text-left border rounded-lg p-4 hover:bg-gray-50 hover:border-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                       <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-900">
-                            {ticket.subject}
-                          </h3>
-                          <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-medium text-gray-900 truncate">
+                              {ticket.subject}
+                            </h3>
+                            <code className="text-xs text-gray-500 font-mono">
+                              {ticket.referenceNumber}
+                            </code>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                             {ticket.message}
                           </p>
                           <div className="flex items-center gap-3 mt-3 text-sm text-gray-500">
                             <span>{formatDate(ticket.createdAt)}</span>
+                            <span className="text-blue-600 text-xs">
+                              Click to view details →
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-2 items-end">
+                        <div className="flex flex-col gap-2 items-end flex-shrink-0">
                           <div
                             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_CONFIG[ticket.status].color}`}
                           >
@@ -398,7 +601,7 @@ export default function SupportPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

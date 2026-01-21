@@ -151,6 +151,25 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - 📝 Pre-trip email sequences (Planned)
 - 📝 SMS notifications (Planned)
 
+### Support System (New)
+- ✅ **Public Contact Form** with spam protection
+  - reCAPTCHA v3 integration with score threshold
+  - Honeypot field for bot detection
+  - Rate limiting (3 requests/minute per IP)
+  - Category selection (General, Booking, Medical, Payment, Partnership)
+  - Trip interest and timeline fields
+- ✅ **Guest Support Portal** in dashboard
+  - Create support tickets linked to bookings
+  - Track ticket status and history
+  - View ticket counts by status
+- ✅ **Admin Support Management**
+  - Ticket listing with filters (status, priority, category, source)
+  - Search across name, email, message, reference number
+  - Date range filtering
+  - Ticket assignment to admin users
+  - Reply functionality with auto-status update
+  - Dashboard statistics (total, open, urgent counts)
+
 ### Partner Portal (Epic 9) - ✅ COMPLETE
 - ✅ **Partner Dashboard** with comprehensive overview
   - Real-time metrics (referrals, commissions, leads, points)
@@ -221,7 +240,7 @@ A Next.js application for managing luxury pickleball tourism packages, combining
 - ✅ Footer
 - 📝 SEO optimization (Planned)
 - 📝 Email capture & newsletter signup (Planned)
-- 📝 Contact form (Planned)
+- ✅ Contact form (with reCAPTCHA & rate limiting)
 - 📝 Privacy policy & terms of service (Planned)
 
 ## 🚀 Getting Started
@@ -430,7 +449,8 @@ pickleball-passport/
 │       ├── trips/               # Trip management
 │       ├── packages/            # Package management
 │       ├── analytics/           # Analytics dashboard
-│       └── communications/      # Email & notifications
+│       ├── communications/      # Email & notifications
+│       └── support/             # Support ticket management
 ├── components/                  # React components
 │   ├── booking/                # Booking-specific components
 │   ├── dashboard/              # Dashboard components
@@ -454,7 +474,8 @@ pickleball-passport/
 │   │       │   ├── queries.ts  # Read operations
 │   │       │   └── trips.ts    # Trip operations
 │   │       ├── partner.ts      # Partner portal operations
-│   │       └── forum.ts        # Community forum operations
+│   │       ├── forum.ts        # Community forum operations
+│   │       └── support.ts      # Support ticket operations
 │   ├── stores/                 # Zustand state stores
 │   └── utils.ts                # Utility functions
 ├── prisma/                     # Database schema
@@ -602,6 +623,13 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 - **Staging**: (Coming soon)
 
 ## 📝 Recent Updates
+
+### January 20, 2026
+- ✅ **Support System Implementation** - Contact Form & Support Tickets
+  - Public contact form with reCAPTCHA v3, honeypot, and rate limiting
+  - Guest support portal with ticket creation and tracking
+  - Admin support management dashboard with filters and assignment
+  - Support ticket router with 15+ tRPC procedures
 
 ### January 17, 2026
 - ✅ **Epic 9: Partner Portal - COMPLETE** (100 story points)

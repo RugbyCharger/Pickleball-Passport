@@ -94,6 +94,22 @@ enum TicketPriority {
   URGENT
 }
 
+enum TicketCategory {
+  GENERAL_INQUIRY
+  BOOKING_QUESTION
+  MEDICAL_WELLNESS_QUESTION
+  PAYMENT_ISSUE
+  PARTNERSHIP_INQUIRY
+  OTHER
+}
+
+enum TicketSource {
+  WEBSITE_CONTACT
+  GUEST_DASHBOARD
+  ADMIN_CREATED
+  EMAIL
+}
+
 enum ForumCategory {
   BEST_PRACTICES
   SUCCESS_STORIES
@@ -183,6 +199,11 @@ model User {
   bookings       Booking[]
   notifications  Notification[]
   testimonials   Testimonial[]
+
+  // Support System (E1-S12)
+  supportTickets         SupportTicket[]       // Tickets created by this user
+  assignedTickets        SupportTicket[]       @relation("AssignedTickets") // Tickets assigned to admin
+  supportTicketReplies   SupportTicketReply[]  // Replies from this user
 
   @@index([email])
   @@index([role])
@@ -431,6 +452,7 @@ model Booking {
   referral        PartnerReferral?
   reminderHistory ReminderHistory[]
   tasks           Task[]
+  supportTickets  SupportTicket[] // E1-S12: Support tickets linked to this booking
 
   // Companion booking relationships
   primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
@@ -919,17 +941,93 @@ model Document {
 // ============================================================================
 
 model SupportTicket {
-  id        String         @id @default(cuid())
-  userId    String
-  subject   String
-  message   String         @db.Text
-  status    TicketStatus   @default(OPEN)
-  priority  TicketPriority @default(NORMAL)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id              String          @id @default(cuid())
+  referenceNumber String          @unique // Format: TKT-{nanoid(8)}
+
+  // Ticket Content
+  subject         String
+  message         String          @db.Text
+
+  // Classification
+  category        TicketCategory  @default(GENERAL_INQUIRY)
+  source          TicketSource    @default(WEBSITE_CONTACT)
+  status          TicketStatus    @default(OPEN)
+  priority        TicketPriority  @default(NORMAL)
+
+  // Contact Information (email required, others optional for public submissions)
+  email           String
+  name            String?
+  phone           String?
+
+  // Optional User Relations
+  userId          String?         // Null for public/unauthenticated submissions
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Optional Booking Relation
+  bookingId       String?
+  booking         Booking?        @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  // Assignment (admin handling the ticket)
+  assignedToId    String?
+  assignedTo      User?           @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  // Resolution
+  resolvedAt      DateTime?
+
+  // Timestamps
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relationships
+  replies         SupportTicketReply[]
+  attachments     SupportTicketAttachment[]
 
   @@index([userId])
+  @@index([assignedToId])
+  @@index([bookingId])
   @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([source])
+  @@index([email])
+  @@index([referenceNumber])
+  @@index([createdAt])
+}
+
+model SupportTicketReply {
+  id            String         @id @default(cuid())
+  ticketId      String
+  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // Reply author (can be guest user or admin)
+  userId        String?
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Reply content
+  message       String         @db.Text
+  isAdminReply  Boolean        @default(false)
+
+  createdAt     DateTime       @default(now())
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SupportTicketAttachment {
+  id            String         @id @default(cuid())
+  ticketId      String
+  ticket        SupportTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // File information
+  fileName      String
+  fileUrl       String         // Supabase Storage URL
+  fileSize      Int            // Bytes
+  mimeType      String
+
+  createdAt     DateTime       @default(now())
+
+  @@index([ticketId])
   @@index([createdAt])
 }
 
@@ -1041,4 +1139,94 @@ model NewsletterSubscriber {
   @@index([email])
   @@index([status])
   @@index([confirmToken])
+}
+
+// ============================================================================
+// EMAIL TEMPLATE MANAGEMENT (E11-S11)
+// ============================================================================
+
+enum EmailTemplateCategory {
+  TRANSACTIONAL // Booking, payment, account
+  MARKETING     // Pre-trip, post-trip, promotions
+  NOTIFICATIONS // Admin alerts, partner notifications
+  SYSTEM        // Welcome, verification, password reset
+}
+
+enum EmailTemplateStatus {
+  DRAFT    // In progress, not live
+  ACTIVE   // Published and in use
+  ARCHIVED // No longer in use
+}
+
+model EmailTemplate {
+  id          String                @id @default(cuid())
+  name        String                // "Booking Confirmation Email"
+  slug        String                @unique // "booking-confirmation"
+  description String?               // "Sent after guest completes booking"
+  category    EmailTemplateCategory
+  status      EmailTemplateStatus   @default(DRAFT)
+
+  // Content
+  subjectLine   String  // "Your Pickleball Passport Booking Confirmed!"
+  preheaderText String? // Preview text shown in inbox
+  htmlContent   String  @db.Text // Full HTML content
+  textContent   String  @db.Text // Plain text version
+  variables     Json    // ["guestName", "bookingReference", "tripName"]
+
+  // Branding - Base template inheritance
+  baseTemplateId String?
+  baseTemplate   EmailTemplate?  @relation("TemplateToBase", fields: [baseTemplateId], references: [id])
+  childTemplates EmailTemplate[] @relation("TemplateToBase")
+
+  // Metadata
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  versions  EmailTemplateVersion[]
+  analytics EmailTemplateAnalytics?
+
+  @@index([category])
+  @@index([status])
+  @@index([slug])
+}
+
+model EmailTemplateVersion {
+  id         String        @id @default(cuid())
+  templateId String
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  versionNumber  Int     // 1, 2, 3...
+  content        Json    // Snapshot of template at this version
+  changesSummary String? // What changed in this version
+  createdBy      String
+  createdAt      DateTime @default(now())
+
+  @@unique([templateId, versionNumber])
+  @@index([templateId])
+}
+
+model EmailTemplateAnalytics {
+  id         String        @id @default(cuid())
+  templateId String        @unique
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  // Metrics (last 30 days)
+  sentCount        Int @default(0)
+  openCount        Int @default(0)
+  clickCount       Int @default(0)
+  bounceCount      Int @default(0)
+  unsubscribeCount Int @default(0)
+
+  // Calculated rates
+  openRate        Float? // openCount / sentCount
+  clickRate       Float? // clickCount / sentCount
+  bounceRate      Float? // bounceCount / sentCount
+  unsubscribeRate Float? // unsubscribeCount / sentCount
+
+  lastUpdatedAt DateTime @updatedAt
+
+  @@index([templateId])
 }

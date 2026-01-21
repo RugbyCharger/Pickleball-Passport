@@ -1510,10 +1510,10 @@ export const partnerRouter = router({
               createdAt: true,
               user: {
                 select: {
-                  application: {
+                  applications: {
                     select: {
                       id: true,
-                      submittedAt: true,
+                      createdAt: true,
                     },
                     take: 1,
                   },
@@ -1529,7 +1529,7 @@ export const partnerRouter = router({
 
       // Calculate funnel metrics
       const totalReferrals = referrals.length
-      const applicationsCount = referrals.filter((r) => r.booking.user.application?.submittedAt).length
+      const applicationsCount = referrals.filter((r) => r.booking.user.applications?.[0]?.createdAt).length
       const bookingsCount = referrals.filter((r) => r.booking.status === 'CONFIRMED').length
       const completedCount = referrals.filter((r) => r.booking.status === 'COMPLETED').length
 
@@ -1910,7 +1910,7 @@ export const partnerRouter = router({
   updateNotificationPreferences: partnerProcedure
     .input(
       z.object({
-        preferences: z.record(z.boolean()),
+        preferences: z.record(z.string(), z.boolean()),
       })
     )
     .mutation(async ({ ctx, input }) => {

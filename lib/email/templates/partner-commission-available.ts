@@ -42,7 +42,7 @@ export function generatePartnerCommissionAvailableEmail(data: PartnerCommissionA
 
   const html = baseEmailTemplate({
     preheader: `Your points are ready to redeem!`,
-    heading: '💰 Your Rewards Are Ready!',
+    title: '💰 Your Rewards Are Ready!',
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

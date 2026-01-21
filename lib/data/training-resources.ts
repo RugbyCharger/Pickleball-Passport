@@ -216,7 +216,7 @@ Points are awarded automatically when bookings are confirmed. Your commission ra
   {
     id: 'faq-3',
     category: 'faq',
-    title: 'What if a member doesn't use my referral code?',
+    title: "What if a member doesn't use my referral code?",
     description: 'How to handle manual referral entries and attribution.',
     type: 'article',
     content: `

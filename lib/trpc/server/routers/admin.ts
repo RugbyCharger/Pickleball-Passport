@@ -1321,4 +1321,144 @@ export const adminRouter = router({
         refundLog: result.refundLog,
       };
     }),
+
+  /**
+   * Send itinerary change SMS to a guest
+   * TODO: Implement Twilio SMS sending when Twilio is configured
+   */
+  sendItineraryChangeSMS: adminProcedure
+    .input(
+      z.object({
+        bookingId: z.string(),
+        changeDetails: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Get booking with guest info
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        include: {
+          user: {
+            include: {
+              guestProfile: true,
+            },
+          },
+        },
+      });
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        });
+      }
+
+      // TODO: Actually send SMS via Twilio when configured
+      apiLogger.info({
+        adminId: ctx.user?.id,
+        bookingId: input.bookingId,
+        changeDetails: input.changeDetails,
+      }, 'Itinerary change SMS requested (not implemented)');
+
+      return {
+        success: true,
+        message: 'SMS feature not yet implemented - no message was sent',
+      };
+    }),
+
+  /**
+   * Send flight delay SMS to a guest
+   * TODO: Implement Twilio SMS sending when Twilio is configured
+   */
+  sendFlightDelaySMS: adminProcedure
+    .input(
+      z.object({
+        bookingId: z.string(),
+        delayInfo: z.object({
+          tripDate: z.string(),
+          newTime: z.string(),
+          contactInfo: z.string(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Get booking with guest info
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        include: {
+          user: {
+            include: {
+              guestProfile: true,
+            },
+          },
+        },
+      });
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        });
+      }
+
+      // TODO: Actually send SMS via Twilio when configured
+      apiLogger.info({
+        adminId: ctx.user?.id,
+        bookingId: input.bookingId,
+        delayInfo: input.delayInfo,
+      }, 'Flight delay SMS requested (not implemented)');
+
+      return {
+        success: true,
+        message: 'SMS feature not yet implemented - no message was sent',
+      };
+    }),
+
+  /**
+   * Send emergency alert SMS to all guests on a trip
+   * TODO: Implement Twilio SMS sending when Twilio is configured
+   */
+  sendEmergencyAlertSMS: adminProcedure
+    .input(
+      z.object({
+        tripId: z.string(),
+        alertMessage: z.string().min(1),
+        contactInfo: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Get all guests on this trip with phone numbers
+      const bookings = await ctx.db.booking.findMany({
+        where: {
+          tripId: input.tripId,
+          status: 'CONFIRMED',
+        },
+        include: {
+          user: {
+            include: {
+              guestProfile: true,
+            },
+          },
+        },
+      });
+
+      // Count guests with valid phone numbers
+      const guestsWithPhones = bookings.filter(
+        (b) => b.user.guestProfile?.phone
+      );
+
+      // TODO: Actually send SMS via Twilio when configured
+      apiLogger.info({
+        adminId: ctx.user?.id,
+        tripId: input.tripId,
+        guestCount: guestsWithPhones.length,
+        message: input.alertMessage,
+      }, 'Emergency alert SMS requested (not implemented)');
+
+      return {
+        sentCount: 0, // SMS not actually sent yet
+        skippedCount: bookings.length - guestsWithPhones.length,
+        message: 'SMS feature not yet implemented - no messages were sent',
+      };
+    }),
 });

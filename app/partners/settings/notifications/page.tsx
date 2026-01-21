@@ -13,10 +13,9 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
 import { trpc } from '@/lib/trpc/client'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 
 export default function PartnerNotificationPreferencesPage() {
-  const { toast } = useToast()
   const { data: profile } = trpc.partner.getMyProfile.useQuery()
   const utils = trpc.useUtils()
 
@@ -45,17 +44,12 @@ export default function PartnerNotificationPreferencesPage() {
   const updatePreferences = trpc.partner.updateNotificationPreferences.useMutation({
     onSuccess: () => {
       utils.partner.getMyProfile.invalidate()
-      toast({
-        title: 'Preferences Updated',
+      toast.success('Preferences Updated', {
         description: 'Your notification preferences have been saved.',
       })
     },
     onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to update preferences.',
-        variant: 'destructive',
-      })
+      toast.error(error.message || 'Failed to update preferences.')
     },
   })
 

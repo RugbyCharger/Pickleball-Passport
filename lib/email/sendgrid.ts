@@ -396,3 +396,90 @@ export async function sendCompanionConfirmation(
     text,
   });
 }
+
+/**
+ * Send support ticket confirmation email to guest/prospect
+ */
+export async function sendTicketCreatedEmail(
+  to: string,
+  data: import('./templates/ticket-created').TicketCreatedData
+): Promise<void> {
+  const { generateTicketCreatedEmail } = await import('./templates/ticket-created');
+  const { html, text, subject } = generateTicketCreatedEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send support ticket admin notification email
+ */
+export async function sendTicketAdminNotification(
+  data: import('./templates/ticket-admin-notification').TicketAdminNotificationData
+): Promise<void> {
+  const { generateTicketAdminNotificationEmail } = await import('./templates/ticket-admin-notification');
+  const { html, text, subject } = generateTicketAdminNotificationEmail(data);
+
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@pickleballpassport.com';
+  const ccEmails = process.env.ADMIN_ALERT_CC_EMAILS?.split(',').map((e) => e.trim()).filter(Boolean) || [];
+
+  // Send to primary admin
+  await sendEmail({
+    to: adminEmail,
+    subject,
+    html,
+    text,
+    replyTo: data.email, // Set reply-to as the ticket submitter's email
+  });
+
+  // Send to CC admins if configured
+  if (ccEmails.length > 0) {
+    await sendEmail({
+      to: ccEmails,
+      subject,
+      html,
+      text,
+      replyTo: data.email,
+    });
+  }
+}
+
+/**
+ * Send support ticket reply notification email to guest/prospect
+ */
+export async function sendTicketReplyEmail(
+  to: string,
+  data: import('./templates/ticket-reply').TicketReplyData
+): Promise<void> {
+  const { generateTicketReplyEmail } = await import('./templates/ticket-reply');
+  const { html, text, subject } = generateTicketReplyEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send support ticket resolved notification email to guest/prospect
+ */
+export async function sendTicketResolvedEmail(
+  to: string,
+  data: import('./templates/ticket-resolved').TicketResolvedData
+): Promise<void> {
+  const { generateTicketResolvedEmail } = await import('./templates/ticket-resolved');
+  const { html, text, subject } = generateTicketResolvedEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}

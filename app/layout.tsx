@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+
+// Prevent static generation - ClerkProvider requires valid keys during build
+// Remove this once proper build-time environment variables are configured
+export const dynamic = 'force-dynamic'
 import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
 import { Footer } from "@/components/marketing/footer";

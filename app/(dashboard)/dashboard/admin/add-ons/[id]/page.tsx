@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/client';
 import {
@@ -69,25 +69,27 @@ export default function AddOnFormPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof AddOnFormData, string>>>({});
 
   // Fetch existing add-on data if editing
-  const { isLoading: isLoadingAddOn } = trpc.addOn.adminGetById.useQuery(
+  const { data: addOnData, isLoading: isLoadingAddOn } = trpc.addOn.adminGetById.useQuery(
     { id: addOnId! },
     {
       enabled: !isNew && !!addOnId,
-      onSuccess: (data) => {
-        if (data && !isNew) {
-          setFormData({
-            name: data.name,
-            description: data.description || '',
-            category: data.category,
-            thPrice: (data.thPrice / 100).toString(),
-            usPrice: (data.usPrice / 100).toString(),
-            imageUrl: data.imageUrl || '',
-            isActive: data.isActive,
-          });
-        }
-      },
     }
   );
+
+  // Populate form when data is loaded
+  useEffect(() => {
+    if (addOnData && !isNew) {
+      setFormData({
+        name: addOnData.name,
+        description: addOnData.description || '',
+        category: addOnData.category,
+        thPrice: (addOnData.thPrice / 100).toString(),
+        usPrice: (addOnData.usPrice / 100).toString(),
+        imageUrl: addOnData.imageUrl || '',
+        isActive: addOnData.isActive,
+      });
+    }
+  }, [addOnData, isNew]);
 
   // Mutations
   const createMutation = trpc.addOn.adminCreate.useMutation({

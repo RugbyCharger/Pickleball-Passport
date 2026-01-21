@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 
+// Prevent static generation - wrapped by ClerkProvider
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Apply for Your Transformation Journey | Pickleball Passport',
   description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to luxury pickleball, medical tourism, and spiritual experiences.',

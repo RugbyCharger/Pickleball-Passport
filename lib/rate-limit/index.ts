@@ -95,6 +95,22 @@ export const rateLimiters = {
       analytics: true,
     });
   },
+
+  /**
+   * Ticket status lookup: 10 requests per hour per email
+   * Prevents enumeration attacks on ticket reference numbers
+   */
+  ticketStatus: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(10, '1 h'),
+      prefix: 'ratelimit:ticket-status',
+      analytics: true,
+    });
+  },
 };
 
 /**

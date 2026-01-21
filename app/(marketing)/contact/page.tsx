@@ -12,6 +12,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Mail,
   Phone,
   Clock,
@@ -19,7 +26,50 @@ import {
   Loader2,
   CheckCircle,
   MapPin,
+  Copy,
 } from 'lucide-react'
+
+/**
+ * Phone validation regex - allows various phone formats
+ */
+const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/
+
+/**
+ * Category options for the contact form
+ */
+const categoryOptions = [
+  { value: 'GENERAL_INQUIRY', label: 'General Inquiry' },
+  { value: 'BOOKING_QUESTION', label: 'Booking Question' },
+  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Medical/Wellness Question' },
+  { value: 'PAYMENT_ISSUE', label: 'Payment Issue' },
+  { value: 'PARTNERSHIP_INQUIRY', label: 'Partnership Inquiry' },
+  { value: 'OTHER', label: 'Other' },
+] as const
+
+/**
+ * Trip interest options
+ */
+const tripInterestOptions = [
+  { value: '', label: 'Select a trip (optional)' },
+  { value: 'Singles Retreat', label: 'Singles Retreat' },
+  { value: 'Couples Getaway', label: 'Couples Getaway' },
+  { value: 'Group Adventure', label: 'Group Adventure' },
+  { value: 'Corporate Event', label: 'Corporate Event' },
+  { value: 'Custom Trip', label: 'Custom Trip' },
+  { value: 'Not Sure Yet', label: 'Not Sure Yet' },
+] as const
+
+/**
+ * Timeline options
+ */
+const timelineOptions = [
+  { value: '', label: 'Select timeline (optional)' },
+  { value: 'Within 1 month', label: 'Within 1 month' },
+  { value: '1-3 months', label: '1-3 months' },
+  { value: '3-6 months', label: '3-6 months' },
+  { value: '6+ months', label: '6+ months' },
+  { value: 'Just exploring', label: 'Just exploring' },
+] as const
 
 const contactFormSchema = z.object({
   name: z
@@ -27,17 +77,34 @@ const contactFormSchema = z.object({
     .min(1, 'Name is required')
     .max(100, 'Name must be 100 characters or less'),
   email: z.string().email('Please enter a valid email address'),
-  phone: z.string().optional(),
+  phone: z
+    .string()
+    .regex(phoneRegex, 'Please enter a valid phone number')
+    .optional()
+    .or(z.literal('')),
+  category: z.enum([
+    'GENERAL_INQUIRY',
+    'BOOKING_QUESTION',
+    'MEDICAL_WELLNESS_QUESTION',
+    'PAYMENT_ISSUE',
+    'PARTNERSHIP_INQUIRY',
+    'OTHER',
+  ]),
   message: z
     .string()
-    .min(10, 'Message must be at least 10 characters')
-    .max(2000, 'Message must be 2000 characters or less'),
+    .min(20, 'Message must be at least 20 characters')
+    .max(5000, 'Message must be 5000 characters or less'),
+  tripInterest: z.string().optional(),
+  timeline: z.string().optional(),
+  // Honeypot field - should always be empty
+  website: z.string().optional(),
 })
 
 type ContactFormInput = z.infer<typeof contactFormSchema>
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [referenceNumber, setReferenceNumber] = useState<string | null>(null)
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   const {
@@ -45,19 +112,28 @@ export default function ContactPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
+    watch,
   } = useForm<ContactFormInput>({
     resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      category: 'GENERAL_INQUIRY',
+      tripInterest: '',
+      timeline: '',
+      website: '',
+    },
   })
 
-  const contactMutation = trpc.contact.submit.useMutation({
-    onSuccess: () => {
-      toast.success("Message sent successfully! We'll respond within 24 hours.")
-      setIsSubmitted(true)
-      reset()
+  const selectedCategory = watch('category')
+  const selectedTripInterest = watch('tripInterest')
+  const selectedTimeline = watch('timeline')
 
-      setTimeout(() => {
-        setIsSubmitted(false)
-      }, 5000)
+  const contactMutation = trpc.support.createPublicTicket.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message)
+      setIsSubmitted(true)
+      setReferenceNumber(data.referenceNumber)
+      reset()
     },
     onError: (error) => {
       console.error('Contact form error:', error)
@@ -85,6 +161,13 @@ export default function ContactPage() {
       })
     } catch (error) {
       console.error('Contact form submission error:', error)
+    }
+  }
+
+  const copyReferenceNumber = () => {
+    if (referenceNumber) {
+      navigator.clipboard.writeText(referenceNumber)
+      toast.success('Reference number copied!')
     }
   }
 
@@ -120,22 +203,58 @@ export default function ContactPage() {
                   hours.
                 </p>
 
-                {isSubmitted && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-green-800 font-medium">
-                        Message sent successfully!
-                      </p>
-                      <p className="text-green-700 text-sm mt-1">
-                        We&apos;ve received your message and will respond within 24
-                        hours.
-                      </p>
+                {isSubmitted && referenceNumber && (
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle
+                        className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                      <div className="flex-1">
+                        <p className="text-green-800 font-medium">
+                          Message sent successfully!
+                        </p>
+                        <p className="text-green-700 text-sm mt-1">
+                          We&apos;ve received your message and will respond within 24
+                          hours.
+                        </p>
+                        <div className="mt-3 flex items-center gap-2 bg-green-100 rounded-md p-2">
+                          <span className="text-green-800 text-sm font-medium">
+                            Reference Number:
+                          </span>
+                          <code className="text-green-900 font-mono font-bold">
+                            {referenceNumber}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={copyReferenceNumber}
+                            className="ml-auto text-green-700 hover:text-green-900 p-1"
+                            aria-label="Copy reference number"
+                          >
+                            <Copy className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <p className="text-green-600 text-xs mt-2">
+                          Save this reference number to check on your ticket status.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  {/* Honeypot field - hidden from users, visible to bots */}
+                  <div className="hidden" aria-hidden="true">
+                    <Label htmlFor="website">Website</Label>
+                    <Input
+                      id="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      {...register('website')}
+                    />
+                  </div>
+
                   {/* Name Field */}
                   <div>
                     <Label htmlFor="name" className="text-gray-700 font-medium">
@@ -145,12 +264,15 @@ export default function ContactPage() {
                       id="name"
                       type="text"
                       placeholder="Your full name"
+                      aria-required="true"
+                      aria-invalid={errors.name ? 'true' : 'false'}
+                      aria-describedby={errors.name ? 'name-error' : undefined}
                       {...register('name')}
                       className={`mt-1.5 ${errors.name ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="name-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.name.message}
                       </p>
                     )}
@@ -165,12 +287,15 @@ export default function ContactPage() {
                       id="email"
                       type="email"
                       placeholder="your.email@example.com"
+                      aria-required="true"
+                      aria-invalid={errors.email ? 'true' : 'false'}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
                       {...register('email')}
                       className={`mt-1.5 ${errors.email ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.email.message}
                       </p>
                     )}
@@ -185,15 +310,102 @@ export default function ContactPage() {
                       id="phone"
                       type="tel"
                       placeholder="+1 (555) 123-4567"
+                      aria-invalid={errors.phone ? 'true' : 'false'}
+                      aria-describedby={errors.phone ? 'phone-error' : undefined}
                       {...register('phone')}
-                      className="mt-1.5"
+                      className={`mt-1.5 ${errors.phone ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
                     {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="phone-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.phone.message}
                       </p>
                     )}
+                  </div>
+
+                  {/* Category Dropdown */}
+                  <div>
+                    <Label htmlFor="category" className="text-gray-700 font-medium">
+                      How can we help? <span className="text-red-500">*</span>
+                    </Label>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={(value) =>
+                        setValue(
+                          'category',
+                          value as ContactFormInput['category']
+                        )
+                      }
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger
+                        id="category"
+                        className={`mt-1.5 ${errors.category ? 'border-red-500' : ''}`}
+                        aria-required="true"
+                        aria-invalid={errors.category ? 'true' : 'false'}
+                        aria-describedby={errors.category ? 'category-error' : undefined}
+                      >
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categoryOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.category && (
+                      <p id="category-error" className="text-red-500 text-sm mt-1" role="alert">
+                        {errors.category.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Trip Interest Dropdown */}
+                  <div>
+                    <Label htmlFor="tripInterest" className="text-gray-700 font-medium">
+                      Trip Interest
+                    </Label>
+                    <Select
+                      value={selectedTripInterest}
+                      onValueChange={(value) => setValue('tripInterest', value)}
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger id="tripInterest" className="mt-1.5">
+                        <SelectValue placeholder="Select a trip (optional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tripInterestOptions.map((option) => (
+                          <SelectItem key={option.value || 'empty'} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Timeline Dropdown */}
+                  <div>
+                    <Label htmlFor="timeline" className="text-gray-700 font-medium">
+                      Timeline
+                    </Label>
+                    <Select
+                      value={selectedTimeline}
+                      onValueChange={(value) => setValue('timeline', value)}
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger id="timeline" className="mt-1.5">
+                        <SelectValue placeholder="Select timeline (optional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timelineOptions.map((option) => (
+                          <SelectItem key={option.value || 'empty'} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Message Field */}
@@ -206,14 +418,17 @@ export default function ContactPage() {
                     </Label>
                     <Textarea
                       id="message"
-                      placeholder="Tell us about your questions or interests..."
+                      placeholder="Tell us about your questions or interests... (minimum 20 characters)"
                       rows={6}
+                      aria-required="true"
+                      aria-invalid={errors.message ? 'true' : 'false'}
+                      aria-describedby={errors.message ? 'message-error' : undefined}
                       {...register('message')}
                       className={`mt-1.5 resize-none ${errors.message ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
                     {errors.message && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="message-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.message.message}
                       </p>
                     )}
@@ -250,12 +465,12 @@ export default function ContactPage() {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
                         Sending...
                       </>
                     ) : (
                       <>
-                        <Send className="h-5 w-5" />
+                        <Send className="h-5 w-5" aria-hidden="true" />
                         Send Message
                       </>
                     )}
@@ -275,7 +490,7 @@ export default function ContactPage() {
                 <div className="space-y-4">
                   {/* Email */}
                   <div className="flex items-start gap-3">
-                    <Mail className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" />
+                    <Mail className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <p className="text-sm font-medium text-gray-700">Email</p>
                       <a
@@ -289,7 +504,7 @@ export default function ContactPage() {
 
                   {/* Phone */}
                   <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" />
+                    <Phone className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <p className="text-sm font-medium text-gray-700">Phone</p>
                       <a
@@ -303,7 +518,7 @@ export default function ContactPage() {
 
                   {/* Office Hours */}
                   <div className="flex items-start gap-3">
-                    <Clock className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" />
+                    <Clock className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <p className="text-sm font-medium text-gray-700">
                         Office Hours
@@ -318,7 +533,7 @@ export default function ContactPage() {
 
                   {/* Location */}
                   <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" />
+                    <MapPin className="h-5 w-5 text-[#003D5C] mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <p className="text-sm font-medium text-gray-700">
                         Location
