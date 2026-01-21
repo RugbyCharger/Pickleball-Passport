@@ -181,7 +181,7 @@ export default function CMSDashboardPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="mb-8 grid gap-6 lg:grid-cols-3">
+            <div className="mb-8 grid gap-6 lg:grid-cols-4">
               {/* Manage Blocks */}
               <div className="rounded-lg border border-slate-200 bg-white p-6">
                 <div className="flex items-start gap-4">
@@ -254,6 +254,26 @@ export default function CMSDashboardPage() {
                           <Plus className="h-3 w-3" />
                           Create
                         </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Manage Packages (Story 12-2) */}
+              <div className="rounded-lg border border-slate-200 bg-white p-6">
+                <div className="flex items-start gap-4">
+                  <div className="rounded-full bg-emerald-100 p-3">
+                    <FileText className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-slate-900">Packages</h3>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Edit package content, descriptions, and images
+                    </p>
+                    <div className="mt-4 flex gap-2">
+                      <Link href="/dashboard/admin/cms/packages">
+                        <Button variant="outline" size="sm">View All</Button>
                       </Link>
                     </div>
                   </div>
