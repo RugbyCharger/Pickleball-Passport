@@ -106,6 +106,7 @@ export const muxLogger = createLogger('mux')
 export const pdfLogger = createLogger('pdf')
 export const rateLimitLogger = createLogger('rateLimit')
 export const notificationLogger = createLogger('notification')
+export const whatsappLogger = createLogger('whatsapp')
 
 /**
  * Log an error with stack trace and additional context
