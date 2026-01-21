@@ -7,6 +7,8 @@
 - Pre-existing TypeScript errors exist in test files - focus on new code compiling
 - Pre-existing lint warnings exist (unused imports, no-img-element)
 - Tests failing for STRIPE_SECRET_KEY are environment-related, not code issues
+- Cookie tracking (referral, UTM): Use middleware.ts for site-wide capture, parse in tRPC with ctx.headers.get('cookie')
+- UTM params: Use first-touch attribution (don't overwrite existing cookies)
 
 ---
 
@@ -177,4 +179,32 @@ Files changed:
 - Use groupBy with _count for aggregating events by code
 - Partner codes have referralCodeClickCount on PartnerProfile, guest codes track via ReferralEvent only
 - Raw SQL queries can be used for complex aggregations (e.g., summing points across tables)
+---
+
+## 2026-01-21 - US-007: UTM Parameter Tracking
+Iteration: 8
+- Added utmSource, utmMedium, utmCampaign fields to Application and Booking models
+- Added @@index([utmSource]) to both models for efficient filtering
+- Modified middleware.ts to capture UTM params from URL and store in cookies
+- UTM cookies use 30-day expiration with first-touch attribution (doesn't overwrite existing)
+- Updated application.create to extract UTM params from cookies and store in record
+- Updated booking.createPaymentIntent to extract UTM params from cookies and store in record
+- Added admin tRPC procedures: getUtmBreakdown, getUtmSourceList, getReferralFunnelStatsByUtm
+- Updated referral analytics dashboard with UTM breakdown table and filter
+
+Files changed:
+- prisma/schema.prisma (added UTM fields to Application and Booking)
+- middleware.ts (added UTM cookie capture logic)
+- lib/trpc/server/routers/application.ts (extract and store UTM params)
+- lib/trpc/server/routers/booking.ts (extract and store UTM params)
+- lib/trpc/server/routers/admin.ts (added 3 UTM analytics procedures)
+- app/(dashboard)/dashboard/admin/referral-analytics/page.tsx (UTM breakdown section and filter)
+
+**Learnings for future iterations:**
+- Middleware runs on all routes, good place for global cookie/tracking logic
+- UTM cookies should NOT be httpOnly since they need to be read by server-side tRPC
+- First-touch attribution: check if cookie exists before setting a new one
+- Use groupBy with Prisma to aggregate by UTM source across event types
+- To add filters to existing queries, pass optional params and spread them into where clause
+- Reuse existing components (DateRangeFilter) for consistency in admin pages
 ---
