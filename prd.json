@@ -88,7 +88,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Meta webhooks require quick 200 response. Process events async if needed. Reference existing webhook patterns in app/api/webhooks/."
     },
     {

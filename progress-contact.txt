@@ -357,3 +357,33 @@ Iteration: 4
   - WhatsApp API doesn't support true group messages - broadcasts send individual messages
   - Only send broadcasts to guests with whatsappGroupJoinedAt set (confirmed joined)
 ---
+
+## 2026-01-21 - US-004
+Iteration: 5
+- Implemented US-004: WhatsApp Webhook Endpoint
+- Files changed:
+  - app/api/webhooks/whatsapp/route.ts - New webhook handler for Meta WhatsApp API
+- **What was implemented:**
+  - GET handler for Meta webhook verification (hub.mode/hub.verify_token/hub.challenge flow)
+  - POST handler for incoming webhook events (messages and statuses)
+  - Full TypeScript types for WhatsApp webhook payload structure
+  - Message status processing (sent, delivered, read, failed)
+  - Incoming message processing with contact information
+  - Button reply handling for "joined group" confirmations
+  - Interactive reply handling (list/button selections)
+  - Text message keyword detection for join confirmations
+  - markGuestJoinedByPhone() - Updates booking whatsappGroupJoinedAt based on phone number lookup
+  - Comprehensive logging with privacy-safe phone number masking (last 4 digits only)
+  - Quick 200 OK responses for all valid webhooks (Meta requirement)
+  - Uses getWebhookVerifyToken() from lib/whatsapp/client.ts
+- TypeScript strict mode passed with 0 errors in WhatsApp files
+- ESLint passed with no warnings
+- **Learnings for future iterations:**
+  - Meta webhook verification uses hub.mode=subscribe, hub.verify_token, hub.challenge pattern
+  - Must return 200 OK quickly for Meta webhooks (even on errors) to prevent retries
+  - WhatsApp webhook payload structure: object -> entry[] -> changes[] -> value
+  - value.statuses[] for delivery status, value.messages[] for incoming messages
+  - Phone numbers in webhooks don't have + prefix, need to add for E.164 matching
+  - Can track group joins via button/interactive replies or keyword detection in text messages
+  - Match phone to guestProfile.phone to find booking and update whatsappGroupJoinedAt
+---
