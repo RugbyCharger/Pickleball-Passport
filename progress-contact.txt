@@ -575,3 +575,44 @@ Iteration: 11
   - Cast JSON fields from Prisma: (booking.whatsappMilestonesSent as Record<string, boolean>)
   - Use OR filter for gift booking handling: [{ isGift: false }, { isGift: true, giftStatus: 'ACCEPTED' }]
 ---
+
+## 2026-01-21 - US-011
+Iteration: 12
+- Implemented US-011: Unit Tests for WhatsApp Services
+- Files changed:
+  - lib/whatsapp/__tests__/client.test.ts - New unit tests for WhatsApp client module
+  - lib/whatsapp/__tests__/group-manager.test.ts - New unit tests for group manager service
+  - src/test/setup.ts - Created test setup file (required by vitest.config.ts)
+- **What was implemented:**
+  - client.test.ts (17 tests) covering:
+    - isConfigured() returns true when all env vars set
+    - isConfigured() returns false when env vars missing
+    - isValidPhoneNumber() accepts valid E.164 formats
+    - isValidPhoneNumber() rejects invalid formats
+    - sendMessage() success path with mocked axios
+    - sendMessage() handles API errors gracefully
+    - sendMessage() validates phone number format
+    - sendTemplateMessage() success path
+  - group-manager.test.ts (24 tests) covering:
+    - createTripGroup() activates group when 3+ bookings and invite link set
+    - createTripGroup() error when trip not found
+    - createTripGroup() error when fewer than 3 bookings
+    - createTripGroup() error when no invite link
+    - inviteGuestToGroup() sends message and updates booking
+    - inviteGuestToGroup() error handling (booking not found, no phone, no group, already invited)
+    - inviteGuestByBookingId() builds invitation data and sends
+    - markGuestJoined() updates booking and increments member count
+    - sendGroupBroadcast() sends to all group members
+    - sendGroupBroadcast() handles partial failures
+    - buildInvitationData() constructs data from booking
+  - Vitest mocking patterns for Prisma, axios, and logger dependencies
+  - All 41 tests pass
+- TypeScript strict mode passed with 0 errors (used `as unknown as` for mock type assertions)
+- **Learnings for future iterations:**
+  - vi.mock() must use inline factory functions (no top-level variable references)
+  - Import mocked modules AFTER vi.mock() calls
+  - Use `as unknown as MockType` for type assertions on mocked Prisma delegates
+  - Mock @/lib/logger and @/lib/db as separate modules
+  - Mock ../templates with simple function implementation for template generation
+  - vitest.config.ts requires src/test/setup.ts - create empty file if missing
+---
