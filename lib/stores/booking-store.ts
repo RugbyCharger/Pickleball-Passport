@@ -24,6 +24,12 @@ import {
   calculateFullPaymentDiscount,
 } from '@/lib/utils/installment-calculator'
 import { ACCOMMODATION_TIER_PRICING } from '@/lib/config/business-constants'
+import {
+  type SupportedCurrency,
+  DEFAULT_CURRENCY,
+  convertAmountSync,
+  formatCurrency as formatCurrencyUtil,
+} from '@/lib/services/currency'
 
 // Types based on Prisma schema
 export type AccommodationTier = 'LUXURY' | 'ULTRA_LUXURY' | 'VILLA'
@@ -117,6 +123,10 @@ export interface BookingState {
   // Payment Plan (E4-S6)
   paymentPlan: PaymentPlan
 
+  // Currency (E4-S13)
+  currency: SupportedCurrency
+  exchangeRates: Record<string, number> | null
+
   // Referral Code (applied at review step)
   referralCode: string | null
   referralDiscount: number // in cents
@@ -170,6 +180,12 @@ export interface BookingState {
   canUseInstallments: () => boolean
   getDiscountedTotal: () => number
   getInstallmentSchedule: () => InstallmentScheduleItem[]
+
+  // Currency actions (E4-S13)
+  setCurrency: (currency: SupportedCurrency) => void
+  setExchangeRates: (rates: Record<string, number>) => void
+  getDisplayPrice: (amountInCents: number) => number
+  formatDisplayPrice: (amountInCents: number) => string
 
   setReferralCode: (code: string | null) => void
   setReferralDiscount: (discount: number) => void
@@ -231,6 +247,8 @@ const initialState = {
   selectedTripId: null,
   selectedTrip: null,
   paymentPlan: 'FULL' as PaymentPlan,
+  currency: DEFAULT_CURRENCY as SupportedCurrency,
+  exchangeRates: null as Record<string, number> | null,
   referralCode: null,
   referralDiscount: 0,
   referralPartnerId: null,
@@ -336,6 +354,24 @@ export const useBookingStore = create<BookingState>()(
           { number: 3, amount: amounts.third, dueDate: dates.third, percentage: '15%' },
           { number: 4, amount: amounts.fourth, dueDate: dates.fourth, percentage: '10%' },
         ]
+      },
+
+      // Currency Actions (E4-S13)
+      setCurrency: (currency) => set({ currency }),
+      setExchangeRates: (rates) => set({ exchangeRates: rates }),
+
+      getDisplayPrice: (amountInCents) => {
+        const state = get()
+        if (state.currency === 'USD') return amountInCents
+        return convertAmountSync(amountInCents, 'USD', state.currency, state.exchangeRates || undefined)
+      },
+
+      formatDisplayPrice: (amountInCents) => {
+        const state = get()
+        const displayAmount = state.currency === 'USD'
+          ? amountInCents
+          : convertAmountSync(amountInCents, 'USD', state.currency, state.exchangeRates || undefined)
+        return formatCurrencyUtil(displayAmount, state.currency)
       },
 
       // Referral Code
@@ -736,6 +772,7 @@ export const useBookingStore = create<BookingState>()(
         selectedTripId: state.selectedTripId,
         selectedTrip: state.selectedTrip,
         paymentPlan: state.paymentPlan,
+        currency: state.currency, // E4-S13: Persist currency preference
         referralCode: state.referralCode,
         referralDiscount: state.referralDiscount,
         referralPartnerId: state.referralPartnerId,
@@ -754,6 +791,7 @@ export const useBookingStore = create<BookingState>()(
         giftDeliveryOption: state.giftDeliveryOption,
         giftDeliveryDate: state.giftDeliveryDate,
         // Modification mode state excluded from persistence
+        // Exchange rates NOT persisted (fetched fresh)
       }),
     }
   )

@@ -25,6 +25,7 @@ export interface BookingCreateData {
   accommodationPrice: number
   addOnsTotal: number
   totalPrice: number
+  currency?: string // E4-S13: Currency code
   referredBy?: string | null
   paymentPlan: PaymentPlan
   stripeCustomerId?: string | null
@@ -36,6 +37,7 @@ export interface BookingCreateData {
  */
 export interface PaymentRecordCreateData {
   amountCents: number
+  currency?: string // E4-S13: Currency code
   dueDate: Date
   percentage?: number | null
   installmentNumber?: number | null
@@ -81,6 +83,7 @@ export async function createBookingWithPayments(
           data: {
             bookingId: booking.id,
             amountCents: record.amountCents,
+            currency: record.currency || bookingData.currency || 'USD', // E4-S13: Inherit currency from booking
             dueDate: record.dueDate,
             percentage: record.percentage,
             installmentNumber: record.installmentNumber,

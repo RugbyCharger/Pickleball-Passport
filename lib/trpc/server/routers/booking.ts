@@ -60,6 +60,8 @@ const createPaymentIntentInput = z.object({
   tripId: z.string().cuid().optional(),
   referralCode: z.string().optional(),
   paymentPlan: z.enum(['FULL', 'INSTALLMENT_4', 'FINANCING']).optional().default('FULL'),
+  // E4-S13: Multi-currency support
+  currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD']).optional().default('USD'),
 })
 
 // Accommodation tier pricing imported from @/lib/config/business-constants
@@ -90,7 +92,7 @@ export const bookingRouter = router({
   createPaymentIntent: guestProcedure
     .input(createPaymentIntentInput)
     .mutation(async ({ ctx, input }) => {
-      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode, paymentPlan } = input
+      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode, paymentPlan, currency } = input
 
       // 1. Validate package exists and is active
       const pkg = await ctx.db.package.findFirst({
@@ -407,6 +409,7 @@ export const bookingRouter = router({
         accommodationPrice,
         addOnsTotal,
         totalPrice,
+        currency, // E4-S13: Store currency for booking
         referredBy: referredByPartnerId || null,
         paymentPlan,
         stripeCustomerId,
@@ -445,6 +448,7 @@ export const bookingRouter = router({
           bookingId: booking.id,
           guestEmail,
           guestName,
+          currency: currency.toLowerCase(), // E4-S13: Pass currency to Stripe
           // E4-S6: For installment plans, attach customer and save payment method
           ...(paymentPlan === 'INSTALLMENT_4' && stripeCustomerId && {
             customerId: stripeCustomerId,
@@ -459,6 +463,7 @@ export const bookingRouter = router({
             referralCode: referralCode || '',
             paymentPlan, // E4-S6: Store payment plan in metadata
             totalPrice: totalPrice.toString(), // E4-S6: Store total for reference
+            currency, // E4-S13: Store currency in metadata
             ...(paymentPlan === 'INSTALLMENT_4' && {
               installmentNumber: '1',
               installmentOf: '4',
@@ -472,6 +477,7 @@ export const bookingRouter = router({
           data: {
             bookingId: booking.id,
             amount: paymentAmount, // E4-S6: First installment or full amount
+            currency, // E4-S13: Store currency for payment
             status: 'PENDING',
             stripePaymentIntentId: paymentIntent.paymentIntentId,
             stripeCustomerId, // E4-S6: Store customer ID for installment plans
@@ -620,6 +626,7 @@ export const bookingRouter = router({
           discount,
           paymentPlan, // E4-S6: Payment plan selected
           stripeCustomerId, // E4-S6: Customer ID for installment plans
+          currency, // E4-S13: Currency used for payment
           // Epic 10: Flag to indicate referral was attributed (cookie should be cleared)
           referralAttributed: !!(referredByPartnerId || guestReferrerUserId),
         }

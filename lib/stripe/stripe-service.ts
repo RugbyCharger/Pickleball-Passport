@@ -45,6 +45,7 @@ export interface CreatePaymentIntentParams {
   metadata?: Record<string, string>;
   customerId?: string; // E4-S6: For installment plans
   setupFutureUsage?: 'off_session' | 'on_session'; // E4-S6: Save payment method for future charges
+  currency?: string; // E4-S13: Currency code (lowercase for Stripe)
 }
 
 export interface PaymentIntentResult {
@@ -61,12 +62,12 @@ export interface PaymentIntentResult {
 export async function createPaymentIntent(
   params: CreatePaymentIntentParams
 ): Promise<PaymentIntentResult> {
-  const { amount, bookingId, guestEmail, guestName, metadata = {}, customerId, setupFutureUsage } = params;
+  const { amount, bookingId, guestEmail, guestName, metadata = {}, customerId, setupFutureUsage, currency = 'usd' } = params;
 
   try {
     const paymentIntent = await getStripe().paymentIntents.create({
       amount,
-      currency: 'usd',
+      currency: currency.toLowerCase(), // E4-S13: Stripe requires lowercase currency codes
       automatic_payment_methods: {
         enabled: true,
       },

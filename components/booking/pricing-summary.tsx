@@ -18,8 +18,9 @@
 'use client'
 
 import { useBookingStore } from '@/lib/stores/booking-store'
-import { CheckCircle2, Clock, Home, Plus, ShoppingCart } from 'lucide-react'
-import { useMemo } from 'react'
+import { CheckCircle2, Clock, Home, Plus, ShoppingCart, Globe } from 'lucide-react'
+import { useMemo, useEffect } from 'react'
+import { getExchangeRates, formatCurrency } from '@/lib/services/currency'
 
 // Accommodation tier pricing for display
 const ACCOMMODATION_TIER_NAMES = {
@@ -34,15 +35,6 @@ const ACCOMMODATION_TIER_PRICING = {
   VILLA: 500000, // $5,000
 }
 
-function formatPrice(cents: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(cents / 100)
-}
-
 export function PricingSummary() {
   const {
     selectedPackage,
@@ -52,6 +44,9 @@ export function PricingSummary() {
     currentStep,
     referralDiscount,
     paymentPlan,
+    currency,
+    setExchangeRates,
+    formatDisplayPrice,
     calculateSubtotal,
     calculateSavings,
     calculateTotal,
@@ -67,6 +62,14 @@ export function PricingSummary() {
     calculateCompanionSubtotal,
     calculateCombinedTotal,
   } = useBookingStore()
+
+  // Fetch exchange rates on mount for currency display
+  useEffect(() => {
+    getExchangeRates().then(setExchangeRates).catch(console.error)
+  }, [setExchangeRates])
+
+  // Helper function that uses store's currency
+  const formatPrice = (cents: number) => formatDisplayPrice(cents)
 
   // Calculate prices
   const subtotal = useMemo(() => calculateSubtotal(), [
@@ -521,7 +524,12 @@ export function PricingSummary() {
       {/* Footer */}
       <div className="bg-slate-50 border-t border-slate-200 px-6 py-4">
         <p className="text-xs text-slate-600 text-center">
-          Final price confirmed at checkout. All prices in USD.
+          Final price confirmed at checkout.{' '}
+          {currency !== 'USD' ? (
+            <span>Prices shown in {currency} (converted from USD).</span>
+          ) : (
+            <span>All prices in USD.</span>
+          )}
         </p>
       </div>
     </div>
