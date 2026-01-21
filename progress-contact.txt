@@ -318,3 +318,42 @@ Iteration: 3
   - Mirror email milestone constants (PRE_TRIP_MILESTONES) for consistency
   - Use TypeScript exhaustive check pattern for milestone switch statements
 ---
+
+## 2026-01-21 - US-003
+Iteration: 4
+- Implemented US-003: Group Manager Service
+- Files changed:
+  - lib/whatsapp/group-manager.ts - New group management service module
+- **What was implemented:**
+  - createTripGroup(tripId) - Activates WhatsApp group when trip has 3+ confirmed bookings and invite link is set
+    - For MVP: Manual group creation (admin creates group externally, enters invite link)
+    - Validates minimum booking requirement (MIN_BOOKINGS_FOR_GROUP = 3)
+    - Updates whatsappGroupStatus to ACTIVE and sets whatsappGroupCreatedAt
+  - inviteGuestToGroup(bookingId, guestData) - Sends WhatsApp invitation to guest
+    - Gets guest phone from user.guestProfile.phone
+    - Sends invitation message using generateTripGroupInvitationMessage template
+    - Updates booking whatsappInvitationSentAt and whatsappInvitationStatus (sent/failed)
+  - sendGroupBroadcast(tripId, message) - Broadcasts to all guests in trip's WhatsApp group
+    - Only sends to guests who have joined (whatsappGroupJoinedAt is set)
+    - Sends individual messages (WhatsApp API limitation)
+    - Returns detailed success/failure counts
+  - Helper functions:
+    - buildInvitationData(bookingId) - Builds TripGroupInvitationData from booking
+    - inviteGuestByBookingId(bookingId) - Convenience wrapper for inviteGuestToGroup
+    - markGuestJoined(bookingId) - Updates booking status and increments trip member count
+  - Retry logic with exponential backoff:
+    - MAX_RETRIES = 3
+    - Delays: 1s, 2s, 4s (exponential backoff)
+    - withRetry<T>() generic function for reusable retry logic
+  - Non-blocking error handling - all functions return result objects instead of throwing
+- TypeScript strict mode passed with 0 errors in group-manager.ts
+- ESLint passed with no warnings
+- **Learnings for future iterations:**
+  - Use Prisma _count with nested where for conditional counts (e.g., count confirmed bookings)
+  - GuestProfile has the phone field, accessed via booking.user.guestProfile.phone
+  - BookingStatus.CONFIRMED is the status to check for paid bookings
+  - Return result objects with {success, error} pattern for non-blocking behavior
+  - Use withRetry() helper for exponential backoff with configurable attempts
+  - WhatsApp API doesn't support true group messages - broadcasts send individual messages
+  - Only send broadcasts to guests with whatsappGroupJoinedAt set (confirmed joined)
+---

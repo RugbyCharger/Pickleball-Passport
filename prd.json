@@ -70,7 +70,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "For MVP: Group creation can be manual (admin creates group, enters invite link in admin UI). Automated group creation via API requires WhatsApp Business Platform which may take time to set up."
     },
     {
