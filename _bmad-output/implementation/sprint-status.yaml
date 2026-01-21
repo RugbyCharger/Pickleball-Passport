@@ -67,7 +67,7 @@ development_status:
   2-5-password-reset-flow: done
   2-6-profile-management: done
   2-7-account-deletion: done
-  2-8-session-management: backlog
+  2-8-session-management: done
   epic-2-retrospective: optional
 
   # EPIC 3: Booking System
