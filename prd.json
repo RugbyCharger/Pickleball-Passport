@@ -81,7 +81,7 @@
       "id": "E4-S14-004",
       "title": "Admin Payout Processing UI Update",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "description": "Update admin payout management UI to support Stripe Connect processing",
       "acceptanceCriteria": [
         "Find the admin payout management page (likely in app/dashboard/admin/payouts or similar)",
@@ -101,7 +101,7 @@
       "id": "E4-S14-005",
       "title": "Final Integration and Testing",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "description": "Ensure all components work together and pass quality checks",
       "acceptanceCriteria": [
         "Run npm run typecheck - all TypeScript compiles without errors",
