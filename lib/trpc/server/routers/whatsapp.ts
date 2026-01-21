@@ -9,10 +9,10 @@
 
 import { z } from 'zod';
 import { router, protectedProcedure, adminProcedure } from '../trpc';
-import { markGuestJoined, createTripGroup } from '@/lib/whatsapp/group-manager';
+import { markGuestJoined, createTripGroup, sendGroupBroadcast } from '@/lib/whatsapp/group-manager';
 import { TRPCError } from '@trpc/server';
 import { WhatsAppGroupStatus } from '@prisma/client';
-import { dbLogger } from '@/lib/logger';
+import { dbLogger, whatsappLogger } from '@/lib/logger';
 
 export const whatsappRouter = router({
   /**
@@ -576,6 +576,237 @@ export const whatsappRouter = router({
         tripId,
         status: updatedTrip.whatsappGroupStatus,
         message: 'Group activated successfully',
+      };
+    }),
+
+  /**
+   * Admin: Get trips with active WhatsApp groups for broadcast selection
+   *
+   * Returns a list of trips that have active WhatsApp groups,
+   * optionally filtered by upcoming trips only.
+   */
+  adminGetTripsForBroadcast: adminProcedure
+    .input(
+      z
+        .object({
+          upcomingOnly: z.boolean().default(false),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const now = new Date();
+
+      const where: Record<string, unknown> = {
+        whatsappGroupStatus: 'ACTIVE',
+      };
+
+      // Filter for upcoming trips only
+      if (input?.upcomingOnly) {
+        where.startDate = { gte: now };
+      }
+
+      const trips = await ctx.db.trip.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          destination: true,
+          startDate: true,
+          endDate: true,
+          whatsappGroupMemberCount: true,
+          _count: {
+            select: {
+              bookings: {
+                where: {
+                  status: 'CONFIRMED',
+                  whatsappGroupJoinedAt: { not: null },
+                },
+              },
+            },
+          },
+        },
+        orderBy: [{ startDate: 'asc' }],
+      });
+
+      return trips.map((trip) => ({
+        id: trip.id,
+        name: trip.name,
+        destination: trip.destination,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        memberCount: trip.whatsappGroupMemberCount,
+        joinedCount: trip._count.bookings,
+      }));
+    }),
+
+  /**
+   * Admin: Send broadcast message to a trip's WhatsApp group
+   *
+   * Sends a message to all guests who have joined the WhatsApp group for a trip.
+   * Messages are sent as individual WhatsApp messages (API limitation).
+   */
+  adminSendBroadcast: adminProcedure
+    .input(
+      z.object({
+        tripId: z.string().min(1, 'Trip is required'),
+        message: z.string().min(1, 'Message is required').max(4096, 'Message too long (max 4096 characters)'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { tripId, message } = input;
+
+      // Verify trip exists and has active WhatsApp group
+      const trip = await ctx.db.trip.findUnique({
+        where: { id: tripId },
+        select: {
+          id: true,
+          name: true,
+          whatsappGroupStatus: true,
+        },
+      });
+
+      if (!trip) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Trip not found',
+        });
+      }
+
+      if (trip.whatsappGroupStatus !== 'ACTIVE') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Trip does not have an active WhatsApp group',
+        });
+      }
+
+      // Send broadcast using group manager
+      const result = await sendGroupBroadcast(tripId, message);
+
+      // Log the broadcast
+      whatsappLogger.info(
+        {
+          tripId,
+          tripName: trip.name,
+          adminId: ctx.user.id,
+          totalGuests: result.totalGuests,
+          successfulSends: result.successfulSends,
+          failedSends: result.failedSends,
+          messageLength: message.length,
+        },
+        'Admin sent WhatsApp broadcast'
+      );
+
+      return {
+        success: result.success,
+        tripId,
+        tripName: trip.name,
+        totalGuests: result.totalGuests,
+        successfulSends: result.successfulSends,
+        failedSends: result.failedSends,
+        errors: result.errors,
+      };
+    }),
+
+  /**
+   * Admin: Send broadcast to multiple trips
+   *
+   * Sends the same message to all active WhatsApp groups for the selected trips.
+   * If tripIds is empty, sends to ALL trips with active WhatsApp groups.
+   */
+  adminSendMultiBroadcast: adminProcedure
+    .input(
+      z.object({
+        tripIds: z.array(z.string()).optional(), // Empty array = all active trips
+        upcomingOnly: z.boolean().default(false),
+        message: z.string().min(1, 'Message is required').max(4096, 'Message too long (max 4096 characters)'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { tripIds, upcomingOnly, message } = input;
+      const now = new Date();
+
+      // Build query to get trips
+      const where: Record<string, unknown> = {
+        whatsappGroupStatus: 'ACTIVE',
+      };
+
+      // Filter to specific trips if provided
+      if (tripIds && tripIds.length > 0) {
+        where.id = { in: tripIds };
+      }
+
+      // Filter for upcoming trips only
+      if (upcomingOnly) {
+        where.startDate = { gte: now };
+      }
+
+      const trips = await ctx.db.trip.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+
+      if (trips.length === 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'No trips with active WhatsApp groups found',
+        });
+      }
+
+      // Send broadcasts to all selected trips
+      const results: Array<{
+        tripId: string;
+        tripName: string;
+        success: boolean;
+        successfulSends: number;
+        failedSends: number;
+        totalGuests: number;
+      }> = [];
+
+      for (const trip of trips) {
+        const result = await sendGroupBroadcast(trip.id, message);
+        results.push({
+          tripId: trip.id,
+          tripName: trip.name,
+          success: result.success,
+          successfulSends: result.successfulSends,
+          failedSends: result.failedSends,
+          totalGuests: result.totalGuests,
+        });
+      }
+
+      // Calculate totals
+      const totalTrips = results.length;
+      const successfulTrips = results.filter((r) => r.success).length;
+      const totalSuccessfulSends = results.reduce((sum, r) => sum + r.successfulSends, 0);
+      const totalFailedSends = results.reduce((sum, r) => sum + r.failedSends, 0);
+      const totalGuests = results.reduce((sum, r) => sum + r.totalGuests, 0);
+
+      // Log the multi-broadcast
+      whatsappLogger.info(
+        {
+          adminId: ctx.user.id,
+          totalTrips,
+          successfulTrips,
+          totalGuests,
+          totalSuccessfulSends,
+          totalFailedSends,
+          messageLength: message.length,
+          upcomingOnly,
+        },
+        'Admin sent multi-trip WhatsApp broadcast'
+      );
+
+      return {
+        success: totalFailedSends === 0,
+        totalTrips,
+        successfulTrips,
+        totalGuests,
+        totalSuccessfulSends,
+        totalFailedSends,
+        results,
       };
     }),
 });
