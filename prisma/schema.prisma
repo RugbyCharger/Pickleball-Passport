@@ -224,6 +224,7 @@ model User {
   bookings       Booking[]
   notifications  Notification[]
   testimonials   Testimonial[]
+  guestTestimonials GuestTestimonial[] @relation("GuestTestimonials")
 
   // Guest Referral Relationships (Epic 10)
   referralsMade    GuestReferral[] @relation("ReferrerUser") // Referrals this user made
@@ -1522,6 +1523,88 @@ model ReferralEvent {
   @@index([userId])
   @@index([createdAt])
   @@index([utmSource])
+}
+
+// ============================================================================
+// GUEST TESTIMONIALS (Epic 12-5)
+// ============================================================================
+
+// Guest testimonial types
+enum GuestTestimonialType {
+  TEXT // Written testimonial only
+  VIDEO // Video testimonial
+  BEFORE_AFTER // Before/after photos with text
+  COMBINED // Video + photos + text
+}
+
+// Guest testimonial moderation status
+enum GuestTestimonialStatus {
+  PENDING // Submitted, awaiting review
+  APPROVED // Approved by admin, ready to publish
+  PUBLISHED // Live on website
+  REJECTED // Rejected by admin
+  EDIT_REQUESTED // Admin requested edits from guest
+}
+
+// Guest testimonial submissions for moderation
+model GuestTestimonial {
+  id     String @id @default(cuid())
+
+  // Guest reference
+  guestId String
+  guest   User   @relation("GuestTestimonials", fields: [guestId], references: [id], onDelete: Cascade)
+
+  // Testimonial type and content
+  type    GuestTestimonialType @default(TEXT)
+  content String?              @db.Text // Written testimonial text
+
+  // Video (S3 or Mux)
+  videoUrl      String? // S3 presigned URL or Mux playback URL
+  videoAssetId  String? // Mux asset ID if using Mux
+  videoThumbnail String? // Video thumbnail URL
+
+  // Before/After Photos (S3)
+  beforePhotoUrl String? // S3 URL for before photo
+  afterPhotoUrl  String? // S3 URL for after photo
+
+  // Moderation workflow
+  status           GuestTestimonialStatus @default(PENDING)
+  submittedAt      DateTime               @default(now())
+  reviewedAt       DateTime?
+  reviewedBy       String? // Admin user ID
+  publishedAt      DateTime?
+  rejectionReason  String? // Reason for rejection
+  editRequestNotes String?                @db.Text // Notes for requested edits
+
+  // GDPR Consent
+  consentGiven      Boolean   @default(false) // Guest consented to use
+  consentTimestamp  DateTime? // When consent was given
+  consentIpAddress  String? // IP address when consent given
+
+  // Display info (snapshot from guest profile)
+  guestName     String // Display name
+  guestLocation String? // City, Country
+  packageType   String? // Package they booked
+  tripDate      DateTime? // When they traveled
+
+  // Link to booking/package (optional)
+  bookingId String?
+  packageId String?
+
+  // Public display settings
+  isFeatured Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([guestId])
+  @@index([status])
+  @@index([type])
+  @@index([submittedAt])
+  @@index([publishedAt])
+  @@index([isFeatured])
+  @@index([bookingId])
 }
 
 // ============================================================================
