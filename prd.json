@@ -35,7 +35,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": "Use axios for API calls. Base URL: https://graph.facebook.com/v18.0. Reference lib/sms/twilio.ts for similar third-party API integration pattern."
     },
     {
@@ -52,7 +52,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "WhatsApp uses plain text only (no HTML). Keep messages concise and mobile-friendly."
     },
     {

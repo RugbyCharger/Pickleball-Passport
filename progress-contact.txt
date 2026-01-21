@@ -253,3 +253,68 @@ Iteration: 1
   - WhatsApp invite links follow format: https://chat.whatsapp.com/{inviteCode}
   - Build fails without env vars (STRIPE_SECRET_KEY) but this is pre-existing, not from schema changes
 ---
+
+## 2026-01-21 - US-001
+Iteration: 2
+- Implemented US-001: WhatsApp Business API Client
+- Files changed:
+  - lib/whatsapp/client.ts - New WhatsApp Business API client module
+  - lib/logger/index.ts - Added whatsappLogger export
+  - QUICK_SETUP.md - Added WhatsApp env vars documentation
+  - package.json, pnpm-lock.yaml - Added axios dependency
+- **What was implemented:**
+  - WhatsApp Business API client following Twilio SMS pattern (lib/sms/twilio.ts)
+  - isConfigured() method - checks if WHATSAPP_API_KEY, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_BUSINESS_ACCOUNT_ID are set
+  - sendMessage(to, message) - sends text messages via WhatsApp Cloud API
+  - sendTemplateMessage(to, templateName, parameters, languageCode) - sends pre-approved template messages
+  - sendBatchMessages(messages) - sends multiple messages concurrently
+  - Phone number validation (E.164 format: +15551234567)
+  - Phone number masking for secure logging (shows only last 4 digits)
+  - Non-blocking error handling - returns {success: false, error: string} instead of throwing
+  - Lazy initialization of axios client for better cold start performance
+  - Added axios dependency for HTTP requests
+  - Environment variables: WHATSAPP_API_KEY, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_BUSINESS_ACCOUNT_ID, WHATSAPP_WEBHOOK_VERIFY_TOKEN
+- TypeScript strict mode passed with 0 errors in WhatsApp files
+- **Learnings for future iterations:**
+  - WhatsApp Cloud API base URL: https://graph.facebook.com/v18.0
+  - Endpoint for sending: POST /{phone_number_id}/messages
+  - Phone numbers must have '+' prefix for internal validation but stripped for API calls
+  - Template messages require pre-approved templates in WhatsApp Business Manager
+  - Template parameters are passed as ordered array in body.parameters component
+  - Return result objects instead of throwing errors for non-blocking behavior
+  - .env.example is gitignored in this project, document env vars in QUICK_SETUP.md instead
+---
+
+## 2026-01-21 - US-002
+Iteration: 3
+- Implemented US-002: WhatsApp Message Templates
+- Files changed:
+  - lib/whatsapp/templates/trip-group-invitation.ts - Invitation and reminder messages
+  - lib/whatsapp/templates/group-welcome-message.ts - Welcome, announcement, and group intro messages
+  - lib/whatsapp/templates/milestone-messages.ts - Pre-trip milestone messages (60/30/14/7/1 days)
+  - lib/whatsapp/templates/index.ts - Barrel export for all templates
+- **What was implemented:**
+  - TripGroupInvitationData interface with guestName, tripName, destination, dates, inviteLink, memberCount
+  - generateTripGroupInvitationMessage() - Full invitation with trip details and WhatsApp group link
+  - generateTripGroupReminderMessage() - Shorter follow-up reminder
+  - GroupWelcomeMessageData interface for welcome messages
+  - generateGroupWelcomeMessage() - Personalized welcome for new group members
+  - generateNewMemberAnnouncementMessage() - Group announcement when new member joins
+  - generateGroupIntroMessage() - Pinned intro message for new groups with guidelines
+  - WHATSAPP_MILESTONES constant matching email sequence (60/30/14/7/1 days)
+  - generate60DaysMessage(), generate30DaysMessage(), generate14DaysMessage(), generate7DaysMessage(), generate1DayMessage()
+  - generateMilestoneMessage(data, milestone) - Factory function for any milestone
+  - getMilestoneForDays() - Get milestone key for a given days count
+  - getMilestonesInRange() - Get all milestones within a date range
+  - All messages are plain text with emojis, optimized for WhatsApp mobile format
+- TypeScript strict mode passed with 0 errors in new files
+- ESLint passed with no warnings
+- **Learnings for future iterations:**
+  - WhatsApp templates are plain text only, no HTML formatting
+  - Use *bold* for emphasis in WhatsApp (asterisks)
+  - Emojis are essential for engagement on WhatsApp
+  - Keep messages concise and mobile-friendly
+  - Export types along with functions for strong typing
+  - Mirror email milestone constants (PRE_TRIP_MILESTONES) for consistency
+  - Use TypeScript exhaustive check pattern for milestone switch statements
+---
