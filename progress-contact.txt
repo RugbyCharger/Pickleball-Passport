@@ -387,3 +387,38 @@ Iteration: 5
   - Can track group joins via button/interactive replies or keyword detection in text messages
   - Match phone to guestProfile.phone to find booking and update whatsappGroupJoinedAt
 ---
+
+## 2026-01-21 - US-005
+Iteration: 6
+- Implemented US-005: Guest Dashboard WhatsApp Card
+- Files changed:
+  - components/guest/whatsapp-group-card.tsx - New WhatsApp group card component
+  - app/(dashboard)/dashboard/whatsapp-groups-section.tsx - Section wrapper for dashboard
+  - app/(dashboard)/dashboard/page.tsx - Integrated WhatsApp groups section
+  - lib/trpc/server/routers/whatsapp.ts - New tRPC router with guest procedures
+  - lib/trpc/server/root.ts - Registered whatsapp router
+- **What was implemented:**
+  - WhatsApp group card component with:
+    - Group info display (trip name, destination, dates, member count)
+    - "Join WhatsApp Group" button that opens invite link in new tab
+    - QR code generation using qrcode.react for mobile scanning
+    - "Joined" badge for guests who have already joined
+    - Click tracking that marks guest as joined via tRPC mutation
+    - Responsive design with green theme styling
+  - WhatsApp tRPC router with:
+    - getGuestWhatsAppGroup query - fetches group info for booking
+    - markGroupJoined mutation - tracks join button clicks
+    - Both procedures require authentication and verify booking ownership
+  - Dashboard integration:
+    - Extended trip query to include WhatsApp fields
+    - WhatsAppGroupsSection component filters for active groups
+    - Shows card only for confirmed bookings with active WhatsApp groups
+- TypeScript strict mode passed with 0 errors in new files
+- ESLint passed with no warnings in new files
+- **Learnings for future iterations:**
+  - Use qrcode.react (already in project) for QR code generation: <QRCodeSVG value={url} size={160} />
+  - Filter server-side for performance (check trip.whatsappGroupInviteLink and status)
+  - Client component handles its own data fetching via tRPC for interactivity
+  - Use window.open(url, '_blank', 'noopener,noreferrer') for secure external links
+  - markGuestJoined from group-manager.ts handles updating booking AND incrementing trip member count
+---
