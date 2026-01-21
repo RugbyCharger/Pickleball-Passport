@@ -1,282 +1,48 @@
+# Ralph Progress Log
+Started: Wed Jan 21 22:54:26 +07 2026
+---
+
 ## Codebase Patterns
-- Prisma schema uses cuid() for IDs
-- Enum naming convention: CamelCase for enum types (e.g., GuestReferralStatus)
-- Always add appropriate indexes for foreign keys and frequently queried fields
-- User model uses Clerk user ID as @id (not cuid)
-- Run `npx prisma generate` after schema changes
-- Pre-existing TypeScript errors exist in test files - focus on new code compiling
-- Pre-existing lint warnings exist (unused imports, no-img-element)
-- Tests failing for STRIPE_SECRET_KEY are environment-related, not code issues
-- Cookie tracking (referral, UTM): Use middleware.ts for site-wide capture, parse in tRPC with ctx.headers.get('cookie')
-- UTM params: Use first-touch attribution (don't overwrite existing cookies)
+- Use `logStripeError(error, message, context)` for Stripe errors (no logger param)
+- Use `stripeLogger.info/warn` for Stripe-related logging
+- Admin mutations use `adminProcedure` with `z.object()` input validation
+- Payout status values: PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED
+- Partner Stripe Connect fields on PartnerProfile: stripeConnectAccountId, stripeConnectOnboardingComplete, stripeConnectAccountType, stripeConnectPayoutsEnabled
 
 ---
 
-## 2026-01-21 - US-000: Prisma Schema Updates for Guest Referral System
+## 2026-01-21 22:56 - E4-S14-001
 Iteration: 1
-- Implemented GuestReferralStatus enum (CLICKED, APPLIED, BOOKED, COMPLETED)
-- Implemented ReferralEventType enum (CLICK, APPLICATION, BOOKING, COMPLETION)
-- Added GuestReferral model with referrer/referred User relationships
-- Added ReferralEvent model for tracking events with UTM params
-- Added referralCode (unique, nullable) and referralPointsBalance to User model
-- Added referralCodeClickCount to PartnerProfile model
-- All new fields have appropriate indexes
-
-Files changed:
-- prisma/schema.prisma
-
-**Learnings for future iterations:**
-- User model uses Clerk ID as primary key (String @id), not auto-generated cuid
-- GuestReferral uses @unique on referredUserId (one-to-one relationship)
-- ReferralEvent is independent - no foreign key to User to allow anonymous tracking
-- prisma db push requires DATABASE_URL and DIRECT_URL env vars (may fail locally)
-- Cookie name for referrals: `referral_code` (used throughout the referral system)
-- Next.js 14+ route params are async: use `{ params }: { params: Promise<{ code: string }> }` and `await params`
+- Implemented processStripeConnectPayout admin mutation endpoint
+- Files changed: lib/trpc/server/routers/admin.ts
+- **Learnings for future iterations:**
+  - `logStripeError` only takes 2-3 args (error, message, context?) - NOT a logger as first param
+  - Existing lint warnings in admin.ts (guestName unused) are pre-existing, don't need to fix them
+  - TypeScript errors in test files and some components are pre-existing
+  - PartnerPayout includes `partner: PartnerProfile` via Prisma relation
 ---
 
-## 2026-01-21 - US-001: Referral Link Tracking (Cookie-Based)
+## 2026-01-21 23:01 - E4-S14-002
 Iteration: 2
-- Created /r/[code] dynamic route at app/r/[code]/route.ts
-- Sets referral_code cookie with 30-day expiration (httpOnly, secure, sameSite: lax)
-- Stores click event in ReferralEvent table with IP address, user agent, UTM params
-- Increments referralCodeClickCount on PartnerProfile for partner codes
-- First-click attribution: checks existing cookie and doesn't overwrite
-- Validates codes against both PartnerProfile.referralCode and User.referralCode
-- Graceful error handling: invalid codes redirect to homepage without errors
-
-Files changed:
-- app/r/[code]/route.ts (new)
-
-**Learnings for future iterations:**
-- Route params in Next.js App Router are now async (Promise<{ param: type }>)
-- Use x-forwarded-for header (split by comma for first IP) for IP address extraction
-- Partner codes tracked via PartnerProfile.referralCodeClickCount, guest codes tracked via ReferralEvent only
-- Cookie settings: httpOnly for security, secure in production, sameSite: lax for redirect compatibility
+- Implemented Stripe Connect webhook handlers for account.updated, transfer.created, and transfer.reversed events
+- Files changed: app/api/webhooks/stripe/route.ts
+- **Learnings for future iterations:**
+  - Existing webhook handler has good pattern: switch/case on event.type, handler functions are async, log errors but don't throw (acknowledge webhook)
+  - Use `stripeLogger.info/warn/error` for Stripe-related logging (imported from @/lib/logger)
+  - parseAccountUpdatedEvent and parseTransferEvent are helper functions in stripe-connect.ts for extracting typed data from Stripe events
+  - Pre-existing build errors exist (missing @tiptap packages, @dnd-kit packages, db export issues) - these are unrelated to current work
 ---
 
-## 2026-01-21 - US-002: Referral Attribution at Application
+## 2026-01-21 23:09 - E4-S14-003
 Iteration: 3
-- Added referralCode field to Application model in Prisma schema with index
-- Modified application.create mutation to read referral_code cookie from headers
-- Created ReferralEvent with type APPLICATION when valid referral code exists
-- Awards 100 points to referrer: passportPoints for partners, referralPointsBalance for guests
-- Sends notification email to partner referrers via existing template
-- Created /api/referral/clear-cookie endpoint to delete cookie after successful attribution
-- Updated application-form.tsx to call clear-cookie endpoint when referralAttributed is true
-
-Files changed:
-- prisma/schema.prisma (added referralCode to Application model)
-- lib/trpc/server/routers/application.ts (referral attribution logic)
-- components/forms/application-form.tsx (cookie clearing after submission)
-- app/api/referral/clear-cookie/route.ts (new)
-
-**Learnings for future iterations:**
-- tRPC context includes headers, so cookies can be parsed from ctx.headers.get('cookie')
-- httpOnly cookies cannot be cleared from client JS, need server-side endpoint
-- Partner referrers receive passportPoints, guest referrers receive referralPointsBalance
-- Always validate referral codes against both PartnerProfile and User tables
-- Use try/catch around referral logic to not fail the main operation on referral errors
----
-
-## 2026-01-21 - US-003: Referral Attribution at Booking
-Iteration: 4
-- Modified createPaymentIntent mutation to check for referral_code cookie
-- Manual referral code input takes precedence over cookie when both exist
-- Added validateAnyReferralCode endpoint to validate both partner and guest codes
-- Updated referral-code-input.tsx to accept guest codes (FIRSTNAME-YEAR format)
-- Creates ReferralEvent with type BOOKING on successful attribution
-- Awards points based on package value: 1000 pts < $15K, 1500 pts >= $15K
-- Updates booking.referredBy with the referral code
-- Creates GuestReferral record with status BOOKED
-- Sends notification email to guest referrer
-- Added GUEST_REFERRAL_POINTS_CONFIG and calculateGuestReferralPoints helper
-- Created guest-referral-booking.ts email template
-
-Files changed:
-- lib/trpc/server/routers/booking.ts (referral attribution logic in createPaymentIntent)
-- lib/trpc/server/routers/partner.ts (validateAnyReferralCode endpoint)
-- components/booking/referral-code-input.tsx (support both partner and guest codes)
-- lib/config/business-constants.ts (GUEST_REFERRAL_POINTS_CONFIG)
-- lib/email/templates/guest-referral-booking.ts (new)
-
-**Learnings for future iterations:**
-- Booking referral attribution happens in createPaymentIntent, not after payment
-- Partner codes provide discounts, guest codes only provide attribution (no discount)
-- When checking both partner and guest codes, use Promise.all for parallel queries
-- referralAttributed flag is returned to client to indicate cookie should be cleared
-- Guest referral points use a different calculation than partner points (flat 1000/1500 vs scaled)
----
-
-## 2026-01-21 - US-004: Guest Referral Code Generation
-Iteration: 5
-- Added getMyReferralCode tRPC procedure: returns referral code, shareable link, points balance
-- Added getReferralStats tRPC procedure: returns clicks, applications, bookings, completed stats with referral list
-- Added generateReferralCode tRPC procedure: generates code after first trip completes (FIRSTNAME-YEAR format)
-- Added checkReferralCodeEligibility tRPC procedure: checks if user can get a referral code
-- Created guest-referral-code.ts email template for notifying guests of their new referral code
-- Created /dashboard/referrals page for guests to view their code, stats, and referrals list
-- Copy to clipboard functionality for both referral code and shareable link
-- Locked state UI for users who haven't completed a trip yet
-
-Files changed:
-- lib/trpc/server/routers/user.ts (added 4 new procedures)
-- lib/email/templates/guest-referral-code.ts (new)
-- app/(dashboard)/dashboard/referrals/page.tsx (new)
-
-**Learnings for future iterations:**
-- Import sendEmail from '@/lib/email/send-email', not '@/lib/email' (no index file)
-- Guest referral code format: FIRSTNAME-YEAR (e.g., SUSAN-2026), with counter if duplicate
-- Use 'const' instead of 'let' for variables that are never reassigned (lint rule)
-- User referral procedures are in user router, not partner router
-- Eligibility check: user must have at least one COMPLETED booking to get a referral code
----
-
-## 2026-01-21 - US-005: Post-Trip Completion Bonus
-Iteration: 6
-- Created daily cron job at /api/cron/referral-completion-bonus
-- Finds trips that ended yesterday and processes completed bookings with referredBy
-- Awards 500 bonus points to referrers (passportPoints for partners, referralPointsBalance for guests)
-- Creates ReferralEvent with type COMPLETION
-- Updates GuestReferral status to COMPLETED
-- Sends notification email to referrer with completion bonus details
-- Prevents duplicate bonus awards by checking existing COMPLETION events for same user/code
-- Added COMPLETION_BONUS_POINTS to GUEST_REFERRAL_POINTS_CONFIG
-
-Files changed:
-- app/api/cron/referral-completion-bonus/route.ts (new)
-- lib/email/templates/guest-referral-completion.ts (new)
-- lib/config/business-constants.ts (added COMPLETION_BONUS_POINTS)
-
-**Learnings for future iterations:**
-- Cron jobs use CRON_SECRET for authorization (Bearer token in header)
-- Use prisma.$transaction for atomic operations when awarding points and updating status
-- To find trips that ended yesterday, use startDate/endDate with date range (0:00:00 to 23:59:59)
-- Both partner and guest referrers get completion bonus (check both PartnerProfile and User tables)
-- Email sending should be in try/catch to not fail the main operation if email fails
----
-
-## 2026-01-21 - US-006: Referral Analytics Admin Dashboard
-Iteration: 7
-- Created /dashboard/admin/referral-analytics page for admins
-- Added three new tRPC admin procedures:
-  - admin.getReferralFunnelStats: Returns clicks, applications, bookings, completed counts with conversion rates
-  - admin.getTopReferrers: Returns top 10 referrers (partners and guests combined) sorted by bookings then points
-  - admin.getReferralSourceBreakdown: Returns breakdown by partner vs guest source with percentages
-- Implemented referral funnel visualization with stages: Clicks -> Applications -> Bookings -> Completed
-- Added conversion rate calculations at each funnel stage
-- Created visual source breakdown bar showing partner vs guest referral distribution
-- Implemented date range filter (All Time, Last 90 Days, Last 30 Days, Last 7 Days)
-- Displayed total points awarded summary across all referrers
-
-Files changed:
-- lib/trpc/server/routers/admin.ts (added 3 new procedures for referral analytics)
-- app/(dashboard)/dashboard/admin/referral-analytics/page.tsx (new)
-
-**Learnings for future iterations:**
-- Admin analytics procedures use adminProcedure for authorization
-- ReferralEvent.eventType enum values: CLICK, APPLICATION, BOOKING, COMPLETION
-- To combine partner and guest referrers, query both tables separately and merge results
-- Use groupBy with _count for aggregating events by code
-- Partner codes have referralCodeClickCount on PartnerProfile, guest codes track via ReferralEvent only
-- Raw SQL queries can be used for complex aggregations (e.g., summing points across tables)
----
-
-## 2026-01-21 - US-007: UTM Parameter Tracking
-Iteration: 8
-- Added utmSource, utmMedium, utmCampaign fields to Application and Booking models
-- Added @@index([utmSource]) to both models for efficient filtering
-- Modified middleware.ts to capture UTM params from URL and store in cookies
-- UTM cookies use 30-day expiration with first-touch attribution (doesn't overwrite existing)
-- Updated application.create to extract UTM params from cookies and store in record
-- Updated booking.createPaymentIntent to extract UTM params from cookies and store in record
-- Added admin tRPC procedures: getUtmBreakdown, getUtmSourceList, getReferralFunnelStatsByUtm
-- Updated referral analytics dashboard with UTM breakdown table and filter
-
-Files changed:
-- prisma/schema.prisma (added UTM fields to Application and Booking)
-- middleware.ts (added UTM cookie capture logic)
-- lib/trpc/server/routers/application.ts (extract and store UTM params)
-- lib/trpc/server/routers/booking.ts (extract and store UTM params)
-- lib/trpc/server/routers/admin.ts (added 3 UTM analytics procedures)
-- app/(dashboard)/dashboard/admin/referral-analytics/page.tsx (UTM breakdown section and filter)
-
-**Learnings for future iterations:**
-- Middleware runs on all routes, good place for global cookie/tracking logic
-- UTM cookies should NOT be httpOnly since they need to be read by server-side tRPC
-- First-touch attribution: check if cookie exists before setting a new one
-- Use groupBy with Prisma to aggregate by UTM source across event types
-- To add filters to existing queries, pass optional params and spread them into where clause
-- Reuse existing components (DateRangeFilter) for consistency in admin pages
----
-
-## 2026-01-21 - US-008: Unit Tests for Referral System
-Iteration: 9
-- Created 127 new tests across 4 test files covering all Epic 10 referral functionality
-- Referral link tests: code validation, click tracking, UTM capture, first-click attribution
-- Application attribution tests: event creation, points awarding
-- Booking attribution tests: points calculation (1000/<$15K, 1500/>=$15K), GuestReferral creation
-- Guest referral code generation tests: FIRSTNAME-YEAR format, eligibility, uniqueness
-- Completion bonus cron tests: date calculation, duplicate prevention, transaction handling
-- Referral analytics tests: funnel stats, conversion rates, top referrers, source breakdown
-- UTM tracking tests: capture, breakdown processing, per-source conversion rates
-- Email template tests: booking notification, code generation, completion bonus emails
-- Business constants tests: calculateGuestReferralPoints function, threshold boundaries
-
-Files changed:
-- lib/trpc/server/routers/__tests__/referral.test.ts (new - 41 tests)
-- app/api/cron/__tests__/referral-completion-bonus.test.ts (new - 24 tests)
-- lib/email/templates/__tests__/guest-referral-templates.test.ts (new - 34 tests)
-- lib/config/__tests__/guest-referral-points.test.ts (new - 28 tests)
-
-**Learnings for future iterations:**
-- Use vi.mock('@/lib/db') pattern for mocking Prisma in tests
-- Mock functions return value with vi.mocked(fn).mockResolvedValue() for async
-- Test files follow existing patterns with `as any` for complex mock returns
-- Pre-existing lint errors with @typescript-eslint/no-explicit-any are acceptable in test files
-- Focus on testing logic/calculations, not full database integration
----
-## 2026-01-21 - US-009: Final Integration and PR Creation
-Iteration: 10
-- Verified all TypeScript compiles (pre-existing errors in unrelated test files only)
-- Verified ESLint passes (pre-existing warnings in unrelated files only)
-- All 127 Epic 10 referral tests pass with vitest
-- Updated sprint-status.yaml to mark all Epic 10 stories as done
-- Created PR #12: feat(E10): Guest Referral System - Cookie Tracking, Attribution, Analytics
-- PR includes comprehensive summary of all 9 user stories implemented
-
-Files changed:
-- _bmad-output/implementation/sprint-status.yaml (updated Epic 10 status to done)
-
-**Learnings for future iterations:**
-- Pre-existing TypeScript errors in test files are environment-related (STRIPE_SECRET_KEY, db exports)
-- Pre-existing lint warnings are acceptable as long as new code is clean
-- Epic 10 used a different story naming scheme in PRD vs sprint-status - updated to match implementation
-- PR creation with gh cli requires --title and --body flags, use HEREDOC for multiline body
-
----
-
-## EPIC 10 COMPLETE
-All 10 user stories (US-000 through US-009) have been implemented and pass.
-PR created: https://github.com/RugbyCharger/Pickleball-Passport/pull/12
-
----
----
-
-# E4-S14: Stripe Connect Partner Payouts
-Started: 2026-01-21
-
-## Additional Patterns for Stripe Connect
-- Stripe Connect service is at lib/stripe/stripe-connect.ts
-- Partner Stripe Connect tRPC endpoints already added: getStripeConnectStatus, createStripeConnectAccount, getStripeConnectOnboardingLink, getStripeConnectDashboardLink
-- PartnerProfile has Stripe Connect fields: stripeConnectAccountId, stripeConnectOnboardingComplete, stripeConnectAccountType, stripeConnectPayoutsEnabled
-- PartnerPayout has Stripe fields: stripeTransferId, stripePayoutId, payoutMethod ('manual' or 'stripe_connect'), stripeError
-- Use adminProcedure for admin-only endpoints in admin.ts
-- Existing webhook handler at app/api/webhooks/stripe/route.ts uses Stripe webhook signature verification
-- Partner payouts page is at app/dashboard/partner/payouts/page.tsx
-
-## Pre-completed Work (Before Ralph)
-- Prisma schema updated with all stripeConnect fields
-- lib/stripe/stripe-connect.ts service fully implemented with: createConnectAccount, createAccountLink, getConnectAccountStatus, createLoginLink, createTransfer, getPlatformBalance, parseAccountUpdatedEvent, parseTransferEvent
-- Partner tRPC endpoints added to lib/trpc/server/routers/partner.ts
-
+- Created StripeConnectCard component for partner Stripe Connect onboarding UI
+- Added component to existing partner payouts page at app/(dashboard)/dashboard/partner/payouts/page.tsx
+- Implemented URL param handling for stripe_return and stripe_refresh params
+- Files changed: app/(dashboard)/dashboard/partner/payouts/page.tsx
+- **Learnings for future iterations:**
+  - Partner payouts page is at app/(dashboard)/dashboard/partner/payouts/page.tsx (not app/dashboard/partner/payouts/page.tsx as PRD suggested)
+  - Page uses custom card styles (rounded-lg border border-slate-200 bg-white p-6 shadow-sm) not shadcn/ui Card
+  - tRPC mutations: createStripeConnectAccount returns { onboardingUrl }, getStripeConnectOnboardingLink returns { onboardingUrl }, getStripeConnectDashboardLink returns { dashboardUrl }
+  - Pre-existing lint error in payouts page: unescaped apostrophe in "you're" - not related to current work
+  - Use useMemo for derived state from searchParams to avoid React setState-in-effect lint errors
 ---

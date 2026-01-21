@@ -23,7 +23,7 @@
       "id": "E4-S14-001",
       "title": "Admin Stripe Connect Payout Processing Endpoint",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "description": "Add tRPC endpoint for admins to process partner payouts via Stripe Connect transfer",
       "acceptanceCriteria": [
         "Add import for createTransfer, getPlatformBalance from '@/lib/stripe/stripe-connect' to admin.ts",
@@ -44,7 +44,7 @@
       "id": "E4-S14-002",
       "title": "Stripe Connect Webhook Handler",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "description": "Handle Stripe Connect webhook events to update partner onboarding status and transfer status",
       "acceptanceCriteria": [
         "Read existing webhook handler at app/api/webhooks/stripe/route.ts",
@@ -62,7 +62,7 @@
       "id": "E4-S14-003",
       "title": "Partner Stripe Connect Onboarding UI",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "description": "Create UI components for partners to connect their Stripe account on the payouts page",
       "acceptanceCriteria": [
         "Read the existing partner payouts page at app/dashboard/partner/payouts/page.tsx",
