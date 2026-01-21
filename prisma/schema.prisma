@@ -1876,3 +1876,50 @@ model BlogPostVersion {
   @@index([versionNumber])
   @@index([createdAt])
 }
+
+// ============================================================================
+// FAQ MANAGEMENT (Epic 12, Story 12-4)
+// ============================================================================
+
+// FAQ Category for organizing FAQs
+model FAQCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique // URL-friendly identifier
+  description String?
+  sortOrder   Int    @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  faqs FAQ[]
+
+  @@index([slug])
+  @@index([sortOrder])
+}
+
+// FAQ items with rich text answers
+model FAQ {
+  id          String  @id @default(cuid())
+  question    String  // The FAQ question
+  answer      Json    // Rich text answer in TipTap JSON format
+  answerPlain String? @db.Text // Plain text extraction for search
+  sortOrder   Int     @default(0) // For custom ordering within category
+  isPublished Boolean @default(false) // Draft/publish status
+
+  // Category relationship
+  categoryId String?
+  category   FAQCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@index([createdAt])
+}
