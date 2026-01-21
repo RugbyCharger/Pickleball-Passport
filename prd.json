@@ -197,7 +197,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Can be triggered by cron job (Vercel cron) or manual admin trigger for testing. Add whatsappMilestonesSent Json field to Booking model if needed to track sent milestones."
     },
     {

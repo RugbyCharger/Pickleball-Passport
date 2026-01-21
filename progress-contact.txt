@@ -546,3 +546,32 @@ Iteration: 10
   - booking.trip is included in the Prisma query (line 178-195), includes whatsappGroupStatus
   - Notification preferences (Story 11-12) should gate WhatsApp sending when implemented
 ---
+
+## 2026-01-21 - US-010
+Iteration: 11
+- Implemented US-010: Pre-Trip Milestone Messages Job
+- Files changed:
+  - lib/jobs/whatsapp-milestone-messages.ts - New milestone messages job service
+  - app/api/cron/whatsapp-milestones/route.ts - Cron endpoint for scheduled execution
+- **What was implemented:**
+  - checkAndSendMilestoneMessages() function that:
+    - Checks if WhatsApp is configured
+    - Processes all 5 milestones (60, 30, 14, 7, 1 day)
+    - Finds bookings where guest has joined WhatsApp group
+    - Checks trip starts on milestone day
+    - Skips if milestone already sent (via whatsappMilestonesSent JSON)
+    - Sends message using templates from milestone-messages.ts
+    - Updates booking with sent milestone
+    - Returns detailed result with counts per milestone
+  - Cron route with CRON_SECRET authorization
+  - Matches pattern from send-pre-trip-emails service
+  - Uses whatsappMilestonesSent field (already added in US-000 schema)
+- TypeScript strict mode passed with 0 errors in new files
+- ESLint passed with no warnings in new files
+- **Learnings for future iterations:**
+  - Follow existing cron job patterns (CRON_SECRET auth, startTime tracking)
+  - date-fns addDays, startOfDay, endOfDay for date range queries
+  - JSON field type for flexible milestone tracking: { "60_DAYS": true, ... }
+  - Cast JSON fields from Prisma: (booking.whatsappMilestonesSent as Record<string, boolean>)
+  - Use OR filter for gift booking handling: [{ isGift: false }, { isGift: true, giftStatus: 'ACCEPTED' }]
+---
