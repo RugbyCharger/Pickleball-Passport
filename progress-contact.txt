@@ -1,0 +1,31 @@
+## Codebase Patterns
+- Prisma schema uses cuid() for IDs
+- Enum naming convention: CamelCase for enum types (e.g., GuestReferralStatus)
+- Always add appropriate indexes for foreign keys and frequently queried fields
+- User model uses Clerk user ID as @id (not cuid)
+- Run `npx prisma generate` after schema changes
+- Pre-existing TypeScript errors exist in test files - focus on new code compiling
+- Pre-existing lint warnings exist (unused imports, no-img-element)
+- Tests failing for STRIPE_SECRET_KEY are environment-related, not code issues
+
+---
+
+## 2026-01-21 - US-000: Prisma Schema Updates for Guest Referral System
+Iteration: 1
+- Implemented GuestReferralStatus enum (CLICKED, APPLIED, BOOKED, COMPLETED)
+- Implemented ReferralEventType enum (CLICK, APPLICATION, BOOKING, COMPLETION)
+- Added GuestReferral model with referrer/referred User relationships
+- Added ReferralEvent model for tracking events with UTM params
+- Added referralCode (unique, nullable) and referralPointsBalance to User model
+- Added referralCodeClickCount to PartnerProfile model
+- All new fields have appropriate indexes
+
+Files changed:
+- prisma/schema.prisma
+
+**Learnings for future iterations:**
+- User model uses Clerk ID as primary key (String @id), not auto-generated cuid
+- GuestReferral uses @unique on referredUserId (one-to-one relationship)
+- ReferralEvent is independent - no foreign key to User to allow anonymous tracking
+- prisma db push requires DATABASE_URL and DIRECT_URL env vars (may fail locally)
+---
