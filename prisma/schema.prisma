@@ -679,6 +679,9 @@ model Application {
   // Step 5: Discovery
   referralSource String // How did you hear about us?
 
+  // Guest Referral Attribution (Epic 10)
+  referralCode String? // Referral code used when submitting application (from cookie)
+
   // Admin Notes
   adminNotes String? @db.Text
 
@@ -688,6 +691,7 @@ model Application {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([referralCode])
 }
 
 // ============================================================================

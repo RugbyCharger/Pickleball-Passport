@@ -2,18 +2,25 @@
  * Application Router
  *
  * tRPC procedures for guest application operations
+ * Includes Epic 10 referral attribution at application submission
  */
 
 import { z } from 'zod';
-import { router, publicProcedure, guestProcedure } from '../trpc';
+import { router, guestProcedure } from '../trpc';
 import { prisma } from '@/lib/db';
 import { TRPCError } from '@trpc/server';
+import { ReferralEventType } from '@prisma/client';
 import { sendEmail } from '@/lib/email/sendgrid';
 import { generateApplicationConfirmationEmail } from '@/lib/email/templates/application-confirmation';
+import { generatePartnerReferralApplicationEmail } from '@/lib/email/templates/partner-referral-application';
+
+const REFERRAL_COOKIE_NAME = 'referral_code';
+const APPLICATION_REFERRAL_POINTS = 100; // Points awarded for application submission
 
 export const applicationRouter = router({
   /**
    * Create a new application
+   * Includes Epic 10 referral attribution tracking
    */
   create: guestProcedure
     .input(
@@ -55,7 +62,24 @@ export const applicationRouter = router({
 
         const userId = ctx.user.id;
 
-        // Create application
+        // Epic 10: Extract referral code from cookie
+        let referralCode: string | null = null;
+        let referralAttributed = false;
+
+        // Parse cookies from headers
+        const cookieHeader = ctx.headers.get('cookie');
+        if (cookieHeader) {
+          const cookies = cookieHeader.split(';').map(c => c.trim());
+          for (const cookie of cookies) {
+            const [name, value] = cookie.split('=');
+            if (name === REFERRAL_COOKIE_NAME && value) {
+              referralCode = decodeURIComponent(value);
+              break;
+            }
+          }
+        }
+
+        // Create application with referral code if present
         const application = await prisma.application.create({
           data: {
             userId,
@@ -73,9 +97,108 @@ export const applicationRouter = router({
             travelingAlone: input.travelingAlone,
             budgetRange: input.budgetRange,
             referralSource: input.referralSource,
+            referralCode: referralCode, // Epic 10: Store referral code
             status: 'SUBMITTED',
           },
         });
+
+        // Epic 10: Process referral attribution if we have a code
+        if (referralCode) {
+          try {
+            // Validate the referral code - check both partner profiles and user referral codes
+            const [partnerProfile, userWithReferralCode] = await Promise.all([
+              prisma.partnerProfile.findUnique({
+                where: { referralCode: referralCode },
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      email: true,
+                    }
+                  }
+                }
+              }),
+              prisma.user.findUnique({
+                where: { referralCode: referralCode },
+                select: { id: true, email: true },
+              }),
+            ]);
+
+            const isPartnerReferral = partnerProfile !== null;
+            const isGuestReferral = userWithReferralCode !== null;
+
+            if (isPartnerReferral || isGuestReferral) {
+              // Determine the referrer user ID
+              const referrerUserId = isPartnerReferral
+                ? partnerProfile!.userId
+                : userWithReferralCode!.id;
+
+              // Create ReferralEvent with type APPLICATION
+              await prisma.referralEvent.create({
+                data: {
+                  referralCode: referralCode,
+                  eventType: ReferralEventType.APPLICATION,
+                  userId: userId, // The applicant's user ID
+                },
+              });
+
+              // Award points to the referrer
+              if (isPartnerReferral) {
+                // Award to partner's passportPoints
+                await prisma.partnerProfile.update({
+                  where: { id: partnerProfile!.id },
+                  data: {
+                    passportPoints: { increment: APPLICATION_REFERRAL_POINTS },
+                  },
+                });
+
+                // Send notification email to partner (non-blocking)
+                try {
+                  const guestInitials = `${input.firstName[0]}.${input.lastName[0]}.`;
+                  const emailContent = generatePartnerReferralApplicationEmail({
+                    partnerName: partnerProfile!.user?.email?.split('@')[0] || 'Partner',
+                    partnerEmail: partnerProfile!.user?.email || '',
+                    guestInitials,
+                    applicationDate: new Date().toISOString(),
+                    potentialPoints: 1000, // Estimated booking points
+                    currentTier: 'BRONZE', // Default, could be fetched from profile
+                  });
+
+                  if (partnerProfile!.user?.email) {
+                    await sendEmail({
+                      to: partnerProfile!.user.email,
+                      subject: emailContent.subject,
+                      html: emailContent.html,
+                      text: emailContent.text,
+                    });
+                  }
+                } catch (emailError) {
+                  console.error('[Referral] Failed to send partner notification email:', emailError);
+                }
+              } else {
+                // Award to guest's referralPointsBalance
+                await prisma.user.update({
+                  where: { id: referrerUserId },
+                  data: {
+                    referralPointsBalance: { increment: APPLICATION_REFERRAL_POINTS },
+                  },
+                });
+              }
+
+              referralAttributed = true;
+              console.log(
+                `[Referral] Application attribution: code=${referralCode}, ` +
+                `type=${isPartnerReferral ? 'partner' : 'guest'}, ` +
+                `points=${APPLICATION_REFERRAL_POINTS}, applicantId=${userId}`
+              );
+            } else {
+              console.log(`[Referral] Invalid referral code at application: ${referralCode}`);
+            }
+          } catch (referralError) {
+            // Log but don't fail the application for referral errors
+            console.error('[Referral] Error processing referral attribution:', referralError);
+          }
+        }
 
         // Send confirmation email (non-blocking)
         try {
@@ -102,6 +225,7 @@ export const applicationRouter = router({
           success: true,
           applicationId: application.id,
           message: 'Application submitted successfully',
+          referralAttributed, // Epic 10: Flag to indicate cookie should be cleared
         };
       } catch (error) {
         console.error('Application creation error:', error);
