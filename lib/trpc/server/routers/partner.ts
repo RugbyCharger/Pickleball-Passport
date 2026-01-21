@@ -2082,6 +2082,316 @@ export const partnerRouter = router({
 
     return agreements
   }),
+
+  // ============================================================================
+  // E9-S16: Partner Support Ticketing System
+  // ============================================================================
+
+  /**
+   * Create a new support ticket
+   */
+  createTicket: partnerProcedure
+    .input(
+      z.object({
+        subject: z.string().min(1, 'Subject is required').max(200),
+        description: z.string().min(1, 'Description is required').max(5000),
+        priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).default('MEDIUM'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.create({
+        data: {
+          partnerId: profile.id,
+          subject: input.subject,
+          description: input.description,
+          priority: input.priority,
+          status: 'OPEN',
+        },
+      })
+
+      // Send email notification to admin (non-blocking)
+      try {
+        const { sendPartnerTicketNotification } = await import('@/lib/email/sendgrid')
+        await sendPartnerTicketNotification({
+          ticketId: ticket.id,
+          subject: input.subject,
+          partnerName: profile.clubName,
+          partnerEmail: profile.user.email,
+          priority: input.priority,
+        })
+      } catch (error) {
+        console.error('Failed to send ticket notification email:', error)
+        // Don't fail the operation if email fails
+      }
+
+      return ticket
+    }),
+
+  /**
+   * Get all support tickets for current partner
+   */
+  getTickets: partnerProcedure
+    .input(
+      z
+        .object({
+          status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']).optional(),
+          limit: z.number().min(1).max(100).default(20),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const where = {
+        partnerId: profile.id,
+        ...(input?.status && { status: input.status }),
+      }
+
+      const [tickets, total] = await Promise.all([
+        ctx.db.partnerSupportTicket.findMany({
+          where,
+          include: {
+            replies: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+              select: {
+                createdAt: true,
+                isStaff: true,
+              },
+            },
+            _count: {
+              select: {
+                replies: true,
+              },
+            },
+          },
+          orderBy: {
+            updatedAt: 'desc',
+          },
+          take: input?.limit || 20,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerSupportTicket.count({ where }),
+      ])
+
+      return {
+        tickets: tickets.map((t) => ({
+          ...t,
+          lastReply: t.replies[0] || null,
+          replyCount: t._count.replies,
+        })),
+        total,
+        hasMore: (input?.offset || 0) + (input?.limit || 20) < total,
+      }
+    }),
+
+  /**
+   * Get single ticket with full conversation thread
+   */
+  getTicket: partnerProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.id,
+          partnerId: profile.id,
+        },
+        include: {
+          replies: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      return ticket
+    }),
+
+  /**
+   * Reply to a support ticket
+   */
+  replyToTicket: partnerProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        message: z.string().min(1, 'Message is required').max(5000),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Verify ticket belongs to partner
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.ticketId,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      // Don't allow replies to closed tickets
+      if (ticket.status === 'CLOSED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot reply to a closed ticket',
+        })
+      }
+
+      // Create reply and update ticket
+      const reply = await ctx.db.partnerSupportReply.create({
+        data: {
+          ticketId: input.ticketId,
+          userId: ctx.user!.id,
+          message: input.message,
+          isStaff: false,
+        },
+      })
+
+      // Update ticket updatedAt
+      await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: { updatedAt: new Date() },
+      })
+
+      return reply
+    }),
+
+  /**
+   * Reopen a resolved ticket (within 7 days)
+   */
+  reopenTicket: partnerProcedure
+    .input(z.object({ ticketId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: {
+          userId: ctx.user!.id,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      const ticket = await ctx.db.partnerSupportTicket.findFirst({
+        where: {
+          id: input.ticketId,
+          partnerId: profile.id,
+        },
+      })
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        })
+      }
+
+      // Can only reopen RESOLVED tickets
+      if (ticket.status !== 'RESOLVED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Can only reopen resolved tickets',
+        })
+      }
+
+      // Check if within 7 days of resolution
+      if (ticket.resolvedAt) {
+        const daysSinceResolution = Math.floor(
+          (Date.now() - ticket.resolvedAt.getTime()) / (1000 * 60 * 60 * 24)
+        )
+        if (daysSinceResolution > 7) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Tickets can only be reopened within 7 days of resolution',
+          })
+        }
+      }
+
+      const updatedTicket = await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: {
+          status: 'OPEN',
+          resolvedAt: null,
+        },
+      })
+
+      return updatedTicket
+    }),
 })
 
 /**

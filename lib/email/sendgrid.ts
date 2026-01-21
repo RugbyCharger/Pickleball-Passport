@@ -483,3 +483,143 @@ export async function sendTicketResolvedEmail(
     text,
   });
 }
+
+// ============================================================================
+// E9-S16: Partner Support Ticket Email Notifications
+// ============================================================================
+
+export interface PartnerTicketNotificationData {
+  ticketId: string;
+  subject: string;
+  partnerName: string;
+  partnerEmail: string;
+  priority: string;
+}
+
+/**
+ * Send notification to admin when partner creates a new support ticket
+ */
+export async function sendPartnerTicketNotification(data: PartnerTicketNotificationData): Promise<void> {
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@pickleballpassport.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+
+  const priorityColors: Record<string, string> = {
+    LOW: '#22c55e',
+    MEDIUM: '#eab308',
+    HIGH: '#ef4444',
+  };
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #003D5C; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">New Partner Support Ticket</h1>
+      </div>
+      <div style="padding: 24px; background: #f9fafb;">
+        <p style="margin-bottom: 16px;">A partner has submitted a new support ticket:</p>
+
+        <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+          <p style="margin: 0 0 8px;"><strong>Partner:</strong> ${data.partnerName}</p>
+          <p style="margin: 0 0 8px;"><strong>Email:</strong> ${data.partnerEmail}</p>
+          <p style="margin: 0 0 8px;"><strong>Subject:</strong> ${data.subject}</p>
+          <p style="margin: 0;">
+            <strong>Priority:</strong>
+            <span style="background: ${priorityColors[data.priority] || '#6b7280'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">
+              ${data.priority}
+            </span>
+          </p>
+        </div>
+
+        <a href="${appUrl}/dashboard/admin/partner-tickets/${data.ticketId}"
+           style="display: inline-block; background: #D4AF37; color: #003D5C; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+          View Ticket
+        </a>
+      </div>
+      <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
+        <p>Pickleball Passport Partner Support</p>
+      </div>
+    </div>
+  `;
+
+  const text = `
+New Partner Support Ticket
+
+Partner: ${data.partnerName}
+Email: ${data.partnerEmail}
+Subject: ${data.subject}
+Priority: ${data.priority}
+
+View ticket: ${appUrl}/dashboard/admin/partner-tickets/${data.ticketId}
+  `.trim();
+
+  await sendEmail({
+    to: adminEmail,
+    subject: `[Partner Support] ${data.priority === 'HIGH' ? '🔴 HIGH PRIORITY - ' : ''}${data.subject}`,
+    html,
+    text,
+    replyTo: data.partnerEmail,
+  });
+}
+
+export interface PartnerTicketReplyNotificationData {
+  ticketId: string;
+  subject: string;
+  partnerName: string;
+  partnerEmail: string;
+}
+
+/**
+ * Send notification to partner when admin replies to their support ticket
+ */
+export async function sendPartnerTicketReplyNotification(data: PartnerTicketReplyNotificationData): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #003D5C; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">New Reply on Your Support Ticket</h1>
+      </div>
+      <div style="padding: 24px; background: #f9fafb;">
+        <p>Hi ${data.partnerName},</p>
+
+        <p>Our support team has replied to your ticket:</p>
+
+        <div style="background: white; border-radius: 8px; padding: 20px; margin: 16px 0;">
+          <p style="margin: 0;"><strong>Subject:</strong> ${data.subject}</p>
+        </div>
+
+        <a href="${appUrl}/dashboard/partner/support/${data.ticketId}"
+           style="display: inline-block; background: #D4AF37; color: #003D5C; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+          View Conversation
+        </a>
+
+        <p style="margin-top: 24px; color: #6b7280; font-size: 14px;">
+          If you have any questions, you can reply directly in the ticket portal.
+        </p>
+      </div>
+      <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
+        <p>Pickleball Passport Partner Support</p>
+      </div>
+    </div>
+  `;
+
+  const text = `
+Hi ${data.partnerName},
+
+Our support team has replied to your ticket:
+
+Subject: ${data.subject}
+
+View the conversation: ${appUrl}/dashboard/partner/support/${data.ticketId}
+
+If you have any questions, you can reply directly in the ticket portal.
+
+Pickleball Passport Partner Support
+  `.trim();
+
+  await sendEmail({
+    to: data.partnerEmail,
+    subject: `Re: ${data.subject} - Pickleball Passport Support`,
+    html,
+    text,
+  });
+}

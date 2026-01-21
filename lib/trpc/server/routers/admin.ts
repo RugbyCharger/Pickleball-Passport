@@ -1597,4 +1597,272 @@ export const adminRouter = router({
         : 0,
     };
   }),
+
+  // ============================================================================
+  // E9-S16: Partner Support Ticketing System (Admin)
+  // ============================================================================
+
+  /**
+   * Get all partner support tickets with filters
+   */
+  getPartnerTickets: adminProcedure
+    .input(
+      z
+        .object({
+          status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']).optional(),
+          priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(),
+          partnerId: z.string().optional(),
+          limit: z.number().min(1).max(100).default(50),
+          offset: z.number().min(0).default(0),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where = {
+        ...(input?.status && { status: input.status }),
+        ...(input?.priority && { priority: input.priority }),
+        ...(input?.partnerId && { partnerId: input.partnerId }),
+      };
+
+      const [tickets, total] = await Promise.all([
+        ctx.db.partnerSupportTicket.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                tier: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+            replies: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+              select: {
+                createdAt: true,
+                isStaff: true,
+              },
+            },
+            _count: {
+              select: {
+                replies: true,
+              },
+            },
+          },
+          orderBy: [
+            { status: 'asc' }, // OPEN first
+            { priority: 'desc' }, // HIGH priority first
+            { updatedAt: 'desc' },
+          ],
+          take: input?.limit || 50,
+          skip: input?.offset || 0,
+        }),
+        ctx.db.partnerSupportTicket.count({ where }),
+      ]);
+
+      return {
+        tickets: tickets.map((t) => ({
+          ...t,
+          lastReply: t.replies[0] || null,
+          replyCount: t._count.replies,
+        })),
+        total,
+        hasMore: (input?.offset || 0) + (input?.limit || 50) < total,
+      };
+    }),
+
+  /**
+   * Get single partner support ticket
+   */
+  getPartnerTicket: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.id },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              clubName: true,
+              clubLocation: true,
+              tier: true,
+              referralCode: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+          replies: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      return ticket;
+    }),
+
+  /**
+   * Reply to a partner support ticket (admin)
+   */
+  replyToPartnerTicket: adminProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        message: z.string().min(1, 'Message is required').max(5000),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.ticketId },
+        include: {
+          partner: {
+            select: {
+              clubName: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      // Create reply
+      const reply = await ctx.db.partnerSupportReply.create({
+        data: {
+          ticketId: input.ticketId,
+          userId: ctx.user!.id,
+          message: input.message,
+          isStaff: true,
+        },
+      });
+
+      // Update ticket status to IN_PROGRESS if it was OPEN
+      if (ticket.status === 'OPEN') {
+        await ctx.db.partnerSupportTicket.update({
+          where: { id: input.ticketId },
+          data: {
+            status: 'IN_PROGRESS',
+            updatedAt: new Date(),
+          },
+        });
+      } else {
+        await ctx.db.partnerSupportTicket.update({
+          where: { id: input.ticketId },
+          data: { updatedAt: new Date() },
+        });
+      }
+
+      // Send email notification to partner (non-blocking)
+      try {
+        const { sendPartnerTicketReplyNotification } = await import('@/lib/email/sendgrid');
+        await sendPartnerTicketReplyNotification({
+          ticketId: ticket.id,
+          subject: ticket.subject,
+          partnerName: ticket.partner.clubName,
+          partnerEmail: ticket.partner.user.email,
+        });
+      } catch (error) {
+        logError(emailLogger, error, 'Failed to send ticket reply notification email');
+        // Don't fail the operation if email fails
+      }
+
+      return reply;
+    }),
+
+  /**
+   * Update partner ticket status
+   */
+  updatePartnerTicketStatus: adminProcedure
+    .input(
+      z.object({
+        ticketId: z.string(),
+        status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const ticket = await ctx.db.partnerSupportTicket.findUnique({
+        where: { id: input.ticketId },
+      });
+
+      if (!ticket) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Ticket not found',
+        });
+      }
+
+      const updateData: { status: typeof input.status; resolvedAt?: Date | null } = {
+        status: input.status,
+      };
+
+      // Set resolvedAt when marking as resolved
+      if (input.status === 'RESOLVED') {
+        updateData.resolvedAt = new Date();
+      } else if (input.status === 'OPEN' || input.status === 'IN_PROGRESS') {
+        updateData.resolvedAt = null;
+      }
+
+      const updatedTicket = await ctx.db.partnerSupportTicket.update({
+        where: { id: input.ticketId },
+        data: updateData,
+      });
+
+      return updatedTicket;
+    }),
+
+  /**
+   * Get partner support ticket statistics
+   */
+  getPartnerTicketStats: adminProcedure.query(async ({ ctx }) => {
+    const [total, open, inProgress, resolved, closed, highPriority] = await Promise.all([
+      ctx.db.partnerSupportTicket.count(),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'OPEN' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'IN_PROGRESS' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'RESOLVED' } }),
+      ctx.db.partnerSupportTicket.count({ where: { status: 'CLOSED' } }),
+      ctx.db.partnerSupportTicket.count({
+        where: {
+          priority: 'HIGH',
+          status: { in: ['OPEN', 'IN_PROGRESS'] },
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      open,
+      inProgress,
+      resolved,
+      closed,
+      highPriority,
+      requiresAttention: open + highPriority,
+    };
+  }),
 });
