@@ -175,7 +175,7 @@ export default function PartnerSupportPage() {
           ) : data?.tickets && data.tickets.length > 0 ? (
             <>
               <div className="divide-y divide-slate-200">
-                {data.tickets.map((ticket) => {
+                {data.tickets.map((ticket: typeof data.tickets[number]) => {
                   const StatusIcon = STATUS_ICONS[ticket.status] || AlertCircle;
                   return (
                     <Link

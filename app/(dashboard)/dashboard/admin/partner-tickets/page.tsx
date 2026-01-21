@@ -244,7 +244,7 @@ export default function AdminPartnerTicketsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {data.tickets.map((ticket) => {
+                    {data.tickets.map((ticket: typeof data.tickets[number]) => {
                       const StatusIcon = STATUS_ICONS[ticket.status] || AlertCircle;
                       const needsAttention = ticket.status === 'OPEN' ||
                         (ticket.lastReply && !ticket.lastReply.isStaff && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED');

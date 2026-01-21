@@ -216,7 +216,7 @@ export default function PartnerEventsPage() {
     if (!eventsData) return new Map<string, CalendarEvent[]>();
 
     const eventMap = new Map<string, CalendarEvent[]>();
-    eventsData.forEach((event) => {
+    eventsData.forEach((event: NonNullable<typeof eventsData>[number]) => {
       const eventDate = new Date(event.startDate);
       const dateKey = `${eventDate.getFullYear()}-${eventDate.getMonth()}-${eventDate.getDate()}`;
       const existing = eventMap.get(dateKey) || [];
@@ -477,7 +477,7 @@ export default function PartnerEventsPage() {
               /* List View */
               <div className="space-y-4">
                 {eventsData && eventsData.length > 0 ? (
-                  eventsData.map((event) => (
+                  eventsData.map((event: NonNullable<typeof eventsData>[number]) => (
                     <EventCard
                       key={event.id}
                       event={{
@@ -520,7 +520,7 @@ export default function PartnerEventsPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
               </div>
             ) : registrationsData && registrationsData.length > 0 ? (
-              registrationsData.map((registration) => (
+              registrationsData.map((registration: NonNullable<typeof registrationsData>[number]) => (
                 <EventCard
                   key={registration.id}
                   event={{

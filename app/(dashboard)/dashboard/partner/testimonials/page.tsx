@@ -168,7 +168,7 @@ export default function PartnerTestimonialsPage() {
           </div>
         ) : testimonials && testimonials.length > 0 ? (
           <div className="space-y-4">
-            {testimonials.map((testimonial) => (
+            {testimonials.map((testimonial: NonNullable<typeof testimonials>[number]) => (
               <div
                 key={testimonial.id}
                 className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"

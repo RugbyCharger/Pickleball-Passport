@@ -18,7 +18,6 @@ import {
   Medal,
   Crown,
   Loader2,
-  User,
   Eye,
   EyeOff,
   ChevronRight,

@@ -73,7 +73,7 @@ export default function AdminPartnerAgreementsPage() {
     );
 
   // Filter agreements by search
-  const filteredAgreements = data?.agreements?.filter((agreement) => {
+  const filteredAgreements = data?.agreements?.filter((agreement: typeof data.agreements[number]) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
@@ -220,7 +220,7 @@ export default function AdminPartnerAgreementsPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {filteredAgreements.map((agreement) => (
+                      {filteredAgreements.map((agreement: NonNullable<typeof data>['agreements'][number]) => (
                         <tr key={agreement.id} className="hover:bg-slate-50">
                           <td className="px-6 py-4">
                             <div>

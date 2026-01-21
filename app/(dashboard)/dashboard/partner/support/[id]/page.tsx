@@ -237,7 +237,7 @@ export default function PartnerTicketDetailPage() {
 
           {ticket.replies.length > 0 ? (
             <div className="divide-y divide-slate-100">
-              {ticket.replies.map((reply) => (
+              {ticket.replies.map((reply: typeof ticket.replies[number]) => (
                 <div
                   key={reply.id}
                   className={cn(

@@ -334,7 +334,7 @@ export default function AdminPartnerEventsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {data.events.map((event) => {
+                    {data.events.map((event: typeof data.events[number]) => {
                       const startDate = new Date(event.startDate);
                       const isPast = startDate < new Date();
 
@@ -360,7 +360,7 @@ export default function AdminPartnerEventsPage() {
                             <span
                               className={cn(
                                 'inline-flex rounded-full px-2.5 py-1 text-xs font-medium',
-                                EVENT_TYPE_COLORS[event.eventType]
+                                EVENT_TYPE_COLORS[event.eventType as EventType]
                               )}
                             >
                               {event.eventType}

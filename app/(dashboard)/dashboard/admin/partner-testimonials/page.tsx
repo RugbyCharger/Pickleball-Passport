@@ -221,7 +221,7 @@ export default function AdminPartnerTestimonialsPage() {
           </div>
         ) : data && data.testimonials.length > 0 ? (
           <div className="space-y-4">
-            {data.testimonials.map((testimonial) => (
+            {data.testimonials.map((testimonial: typeof data.testimonials[number]) => (
               <div
                 key={testimonial.id}
                 className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
