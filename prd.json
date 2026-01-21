@@ -70,7 +70,7 @@
       "id": "US-004",
       "title": "Guest Referral Code Generation",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "After guest's first trip completes: Auto-generate referral code",
         "Code format: FIRSTNAME-YEAR (e.g., SUSAN-2026)",

@@ -104,3 +104,27 @@ Files changed:
 - referralAttributed flag is returned to client to indicate cookie should be cleared
 - Guest referral points use a different calculation than partner points (flat 1000/1500 vs scaled)
 ---
+
+## 2026-01-21 - US-004: Guest Referral Code Generation
+Iteration: 5
+- Added getMyReferralCode tRPC procedure: returns referral code, shareable link, points balance
+- Added getReferralStats tRPC procedure: returns clicks, applications, bookings, completed stats with referral list
+- Added generateReferralCode tRPC procedure: generates code after first trip completes (FIRSTNAME-YEAR format)
+- Added checkReferralCodeEligibility tRPC procedure: checks if user can get a referral code
+- Created guest-referral-code.ts email template for notifying guests of their new referral code
+- Created /dashboard/referrals page for guests to view their code, stats, and referrals list
+- Copy to clipboard functionality for both referral code and shareable link
+- Locked state UI for users who haven't completed a trip yet
+
+Files changed:
+- lib/trpc/server/routers/user.ts (added 4 new procedures)
+- lib/email/templates/guest-referral-code.ts (new)
+- app/(dashboard)/dashboard/referrals/page.tsx (new)
+
+**Learnings for future iterations:**
+- Import sendEmail from '@/lib/email/send-email', not '@/lib/email' (no index file)
+- Guest referral code format: FIRSTNAME-YEAR (e.g., SUSAN-2026), with counter if duplicate
+- Use 'const' instead of 'let' for variables that are never reassigned (lint rule)
+- User referral procedures are in user router, not partner router
+- Eligibility check: user must have at least one COMPLETED booking to get a referral code
+---
