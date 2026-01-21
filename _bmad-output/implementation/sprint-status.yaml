@@ -189,30 +189,30 @@ development_status:
   9-12-partner-tiers-and-benefits: done  # Partner tiers and benefits page - Completed 2026-01-16
   9-13-partner-community-forum: done  # Directors Circle community forum - Completed 2026-01-16
   9-14-partner-onboarding-flow: done  # Partner onboarding wizard - Completed 2026-01-16
-  9-15-partner-agreement-e-signature: backlog
-  9-16-partner-support-ticketing: backlog
-  9-17-partner-event-calendar: backlog
-  9-18-partner-testimonials: backlog
-  9-19-partner-leaderboard: backlog
-  9-20-partner-mobile-app: backlog
+  9-15-partner-agreement-e-signature: in-progress  # Ralph working - 2026-01-21
+  9-16-partner-support-ticketing: in-progress  # Ralph working - 2026-01-21
+  9-17-partner-event-calendar: in-progress  # Ralph working - 2026-01-21
+  9-18-partner-testimonials: in-progress  # Ralph working - 2026-01-21
+  9-19-partner-leaderboard: in-progress  # Ralph working - 2026-01-21
+  9-20-partner-mobile-app: backlog  # Requires React Native - Phase 2
   epic-9-retrospective: optional
 
   # EPIC 10: Referral System
-  epic-10: backlog
-  10-1-referral-code-generation: backlog
-  10-2-referral-tracking: backlog
-  10-3-referral-rewards: backlog
-  10-4-referral-notifications: backlog
-  10-5-referral-analytics: backlog
-  10-6-referral-landing-pages: backlog
-  10-7-social-media-sharing: backlog
-  10-8-email-referral-invites: backlog
-  10-9-referral-leaderboard: backlog
-  10-10-referral-program-terms: backlog
+  epic-10: in-progress  # Ralph working - 2026-01-21
+  10-1-referral-code-generation: in-progress  # Ralph working
+  10-2-referral-tracking: in-progress  # Ralph working (cookie-based)
+  10-3-referral-rewards: in-progress  # Ralph working (points attribution)
+  10-4-referral-notifications: in-progress  # Ralph working
+  10-5-referral-analytics: in-progress  # Ralph working (admin dashboard)
+  10-6-referral-landing-pages: backlog  # Phase 2
+  10-7-social-media-sharing: backlog  # Phase 2
+  10-8-email-referral-invites: backlog  # Phase 2
+  10-9-referral-leaderboard: backlog  # Covered by 9-19 partner leaderboard
+  10-10-referral-program-terms: backlog  # Phase 2
   epic-10-retrospective: optional
 
   # EPIC 11: Communication System
-  epic-11: in-progress
+  epic-11: done  # All 12 stories complete - 2026-01-21
   11-1-sendgrid-integration: done
   11-2-booking-confirmation-email: done
   11-3-application-confirmation-email: done  # Already implemented in application router - Completed 2026-01-16
