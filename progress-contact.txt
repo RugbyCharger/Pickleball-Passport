@@ -461,3 +461,49 @@ Iteration: 7
   - WhatsApp invite link format validation: url().refine() for custom checks
   - Extract invite code from link with split('/').pop()
 ---
+
+## 2026-01-21 - US-007
+Iteration: 8
+- Implemented US-007: Admin Broadcast Interface
+- Files changed:
+  - app/(dashboard)/dashboard/admin/whatsapp-broadcast/page.tsx - New broadcast admin page
+  - lib/trpc/server/routers/whatsapp.ts - Added broadcast procedures
+- **What was implemented:**
+  - Admin page at /dashboard/admin/whatsapp-broadcast with:
+    - Destination selection (radio buttons):
+      - Specific trip: Select from dropdown of active trips
+      - All active trips: Broadcast to all trips with active WhatsApp groups
+      - Upcoming trips only: Broadcast to trips that haven't started yet
+    - Message composition with:
+      - Textarea with character count (max 4096)
+      - Live character count indicator with color coding (yellow at 90%, red at limit)
+      - Tips for writing engaging messages
+    - Preview modal showing how message will appear in WhatsApp
+    - Confirmation modal with:
+      - Warning that action cannot be undone
+      - Recipient count and trip info
+      - Cancel and Confirm & Send buttons
+    - Result view showing:
+      - Success/failure status
+      - Total recipients, delivered, failed counts
+      - Error details if any failures
+      - Option to send another broadcast
+    - Sidebar showing:
+      - Broadcast summary (destination, estimated recipients, message length)
+      - Tips for effective broadcasts
+      - List of trips that will receive broadcast (for all/upcoming)
+  - tRPC procedures added:
+    - adminGetTripsForBroadcast - List trips with active WhatsApp groups
+    - adminSendBroadcast - Send broadcast to single trip
+    - adminSendMultiBroadcast - Send broadcast to multiple trips
+  - All broadcasts logged with adminId, tripId(s), message length, success/failure counts
+- TypeScript strict mode passed with 0 errors in new files
+- ESLint passed with no warnings in new files
+- **Learnings for future iterations:**
+  - ctx.user only has id property, not email (Clerk auth integration)
+  - Use useMemo for computed values like character count colors
+  - Radio button groups with styled labels work well for destination selection
+  - For multi-destination broadcasts, query trips first to show estimated recipients
+  - Show result view after broadcast with option to send another
+  - WhatsApp messages are sent sequentially to respect rate limits (100ms delay)
+---

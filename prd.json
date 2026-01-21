@@ -145,7 +145,7 @@
         "TypeScript strict mode: 0 errors"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Broadcasts are sent as individual messages to each group member, not a group message (WhatsApp API limitation). Consider rate limiting."
     },
     {
