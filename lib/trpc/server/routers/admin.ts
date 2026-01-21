@@ -13,6 +13,7 @@ import { router, adminProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendEmail } from '@/lib/email/send-email';
 import { apiLogger, emailLogger, stripeLogger, logError, logStripeError } from '@/lib/logger';
+import { createTransfer, getPlatformBalance } from '@/lib/stripe/stripe-connect';
 
 /**
  * Get common issues for document types to help users fix rejections
@@ -2888,5 +2889,227 @@ export const adminRouter = router({
         },
         utmSource: input?.utmSource || null,
       };
+    }),
+
+  // ============================================================================
+  // E4-S14: STRIPE CONNECT PARTNER PAYOUTS
+  // ============================================================================
+
+  /**
+   * Get partner payouts with filtering options
+   */
+  getPartnerPayouts: adminProcedure
+    .input(
+      z.object({
+        status: z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED']).optional(),
+        limit: z.number().min(1).max(100).default(50),
+        offset: z.number().min(0).default(0),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const { status, limit = 50, offset = 0 } = input || {};
+
+      const where = status ? { status } : {};
+
+      const [payouts, total] = await Promise.all([
+        ctx.db.partnerPayout.findMany({
+          where,
+          include: {
+            partner: {
+              select: {
+                id: true,
+                clubName: true,
+                tier: true,
+                stripeConnectAccountId: true,
+                stripeConnectOnboardingComplete: true,
+                stripeConnectPayoutsEnabled: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            requestedAt: 'desc',
+          },
+          take: limit,
+          skip: offset,
+        }),
+        ctx.db.partnerPayout.count({ where }),
+      ]);
+
+      return {
+        payouts,
+        total,
+        hasMore: offset + payouts.length < total,
+      };
+    }),
+
+  /**
+   * Get partner payout stats for admin dashboard
+   */
+  getPartnerPayoutStats: adminProcedure.query(async ({ ctx }) => {
+    const [pending, processing, completed, failed, total] = await Promise.all([
+      ctx.db.partnerPayout.count({ where: { status: 'PENDING' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'PROCESSING' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'COMPLETED' } }),
+      ctx.db.partnerPayout.count({ where: { status: 'FAILED' } }),
+      ctx.db.partnerPayout.count(),
+    ]);
+
+    return {
+      pending,
+      processing,
+      completed,
+      failed,
+      total,
+    };
+  }),
+
+  /**
+   * Process a partner payout via Stripe Connect transfer
+   *
+   * This endpoint validates the payout, checks platform balance,
+   * and creates a transfer to the partner's connected Stripe account.
+   */
+  processStripeConnectPayout: adminProcedure
+    .input(
+      z.object({
+        payoutId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { payoutId } = input;
+
+      stripeLogger.info({ payoutId }, 'Processing Stripe Connect payout');
+
+      // 1. Fetch the payout and validate it exists
+      const payout = await ctx.db.partnerPayout.findUnique({
+        where: { id: payoutId },
+        include: {
+          partner: true,
+        },
+      });
+
+      if (!payout) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Payout not found',
+        });
+      }
+
+      // 2. Validate payout status is PENDING
+      if (payout.status !== 'PENDING') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Payout cannot be processed: status is ${payout.status}, expected PENDING`,
+        });
+      }
+
+      // 3. Validate partner has Stripe Connect enabled
+      if (!payout.partner.stripeConnectAccountId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Partner has not connected a Stripe account',
+        });
+      }
+
+      if (!payout.partner.stripeConnectPayoutsEnabled) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Partner Stripe account is not enabled for payouts. Please complete onboarding.',
+        });
+      }
+
+      // 4. Check platform balance is sufficient
+      const platformBalance = await getPlatformBalance();
+      if (platformBalance.available < payout.amountInCents) {
+        stripeLogger.warn(
+          {
+            payoutId,
+            required: payout.amountInCents,
+            available: platformBalance.available,
+          },
+          'Insufficient platform balance for payout'
+        );
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Insufficient platform balance. Required: $${(payout.amountInCents / 100).toFixed(2)}, Available: $${(platformBalance.available / 100).toFixed(2)}`,
+        });
+      }
+
+      // 5. Update payout to PROCESSING before attempting transfer
+      await ctx.db.partnerPayout.update({
+        where: { id: payoutId },
+        data: {
+          status: 'PROCESSING',
+          payoutMethod: 'stripe_connect',
+          processedAt: new Date(),
+        },
+      });
+
+      try {
+        // 6. Create the Stripe transfer
+        const transferResult = await createTransfer({
+          amount: payout.amountInCents,
+          connectedAccountId: payout.partner.stripeConnectAccountId,
+          payoutId: payout.id,
+          description: `Partner payout for ${payout.pointsRedeemed} points`,
+        });
+
+        // 7. Update payout to COMPLETED with transfer ID
+        const updatedPayout = await ctx.db.partnerPayout.update({
+          where: { id: payoutId },
+          data: {
+            status: 'COMPLETED',
+            stripeTransferId: transferResult.transferId,
+            stripeError: null,
+          },
+        });
+
+        stripeLogger.info(
+          {
+            payoutId,
+            transferId: transferResult.transferId,
+            amount: transferResult.amount,
+          },
+          'Stripe Connect payout completed successfully'
+        );
+
+        return {
+          success: true,
+          payout: updatedPayout,
+          transfer: {
+            id: transferResult.transferId,
+            amount: transferResult.amount,
+            status: transferResult.status,
+          },
+        };
+      } catch (error) {
+        // 8. On Stripe error, update status to FAILED and store error
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        logStripeError(error, 'Stripe Connect transfer failed', {
+          payoutId,
+          connectedAccountId: payout.partner.stripeConnectAccountId,
+          amount: payout.amountInCents,
+        });
+
+        await ctx.db.partnerPayout.update({
+          where: { id: payoutId },
+          data: {
+            status: 'FAILED',
+            stripeError: errorMessage,
+          },
+        });
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Stripe transfer failed: ${errorMessage}`,
+          cause: error,
+        });
+      }
     }),
 });

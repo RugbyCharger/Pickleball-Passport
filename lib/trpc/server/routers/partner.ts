@@ -12,6 +12,13 @@ import { router, partnerProcedure, publicProcedure, protectedProcedure } from '.
 import { TRPCError } from '@trpc/server'
 import { PartnerTier, Role } from '@prisma/client'
 import { checkRateLimit, getIpAddress } from '@/lib/rate-limit'
+import {
+  createConnectAccount,
+  createAccountLink,
+  getConnectAccountStatus,
+  createLoginLink,
+  isStripeConnectConfigured,
+} from '@/lib/stripe/stripe-connect'
 
 /**
  * Tier thresholds for partner progression
@@ -3182,6 +3189,213 @@ export const partnerRouter = router({
     }
 
     return { showOnLeaderboard: profile.showOnLeaderboard }
+  }),
+
+  // ============================================================================
+  // E4-S14: Stripe Connect Partner Payouts
+  // ============================================================================
+
+  /**
+   * Get partner's Stripe Connect status
+   * Returns current onboarding status, account details, and whether payouts are enabled
+   */
+  getStripeConnectStatus: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      select: {
+        id: true,
+        stripeConnectAccountId: true,
+        stripeConnectOnboardingComplete: true,
+        stripeConnectAccountType: true,
+        stripeConnectPayoutsEnabled: true,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    // Check if Stripe Connect is configured for the platform
+    const isConfigured = isStripeConnectConfigured()
+
+    // If partner has a Stripe account, fetch latest status from Stripe
+    let stripeAccountStatus = null
+    if (profile.stripeConnectAccountId) {
+      try {
+        stripeAccountStatus = await getConnectAccountStatus(profile.stripeConnectAccountId)
+      } catch {
+        // Account may have been deleted or is inaccessible
+        stripeAccountStatus = null
+      }
+    }
+
+    return {
+      isStripeConnectConfigured: isConfigured,
+      hasStripeAccount: !!profile.stripeConnectAccountId,
+      accountId: profile.stripeConnectAccountId,
+      onboardingComplete: profile.stripeConnectOnboardingComplete,
+      accountType: profile.stripeConnectAccountType,
+      payoutsEnabled: profile.stripeConnectPayoutsEnabled,
+      stripeAccountStatus,
+    }
+  }),
+
+  /**
+   * Create a Stripe Connect account and get onboarding link
+   * Called when partner initiates Stripe Connect setup
+   */
+  createStripeConnectAccount: partnerProcedure.mutation(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    // Check if already has a Stripe Connect account
+    if (profile.stripeConnectAccountId) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Stripe Connect account already exists. Use getStripeConnectOnboardingLink to continue onboarding.',
+      })
+    }
+
+    // Check if Stripe Connect is configured
+    if (!isStripeConnectConfigured()) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'Stripe Connect is not configured for this platform',
+      })
+    }
+
+    // Create the Stripe Connect account
+    const { accountId, accountType } = await createConnectAccount({
+      partnerId: profile.id,
+      email: profile.user.email,
+      businessName: profile.clubName,
+      accountType: 'express',
+    })
+
+    // Save account ID to partner profile
+    await ctx.db.partnerProfile.update({
+      where: { id: profile.id },
+      data: {
+        stripeConnectAccountId: accountId,
+        stripeConnectAccountType: accountType,
+      },
+    })
+
+    // Generate onboarding link
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const { url, expiresAt } = await createAccountLink({
+      accountId,
+      refreshUrl: `${baseUrl}/dashboard/partner/payouts?stripe_refresh=true`,
+      returnUrl: `${baseUrl}/dashboard/partner/payouts?stripe_return=true`,
+    })
+
+    return {
+      success: true,
+      accountId,
+      onboardingUrl: url,
+      expiresAt,
+    }
+  }),
+
+  /**
+   * Get a new onboarding link for an existing Stripe Connect account
+   * Used when partner needs to continue or redo onboarding
+   */
+  getStripeConnectOnboardingLink: partnerProcedure.mutation(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      select: {
+        id: true,
+        stripeConnectAccountId: true,
+        stripeConnectOnboardingComplete: true,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    if (!profile.stripeConnectAccountId) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'No Stripe Connect account exists. Use createStripeConnectAccount first.',
+      })
+    }
+
+    // Generate new onboarding link
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const { url, expiresAt } = await createAccountLink({
+      accountId: profile.stripeConnectAccountId,
+      refreshUrl: `${baseUrl}/dashboard/partner/payouts?stripe_refresh=true`,
+      returnUrl: `${baseUrl}/dashboard/partner/payouts?stripe_return=true`,
+    })
+
+    return {
+      onboardingUrl: url,
+      expiresAt,
+    }
+  }),
+
+  /**
+   * Get Stripe Express Dashboard link for partner
+   * Allows partner to access their Stripe dashboard to manage payouts
+   */
+  getStripeConnectDashboardLink: partnerProcedure.mutation(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      select: {
+        stripeConnectAccountId: true,
+        stripeConnectOnboardingComplete: true,
+      },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    if (!profile.stripeConnectAccountId) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'No Stripe Connect account exists',
+      })
+    }
+
+    if (!profile.stripeConnectOnboardingComplete) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Stripe Connect onboarding must be completed before accessing dashboard',
+      })
+    }
+
+    const dashboardUrl = await createLoginLink(profile.stripeConnectAccountId)
+
+    return {
+      dashboardUrl,
+    }
   }),
 })
 

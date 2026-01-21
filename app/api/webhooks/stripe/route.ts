@@ -16,7 +16,8 @@ import { verifyWebhookSignature } from '@/lib/stripe/stripe-service';
 import { prisma } from '@/lib/db';
 import { sendBookingConfirmation } from '@/lib/email/sendgrid';
 import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
-import { whatsappLogger } from '@/lib/logger';
+import { whatsappLogger, stripeLogger } from '@/lib/logger';
+import { parseAccountUpdatedEvent, parseTransferEvent } from '@/lib/stripe/stripe-connect';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
@@ -102,6 +103,19 @@ export async function POST(req: NextRequest) {
 
       case 'charge.dispute.closed':
         await handleDisputeClosed(event.data.object as Stripe.Dispute);
+        break;
+
+      // E4-S14: Stripe Connect events
+      case 'account.updated':
+        await handleAccountUpdated(event);
+        break;
+
+      case 'transfer.created':
+        await handleTransferCreated(event);
+        break;
+
+      case 'transfer.reversed':
+        await handleTransferReversed(event);
         break;
 
       default:
@@ -828,6 +842,134 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
     }
   } catch (error) {
     console.error('Error handling dispute closure:', error);
+    // Don't throw - log error but acknowledge webhook
+  }
+}
+
+// ============================================================================
+// E4-S14: Stripe Connect Event Handlers
+// ============================================================================
+
+/**
+ * Handle account.updated Webhook Event
+ *
+ * Updates partner's Stripe Connect status when their account changes.
+ * This is called when partners complete onboarding steps.
+ */
+async function handleAccountUpdated(event: Stripe.Event) {
+  const accountData = parseAccountUpdatedEvent(event);
+
+  if (!accountData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse account.updated event');
+    return;
+  }
+
+  const { accountId, detailsSubmitted, payoutsEnabled } = accountData;
+
+  try {
+    // Find partner by Stripe Connect account ID
+    const partner = await prisma.partnerProfile.findFirst({
+      where: { stripeConnectAccountId: accountId },
+    });
+
+    if (!partner) {
+      stripeLogger.info(
+        { accountId },
+        'No partner found for Stripe Connect account (may be a non-partner account)'
+      );
+      return;
+    }
+
+    // Update partner's Stripe Connect status
+    await prisma.partnerProfile.update({
+      where: { id: partner.id },
+      data: {
+        stripeConnectOnboardingComplete: detailsSubmitted,
+        stripeConnectPayoutsEnabled: payoutsEnabled,
+      },
+    });
+
+    stripeLogger.info(
+      { partnerId: partner.id, accountId, detailsSubmitted, payoutsEnabled },
+      'Updated partner Stripe Connect status'
+    );
+  } catch (error) {
+    stripeLogger.error(
+      { accountId, error: error instanceof Error ? error.message : String(error) },
+      'Error handling account.updated event'
+    );
+    // Don't throw - log error but acknowledge webhook
+  }
+}
+
+/**
+ * Handle transfer.created Webhook Event
+ *
+ * Logs transfer creation for audit purposes.
+ */
+async function handleTransferCreated(event: Stripe.Event) {
+  const transferData = parseTransferEvent(event);
+
+  if (!transferData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse transfer.created event');
+    return;
+  }
+
+  const { transferId, amount, destination, payoutId } = transferData;
+
+  stripeLogger.info(
+    { transferId, amount, destination, payoutId },
+    'Stripe transfer created'
+  );
+}
+
+/**
+ * Handle transfer.reversed Webhook Event
+ *
+ * Updates PartnerPayout status to FAILED when a transfer is reversed.
+ */
+async function handleTransferReversed(event: Stripe.Event) {
+  const transferData = parseTransferEvent(event);
+
+  if (!transferData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse transfer.reversed event');
+    return;
+  }
+
+  const { transferId, payoutId } = transferData;
+
+  try {
+    // Find payout by Stripe transfer ID
+    const payout = await prisma.partnerPayout.findFirst({
+      where: { stripeTransferId: transferId },
+    });
+
+    if (!payout) {
+      stripeLogger.warn(
+        { transferId, payoutId },
+        'No PartnerPayout found for reversed transfer'
+      );
+      return;
+    }
+
+    // Update payout status to FAILED
+    await prisma.partnerPayout.update({
+      where: { id: payout.id },
+      data: {
+        status: 'FAILED',
+        stripeError: 'Transfer was reversed by Stripe',
+      },
+    });
+
+    stripeLogger.warn(
+      { payoutId: payout.id, transferId },
+      'PartnerPayout marked as FAILED due to transfer reversal'
+    );
+  } catch (error) {
+    stripeLogger.error(
+      { transferId, error: error instanceof Error ? error.message : String(error) },
+      'Error handling transfer.reversed event'
+    );
     // Don't throw - log error but acknowledge webhook
   }
 }

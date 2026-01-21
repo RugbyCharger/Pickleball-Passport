@@ -1,18 +1,21 @@
 /**
  * Partner Payout Management Page
  * E9-S11: Payout Management
+ * E4-S14: Stripe Connect Integration
  *
  * Features:
  * - Bank account settings
  * - Request payout
  * - Payout history
  * - Eligibility checks
+ * - Stripe Connect onboarding and management
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/client';
 import {
   DollarSign,
@@ -22,8 +25,9 @@ import {
   Clock,
   XCircle,
   AlertCircle,
-  TrendingUp,
   Save,
+  ExternalLink,
+  Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -48,9 +52,308 @@ const payoutRequestSchema = z.object({
 
 type PayoutRequestForm = z.infer<typeof payoutRequestSchema>;
 
+/**
+ * StripeConnectCard Component
+ * E4-S14-003: Partner Stripe Connect Onboarding UI
+ *
+ * Displays Stripe Connect status and provides onboarding/dashboard access buttons
+ */
+function StripeConnectCard({
+  stripeReturnMessage
+}: {
+  stripeReturnMessage: string | null
+}) {
+  const { data: stripeStatus, isLoading } = trpc.partner.getStripeConnectStatus.useQuery();
+
+  const createAccountMutation = trpc.partner.createStripeConnectAccount.useMutation({
+    onSuccess: (data) => {
+      // Redirect to Stripe onboarding
+      window.location.href = data.onboardingUrl;
+    },
+  });
+
+  const getOnboardingLinkMutation = trpc.partner.getStripeConnectOnboardingLink.useMutation({
+    onSuccess: (data) => {
+      // Redirect to Stripe onboarding
+      window.location.href = data.onboardingUrl;
+    },
+  });
+
+  const getDashboardLinkMutation = trpc.partner.getStripeConnectDashboardLink.useMutation({
+    onSuccess: (data) => {
+      // Open Stripe dashboard in new tab
+      window.open(data.dashboardUrl, '_blank');
+    },
+  });
+
+  const handleConnectStripe = () => {
+    createAccountMutation.mutate();
+  };
+
+  const handleCompleteOnboarding = () => {
+    getOnboardingLinkMutation.mutate();
+  };
+
+  const handleViewDashboard = () => {
+    getDashboardLinkMutation.mutate();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+        </div>
+      </div>
+    );
+  }
+
+  // Stripe Connect not configured for platform
+  if (!stripeStatus?.isStripeConnectConfigured) {
+    return null;
+  }
+
+  const isOnboardingComplete = stripeStatus.onboardingComplete;
+  const isPayoutsEnabled = stripeStatus.payoutsEnabled;
+
+  return (
+    <div className="mb-6 rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50 p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="rounded-full bg-purple-100 p-2">
+            <Zap className="h-5 w-5 text-purple-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Stripe Connect</h2>
+            <p className="text-sm text-slate-600">
+              Receive instant payouts directly to your bank account
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Return message from Stripe redirect */}
+      {stripeReturnMessage && (
+        <div className={cn(
+          'mb-4 rounded-lg border p-4',
+          stripeReturnMessage.includes('successfully')
+            ? 'border-emerald-200 bg-emerald-50'
+            : 'border-amber-200 bg-amber-50'
+        )}>
+          <div className="flex items-start gap-3">
+            {stripeReturnMessage.includes('successfully') ? (
+              <CheckCircle className="h-5 w-5 text-emerald-600 mt-0.5" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+            )}
+            <p className={cn(
+              'text-sm',
+              stripeReturnMessage.includes('successfully')
+                ? 'text-emerald-800'
+                : 'text-amber-800'
+            )}>
+              {stripeReturnMessage}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Status indicators */}
+      <div className="mb-4 flex flex-wrap gap-4">
+        <div className="flex items-center gap-2">
+          {stripeStatus.hasStripeAccount ? (
+            <CheckCircle className="h-4 w-4 text-emerald-500" />
+          ) : (
+            <div className="h-4 w-4 rounded-full border-2 border-slate-300" />
+          )}
+          <span className="text-sm text-slate-600">Account Created</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {isOnboardingComplete ? (
+            <CheckCircle className="h-4 w-4 text-emerald-500" />
+          ) : (
+            <div className="h-4 w-4 rounded-full border-2 border-slate-300" />
+          )}
+          <span className="text-sm text-slate-600">Onboarding Complete</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {isPayoutsEnabled ? (
+            <CheckCircle className="h-4 w-4 text-emerald-500" />
+          ) : (
+            <div className="h-4 w-4 rounded-full border-2 border-slate-300" />
+          )}
+          <span className="text-sm text-slate-600">Payouts Enabled</span>
+        </div>
+      </div>
+
+      {/* Action buttons based on status */}
+      {!stripeStatus.hasStripeAccount && (
+        <div>
+          <p className="mb-3 text-sm text-slate-700">
+            Connect your bank account with Stripe to receive faster, automated payouts.
+          </p>
+          <Button
+            onClick={handleConnectStripe}
+            disabled={createAccountMutation.isPending}
+            className="gap-2 bg-purple-600 hover:bg-purple-700"
+          >
+            {createAccountMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Setting up...
+              </>
+            ) : (
+              <>
+                <Zap className="h-4 w-4" />
+                Connect with Stripe
+              </>
+            )}
+          </Button>
+          {createAccountMutation.isError && (
+            <p className="mt-2 text-sm text-red-600">
+              {createAccountMutation.error.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      {stripeStatus.hasStripeAccount && !isOnboardingComplete && (
+        <div>
+          <p className="mb-3 text-sm text-slate-700">
+            Complete your Stripe onboarding to start receiving payouts.
+          </p>
+          <Button
+            onClick={handleCompleteOnboarding}
+            disabled={getOnboardingLinkMutation.isPending}
+            className="gap-2 bg-purple-600 hover:bg-purple-700"
+          >
+            {getOnboardingLinkMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-4 w-4" />
+                Complete Onboarding
+              </>
+            )}
+          </Button>
+          {getOnboardingLinkMutation.isError && (
+            <p className="mt-2 text-sm text-red-600">
+              {getOnboardingLinkMutation.error.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      {isOnboardingComplete && isPayoutsEnabled && (
+        <div>
+          <div className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-emerald-600" />
+              <span className="font-medium text-emerald-900">
+                Stripe Connect is active
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-emerald-700">
+              Your payouts will be processed automatically via Stripe.
+            </p>
+          </div>
+          <Button
+            onClick={handleViewDashboard}
+            disabled={getDashboardLinkMutation.isPending}
+            variant="outline"
+            className="gap-2"
+          >
+            {getDashboardLinkMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-4 w-4" />
+                View Stripe Dashboard
+              </>
+            )}
+          </Button>
+          {getDashboardLinkMutation.isError && (
+            <p className="mt-2 text-sm text-red-600">
+              {getDashboardLinkMutation.error.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      {isOnboardingComplete && !isPayoutsEnabled && (
+        <div>
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+              <div>
+                <span className="font-medium text-amber-900">
+                  Payouts not yet enabled
+                </span>
+                <p className="mt-1 text-sm text-amber-700">
+                  Stripe is reviewing your account. You may need to provide additional information.
+                </p>
+              </div>
+            </div>
+          </div>
+          <Button
+            onClick={handleCompleteOnboarding}
+            disabled={getOnboardingLinkMutation.isPending}
+            variant="outline"
+            className="mt-3 gap-2"
+          >
+            {getOnboardingLinkMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-4 w-4" />
+                Update Account Information
+              </>
+            )}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function PartnerPayoutsPage() {
   const [showSettingsForm, setShowSettingsForm] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Derive the Stripe return message from URL params
+  const stripeReturnMessage = useMemo(() => {
+    const stripeReturn = searchParams.get('stripe_return');
+    const stripeRefresh = searchParams.get('stripe_refresh');
+
+    if (stripeReturn === 'true') {
+      return 'Stripe onboarding completed successfully. Your account status will be updated shortly.';
+    } else if (stripeRefresh === 'true') {
+      return 'Your Stripe session expired. Please click the button below to continue onboarding.';
+    }
+    return null;
+  }, [searchParams]);
+
+  // Clear the URL params after displaying the message
+  useEffect(() => {
+    const stripeReturn = searchParams.get('stripe_return');
+    const stripeRefresh = searchParams.get('stripe_refresh');
+
+    if (stripeReturn || stripeRefresh) {
+      // Use router.replace to clear params without triggering a full navigation
+      router.replace('/dashboard/partner/payouts', { scroll: false });
+    }
+  }, [searchParams, router]);
 
   const { data: profile, isLoading: profileLoading } = trpc.partner.getMyProfile.useQuery();
   const { data: payoutSettings, isLoading: settingsLoading } = trpc.partner.getPayoutSettings.useQuery();
@@ -176,6 +479,9 @@ export default function PartnerPayoutsPage() {
             Request cash payouts for your points (${PAYOUT_RATE} per point)
           </p>
         </div>
+
+        {/* Stripe Connect Card */}
+        <StripeConnectCard stripeReturnMessage={stripeReturnMessage} />
 
         {/* Points Balance */}
         <div className="mb-6 rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 shadow-sm">

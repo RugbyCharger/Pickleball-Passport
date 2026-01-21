@@ -308,6 +308,12 @@ model PartnerProfile {
   // Notification Preferences (E11-S9)
   notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
 
+  // E4-S14: Stripe Connect for Partner Payouts
+  stripeConnectAccountId          String?  // Stripe Connect account ID (acct_xxx)
+  stripeConnectOnboardingComplete Boolean  @default(false) // Has completed Stripe onboarding
+  stripeConnectAccountType        String?  // "express" or "standard"
+  stripeConnectPayoutsEnabled     Boolean  @default(false) // Can receive payouts
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -843,19 +849,26 @@ model PartnerPayout {
   // Status
   status PayoutStatus @default(PENDING)
 
-  // Bank Account (masked for display)
+  // Bank Account (masked for display) - Legacy manual payout
   bankAccountLast4 String?
+
+  // E4-S14: Stripe Connect Payout Fields
+  stripeTransferId String? // Transfer ID from platform to connected account (tr_xxx)
+  stripePayoutId   String? // Payout ID from connected account to bank (po_xxx)
+  payoutMethod     String  @default("manual") // "manual" or "stripe_connect"
+  stripeError      String? // Last Stripe error message if failed
 
   // Processing
   requestedAt   DateTime  @default(now())
   processedAt   DateTime?
-  transactionId String? // External transaction ID
+  transactionId String? // External transaction ID (legacy)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([partnerId])
   @@index([status])
+  @@index([stripeTransferId])
 }
 
 model PartnerPayoutMethod {
