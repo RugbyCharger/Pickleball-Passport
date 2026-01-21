@@ -88,7 +88,7 @@
       "id": "US-005",
       "title": "Post-Trip Completion Bonus",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create daily cron job at /api/cron/referral-completion-bonus",
         "Check for trips that ended yesterday",

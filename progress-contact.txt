@@ -128,3 +128,27 @@ Files changed:
 - User referral procedures are in user router, not partner router
 - Eligibility check: user must have at least one COMPLETED booking to get a referral code
 ---
+
+## 2026-01-21 - US-005: Post-Trip Completion Bonus
+Iteration: 6
+- Created daily cron job at /api/cron/referral-completion-bonus
+- Finds trips that ended yesterday and processes completed bookings with referredBy
+- Awards 500 bonus points to referrers (passportPoints for partners, referralPointsBalance for guests)
+- Creates ReferralEvent with type COMPLETION
+- Updates GuestReferral status to COMPLETED
+- Sends notification email to referrer with completion bonus details
+- Prevents duplicate bonus awards by checking existing COMPLETION events for same user/code
+- Added COMPLETION_BONUS_POINTS to GUEST_REFERRAL_POINTS_CONFIG
+
+Files changed:
+- app/api/cron/referral-completion-bonus/route.ts (new)
+- lib/email/templates/guest-referral-completion.ts (new)
+- lib/config/business-constants.ts (added COMPLETION_BONUS_POINTS)
+
+**Learnings for future iterations:**
+- Cron jobs use CRON_SECRET for authorization (Bearer token in header)
+- Use prisma.$transaction for atomic operations when awarding points and updating status
+- To find trips that ended yesterday, use startDate/endDate with date range (0:00:00 to 23:59:59)
+- Both partner and guest referrers get completion bonus (check both PartnerProfile and User tables)
+- Email sending should be in try/catch to not fail the main operation if email fails
+---
