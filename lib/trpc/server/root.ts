@@ -35,6 +35,7 @@ import { packageCmsRouter } from './routers/package-cms'
 import { blogRouter } from './routers/blog'
 import { faqRouter } from './routers/faq'
 import { guestTestimonialRouter } from './routers/guest-testimonial'
+import { mediaRouter } from './routers/media'
 
 export const appRouter = router({
   user: userRouter,
@@ -66,6 +67,7 @@ export const appRouter = router({
   blog: blogRouter,
   faq: faqRouter,
   guestTestimonial: guestTestimonialRouter,
+  media: mediaRouter,
 })
 
 // Export type definition for the router

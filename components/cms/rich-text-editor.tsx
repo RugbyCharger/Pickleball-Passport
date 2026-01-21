@@ -6,7 +6,7 @@
  * TipTap-based rich text editor for CMS content editing.
  * Features:
  * - Full formatting toolbar
- * - Link and image support
+ * - Link and image support with media library integration
  * - Text alignment
  * - Heading levels
  * - Lists (bullet/numbered)
@@ -23,8 +23,9 @@ import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { MediaPicker } from './media-picker'
 import {
   Bold,
   Italic,
@@ -100,7 +101,7 @@ function MenuButton({ onClick, active, disabled, tooltip, children }: MenuButton
   )
 }
 
-function MenuBar({ editor }: { editor: Editor | null }) {
+function MenuBar({ editor, onOpenMediaPicker }: { editor: Editor | null; onOpenMediaPicker: () => void }) {
   const setLink = useCallback(() => {
     if (!editor) return
 
@@ -117,7 +118,7 @@ function MenuBar({ editor }: { editor: Editor | null }) {
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
 
-  const addImage = useCallback(() => {
+  const addImageFromUrl = useCallback(() => {
     if (!editor) return
 
     const url = window.prompt('Image URL')
