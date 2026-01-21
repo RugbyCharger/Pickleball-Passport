@@ -2947,6 +2947,166 @@ export const partnerRouter = router({
 
       return testimonials
     }),
+
+  // ============================================================================
+  // E9-S19: Partner Leaderboard
+  // ============================================================================
+
+  /**
+   * Get partner leaderboard
+   * Shows top performing partners ranked by points
+   */
+  getLeaderboard: partnerProcedure
+    .input(
+      z
+        .object({
+          timeframe: z.enum(['monthly', 'alltime']).default('monthly'),
+          limit: z.number().min(1).max(100).default(50),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const timeframe = input?.timeframe || 'monthly'
+      const limit = input?.limit || 50
+
+      // Get current partner's profile for highlighting
+      const currentPartner = await ctx.db.partnerProfile.findUnique({
+        where: { userId: ctx.user!.id },
+        select: { id: true, showOnLeaderboard: true },
+      })
+
+      if (!currentPartner) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      // Build date filter for monthly leaderboard
+      let dateFilter: { gte?: Date } = {}
+      if (timeframe === 'monthly') {
+        const startOfMonth = new Date()
+        startOfMonth.setDate(1)
+        startOfMonth.setHours(0, 0, 0, 0)
+        dateFilter = { gte: startOfMonth }
+      }
+
+      // Get all partners with their referral data
+      const partners = await ctx.db.partnerProfile.findMany({
+        select: {
+          id: true,
+          clubName: true,
+          clubLocation: true,
+          tier: true,
+          passportPoints: true,
+          showOnLeaderboard: true,
+          referrals: {
+            where: timeframe === 'monthly' ? { createdAt: dateFilter } : {},
+            select: {
+              pointsEarned: true,
+              createdAt: true,
+            },
+          },
+        },
+      })
+
+      // Calculate points for each partner based on timeframe
+      const partnerPoints = partners.map((partner) => {
+        const points =
+          timeframe === 'monthly'
+            ? partner.referrals.reduce((sum, r) => sum + r.pointsEarned, 0)
+            : partner.passportPoints
+
+        return {
+          id: partner.id,
+          clubName: partner.showOnLeaderboard ? partner.clubName : 'Anonymous Partner',
+          clubLocation: partner.showOnLeaderboard ? partner.clubLocation : null,
+          tier: partner.tier,
+          points,
+          isCurrentPartner: partner.id === currentPartner.id,
+          isAnonymous: !partner.showOnLeaderboard,
+        }
+      })
+
+      // Sort by points (descending)
+      partnerPoints.sort((a, b) => b.points - a.points)
+
+      // Assign ranks (handle ties)
+      let currentRank = 1
+      let previousPoints = -1
+      const rankedPartners = partnerPoints.map((partner, index) => {
+        if (partner.points !== previousPoints) {
+          currentRank = index + 1
+        }
+        previousPoints = partner.points
+        return {
+          ...partner,
+          rank: currentRank,
+        }
+      })
+
+      // Find current partner's rank (even if not in top results)
+      const currentPartnerEntry = rankedPartners.find((p) => p.isCurrentPartner)
+      const currentPartnerRank = currentPartnerEntry?.rank || null
+
+      // Return top partners and current partner info
+      return {
+        leaderboard: rankedPartners.slice(0, limit),
+        currentPartnerRank,
+        currentPartnerPoints: currentPartnerEntry?.points || 0,
+        currentPartnerShowOnLeaderboard: currentPartner.showOnLeaderboard,
+        timeframe,
+        totalPartners: rankedPartners.length,
+      }
+    }),
+
+  /**
+   * Update partner's leaderboard visibility preference
+   */
+  updateLeaderboardVisibility: partnerProcedure
+    .input(
+      z.object({
+        showOnLeaderboard: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.db.partnerProfile.findUnique({
+        where: { userId: ctx.user!.id },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Partner profile not found',
+        })
+      }
+
+      await ctx.db.partnerProfile.update({
+        where: { id: profile.id },
+        data: { showOnLeaderboard: input.showOnLeaderboard },
+      })
+
+      return { success: true, showOnLeaderboard: input.showOnLeaderboard }
+    }),
+
+  /**
+   * Get partner's leaderboard settings
+   */
+  getLeaderboardSettings: partnerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.db.partnerProfile.findUnique({
+      where: { userId: ctx.user!.id },
+      select: { showOnLeaderboard: true },
+    })
+
+    if (!profile) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Partner profile not found',
+      })
+    }
+
+    return { showOnLeaderboard: profile.showOnLeaderboard }
+  }),
 })
 
 /**

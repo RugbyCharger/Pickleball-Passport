@@ -32,6 +32,8 @@ import {
   MessageSquare,
   PenTool,
   AlertTriangle,
+  Medal,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -532,6 +534,32 @@ export default function PartnerDashboardPage() {
                 <div>
                   <h3 className="font-semibold text-slate-900">Directors Circle</h3>
                   <p className="text-sm text-slate-600">Partner community forum</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/leaderboard">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-purple-100 p-3">
+                  <Medal className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Leaderboard</h3>
+                  <p className="text-sm text-slate-600">See top partners</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link href="/dashboard/partner/settings">
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-slate-100 p-3">
+                  <Settings className="h-6 w-6 text-slate-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Settings</h3>
+                  <p className="text-sm text-slate-600">Manage preferences</p>
                 </div>
               </div>
             </div>
