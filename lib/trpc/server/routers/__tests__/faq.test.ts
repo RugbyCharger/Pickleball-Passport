@@ -14,6 +14,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { Prisma } from '@prisma/client'
 
 // Mock Prisma before imports
 vi.mock('@/lib/db', () => ({
@@ -684,7 +685,7 @@ describe('FAQ Router', () => {
         const duplicate = await prisma.fAQ.create({
           data: {
             question: `${original!.question} (Copy)`,
-            answer: original!.answer,
+            answer: original!.answer as Prisma.InputJsonValue,
             answerPlain: original!.answerPlain,
             categoryId: original!.categoryId,
             sortOrder: 6,
