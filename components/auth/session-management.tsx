@@ -29,9 +29,6 @@ import {
 } from '@/components/ui/dialog'
 import {
   Monitor,
-  Smartphone,
-  Tablet,
-  Globe,
   Clock,
   LogOut,
   Shield,
@@ -39,33 +36,6 @@ import {
   CheckCircle,
   AlertTriangle,
 } from 'lucide-react'
-
-// Detect device type from user agent
-function getDeviceInfo(userAgent: string | undefined): { type: 'desktop' | 'mobile' | 'tablet' | 'unknown'; icon: typeof Monitor } {
-  if (!userAgent) return { type: 'unknown', icon: Globe }
-
-  const ua = userAgent.toLowerCase()
-  if (/tablet|ipad|playbook|silk/i.test(ua)) {
-    return { type: 'tablet', icon: Tablet }
-  }
-  if (/mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)) {
-    return { type: 'mobile', icon: Smartphone }
-  }
-  return { type: 'desktop', icon: Monitor }
-}
-
-// Get browser name from user agent
-function getBrowserName(userAgent: string | undefined): string {
-  if (!userAgent) return 'Unknown Browser'
-
-  const ua = userAgent.toLowerCase()
-  if (ua.includes('firefox')) return 'Firefox'
-  if (ua.includes('edg')) return 'Edge'
-  if (ua.includes('chrome')) return 'Chrome'
-  if (ua.includes('safari')) return 'Safari'
-  if (ua.includes('opera')) return 'Opera'
-  return 'Unknown Browser'
-}
 
 export function SessionManagement() {
   const { signOut } = useClerk()
@@ -91,11 +61,9 @@ export function SessionManagement() {
   const handleRevokeSession = async (sessionId: string) => {
     setSigningOutSessionId(sessionId)
     try {
-      const session = sessions?.find(s => s.id === sessionId)
-      if (session) {
-        await session.revoke()
-        toast.success('Session revoked successfully')
-      }
+      // Use signOut with sessionId to revoke a specific session
+      await signOut({ sessionId })
+      toast.success('Session revoked successfully')
     } catch (error) {
       toast.error('Failed to revoke session')
     } finally {
@@ -206,9 +174,6 @@ export function SessionManagement() {
             <div className="space-y-2">
               {activeSessions.map((session) => {
                 const isCurrentSession = session.id === currentSession?.id
-                const deviceInfo = getDeviceInfo(session.latestActivity?.userAgent)
-                const DeviceIcon = deviceInfo.icon
-                const browserName = getBrowserName(session.latestActivity?.userAgent)
 
                 return (
                   <div
@@ -219,12 +184,12 @@ export function SessionManagement() {
                   >
                     <div className="flex items-center gap-3">
                       <div className={`p-2 rounded-lg ${isCurrentSession ? 'bg-primary/10' : 'bg-muted'}`}>
-                        <DeviceIcon className={`h-5 w-5 ${isCurrentSession ? 'text-primary' : 'text-muted-foreground'}`} />
+                        <Monitor className={`h-5 w-5 ${isCurrentSession ? 'text-primary' : 'text-muted-foreground'}`} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-sm">
-                            {browserName} on {deviceInfo.type.charAt(0).toUpperCase() + deviceInfo.type.slice(1)}
+                            Session
                           </span>
                           {isCurrentSession && (
                             <Badge variant="default" className="text-xs">
@@ -244,11 +209,6 @@ export function SessionManagement() {
                             }) : 'Unknown'}
                           </span>
                         </div>
-                        {session.latestActivity?.ipAddress && (
-                          <div className="text-xs text-muted-foreground">
-                            IP: {session.latestActivity.ipAddress}
-                          </div>
-                        )}
                       </div>
                     </div>
 

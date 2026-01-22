@@ -8,15 +8,22 @@
 import Stripe from 'stripe'
 import { stripeLogger, logError } from '@/lib/logger'
 
-// Initialize Stripe client for server-side use
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-if (!stripeSecretKey) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+// Lazy-initialize Stripe client to avoid build-time errors
+let stripeClient: Stripe | null = null
+
+function getStripeClient(): Stripe {
+  if (!stripeClient) {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+    if (!stripeSecretKey) {
+      throw new Error('STRIPE_SECRET_KEY is not set')
+    }
+    stripeClient = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-12-15.clover',
+      typescript: true,
+    })
+  }
+  return stripeClient
 }
-const stripeClient = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-12-15.clover',
-  typescript: true,
-})
 
 export interface CreateCustomerInput {
   email: string
@@ -41,7 +48,7 @@ export async function createStripeCustomer(
   input: CreateCustomerInput
 ): Promise<Stripe.Customer> {
   try {
-    const customer = await stripeClient.customers.create({
+    const customer = await getStripeClient().customers.create({
       email: input.email,
       name: input.name,
       metadata: {
@@ -102,7 +109,7 @@ export async function attachPaymentMethod(
   paymentMethodId: string
 ): Promise<AttachPaymentMethodResult> {
   try {
-    await stripeClient.paymentMethods.attach(paymentMethodId, {
+    await getStripeClient().paymentMethods.attach(paymentMethodId, {
       customer: customerId,
     })
 
@@ -128,7 +135,7 @@ export async function setDefaultPaymentMethod(
   paymentMethodId: string
 ): Promise<AttachPaymentMethodResult> {
   try {
-    await stripeClient.customers.update(customerId, {
+    await getStripeClient().customers.update(customerId, {
       invoice_settings: {
         default_payment_method: paymentMethodId,
       },
@@ -182,7 +189,7 @@ export async function getStripeCustomer(
 ): Promise<Stripe.Customer | null> {
   
   try {
-    const customer = await stripeClient.customers.retrieve(customerId)
+    const customer = await getStripeClient().customers.retrieve(customerId)
 
     // Check if customer was deleted
     if (customer.deleted) {
@@ -207,7 +214,7 @@ export async function getCustomerDefaultPaymentMethod(
 ): Promise<Stripe.PaymentMethod | null> {
   
   try {
-    const customer = await stripeClient.customers.retrieve(customerId, {
+    const customer = await getStripeClient().customers.retrieve(customerId, {
       expand: ['invoice_settings.default_payment_method'],
     })
 
@@ -228,7 +235,7 @@ export async function getCustomerDefaultPaymentMethod(
     }
 
     // Otherwise fetch it
-    return await stripeClient.paymentMethods.retrieve(defaultPaymentMethod)
+    return await getStripeClient().paymentMethods.retrieve(defaultPaymentMethod)
   } catch (error) {
     logError(stripeLogger, error, 'Failed to retrieve default payment method', { customerId })
     return null

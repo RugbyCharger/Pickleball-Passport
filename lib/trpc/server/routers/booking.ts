@@ -36,16 +36,22 @@ import { generateGuestReferralBookingEmail } from '@/lib/email/templates/guest-r
 
 const REFERRAL_COOKIE_NAME = 'referral_code'
 
-// Initialize Stripe client (server-side)
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-if (!stripeSecretKey) {
-  throw new Error('STRIPE_SECRET_KEY is not configured')
-}
+// Lazy-initialize Stripe client to avoid build-time errors
+let stripeClient: Stripe | null = null
 
-const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-12-15.clover',
-  timeout: 10000, // E4-S6: 10 second timeout for Stripe API calls
-})
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+    if (!stripeSecretKey) {
+      throw new Error('STRIPE_SECRET_KEY is not configured')
+    }
+    stripeClient = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-12-15.clover',
+      timeout: 10000, // E4-S6: 10 second timeout for Stripe API calls
+    })
+  }
+  return stripeClient
+}
 
 /**
  * Input schema for creating a payment intent
@@ -1659,7 +1665,7 @@ export const bookingRouter = router({
         }
 
         try {
-          const refund = await stripe.refunds.create({
+          const refund = await getStripe().refunds.create({
             payment_intent: payment.stripePaymentIntentId,
             amount: refundAmount,
             reason: 'requested_by_customer',
@@ -1949,7 +1955,7 @@ export const bookingRouter = router({
       if (priceDifference > 0) {
         // Price increase: charge difference
         try {
-          const paymentIntent = await stripe.paymentIntents.create({
+          const paymentIntent = await getStripe().paymentIntents.create({
             amount: priceDifference,
             currency: 'usd',
             customer: booking.payments[0]?.stripeCustomerId || undefined,
@@ -1974,7 +1980,7 @@ export const bookingRouter = router({
         const payment = booking.payments[0]
         if (payment?.stripePaymentIntentId) {
           try {
-            const refund = await stripe.refunds.create({
+            const refund = await getStripe().refunds.create({
               payment_intent: payment.stripePaymentIntentId,
               amount: Math.abs(priceDifference),
               reason: 'requested_by_customer',
@@ -2245,7 +2251,7 @@ export const bookingRouter = router({
       if (priceDifference > 0) {
         // Price increased - charge difference
         try {
-          const paymentIntent = await stripe.paymentIntents.create({
+          const paymentIntent = await getStripe().paymentIntents.create({
             amount: priceDifference,
             currency: 'usd',
             customer: booking.payments[0]?.stripeCustomerId || undefined,
@@ -2278,7 +2284,7 @@ export const bookingRouter = router({
         const payment = booking.payments[0]
         if (payment?.stripePaymentIntentId) {
           try {
-            const refund = await stripe.refunds.create({
+            const refund = await getStripe().refunds.create({
               payment_intent: payment.stripePaymentIntentId,
               amount: Math.abs(priceDifference),
               reason: 'requested_by_customer',
@@ -2589,7 +2595,7 @@ export const bookingRouter = router({
       const bookingReference = generateBookingReference()
 
       // 8. CREATE STRIPE PAYMENT INTENT
-      const paymentIntent = await stripe.paymentIntents.create({
+      const paymentIntent = await getStripe().paymentIntents.create({
         amount: totalPrice,
         currency: 'usd',
         metadata: {

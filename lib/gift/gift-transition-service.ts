@@ -188,7 +188,7 @@ export async function transitionGiftState(
           fromState: currentState,
           toState,
           reason,
-          metadata: metadata as unknown as Prisma.JsonValue,
+          metadata: metadata as unknown as Prisma.InputJsonValue,
         },
       })
 
@@ -207,7 +207,7 @@ export async function transitionGiftState(
 
       // Additional updates based on state
       if (toState === GiftState.ACCEPTED && options.recipientUserId) {
-        updateData.userId = options.recipientUserId
+        updateData.user = { connect: { id: options.recipientUserId } }
         updateData.giftAcceptedAt = new Date()
       }
 

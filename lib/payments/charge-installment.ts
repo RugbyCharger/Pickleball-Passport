@@ -27,15 +27,22 @@ type PaymentRecordWithBooking = Prisma.PaymentRecordGetPayload<{
   }
 }>
 
-// Initialize Stripe client for server-side use
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-if (!stripeSecretKey) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+// Lazy-initialize Stripe client to avoid build-time errors
+let stripeClient: Stripe | null = null
+
+function getStripeClient(): Stripe {
+  if (!stripeClient) {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+    if (!stripeSecretKey) {
+      throw new Error('STRIPE_SECRET_KEY is not set')
+    }
+    stripeClient = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-12-15.clover',
+      typescript: true,
+    })
+  }
+  return stripeClient
 }
-const stripeClient = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-12-15.clover',
-  typescript: true,
-})
 
 export interface ChargeInstallmentInput {
   paymentRecordId: string
@@ -125,7 +132,7 @@ export async function chargeInstallment(
     paymentLogger.info({ bookingReference: booking.bookingReference, installmentNumber: paymentRecord.installmentNumber }, 'Charging installment')
 
     // Create payment intent with off_session confirmation
-    const paymentIntent = await stripeClient.paymentIntents.create({
+    const paymentIntent = await getStripeClient().paymentIntents.create({
       amount: paymentRecord.amountCents,
       currency: 'usd',
       customer: booking.stripeCustomerId,
@@ -252,8 +259,8 @@ async function sendCustomerReminder(
     if (!nextRetryDate) return
 
     const emailData = {
-      firstName: user.firstName || 'Guest',
-      email: user.emailAddresses?.[0]?.emailAddress || booking.guestEmail || '',
+      firstName: booking.guestFirstName || 'Guest',
+      email: user?.email || booking.guestEmail || '',
       bookingReference: booking.bookingReference,
       packageName: booking.package.name,
       tripStartDate: booking.trip?.startDate?.toISOString() || '',
@@ -267,7 +274,7 @@ async function sendCustomerReminder(
         month: 'long',
         day: 'numeric',
       }),
-      failureReason: paymentRecord.failureReason,
+      failureReason: paymentRecord.failureReason ?? undefined,
       updatePaymentUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
     }
 
@@ -312,9 +319,9 @@ async function sendAdminAlert(
     }
 
     const emailData = {
-      customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown',
-      customerEmail: user.emailAddresses?.[0]?.emailAddress || booking.guestEmail || '',
-      customerPhone: user.phone,
+      customerName: `${booking.guestFirstName || ''} ${booking.guestLastName || ''}`.trim() || 'Unknown',
+      customerEmail: user?.email || booking.guestEmail || '',
+      customerPhone: booking.guestPhone ?? undefined,
       bookingReference: booking.bookingReference,
       bookingId: booking.id,
       packageName: booking.package.name,

@@ -26,7 +26,7 @@ export const preferencesRouter = router({
    * Get current user's notification preferences (authenticated)
    */
   getMyPreferences: protectedProcedure.query(async ({ ctx }) => {
-    return await getUserPreferences(ctx.session.userId);
+    return await getUserPreferences(ctx.user.id);
   }),
 
   /**
@@ -35,7 +35,7 @@ export const preferencesRouter = router({
   updatePreferences: protectedProcedure
     .input(PreferenceUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      await updateUserPreferences(ctx.session.userId, input);
+      await updateUserPreferences(ctx.user.id, input);
       return { success: true };
     }),
 
@@ -43,7 +43,7 @@ export const preferencesRouter = router({
    * Unsubscribe from all optional notifications (authenticated)
    */
   unsubscribeAll: protectedProcedure.mutation(async ({ ctx }) => {
-    await unsubscribeFromAll(ctx.session.userId);
+    await unsubscribeFromAll(ctx.user.id);
     return { success: true };
   }),
 
