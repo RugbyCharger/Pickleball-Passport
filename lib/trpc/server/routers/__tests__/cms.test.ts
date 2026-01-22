@@ -117,6 +117,7 @@ describe('CMS Router', () => {
     sortOrder: 0,
     pageId: null,
     categoryId: null,
+    packageId: null,
     deletedAt: null,
     publishedAt: null,
     createdBy: 'admin_123',

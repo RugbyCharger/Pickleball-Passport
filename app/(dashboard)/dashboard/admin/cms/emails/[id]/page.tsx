@@ -156,7 +156,7 @@ export default function CmsEmailTemplateEditorPage() {
   useEffect(() => {
     if (templateData && !isNew) {
       const visualBlocks = templateData.visualBlocks
-        ? (templateData.visualBlocks as EmailVisualContent)
+        ? (templateData.visualBlocks as unknown as EmailVisualContent)
         : null
       const useVisualEditor = (templateData as { useVisualEditor?: boolean }).useVisualEditor ?? false
 

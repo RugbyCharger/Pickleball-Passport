@@ -1,86 +1,85 @@
 # Ralph Progress Log
-Started: Wed Jan 21 22:54:26 +07 2026
+Started: Thu Jan 22 00:11:19 +07 2026
 ---
 
 ## Codebase Patterns
-- Use `logStripeError(error, message, context)` for Stripe errors (no logger param)
-- Use `stripeLogger.info/warn` for Stripe-related logging
-- Admin mutations use `adminProcedure` with `z.object()` input validation
-- Payout status values: PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED
-- Partner Stripe Connect fields on PartnerProfile: stripeConnectAccountId, stripeConnectOnboardingComplete, stripeConnectAccountType, stripeConnectPayoutsEnabled
-- Admin pages are at app/(dashboard)/dashboard/admin/[feature]/page.tsx (note the (dashboard) route group)
-- Use toast from 'sonner' for notifications, Tooltip from @/components/ui/tooltip
+- Admin CMS pages are at app/(dashboard)/dashboard/admin/cms/[feature]/page.tsx
+- Package CMS router is at lib/trpc/server/routers/package-cms.ts (not admin.ts)
+- Use `Prisma.EnumContentBlockTypeFilter['equals']` for enum type filtering in Prisma where clauses
+- Rich text editor uses TipTap and stores content as JSON in `cmsDescription` fields
+- Preview pages exist at [id]/preview/page.tsx for content preview
+- For `as const` readonly arrays, use `(arr as readonly string[]).includes(val)` instead of `arr.includes(val as any)`
 
 ---
 
-## 2026-01-21 22:56 - E4-S14-001
+## 2026-01-22 - E12-S2
 Iteration: 1
-- Implemented processStripeConnectPayout admin mutation endpoint
-- Files changed: lib/trpc/server/routers/admin.ts
+- Package Content Editing story was already implemented (commit 1c2f99b)
+- Fixed TypeScript error in package-cms.ts (mode and type enum casting)
+- Files involved:
+  - app/(dashboard)/dashboard/admin/cms/packages/page.tsx (packages list)
+  - app/(dashboard)/dashboard/admin/cms/packages/[id]/page.tsx (package editor)
+  - app/(dashboard)/dashboard/admin/cms/packages/[id]/preview/page.tsx (preview)
+  - lib/trpc/server/routers/package-cms.ts (tRPC endpoints)
 - **Learnings for future iterations:**
-  - `logStripeError` only takes 2-3 args (error, message, context?) - NOT a logger as first param
-  - Existing lint warnings in admin.ts (guestName unused) are pre-existing, don't need to fix them
-  - TypeScript errors in test files and some components are pre-existing
-  - PartnerPayout includes `partner: PartnerProfile` via Prisma relation
+  - This epic's stories were partially pre-implemented in feature branches
+  - Always check git history to see what code already exists
+  - Package CMS uses dedicated router (package-cms.ts), not generic admin.ts
+  - ContentBlock type field needs enum type casting for Prisma where clauses
 ---
 
-## 2026-01-21 23:01 - E4-S14-002
-Iteration: 2
-- Implemented Stripe Connect webhook handlers for account.updated, transfer.created, and transfer.reversed events
-- Files changed: app/api/webhooks/stripe/route.ts
+## 2026-01-22 - E12-S3
+Iteration: 1
+- Blog Posts System - implemented public-facing blog pages
+- Files created:
+  - app/(marketing)/blog/page.tsx (blog listing with category/tag filtering, search, pagination)
+  - app/(marketing)/blog/layout.tsx (base SEO metadata for blog section)
+  - app/(marketing)/blog/[slug]/page.tsx (server component for dynamic SEO metadata)
+  - app/(marketing)/blog/[slug]/blog-post-content.tsx (client component for blog post display)
+- Note: Admin blog dashboard and tRPC router were already implemented in previous iterations
 - **Learnings for future iterations:**
-  - Existing webhook handler has good pattern: switch/case on event.type, handler functions are async, log errors but don't throw (acknowledge webhook)
-  - Use `stripeLogger.info/warn/error` for Stripe-related logging (imported from @/lib/logger)
-  - parseAccountUpdatedEvent and parseTransferEvent are helper functions in stripe-connect.ts for extracting typed data from Stripe events
-  - Pre-existing build errors exist (missing @tiptap packages, @dnd-kit packages, db export issues) - these are unrelated to current work
+  - BlogPost model already exists in Prisma schema with full versioning support
+  - Blog tRPC router has both admin (adminProcedure) and public (publicProcedure) endpoints
+  - Public endpoints: getPublishedPosts, getPublishedPostBySlug, getPublicCategories, getPublicTags
+  - Use Next.js generateMetadata for dynamic SEO in server components
+  - Avoid useEffect for state reset - use handler functions instead to satisfy ESLint
+  - Marketing pages use app/(marketing)/ route group with force-dynamic export
+  - Import prisma from '@/lib/db' (not db)
 ---
 
-## 2026-01-21 23:09 - E4-S14-003
-Iteration: 3
-- Created StripeConnectCard component for partner Stripe Connect onboarding UI
-- Added component to existing partner payouts page at app/(dashboard)/dashboard/partner/payouts/page.tsx
-- Implemented URL param handling for stripe_return and stripe_refresh params
-- Files changed: app/(dashboard)/dashboard/partner/payouts/page.tsx
+## 2026-01-22 - E12-S4
+Iteration: 1
+- FAQ Management System was already fully implemented in previous iterations
+- Fixed TypeScript error in faq.test.ts (JsonValue to InputJsonValue cast)
+- Files involved:
+  - prisma/schema.prisma (FAQCategory, FAQ models)
+  - lib/trpc/server/routers/faq.ts (full tRPC router)
+  - lib/trpc/server/routers/__tests__/faq.test.ts (fixed TypeScript error)
+  - app/(dashboard)/dashboard/admin/cms/faqs/page.tsx (admin management page)
+  - app/(marketing)/faq/page.tsx (public FAQ page)
 - **Learnings for future iterations:**
-  - Partner payouts page is at app/(dashboard)/dashboard/partner/payouts/page.tsx (not app/dashboard/partner/payouts/page.tsx as PRD suggested)
-  - Page uses custom card styles (rounded-lg border border-slate-200 bg-white p-6 shadow-sm) not shadcn/ui Card
-  - tRPC mutations: createStripeConnectAccount returns { onboardingUrl }, getStripeConnectOnboardingLink returns { onboardingUrl }, getStripeConnectDashboardLink returns { dashboardUrl }
-  - Pre-existing lint error in payouts page: unescaped apostrophe in "you're" - not related to current work
-  - Use useMemo for derived state from searchParams to avoid React setState-in-effect lint errors
+  - FAQ uses dedicated router (faq.ts) registered in root.ts
+  - Uses @dnd-kit for drag-and-drop reordering of FAQs and categories
+  - TipTap JSON content stored in `answer` field, with `answerPlain` for search indexing
+  - Public endpoints: getPublicFAQs, getPublicCategories
+  - Admin endpoints: getFAQs, createFAQ, updateFAQ, deleteFAQ, reorderFAQs, etc.
+  - Prisma JsonValue needs cast to InputJsonValue when reassigning in tests
 ---
 
-## 2026-01-21 23:16 - E4-S14-004
-Iteration: 4
-- Created admin partner payouts page at app/(dashboard)/dashboard/admin/partner-payouts/page.tsx
-- Added getPartnerPayouts admin endpoint with status filtering and pagination
-- Added getPartnerPayoutStats admin endpoint for dashboard stats
-- Implemented 'Process via Stripe' button with enable/disable logic based on partner Stripe Connect status
-- Added tooltips explaining why button is disabled when partner lacks Stripe Connect
-- Implemented loading state during processing and toast notifications on success/error
-- Displays payoutMethod and stripeTransferId columns in payout list
-- Files changed: lib/trpc/server/routers/admin.ts, app/(dashboard)/dashboard/admin/partner-payouts/page.tsx
+## 2026-01-22 - E12-S5
+Iteration: 1
+- Testimonial Moderation System was already fully implemented in previous iterations
+- Fixed TypeScript error in testimonial-storage.ts (readonly array includes type casting)
+- Files involved:
+  - prisma/schema.prisma (GuestTestimonial model with status enum)
+  - lib/trpc/server/routers/guest-testimonial.ts (full moderation workflow)
+  - lib/storage/testimonial-storage.ts (fixed TypeScript error)
+  - app/(dashboard)/dashboard/admin/cms/testimonials/page.tsx (admin moderation page)
 - **Learnings for future iterations:**
-  - Admin payout management page didn't exist - needed to create it from scratch
-  - Admin pages follow consistent pattern: breadcrumb, header, stats cards, filters, table with pagination
-  - Use toast from 'sonner' for notifications
-  - Use Tooltip components from @/components/ui/tooltip (TooltipProvider, Tooltip, TooltipTrigger, TooltipContent)
-  - TypeScript StatusFilter type issues: avoid redundant checks like `statusFilter !== 'ALL'` when `hasActiveFilters` already guards
-  - No npm run typecheck script exists - use `npx tsc --noEmit` directly
-  - Pre-existing lint errors (529 errors, 2952 warnings) in codebase - not related to current work
----
-
-## 2026-01-21 23:30 - E4-S14-005
-Iteration: 5
-- Final integration and testing for Stripe Connect Partner Payouts
-- Fixed TypeScript error: removed firstName/lastName from User select (fields don't exist on User model)
-- Committed previously untracked lib/stripe/stripe-connect.ts service file
-- Added Stripe Connect fields to Prisma schema (PartnerProfile, PartnerPayout)
-- Verified TypeScript compiles without errors in modified files
-- Verified ESLint passes (only pre-existing errors in codebase)
-- Files changed: lib/trpc/server/routers/partner.ts, lib/stripe/stripe-connect.ts, prisma/schema.prisma
-- **Learnings for future iterations:**
-  - User model only has email - no firstName/lastName (those are on GuestProfile)
-  - PartnerProfile doesn't have firstName/lastName either - partners are identified by clubName
-  - CreateConnectAccountParams has optional firstName/lastName - can safely omit them
-  - Always check git status for untracked files that should be committed
+  - GuestTestimonial uses dedicated router (guest-testimonial.ts) separate from older testimonial.ts
+  - Status enum: PENDING, APPROVED, PUBLISHED, REJECTED, EDIT_REQUESTED
+  - Type enum: TEXT, VIDEO, BEFORE_AFTER, COMBINED
+  - Admin moderation endpoints: listAll, approve, publish, unpublish, reject, requestEdits, toggleFeatured
+  - Uses Supabase Storage for video/photo uploads
+  - For `as const` readonly arrays, use `(arr as readonly string[]).includes()` instead of `arr.includes(val as any)`
 ---

@@ -118,16 +118,6 @@ function MenuBar({ editor, onOpenMediaPicker }: { editor: Editor | null; onOpenM
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
 
-  const addImageFromUrl = useCallback(() => {
-    if (!editor) return
-
-    const url = window.prompt('Image URL')
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
-    }
-  }, [editor])
-
   if (!editor) {
     return null
   }
@@ -302,7 +292,7 @@ function MenuBar({ editor, onOpenMediaPicker }: { editor: Editor | null; onOpenM
         <Unlink className="h-4 w-4" />
       </MenuButton>
       <MenuButton
-        onClick={addImage}
+        onClick={onOpenMediaPicker}
         tooltip="Add Image"
       >
         <ImageIcon className="h-4 w-4" />
@@ -318,6 +308,8 @@ export function RichTextEditor({
   editable = true,
   className,
 }: RichTextEditorProps) {
+  const [showMediaPicker, setShowMediaPicker] = useState(false)
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -385,10 +377,24 @@ export function RichTextEditor({
     }
   }, [editor, editable])
 
+  const handleMediaSelect = useCallback((asset: { url: string; alt?: string | null }) => {
+    if (editor) {
+      editor.chain().focus().setImage({ src: asset.url, alt: asset.alt || '' }).run()
+    }
+  }, [editor])
+
   return (
     <div className={cn('border rounded-lg overflow-hidden bg-background', className)}>
-      {editable && <MenuBar editor={editor} />}
+      {editable && <MenuBar editor={editor} onOpenMediaPicker={() => setShowMediaPicker(true)} />}
       <EditorContent editor={editor} />
+      {editable && (
+        <MediaPicker
+          isOpen={showMediaPicker}
+          onClose={() => setShowMediaPicker(false)}
+          onSelect={handleMediaSelect}
+          allowedTypes={['IMAGE']}
+        />
+      )}
     </div>
   )
 }
