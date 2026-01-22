@@ -3,13 +3,15 @@ export async function register() {
     await import("./sentry.server.config");
   }
 
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("./sentry.edge.config");
-  }
+  // Edge runtime Sentry disabled - causing MIDDLEWARE_INVOCATION_FAILED on Vercel
+  // The @sentry/nextjs package has Node.js dependencies incompatible with Edge Runtime
+  // if (process.env.NEXT_RUNTIME === "edge") {
+  //   await import("./sentry.edge.config");
+  // }
 }
 
-// Only export onRequestError in Node.js runtime to avoid Edge compatibility issues
-// The module-level Sentry import was causing MIDDLEWARE_INVOCATION_FAILED errors
+// Only capture errors in Node.js runtime - Edge runtime has Sentry disabled
+// due to MIDDLEWARE_INVOCATION_FAILED errors from incompatible Node.js dependencies
 export async function onRequestError(
   error: { digest: string } & Error,
   request: {
@@ -26,6 +28,10 @@ export async function onRequestError(
     renderType?: "dynamic" | "dynamic-resume";
   }
 ): Promise<void> {
+  // Skip Sentry in Edge runtime to avoid compatibility issues
+  if (process.env.NEXT_RUNTIME === "edge") {
+    return;
+  }
   // Dynamic import to avoid loading Sentry at module initialization
   const Sentry = await import("@sentry/nextjs");
   return Sentry.captureRequestError(error, request, context);
