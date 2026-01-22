@@ -238,7 +238,7 @@ const FUNNEL_STAGE_COLORS = [
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
-type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics';
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics' | 'package-performance';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
@@ -423,6 +423,25 @@ export default function AnalyticsDashboardPage() {
   const { data: medicalProceduresByDemographic, isLoading: loadingMedicalProcedures } =
     trpc.analytics.demographics.getMedicalProceduresByDemographic.useQuery(dateRange);
 
+  // Package Performance Analytics (E13-S6)
+  const { data: packageOverview, isLoading: loadingPackageOverview } =
+    trpc.analytics.packagePerformance.getOverview.useQuery(dateRange);
+
+  const { data: packageComparison, isLoading: loadingPackageComparison } =
+    trpc.analytics.packagePerformance.getPackageComparison.useQuery(dateRange);
+
+  const { data: seasonalTrends, isLoading: loadingSeasonalTrends } =
+    trpc.analytics.packagePerformance.getSeasonalTrends.useQuery();
+
+  const { data: underperformingPackages, isLoading: loadingUnderperforming } =
+    trpc.analytics.packagePerformance.getUnderperformingPackages.useQuery(dateRange);
+
+  const { data: topPackageAddOns, isLoading: loadingTopPackageAddOns } =
+    trpc.analytics.packagePerformance.getTopAddOns.useQuery({ ...dateRange, limit: 10 });
+
+  const { data: packageRatings, isLoading: loadingPackageRatings } =
+    trpc.analytics.packagePerformance.getPackageRatings.useQuery(dateRange);
+
   // CSV Export handler
   const handleExport = async (
     reportType: 'bookings' | 'revenue' | 'addons' | 'trips' | 'referrals'
@@ -521,6 +540,16 @@ export default function AnalyticsDashboardPage() {
             }`}
           >
             Guest Demographics
+          </button>
+          <button
+            onClick={() => setActiveTab('package-performance')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'package-performance'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Package Performance
           </button>
         </nav>
       </div>
@@ -2447,6 +2476,270 @@ export default function AnalyticsDashboardPage() {
         </div>
       )}
         </>
+      )}
+
+      {/* ================================================================ */}
+      {/* PACKAGE PERFORMANCE TAB (E13-S6) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'package-performance' && (
+        <div className="space-y-6">
+          {/* Package Overview Summary */}
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Package Overview</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Packages"
+                value={packageOverview?.length ?? 0}
+                icon={Package}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Total Bookings"
+                value={packageOverview?.reduce((sum, p) => sum + p.totalBookings, 0) ?? 0}
+                icon={Users}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Total Revenue"
+                value={`$${((packageOverview?.reduce((sum, p) => sum + p.totalRevenue, 0) ?? 0) / 100).toLocaleString()}`}
+                icon={DollarSign}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Avg Booking Value"
+                value={`$${(((packageOverview?.reduce((sum, p) => sum + p.avgBookingValue, 0) ?? 0) / (packageOverview?.length || 1)) / 100).toLocaleString()}`}
+                icon={TrendingUp}
+                loading={loadingPackageOverview}
+              />
+            </div>
+          </div>
+
+          {/* Package Comparison Table */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Package Comparison</h3>
+            {loadingPackageComparison ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Package</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Bookings</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Revenue</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Completed</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Testimonials</th>
+                      <th className="text-center py-3 px-4 font-medium text-gray-600">Satisfaction</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {packageComparison?.map((pkg) => (
+                      <tr key={pkg.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium text-gray-900">{pkg.name}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.totalBookings}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">
+                          ${(pkg.totalRevenue / 100).toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.completedBookings}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.testimonialCount}</td>
+                        <td className="py-3 px-4 text-center">
+                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${
+                            pkg.satisfactionScore === 'Positive'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {pkg.satisfactionScore}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Top Add-Ons with Attach Rates */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Add-Ons by Attach Rate</h3>
+            {loadingTopPackageAddOns ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Add-On</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Category</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Bookings</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Quantity</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Revenue</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Attach Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topPackageAddOns?.map((addOn) => (
+                      <tr key={addOn.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium text-gray-900">{addOn.name}</td>
+                        <td className="py-3 px-4">
+                          <span className="inline-flex px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 capitalize">
+                            {addOn.category.toLowerCase().replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-700">{addOn.bookingCount}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{addOn.totalQuantity}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">
+                          ${(addOn.totalRevenue / 100).toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span className={`font-medium ${
+                            Number(addOn.attachRate) >= 20 ? 'text-green-600' :
+                            Number(addOn.attachRate) >= 10 ? 'text-yellow-600' : 'text-gray-600'
+                          }`}>
+                            {addOn.attachRate}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Seasonal Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Seasonal Trends ({seasonalTrends?.year || new Date().getFullYear()})
+            </h3>
+            {loadingSeasonalTrends ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : seasonalTrends?.months && seasonalTrends.months.length > 0 ? (
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={seasonalTrends.months}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value: number | undefined) => [Number(value ?? 0), 'Bookings']}
+                    />
+                    <Legend />
+                    {seasonalTrends.packageNames.map((name, index) => (
+                      <Bar
+                        key={name}
+                        dataKey={name}
+                        fill={FUNNEL_STAGE_COLORS[index % FUNNEL_STAGE_COLORS.length]}
+                        stackId="a"
+                      />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No seasonal data available
+              </div>
+            )}
+          </div>
+
+          {/* Package Ratings from Testimonials */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Package Satisfaction (from Testimonials)</h3>
+            {loadingPackageRatings ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : packageRatings && packageRatings.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {packageRatings.map((rating) => (
+                  <div key={rating.packageName} className="p-4 bg-gray-50 rounded-lg">
+                    <div className="font-semibold text-gray-900 mb-2">{rating.packageName}</div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-gray-600">
+                          {rating.testimonialCount} testimonial{rating.testimonialCount !== 1 ? 's' : ''}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {rating.totalViewCount.toLocaleString()} views
+                        </div>
+                      </div>
+                      <span className={`px-3 py-1 text-sm font-medium rounded ${
+                        rating.satisfactionIndicator === 'High'
+                          ? 'bg-green-100 text-green-800'
+                          : rating.satisfactionIndicator === 'Medium'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {rating.satisfactionIndicator}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No testimonial data available
+              </div>
+            )}
+          </div>
+
+          {/* Underperforming Packages Alert */}
+          {!loadingUnderperforming && underperformingPackages && underperformingPackages.length > 0 && (
+            <div className="bg-amber-50 rounded-lg shadow border border-amber-200 p-6">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Underperforming Packages
+              </h3>
+              <div className="space-y-4">
+                {underperformingPackages.map((pkg) => (
+                  <div key={pkg.id} className="p-4 bg-white rounded-lg border border-amber-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-semibold text-gray-900">{pkg.name}</div>
+                      <div className="flex gap-2">
+                        {pkg.issues.map((issue) => (
+                          <span
+                            key={issue}
+                            className="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded"
+                          >
+                            {issue}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Bookings:</span>{' '}
+                        <span className="font-medium">{pkg.totalBookings}</span>
+                        <span className={`ml-1 ${Number(pkg.bookingsVsAvg) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          ({pkg.bookingsVsAvg}%)
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Revenue:</span>{' '}
+                        <span className="font-medium">${(pkg.totalRevenue / 100).toLocaleString()}</span>
+                        <span className={`ml-1 ${Number(pkg.revenueVsAvg) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          ({pkg.revenueVsAvg}%)
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Conversion:</span>{' '}
+                        <span className="font-medium">{pkg.conversionRate.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

@@ -69,7 +69,7 @@
       "id": "E13-S3",
       "title": "Conversion Tracking",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "description": "Track conversion events and attribute them to sources",
       "acceptanceCriteria": [
         "Track key conversions: Application Submitted, Booking Completed, Payment Made",
@@ -85,7 +85,7 @@
       "id": "E13-S4",
       "title": "Revenue Reports",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "description": "Comprehensive revenue tracking and reporting",
       "acceptanceCriteria": [
         "Dashboard showing total revenue, MRR, average booking value",
@@ -101,7 +101,7 @@
       "id": "E13-S5",
       "title": "Guest Demographics",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "description": "Analyze guest demographics and preferences",
       "acceptanceCriteria": [
         "Dashboard showing guest age distribution, location, gender",
@@ -117,7 +117,7 @@
       "id": "E13-S6",
       "title": "Package Performance",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "description": "Analyze performance of packages and add-ons",
       "acceptanceCriteria": [
         "Dashboard showing bookings per package, revenue per package",

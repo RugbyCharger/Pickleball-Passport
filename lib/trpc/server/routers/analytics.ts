@@ -3400,6 +3400,499 @@ export const analyticsRouter = router({
   }),
 
   // ============================================================================
+  // PACKAGE PERFORMANCE (E13-S6)
+  // ============================================================================
+
+  packagePerformance: router({
+    /**
+     * Get overview of all packages with key performance metrics
+     */
+    getOverview: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all packages with their bookings
+        const packages = await ctx.db.package.findMany({
+          where: { isActive: true },
+          include: {
+            bookings: {
+              where,
+              select: {
+                id: true,
+                totalPrice: true,
+                status: true,
+                createdAt: true,
+              },
+            },
+          },
+          orderBy: { name: 'asc' },
+        });
+
+        return packages.map((pkg) => {
+          const totalBookings = pkg.bookings.length;
+          const completedBookings = pkg.bookings.filter((b) => b.status === 'COMPLETED').length;
+          const totalRevenue = pkg.bookings.reduce((sum, b) => sum + b.totalPrice, 0);
+          const avgBookingValue = totalBookings > 0 ? Math.round(totalRevenue / totalBookings) : 0;
+
+          return {
+            id: pkg.id,
+            name: pkg.name,
+            slug: pkg.slug,
+            totalBookings,
+            completedBookings,
+            totalRevenue,
+            avgBookingValue,
+            conversionRate: totalBookings > 0
+              ? ((completedBookings / totalBookings) * 100).toFixed(1)
+              : '0.0',
+          };
+        });
+      }),
+
+    /**
+     * Get add-on attach rates for each package
+     */
+    getAddOnAttachRates: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all add-ons with their booking counts
+        const addOns = await ctx.db.addOn.findMany({
+          where: { isActive: true },
+          include: {
+            bookingAddOns: {
+              where: {
+                booking: where,
+              },
+              select: {
+                quantity: true,
+                price: true,
+                booking: {
+                  select: {
+                    packageId: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Get total bookings for attach rate calculation
+        const totalBookings = await ctx.db.booking.count({ where });
+
+        return addOns
+          .map((addOn) => {
+            const bookingCount = addOn.bookingAddOns.length;
+            const totalQuantity = addOn.bookingAddOns.reduce((sum, ba) => sum + ba.quantity, 0);
+            const totalRevenue = addOn.bookingAddOns.reduce((sum, ba) => sum + ba.price * ba.quantity, 0);
+
+            return {
+              id: addOn.id,
+              name: addOn.name,
+              category: addOn.category,
+              bookingCount,
+              totalQuantity,
+              totalRevenue,
+              attachRate: totalBookings > 0
+                ? ((bookingCount / totalBookings) * 100).toFixed(1)
+                : '0.0',
+            };
+          })
+          .sort((a, b) => Number(b.attachRate) - Number(a.attachRate));
+      }),
+
+    /**
+     * Get package comparison data (bookings, revenue, ratings)
+     */
+    getPackageComparison: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get packages with bookings and testimonials
+        const packages = await ctx.db.package.findMany({
+          where: { isActive: true },
+          include: {
+            bookings: {
+              where,
+              select: {
+                id: true,
+                totalPrice: true,
+                status: true,
+              },
+            },
+          },
+        });
+
+        // Get testimonials by package type
+        const testimonials = await ctx.db.testimonial.findMany({
+          where: { isApproved: true },
+          select: {
+            packageType: true,
+          },
+        });
+
+        // Get guest testimonials with ratings (if they have ratings)
+        const guestTestimonials = await ctx.db.guestTestimonial.findMany({
+          where: { status: 'PUBLISHED' },
+          select: {
+            packageType: true,
+          },
+        });
+
+        // Count testimonials per package
+        const testimonialCounts = new Map<string, number>();
+        testimonials.forEach((t) => {
+          const count = testimonialCounts.get(t.packageType) || 0;
+          testimonialCounts.set(t.packageType, count + 1);
+        });
+        guestTestimonials.forEach((t) => {
+          if (t.packageType) {
+            const count = testimonialCounts.get(t.packageType) || 0;
+            testimonialCounts.set(t.packageType, count + 1);
+          }
+        });
+
+        return packages.map((pkg) => {
+          const totalBookings = pkg.bookings.length;
+          const totalRevenue = pkg.bookings.reduce((sum, b) => sum + b.totalPrice, 0);
+          const completedBookings = pkg.bookings.filter((b) => b.status === 'COMPLETED').length;
+          const testimonialCount = testimonialCounts.get(pkg.name) || 0;
+
+          return {
+            id: pkg.id,
+            name: pkg.name,
+            totalBookings,
+            totalRevenue,
+            completedBookings,
+            testimonialCount,
+            satisfactionScore: testimonialCount > 0 ? 'Positive' : 'N/A',
+          };
+        });
+      }),
+
+    /**
+     * Get seasonal trends for packages
+     */
+    getSeasonalTrends: adminProcedure
+      .input(
+        z
+          .object({
+            year: z.number().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const year = input?.year || new Date().getFullYear();
+        const startOfYear = new Date(year, 0, 1);
+        const endOfYear = new Date(year, 11, 31, 23, 59, 59);
+
+        // Get all bookings for the year grouped by package and month
+        const bookings = await ctx.db.booking.findMany({
+          where: {
+            status: { not: 'DRAFT' as BookingStatus },
+            createdAt: {
+              gte: startOfYear,
+              lte: endOfYear,
+            },
+          },
+          select: {
+            id: true,
+            createdAt: true,
+            package: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        });
+
+        // Group by month and package
+        const monthlyData: Record<string, Record<string, number>> = {};
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        months.forEach((month) => {
+          monthlyData[month] = {};
+        });
+
+        bookings.forEach((booking) => {
+          const month = months[booking.createdAt.getMonth()];
+          const packageName = booking.package.name;
+
+          if (!monthlyData[month][packageName]) {
+            monthlyData[month][packageName] = 0;
+          }
+          monthlyData[month][packageName]++;
+        });
+
+        // Get unique package names
+        const packageNames = [...new Set(bookings.map((b) => b.package.name))];
+
+        return {
+          months: months.map((month) => ({
+            month,
+            ...monthlyData[month],
+          })),
+          packageNames,
+          year,
+        };
+      }),
+
+    /**
+     * Get underperforming packages based on various metrics
+     */
+    getUnderperformingPackages: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            threshold: z.number().min(0).max(100).default(20),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all packages with their performance metrics
+        const packages = await ctx.db.package.findMany({
+          where: { isActive: true },
+          include: {
+            bookings: {
+              where,
+              select: {
+                id: true,
+                totalPrice: true,
+                status: true,
+                createdAt: true,
+              },
+            },
+          },
+        });
+
+        if (packages.length === 0) {
+          return [];
+        }
+
+        // Calculate metrics for each package
+        const packageMetrics = packages.map((pkg) => {
+          const totalBookings = pkg.bookings.length;
+          const totalRevenue = pkg.bookings.reduce((sum, b) => sum + b.totalPrice, 0);
+          const completedBookings = pkg.bookings.filter((b) => b.status === 'COMPLETED').length;
+          const conversionRate = totalBookings > 0
+            ? (completedBookings / totalBookings) * 100
+            : 0;
+
+          return {
+            id: pkg.id,
+            name: pkg.name,
+            totalBookings,
+            totalRevenue,
+            conversionRate,
+          };
+        });
+
+        // Calculate averages
+        const avgBookings = packageMetrics.reduce((sum, p) => sum + p.totalBookings, 0) / packages.length;
+        const avgRevenue = packageMetrics.reduce((sum, p) => sum + p.totalRevenue, 0) / packages.length;
+
+        // Identify underperforming packages (below threshold of average)
+        const threshold = (input?.threshold ?? 20) / 100;
+
+        return packageMetrics
+          .filter((pkg) => {
+            const bookingRatio = avgBookings > 0 ? pkg.totalBookings / avgBookings : 0;
+            const revenueRatio = avgRevenue > 0 ? pkg.totalRevenue / avgRevenue : 0;
+
+            // Consider underperforming if significantly below average
+            return bookingRatio < (1 - threshold) || revenueRatio < (1 - threshold);
+          })
+          .map((pkg) => ({
+            ...pkg,
+            bookingsVsAvg: avgBookings > 0
+              ? (((pkg.totalBookings - avgBookings) / avgBookings) * 100).toFixed(1)
+              : '0.0',
+            revenueVsAvg: avgRevenue > 0
+              ? (((pkg.totalRevenue - avgRevenue) / avgRevenue) * 100).toFixed(1)
+              : '0.0',
+            issues: [
+              ...(pkg.totalBookings < avgBookings * (1 - threshold) ? ['Low bookings'] : []),
+              ...(pkg.totalRevenue < avgRevenue * (1 - threshold) ? ['Low revenue'] : []),
+              ...(pkg.conversionRate < 50 ? ['Low conversion'] : []),
+            ],
+          }));
+      }),
+
+    /**
+     * Get top performing add-ons with attach rates
+     */
+    getTopAddOns: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(50).default(10),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const totalBookings = await ctx.db.booking.count({ where });
+
+        const addOnStats = await ctx.db.bookingAddOn.groupBy({
+          by: ['addOnId'],
+          where: {
+            booking: where,
+          },
+          _count: { id: true },
+          _sum: { quantity: true, price: true },
+        });
+
+        // Get add-on details
+        const addOnIds = addOnStats.map((stat) => stat.addOnId);
+        const addOns = await ctx.db.addOn.findMany({
+          where: { id: { in: addOnIds } },
+          select: { id: true, name: true, category: true },
+        });
+
+        const addOnMap = new Map(addOns.map((a) => [a.id, a]));
+
+        return addOnStats
+          .map((stat) => {
+            const addOn = addOnMap.get(stat.addOnId);
+            return {
+              id: stat.addOnId,
+              name: addOn?.name || 'Unknown',
+              category: addOn?.category || 'UNKNOWN',
+              bookingCount: stat._count.id,
+              totalQuantity: stat._sum.quantity || 0,
+              totalRevenue: stat._sum.price || 0,
+              attachRate: totalBookings > 0
+                ? ((stat._count.id / totalBookings) * 100).toFixed(1)
+                : '0.0',
+            };
+          })
+          .sort((a, b) => b.bookingCount - a.bookingCount)
+          .slice(0, input?.limit ?? 10);
+      }),
+
+    /**
+     * Get average rating per package from testimonials
+     */
+    getPackageRatings: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get approved testimonials
+        const testimonials = await ctx.db.testimonial.findMany({
+          where: {
+            isApproved: true,
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          },
+          select: {
+            packageType: true,
+            viewCount: true,
+          },
+        });
+
+        // Get published guest testimonials
+        const guestTestimonials = await ctx.db.guestTestimonial.findMany({
+          where: {
+            status: 'PUBLISHED',
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          },
+          select: {
+            packageType: true,
+          },
+        });
+
+        // Aggregate by package
+        const packageStats: Record<string, { count: number; viewCount: number }> = {};
+
+        testimonials.forEach((t) => {
+          if (!packageStats[t.packageType]) {
+            packageStats[t.packageType] = { count: 0, viewCount: 0 };
+          }
+          packageStats[t.packageType].count++;
+          packageStats[t.packageType].viewCount += t.viewCount;
+        });
+
+        guestTestimonials.forEach((t) => {
+          if (t.packageType) {
+            if (!packageStats[t.packageType]) {
+              packageStats[t.packageType] = { count: 0, viewCount: 0 };
+            }
+            packageStats[t.packageType].count++;
+          }
+        });
+
+        return Object.entries(packageStats)
+          .map(([packageName, stats]) => ({
+            packageName,
+            testimonialCount: stats.count,
+            totalViewCount: stats.viewCount,
+            // Since there's no explicit rating field, use testimonial count as a proxy for satisfaction
+            satisfactionIndicator: stats.count >= 5 ? 'High' : stats.count >= 2 ? 'Medium' : 'Low',
+          }))
+          .sort((a, b) => b.testimonialCount - a.testimonialCount);
+      }),
+  }),
+
+  // ============================================================================
   // EXPORT FUNCTIONALITY
   // ============================================================================
 
