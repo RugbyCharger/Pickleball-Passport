@@ -535,6 +535,7 @@ model Booking {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime? // Soft delete - preserves financial audit trail (P1-002)
 
   // Relationships
   bookingAddOns        BookingAddOn[]
@@ -564,6 +565,7 @@ model Booking {
   @@index([giftExpiresAt]) // GS-001: For expiration cron queries
   @@index([whatsappInvitationStatus])
   @@index([utmSource])
+  @@index([deletedAt]) // P1-002: Efficient soft delete filtering
 }
 
 model AddOn {
@@ -613,7 +615,7 @@ model BookingAddOn {
 model Payment {
   id        String  @id @default(cuid())
   bookingId String
-  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict) // P1-002: Preserve financial audit trail
 
   amount   Int // Amount in cents
   currency String        @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
@@ -659,7 +661,7 @@ model Payment {
 model PaymentRecord {
   id        String  @id @default(cuid())
   bookingId String
-  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict) // P1-002: Preserve financial audit trail
 
   // Amount and Status
   amountCents Int // Payment amount in cents
@@ -1193,7 +1195,7 @@ model WebhookEvent {
 model RefundLog {
   id             String   @id @default(cuid())
   paymentId      String
-  payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Restrict) // P1-002: Preserve financial audit trail
   amount         Int // Refund amount in cents
   stripeRefundId String   @unique // Stripe refund ID (re_...)
   reason         String // RefundReason enum value
