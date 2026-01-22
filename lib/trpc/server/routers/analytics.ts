@@ -5118,20 +5118,14 @@ export const analyticsRouter = router({
       )
       .query(async ({ ctx, input }) => {
         const where = {
-          sentAt: {
-            ...(input?.startDate && { gte: input.startDate }),
-            ...(input?.endDate && { lte: input.endDate }),
-          },
+          ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input?.endDate && { sentAt: { lte: input.endDate } }),
           templateId: { not: null },
         };
 
         // Get all sends grouped by template
         const sends = await ctx.db.emailSend.findMany({
-          where: {
-            ...(input?.startDate && { sentAt: { gte: input.startDate } }),
-            ...(input?.endDate && { sentAt: { lte: input.endDate } }),
-            templateId: { not: null },
-          },
+          where,
           select: {
             templateId: true,
             openedAt: true,
@@ -5491,6 +5485,573 @@ export const analyticsRouter = router({
           unsubscribeRate: ta.unsubscribeRate || 0,
           lastUpdatedAt: ta.lastUpdatedAt,
         }));
+      }),
+  }),
+
+  // ============================================================================
+  // CUSTOM REPORTS (E13-S10)
+  // ============================================================================
+
+  customReports: router({
+    /**
+     * Get available metrics for custom report builder
+     */
+    getAvailableMetrics: adminProcedure.query(() => {
+      return [
+        // Booking metrics
+        { id: 'bookings_total', name: 'Total Bookings', category: 'Bookings', type: 'count' },
+        { id: 'bookings_confirmed', name: 'Confirmed Bookings', category: 'Bookings', type: 'count' },
+        { id: 'bookings_pending', name: 'Pending Bookings', category: 'Bookings', type: 'count' },
+        { id: 'bookings_completed', name: 'Completed Bookings', category: 'Bookings', type: 'count' },
+        { id: 'bookings_cancelled', name: 'Cancelled Bookings', category: 'Bookings', type: 'count' },
+        // Revenue metrics
+        { id: 'revenue_total', name: 'Total Revenue', category: 'Revenue', type: 'currency' },
+        { id: 'revenue_average', name: 'Average Booking Value', category: 'Revenue', type: 'currency' },
+        { id: 'revenue_addons', name: 'Add-Ons Revenue', category: 'Revenue', type: 'currency' },
+        // Conversion metrics
+        { id: 'conversions_total', name: 'Total Conversions', category: 'Conversions', type: 'count' },
+        { id: 'conversions_rate', name: 'Conversion Rate', category: 'Conversions', type: 'percentage' },
+        { id: 'applications_submitted', name: 'Applications Submitted', category: 'Conversions', type: 'count' },
+        // Guest metrics
+        { id: 'guests_total', name: 'Total Guests', category: 'Guests', type: 'count' },
+        { id: 'guests_repeat', name: 'Repeat Guests', category: 'Guests', type: 'count' },
+        { id: 'guests_repeat_rate', name: 'Repeat Guest Rate', category: 'Guests', type: 'percentage' },
+        // Partner metrics
+        { id: 'partners_referrals', name: 'Partner Referrals', category: 'Partners', type: 'count' },
+        { id: 'partners_revenue', name: 'Partner-Sourced Revenue', category: 'Partners', type: 'currency' },
+        // Email metrics
+        { id: 'emails_sent', name: 'Emails Sent', category: 'Email', type: 'count' },
+        { id: 'emails_open_rate', name: 'Email Open Rate', category: 'Email', type: 'percentage' },
+        { id: 'emails_click_rate', name: 'Email Click Rate', category: 'Email', type: 'percentage' },
+        // Package metrics
+        { id: 'packages_bookings', name: 'Bookings by Package', category: 'Packages', type: 'count' },
+        { id: 'packages_revenue', name: 'Revenue by Package', category: 'Packages', type: 'currency' },
+      ];
+    }),
+
+    /**
+     * Run a custom report with selected metrics
+     */
+    runReport: adminProcedure
+      .input(
+        z.object({
+          metrics: z.array(z.string()).min(1),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          groupBy: z.enum(['none', 'daily', 'weekly', 'monthly', 'package', 'partner']).default('none'),
+          filters: z.object({
+            packageId: z.string().optional(),
+            partnerId: z.string().optional(),
+            status: z.string().optional(),
+          }).optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const { metrics, startDate, endDate, groupBy, filters } = input;
+        const results: Record<string, unknown> = {};
+
+        const dateFilter = {
+          ...(startDate && { createdAt: { gte: startDate } }),
+          ...(endDate && { createdAt: { lte: endDate } }),
+        };
+
+        // Helper to get date key for grouping
+        const getDateKey = (date: Date): string => {
+          switch (groupBy) {
+            case 'daily':
+              return date.toISOString().slice(0, 10);
+            case 'weekly': {
+              const d = new Date(date);
+              d.setDate(d.getDate() - d.getDay());
+              return d.toISOString().slice(0, 10);
+            }
+            case 'monthly':
+              return date.toISOString().slice(0, 7);
+            default:
+              return 'total';
+          }
+        };
+
+        // Fetch data for each metric
+        for (const metric of metrics) {
+          switch (metric) {
+            case 'bookings_total': {
+              if (groupBy === 'none') {
+                results[metric] = await ctx.db.booking.count({
+                  where: { ...dateFilter, ...(filters?.status && { status: filters.status as BookingStatus }) },
+                });
+              } else if (groupBy === 'package') {
+                const data = await ctx.db.booking.groupBy({
+                  by: ['packageId'],
+                  where: dateFilter,
+                  _count: true,
+                });
+                const packages = await ctx.db.package.findMany({
+                  where: { id: { in: data.map((d) => d.packageId) } },
+                  select: { id: true, name: true },
+                });
+                results[metric] = data.map((d) => ({
+                  name: packages.find((p) => p.id === d.packageId)?.name || 'Unknown',
+                  value: d._count,
+                }));
+              } else {
+                const bookings = await ctx.db.booking.findMany({
+                  where: dateFilter,
+                  select: { createdAt: true },
+                });
+                const grouped: Record<string, number> = {};
+                bookings.forEach((b) => {
+                  const key = getDateKey(b.createdAt);
+                  grouped[key] = (grouped[key] || 0) + 1;
+                });
+                results[metric] = Object.entries(grouped)
+                  .map(([period, value]) => ({ period, value }))
+                  .sort((a, b) => a.period.localeCompare(b.period));
+              }
+              break;
+            }
+
+            case 'bookings_confirmed': {
+              results[metric] = await ctx.db.booking.count({
+                where: { ...dateFilter, status: 'CONFIRMED' },
+              });
+              break;
+            }
+
+            case 'bookings_pending': {
+              results[metric] = await ctx.db.booking.count({
+                where: { ...dateFilter, status: 'PENDING_PAYMENT' },
+              });
+              break;
+            }
+
+            case 'bookings_completed': {
+              results[metric] = await ctx.db.booking.count({
+                where: { ...dateFilter, status: 'COMPLETED' },
+              });
+              break;
+            }
+
+            case 'bookings_cancelled': {
+              results[metric] = await ctx.db.booking.count({
+                where: { ...dateFilter, status: 'CANCELLED' },
+              });
+              break;
+            }
+
+            case 'revenue_total': {
+              const revenue = await ctx.db.payment.aggregate({
+                where: { ...dateFilter, status: 'SUCCEEDED' },
+                _sum: { amount: true },
+              });
+              if (groupBy === 'none') {
+                results[metric] = revenue._sum.amount || 0;
+              } else {
+                const payments = await ctx.db.payment.findMany({
+                  where: { ...dateFilter, status: 'SUCCEEDED' },
+                  select: { amount: true, createdAt: true },
+                });
+                const grouped: Record<string, number> = {};
+                payments.forEach((p) => {
+                  const key = getDateKey(p.createdAt);
+                  grouped[key] = (grouped[key] || 0) + p.amount;
+                });
+                results[metric] = Object.entries(grouped)
+                  .map(([period, value]) => ({ period, value }))
+                  .sort((a, b) => a.period.localeCompare(b.period));
+              }
+              break;
+            }
+
+            case 'revenue_average': {
+              const payments = await ctx.db.payment.aggregate({
+                where: { ...dateFilter, status: 'SUCCEEDED' },
+                _avg: { amount: true },
+              });
+              results[metric] = Math.round(payments._avg.amount || 0);
+              break;
+            }
+
+            case 'revenue_addons': {
+              const addOns = await ctx.db.bookingAddOn.aggregate({
+                where: dateFilter,
+                _sum: { price: true },
+              });
+              results[metric] = addOns._sum.price || 0;
+              break;
+            }
+
+            case 'conversions_total': {
+              results[metric] = await ctx.db.analyticsEvent.count({
+                where: { ...dateFilter, eventType: 'CONVERSION' },
+              });
+              break;
+            }
+
+            case 'conversions_rate': {
+              const sessions = await ctx.db.analyticsSession.count({
+                where: {
+                  ...(startDate && { startedAt: { gte: startDate } }),
+                  ...(endDate && { startedAt: { lte: endDate } }),
+                },
+              });
+              const conversions = await ctx.db.analyticsSession.count({
+                where: {
+                  ...(startDate && { startedAt: { gte: startDate } }),
+                  ...(endDate && { startedAt: { lte: endDate } }),
+                  hasConverted: true,
+                },
+              });
+              results[metric] = sessions > 0 ? Number(((conversions / sessions) * 100).toFixed(2)) : 0;
+              break;
+            }
+
+            case 'applications_submitted': {
+              results[metric] = await ctx.db.application.count({
+                where: dateFilter,
+              });
+              break;
+            }
+
+            case 'guests_total': {
+              results[metric] = await ctx.db.user.count({
+                where: { role: 'GUEST' },
+              });
+              break;
+            }
+
+            case 'guests_repeat': {
+              const guests = await ctx.db.user.findMany({
+                where: { role: 'GUEST' },
+                select: { _count: { select: { bookings: true } } },
+              });
+              results[metric] = guests.filter((g) => g._count.bookings > 1).length;
+              break;
+            }
+
+            case 'guests_repeat_rate': {
+              const allGuests = await ctx.db.user.count({ where: { role: 'GUEST' } });
+              const guestsWithBookings = await ctx.db.user.findMany({
+                where: { role: 'GUEST' },
+                select: { _count: { select: { bookings: true } } },
+              });
+              const repeatGuests = guestsWithBookings.filter((g) => g._count.bookings > 1).length;
+              results[metric] = allGuests > 0 ? Number(((repeatGuests / allGuests) * 100).toFixed(2)) : 0;
+              break;
+            }
+
+            case 'partners_referrals': {
+              results[metric] = await ctx.db.partnerReferral.count({
+                where: dateFilter,
+              });
+              break;
+            }
+
+            case 'partners_revenue': {
+              const referrals = await ctx.db.partnerReferral.findMany({
+                where: dateFilter,
+                include: { booking: { select: { totalPrice: true } } },
+              });
+              results[metric] = referrals.reduce((sum, r) => sum + r.booking.totalPrice, 0);
+              break;
+            }
+
+            case 'emails_sent': {
+              results[metric] = await ctx.db.emailSend.count({
+                where: { ...dateFilter, sentAt: { not: null } },
+              });
+              break;
+            }
+
+            case 'emails_open_rate': {
+              const sent = await ctx.db.emailSend.count({
+                where: { ...dateFilter, sentAt: { not: null } },
+              });
+              const opened = await ctx.db.emailSend.count({
+                where: { ...dateFilter, openedAt: { not: null } },
+              });
+              results[metric] = sent > 0 ? Number(((opened / sent) * 100).toFixed(2)) : 0;
+              break;
+            }
+
+            case 'emails_click_rate': {
+              const sentEmails = await ctx.db.emailSend.count({
+                where: { ...dateFilter, sentAt: { not: null } },
+              });
+              const clicked = await ctx.db.emailSend.count({
+                where: { ...dateFilter, clickedAt: { not: null } },
+              });
+              results[metric] = sentEmails > 0 ? Number(((clicked / sentEmails) * 100).toFixed(2)) : 0;
+              break;
+            }
+
+            case 'packages_bookings': {
+              const data = await ctx.db.booking.groupBy({
+                by: ['packageId'],
+                where: { ...dateFilter, status: { not: 'DRAFT' as BookingStatus } },
+                _count: true,
+              });
+              const packages = await ctx.db.package.findMany({
+                where: { id: { in: data.map((d) => d.packageId) } },
+                select: { id: true, name: true },
+              });
+              results[metric] = data.map((d) => ({
+                name: packages.find((p) => p.id === d.packageId)?.name || 'Unknown',
+                value: d._count,
+              }));
+              break;
+            }
+
+            case 'packages_revenue': {
+              const bookings = await ctx.db.booking.findMany({
+                where: { ...dateFilter, status: { in: ['CONFIRMED', 'COMPLETED'] as BookingStatus[] } },
+                select: { packageId: true, totalPrice: true },
+              });
+              const packages = await ctx.db.package.findMany({
+                select: { id: true, name: true },
+              });
+              const grouped: Record<string, number> = {};
+              bookings.forEach((b) => {
+                grouped[b.packageId] = (grouped[b.packageId] || 0) + b.totalPrice;
+              });
+              results[metric] = Object.entries(grouped).map(([packageId, value]) => ({
+                name: packages.find((p) => p.id === packageId)?.name || 'Unknown',
+                value,
+              }));
+              break;
+            }
+          }
+        }
+
+        return { results, groupBy };
+      }),
+
+    /**
+     * Save a custom report configuration
+     */
+    save: adminProcedure
+      .input(
+        z.object({
+          name: z.string().min(1).max(100),
+          description: z.string().max(500).optional(),
+          metrics: z.array(z.string()).min(1),
+          filters: z.any().optional(),
+          dateRange: z.any().optional(),
+          visualization: z.enum(['TABLE', 'BAR_CHART', 'LINE_CHART', 'PIE_CHART']).default('TABLE'),
+          groupBy: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (!ctx.user?.id) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
+        }
+
+        const report = await ctx.db.customReport.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            metrics: input.metrics,
+            filters: input.filters || {},
+            dateRange: input.dateRange || {},
+            visualization: input.visualization,
+            groupBy: input.groupBy,
+            createdBy: ctx.user.id,
+          },
+        });
+
+        return report;
+      }),
+
+    /**
+     * Get all saved reports for the current user
+     */
+    list: adminProcedure.query(async ({ ctx }) => {
+      const reports = await ctx.db.customReport.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+      return reports;
+    }),
+
+    /**
+     * Get a single saved report by ID
+     */
+    getById: adminProcedure
+      .input(z.object({ id: z.string() }))
+      .query(async ({ ctx, input }) => {
+        const report = await ctx.db.customReport.findUnique({
+          where: { id: input.id },
+        });
+        if (!report) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Report not found' });
+        }
+        return report;
+      }),
+
+    /**
+     * Update a saved report
+     */
+    update: adminProcedure
+      .input(
+        z.object({
+          id: z.string(),
+          name: z.string().min(1).max(100).optional(),
+          description: z.string().max(500).optional(),
+          metrics: z.array(z.string()).min(1).optional(),
+          filters: z.any().optional(),
+          dateRange: z.any().optional(),
+          visualization: z.enum(['TABLE', 'BAR_CHART', 'LINE_CHART', 'PIE_CHART']).optional(),
+          groupBy: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { id, ...data } = input;
+        const report = await ctx.db.customReport.update({
+          where: { id },
+          data,
+        });
+        return report;
+      }),
+
+    /**
+     * Delete a saved report
+     */
+    delete: adminProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        await ctx.db.customReport.delete({
+          where: { id: input.id },
+        });
+        return { success: true };
+      }),
+
+    /**
+     * Export report data as CSV format
+     */
+    exportCSV: adminProcedure
+      .input(
+        z.object({
+          metrics: z.array(z.string()).min(1),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          groupBy: z.enum(['none', 'daily', 'weekly', 'monthly', 'package', 'partner']).default('none'),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        // Use runReport internally and format as CSV
+        const { metrics, startDate, endDate, groupBy } = input;
+
+        // Build headers and rows based on groupBy
+        const headers: string[] = [];
+        const rows: (string | number)[][] = [];
+
+        if (groupBy !== 'none' && groupBy !== 'package' && groupBy !== 'partner') {
+          headers.push('Period');
+        } else if (groupBy === 'package' || groupBy === 'partner') {
+          headers.push('Name');
+        }
+
+        metrics.forEach((m) => {
+          const metricNames: Record<string, string> = {
+            bookings_total: 'Total Bookings',
+            bookings_confirmed: 'Confirmed Bookings',
+            bookings_pending: 'Pending Bookings',
+            bookings_completed: 'Completed Bookings',
+            bookings_cancelled: 'Cancelled Bookings',
+            revenue_total: 'Total Revenue',
+            revenue_average: 'Average Booking Value',
+            revenue_addons: 'Add-Ons Revenue',
+            conversions_total: 'Total Conversions',
+            conversions_rate: 'Conversion Rate',
+            applications_submitted: 'Applications Submitted',
+            guests_total: 'Total Guests',
+            guests_repeat: 'Repeat Guests',
+            guests_repeat_rate: 'Repeat Guest Rate',
+            partners_referrals: 'Partner Referrals',
+            partners_revenue: 'Partner-Sourced Revenue',
+            emails_sent: 'Emails Sent',
+            emails_open_rate: 'Email Open Rate',
+            emails_click_rate: 'Email Click Rate',
+          };
+          headers.push(metricNames[m] || m);
+        });
+
+        // Collect data for each metric
+        const dateFilter = {
+          ...(startDate && { createdAt: { gte: startDate } }),
+          ...(endDate && { createdAt: { lte: endDate } }),
+        };
+
+        if (groupBy === 'none') {
+          // Single row with all metrics
+          const row: (string | number)[] = [];
+          for (const metric of metrics) {
+            let value: number = 0;
+            switch (metric) {
+              case 'bookings_total':
+                value = await ctx.db.booking.count({ where: dateFilter });
+                break;
+              case 'bookings_confirmed':
+                value = await ctx.db.booking.count({ where: { ...dateFilter, status: 'CONFIRMED' } });
+                break;
+              case 'bookings_pending':
+                value = await ctx.db.booking.count({ where: { ...dateFilter, status: 'PENDING_PAYMENT' } });
+                break;
+              case 'bookings_completed':
+                value = await ctx.db.booking.count({ where: { ...dateFilter, status: 'COMPLETED' } });
+                break;
+              case 'bookings_cancelled':
+                value = await ctx.db.booking.count({ where: { ...dateFilter, status: 'CANCELLED' } });
+                break;
+              case 'revenue_total': {
+                const rev = await ctx.db.payment.aggregate({
+                  where: { ...dateFilter, status: 'SUCCEEDED' },
+                  _sum: { amount: true },
+                });
+                value = (rev._sum.amount || 0) / 100;
+                break;
+              }
+              case 'revenue_average': {
+                const avg = await ctx.db.payment.aggregate({
+                  where: { ...dateFilter, status: 'SUCCEEDED' },
+                  _avg: { amount: true },
+                });
+                value = Math.round((avg._avg.amount || 0) / 100);
+                break;
+              }
+              case 'revenue_addons': {
+                const addOns = await ctx.db.bookingAddOn.aggregate({
+                  where: dateFilter,
+                  _sum: { price: true },
+                });
+                value = (addOns._sum.price || 0) / 100;
+                break;
+              }
+              case 'conversions_total':
+                value = await ctx.db.analyticsEvent.count({
+                  where: { ...dateFilter, eventType: 'CONVERSION' },
+                });
+                break;
+              case 'applications_submitted':
+                value = await ctx.db.application.count({ where: dateFilter });
+                break;
+              case 'guests_total':
+                value = await ctx.db.user.count({ where: { role: 'GUEST' } });
+                break;
+              case 'partners_referrals':
+                value = await ctx.db.partnerReferral.count({ where: dateFilter });
+                break;
+              case 'emails_sent':
+                value = await ctx.db.emailSend.count({
+                  where: { ...dateFilter, sentAt: { not: null } },
+                });
+                break;
+            }
+            row.push(value);
+          }
+          rows.push(row);
+        }
+
+        return { headers, rows };
       }),
   }),
 });

@@ -2406,3 +2406,45 @@ model EmailLinkClick {
   @@index([clickedAt])
   @@index([linkUrl])
 }
+
+// ============================================================================
+// CUSTOM REPORTS (E13-S10)
+// ============================================================================
+
+// Visualization types for custom reports
+enum ReportVisualizationType {
+  TABLE
+  BAR_CHART
+  LINE_CHART
+  PIE_CHART
+}
+
+// Saved custom reports for admin users
+model CustomReport {
+  id          String                  @id @default(cuid())
+  name        String                  // Report name for display
+  description String?                 // Optional description
+
+  // Report configuration stored as JSON
+  metrics     Json                    // Selected metrics: ["bookings", "revenue", "conversions"]
+  filters     Json?                   // Filter configuration
+  dateRange   Json?                   // Date range configuration: { preset: "last30days" } or { startDate, endDate }
+  visualization ReportVisualizationType @default(TABLE)
+  groupBy     String?                 // Optional grouping (daily, weekly, monthly, by package, etc.)
+
+  // Scheduling (optional - for email delivery)
+  isScheduled      Boolean   @default(false)
+  scheduleFrequency String?  // "daily", "weekly", "monthly"
+  scheduleRecipients String[] // Email addresses to send to
+  lastRunAt        DateTime?
+  nextRunAt        DateTime?
+
+  // Audit
+  createdBy   String                  // Admin user ID who created
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  @@index([createdBy])
+  @@index([createdAt])
+  @@index([isScheduled])
+}
