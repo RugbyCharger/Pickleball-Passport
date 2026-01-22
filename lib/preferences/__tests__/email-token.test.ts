@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { generateEmailToken, verifyEmailToken } from '../email-token';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import crypto from 'crypto';
 
 vi.mock('@/lib/db', () => ({
-  db: {
+  prisma: {
     user: {
       update: vi.fn(),
       findFirst: vi.fn(),
@@ -18,7 +18,7 @@ describe('generateEmailToken', () => {
   });
 
   it('should generate a random token and store hash', async () => {
-    (db.user.update as any).mockResolvedValue({
+    (prisma.user.update as any).mockResolvedValue({
       id: 'user_123',
       preferenceEmailToken: 'hashed_token',
     });
@@ -27,7 +27,7 @@ describe('generateEmailToken', () => {
 
     expect(token).toBeTruthy();
     expect(token.length).toBeGreaterThan(20);
-    expect(db.user.update).toHaveBeenCalledWith({
+    expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user_123' },
       data: {
         preferenceEmailToken: expect.any(String),
@@ -37,11 +37,11 @@ describe('generateEmailToken', () => {
   });
 
   it('should set expiry to 90 days from now', async () => {
-    (db.user.update as any).mockResolvedValue({});
+    (prisma.user.update as any).mockResolvedValue({});
 
     await generateEmailToken('user_123');
 
-    const call = (db.user.update as any).mock.calls[0][0];
+    const call = (prisma.user.update as any).mock.calls[0][0];
     const expiry = call.data.preferenceEmailTokenExpiry;
     const now = new Date();
     const diffDays = Math.floor((expiry - now) / (1000 * 60 * 60 * 24));
@@ -66,7 +66,7 @@ describe('verifyEmailToken', () => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 30);
 
-    (db.user.findFirst as any).mockResolvedValue({
+    (prisma.user.findFirst as any).mockResolvedValue({
       id: 'user_123',
       preferenceEmailToken: hash,
       preferenceEmailTokenExpiry: futureDate,
@@ -80,14 +80,14 @@ describe('verifyEmailToken', () => {
     const token = 'plain_token_123';
 
     // For expired tokens, findFirst returns null because of the where clause filter
-    (db.user.findFirst as any).mockResolvedValue(null);
+    (prisma.user.findFirst as any).mockResolvedValue(null);
 
     const userId = await verifyEmailToken(token);
     expect(userId).toBeNull();
   });
 
   it('should return null for invalid token', async () => {
-    (db.user.findFirst as any).mockResolvedValue(null);
+    (prisma.user.findFirst as any).mockResolvedValue(null);
 
     const userId = await verifyEmailToken('invalid_token');
     expect(userId).toBeNull();
@@ -100,7 +100,7 @@ describe('verifyEmailToken', () => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 30);
 
-    (db.user.findFirst as any).mockResolvedValue({
+    (prisma.user.findFirst as any).mockResolvedValue({
       id: 'user_123',
       preferenceEmailToken: wrongHash,
       preferenceEmailTokenExpiry: futureDate,

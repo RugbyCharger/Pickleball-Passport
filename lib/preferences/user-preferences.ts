@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export interface NotificationPreferences {
   // Email categories
@@ -31,7 +31,7 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
 export async function getUserPreferences(
   userId: string
 ): Promise<NotificationPreferences> {
-  const user = await db.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { notificationPreferences: true },
   });
@@ -66,7 +66,7 @@ export async function updateUserPreferences(
   const currentPreferences = await getUserPreferences(userId);
   const updatedPreferences = { ...currentPreferences, ...updates };
 
-  await db.user.update({
+  await prisma.user.update({
     where: { id: userId },
     data: {
       notificationPreferences: updatedPreferences,
@@ -79,7 +79,7 @@ export async function updateUserPreferences(
  * Unsubscribe user from all optional notifications
  */
 export async function unsubscribeFromAll(userId: string): Promise<void> {
-  await db.user.update({
+  await prisma.user.update({
     where: { id: userId },
     data: {
       notificationPreferences: {

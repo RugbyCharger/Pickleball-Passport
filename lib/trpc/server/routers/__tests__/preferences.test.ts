@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as userPreferences from '@/lib/preferences/user-preferences';
 import * as emailToken from '@/lib/preferences/email-token';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 vi.mock('@/lib/db', () => ({
-  db: {
+  prisma: {
     user: {
       findUnique: vi.fn(),
     },
@@ -75,13 +75,13 @@ describe('preferencesRouter - token-based', () => {
       const mockPrefs = { emailMarketing: false };
       vi.spyOn(userPreferences, 'getUserPreferences').mockResolvedValue(mockPrefs as any);
 
-      vi.mocked(db.user.findUnique).mockResolvedValue({
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: 'user_123',
         email: 'test@example.com',
       } as any);
 
       const userId = await emailToken.verifyEmailToken('valid_token');
-      const user = await db.user.findUnique({ where: { id: userId! } });
+      const user = await prisma.user.findUnique({ where: { id: userId! } });
       const preferences = await userPreferences.getUserPreferences(userId!);
 
       expect(userId).toBe('user_123');
