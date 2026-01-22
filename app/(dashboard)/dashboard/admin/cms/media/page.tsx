@@ -249,8 +249,10 @@ export default function MediaLibraryPage() {
       setNewFolderName('');
       setShowFolderModal(false);
       refetchFolders();
-    } catch (error: any) {
-      alert(error.message || 'Failed to create folder');
+    } catch (error: unknown) {
+      // P1-008: Type-safe error handling
+      const message = error instanceof Error ? error.message : 'Failed to create folder';
+      alert(message);
     }
   };
 
@@ -261,8 +263,9 @@ export default function MediaLibraryPage() {
     try {
       await deleteAssetMutation.mutateAsync({ id });
       refetchAssets();
-    } catch (error: any) {
-      alert(error.message || 'Failed to delete asset');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to delete asset';
+      alert(message);
     }
   };
 
@@ -275,8 +278,9 @@ export default function MediaLibraryPage() {
       await deleteAssetsMutation.mutateAsync({ ids: selectedAssets });
       setSelectedAssets([]);
       refetchAssets();
-    } catch (error: any) {
-      alert(error.message || 'Failed to delete assets');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to delete assets';
+      alert(message);
     }
   };
 
@@ -287,8 +291,9 @@ export default function MediaLibraryPage() {
     try {
       await deleteFolderMutation.mutateAsync({ id });
       refetchFolders();
-    } catch (error: any) {
-      alert(error.message || 'Failed to delete folder');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to delete folder';
+      alert(message);
     }
   };
 
@@ -323,8 +328,9 @@ export default function MediaLibraryPage() {
       setShowEditAssetModal(false);
       setEditingAsset(null);
       refetchAssets();
-    } catch (error: any) {
-      alert(error.message || 'Failed to update asset');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to update asset';
+      alert(message);
     }
   };
 

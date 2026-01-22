@@ -99,7 +99,8 @@ export default function GuestProfileForm({ existingProfile }: GuestProfileFormPr
     setValue('dietaryRestrictions', newRestrictions)
   }
 
-  const onSubmit = (data: any) => {
+  // P1-008: Properly typed form submission handler
+  const onSubmit = (data: ProfileFormData) => {
     // Validate custom dietary restriction if checkbox is checked
     if (showOtherDietary && !otherDietary.trim()) {
       toast.error('Please specify your dietary restriction or uncheck "Other"')
@@ -107,15 +108,17 @@ export default function GuestProfileForm({ existingProfile }: GuestProfileFormPr
     }
 
     // Add custom dietary restriction if specified
-    if (showOtherDietary && otherDietary.trim()) {
-      data.dietaryRestrictions = [
-        ...(data.dietaryRestrictions || []).filter((r: string) => r !== 'Other'),
-        otherDietary.trim(),
-      ]
-    }
+    const finalData: ProfileFormData = showOtherDietary && otherDietary.trim()
+      ? {
+          ...data,
+          dietaryRestrictions: [
+            ...data.dietaryRestrictions.filter((r) => r !== 'Other'),
+            otherDietary.trim(),
+          ],
+        }
+      : data
 
-    // Type assertion for mutation - Zod has already validated
-    saveMutation.mutate(data as ProfileFormData)
+    saveMutation.mutate(finalData)
   }
 
   return (
