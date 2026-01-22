@@ -3173,6 +3173,655 @@ export const analyticsRouter = router({
   }),
 
   // ============================================================================
+  // PARTNER PERFORMANCE ANALYTICS (E13-S7)
+  // ============================================================================
+
+  partnerPerformance: router({
+    /**
+     * Get top partners by referrals, conversions, and revenue
+     */
+    getTopPartners: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(100).default(20),
+            sortBy: z.enum(['referrals', 'conversions', 'revenue']).default('revenue'),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const dateFilter = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all partners with their referrals, bookings, and payouts
+        const partners = await ctx.db.partnerProfile.findMany({
+          include: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
+            referrals: {
+              where: dateFilter,
+              include: {
+                booking: {
+                  select: {
+                    id: true,
+                    status: true,
+                    totalPrice: true,
+                  },
+                },
+              },
+            },
+            payouts: {
+              where: {
+                status: 'COMPLETED',
+                ...dateFilter,
+              },
+              select: {
+                amountInCents: true,
+              },
+            },
+          },
+        });
+
+        // Calculate metrics for each partner
+        const partnerStats = partners.map((partner) => {
+          const totalReferrals = partner.referrals.length;
+          const conversions = partner.referrals.filter(
+            (r) => r.booking.status === 'CONFIRMED' || r.booking.status === 'COMPLETED'
+          ).length;
+          const totalRevenue = partner.referrals.reduce((sum, r) => sum + r.booking.totalPrice, 0);
+          const totalCommissions = partner.payouts.reduce((sum, p) => sum + p.amountInCents, 0);
+          const conversionRate = totalReferrals > 0 ? (conversions / totalReferrals) * 100 : 0;
+          const avgBookingValue = conversions > 0 ? totalRevenue / conversions : 0;
+
+          return {
+            partnerId: partner.id,
+            clubName: partner.clubName,
+            clubLocation: partner.clubLocation,
+            partnerName: partner.clubName,
+            email: partner.user.email,
+            tier: partner.tier,
+            totalReferrals,
+            conversions,
+            conversionRate: Number(conversionRate.toFixed(1)),
+            totalRevenue,
+            avgBookingValue: Math.round(avgBookingValue),
+            totalCommissions,
+            currentPoints: partner.passportPoints,
+            referralCodeClicks: partner.referralCodeClickCount,
+          };
+        });
+
+        // Sort by specified metric
+        const sortKey = input?.sortBy || 'revenue';
+        partnerStats.sort((a, b) => {
+          switch (sortKey) {
+            case 'referrals':
+              return b.totalReferrals - a.totalReferrals;
+            case 'conversions':
+              return b.conversions - a.conversions;
+            case 'revenue':
+            default:
+              return b.totalRevenue - a.totalRevenue;
+          }
+        });
+
+        return partnerStats.slice(0, input?.limit || 20);
+      }),
+
+    /**
+     * Get partner tier distribution
+     */
+    getTierDistribution: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx }) => {
+        // Count partners by tier
+        const tierCounts = await ctx.db.partnerProfile.groupBy({
+          by: ['tier'],
+          _count: true,
+        });
+
+        // Get total referrals and revenue by tier
+        const tierStats = await Promise.all(
+          tierCounts.map(async (tierCount) => {
+            const partnersInTier = await ctx.db.partnerProfile.findMany({
+              where: { tier: tierCount.tier },
+              select: { id: true },
+            });
+            const partnerIds = partnersInTier.map((p) => p.id);
+
+            const referrals = await ctx.db.partnerReferral.findMany({
+              where: { partnerId: { in: partnerIds } },
+              include: {
+                booking: {
+                  select: { totalPrice: true },
+                },
+              },
+            });
+
+            const totalReferrals = referrals.length;
+            const totalRevenue = referrals.reduce((sum, r) => sum + r.booking.totalPrice, 0);
+            const avgReferralsPerPartner = tierCount._count > 0 ? totalReferrals / tierCount._count : 0;
+            const avgRevenuePerPartner = tierCount._count > 0 ? totalRevenue / tierCount._count : 0;
+
+            return {
+              tier: tierCount.tier,
+              partnerCount: tierCount._count,
+              totalReferrals,
+              totalRevenue,
+              avgReferralsPerPartner: Number(avgReferralsPerPartner.toFixed(1)),
+              avgRevenuePerPartner: Math.round(avgRevenuePerPartner),
+            };
+          })
+        );
+
+        // Sort by tier hierarchy
+        const tierOrder = ['DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE'];
+        tierStats.sort((a, b) => tierOrder.indexOf(a.tier) - tierOrder.indexOf(b.tier));
+
+        return tierStats;
+      }),
+
+    /**
+     * Get referral-to-booking conversion rates by partner
+     */
+    getConversionRatesByPartner: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            minReferrals: z.number().default(1),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const dateFilter = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const partners = await ctx.db.partnerProfile.findMany({
+          include: {
+            user: {
+              select: { email: true },
+            },
+            referrals: {
+              where: dateFilter,
+              include: {
+                booking: {
+                  select: { status: true },
+                },
+              },
+            },
+          },
+        });
+
+        return partners
+          .map((partner) => {
+            const totalReferrals = partner.referrals.length;
+            const converted = partner.referrals.filter(
+              (r) => r.booking.status === 'CONFIRMED' || r.booking.status === 'COMPLETED'
+            ).length;
+            const pending = partner.referrals.filter(
+              (r) => r.booking.status === 'PENDING_PAYMENT'
+            ).length;
+            const cancelled = partner.referrals.filter(
+              (r) => r.booking.status === 'CANCELLED'
+            ).length;
+
+            return {
+              partnerId: partner.id,
+              clubName: partner.clubName,
+              tier: partner.tier,
+              referralCodeClicks: partner.referralCodeClickCount,
+              totalReferrals,
+              converted,
+              pending,
+              cancelled,
+              conversionRate: totalReferrals > 0 ? Number(((converted / totalReferrals) * 100).toFixed(1)) : 0,
+              clickToReferralRate: partner.referralCodeClickCount > 0
+                ? Number(((totalReferrals / partner.referralCodeClickCount) * 100).toFixed(1))
+                : 0,
+            };
+          })
+          .filter((p) => p.totalReferrals >= (input?.minReferrals || 1))
+          .sort((a, b) => b.conversionRate - a.conversionRate);
+      }),
+
+    /**
+     * Get partner growth trends over time
+     */
+    getGrowthTrends: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            period: z.enum(['daily', 'weekly', 'monthly']).default('monthly'),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const now = new Date();
+        const defaultStart = new Date(now);
+        defaultStart.setMonth(defaultStart.getMonth() - 12);
+
+        const startDate = input?.startDate || defaultStart;
+        const endDate = input?.endDate || now;
+
+        // Get new partners over time
+        const newPartners = await ctx.db.partnerProfile.findMany({
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          select: {
+            id: true,
+            createdAt: true,
+            tier: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Get referrals over time
+        const referrals = await ctx.db.partnerReferral.findMany({
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          include: {
+            booking: {
+              select: { totalPrice: true, status: true },
+            },
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Group by period
+        const period = input?.period || 'monthly';
+        const periodMap = new Map<string, {
+          newPartners: number;
+          referrals: number;
+          conversions: number;
+          revenue: number;
+        }>();
+
+        const formatPeriodKey = (date: Date): string => {
+          switch (period) {
+            case 'daily':
+              return date.toISOString().split('T')[0];
+            case 'weekly':
+              const weekStart = new Date(date);
+              weekStart.setDate(date.getDate() - date.getDay());
+              return weekStart.toISOString().split('T')[0];
+            case 'monthly':
+            default:
+              return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+          }
+        };
+
+        // Initialize periods
+        const cursor = new Date(startDate);
+        while (cursor <= endDate) {
+          const key = formatPeriodKey(cursor);
+          if (!periodMap.has(key)) {
+            periodMap.set(key, { newPartners: 0, referrals: 0, conversions: 0, revenue: 0 });
+          }
+          if (period === 'daily') cursor.setDate(cursor.getDate() + 1);
+          else if (period === 'weekly') cursor.setDate(cursor.getDate() + 7);
+          else cursor.setMonth(cursor.getMonth() + 1);
+        }
+
+        // Count new partners
+        newPartners.forEach((p) => {
+          const key = formatPeriodKey(p.createdAt);
+          const entry = periodMap.get(key);
+          if (entry) entry.newPartners++;
+        });
+
+        // Count referrals
+        referrals.forEach((r) => {
+          const key = formatPeriodKey(r.createdAt);
+          const entry = periodMap.get(key);
+          if (entry) {
+            entry.referrals++;
+            if (r.booking.status === 'CONFIRMED' || r.booking.status === 'COMPLETED') {
+              entry.conversions++;
+              entry.revenue += r.booking.totalPrice;
+            }
+          }
+        });
+
+        return Array.from(periodMap.entries())
+          .map(([periodKey, data]) => ({
+            period: periodKey,
+            ...data,
+          }))
+          .sort((a, b) => a.period.localeCompare(b.period));
+      }),
+
+    /**
+     * Get commission payouts summary
+     */
+    getCommissionSummary: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const dateFilter = {
+          ...(input?.startDate && { requestedAt: { gte: input.startDate } }),
+          ...(input?.endDate && { requestedAt: { lte: input.endDate } }),
+        };
+
+        // Get all payouts in date range
+        const payouts = await ctx.db.partnerPayout.findMany({
+          where: dateFilter,
+          include: {
+            partner: {
+              select: {
+                clubName: true,
+                tier: true,
+              },
+            },
+          },
+          orderBy: { requestedAt: 'desc' },
+        });
+
+        // Calculate totals by status
+        const statusTotals = {
+          PENDING: { count: 0, amount: 0 },
+          PROCESSING: { count: 0, amount: 0 },
+          COMPLETED: { count: 0, amount: 0 },
+          FAILED: { count: 0, amount: 0 },
+        };
+
+        payouts.forEach((p) => {
+          const status = p.status as keyof typeof statusTotals;
+          if (statusTotals[status]) {
+            statusTotals[status].count++;
+            statusTotals[status].amount += p.amountInCents;
+          }
+        });
+
+        // Get top partners by payouts
+        const partnerPayouts = payouts.reduce((acc, p) => {
+          const key = p.partnerId;
+          if (!acc[key]) {
+            acc[key] = {
+              partnerId: p.partnerId,
+              clubName: p.partner.clubName,
+              tier: p.partner.tier,
+              totalPayouts: 0,
+              totalAmount: 0,
+            };
+          }
+          if (p.status === 'COMPLETED') {
+            acc[key].totalPayouts++;
+            acc[key].totalAmount += p.amountInCents;
+          }
+          return acc;
+        }, {} as Record<string, { partnerId: string; clubName: string; tier: string; totalPayouts: number; totalAmount: number }>);
+
+        const topPartnersByPayouts = Object.values(partnerPayouts)
+          .sort((a, b) => b.totalAmount - a.totalAmount)
+          .slice(0, 10);
+
+        // Get recent payouts
+        const recentPayouts = payouts.slice(0, 10).map((p) => ({
+          id: p.id,
+          clubName: p.partner.clubName,
+          tier: p.partner.tier,
+          pointsRedeemed: p.pointsRedeemed,
+          amountInCents: p.amountInCents,
+          status: p.status,
+          payoutMethod: p.payoutMethod,
+          requestedAt: p.requestedAt,
+          processedAt: p.processedAt,
+        }));
+
+        return {
+          statusTotals,
+          totalPaid: statusTotals.COMPLETED.amount,
+          totalPending: statusTotals.PENDING.amount + statusTotals.PROCESSING.amount,
+          topPartnersByPayouts,
+          recentPayouts,
+        };
+      }),
+
+    /**
+     * Identify high-potential partners for outreach
+     */
+    getHighPotentialPartners: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const dateFilter = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const partners = await ctx.db.partnerProfile.findMany({
+          include: {
+            user: {
+              select: { email: true },
+            },
+            referrals: {
+              where: dateFilter,
+              include: {
+                booking: {
+                  select: { status: true, totalPrice: true },
+                },
+              },
+            },
+          },
+        });
+
+        // Calculate potential scores
+        const partnerPotential = partners.map((partner) => {
+          const totalReferrals = partner.referrals.length;
+          const conversions = partner.referrals.filter(
+            (r) => r.booking.status === 'CONFIRMED' || r.booking.status === 'COMPLETED'
+          ).length;
+          const conversionRate = totalReferrals > 0 ? (conversions / totalReferrals) * 100 : 0;
+          const totalRevenue = partner.referrals.reduce((sum, r) => sum + r.booking.totalPrice, 0);
+          const avgBookingValue = conversions > 0 ? totalRevenue / conversions : 0;
+
+          // Calculate click-to-referral ratio (high clicks but low referrals = potential)
+          const clickToReferralRatio = partner.referralCodeClickCount > 0
+            ? totalReferrals / partner.referralCodeClickCount
+            : 0;
+
+          // High potential criteria:
+          // 1. High conversion rate (> 50%) but low referrals (< 5)
+          // 2. High clicks but low referral conversion (< 10% click-to-referral)
+          // 3. Not at highest tier yet (BRONZE, SILVER, GOLD)
+          // 4. Recent activity (onboarding completed or recent referral)
+
+          const signals: string[] = [];
+          let potentialScore = 0;
+
+          // High converter but low volume
+          if (conversionRate > 50 && totalReferrals < 5 && totalReferrals > 0) {
+            signals.push('High converter, low volume');
+            potentialScore += 30;
+          }
+
+          // High engagement (clicks) but low conversion
+          if (partner.referralCodeClickCount > 10 && clickToReferralRatio < 0.1) {
+            signals.push('High engagement, low conversion');
+            potentialScore += 25;
+          }
+
+          // Not at highest tier with activity
+          if (['BRONZE', 'SILVER'].includes(partner.tier) && totalReferrals > 0) {
+            signals.push('Room to grow tier');
+            potentialScore += 15;
+          }
+
+          // Recently onboarded
+          const daysSinceCreated = Math.floor(
+            (Date.now() - partner.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          if (daysSinceCreated < 90 && partner.onboardingCompleted) {
+            signals.push('Recently onboarded');
+            potentialScore += 20;
+          }
+
+          // Has referrals but none recently (re-engage)
+          const hasOldReferrals = partner.referrals.length > 0;
+          const hasRecentReferrals = partner.referrals.some((r) => {
+            const daysSince = Math.floor(
+              (Date.now() - r.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+            );
+            return daysSince < 30;
+          });
+          if (hasOldReferrals && !hasRecentReferrals) {
+            signals.push('Inactive, re-engage');
+            potentialScore += 10;
+          }
+
+          return {
+            partnerId: partner.id,
+            clubName: partner.clubName,
+            partnerName: partner.clubName,
+            email: partner.user.email,
+            tier: partner.tier,
+            totalReferrals,
+            conversions,
+            conversionRate: Number(conversionRate.toFixed(1)),
+            totalRevenue,
+            avgBookingValue: Math.round(avgBookingValue),
+            referralCodeClicks: partner.referralCodeClickCount,
+            clickToReferralRatio: Number((clickToReferralRatio * 100).toFixed(1)),
+            potentialScore,
+            signals,
+            daysSinceCreated,
+            onboardingCompleted: partner.onboardingCompleted,
+          };
+        });
+
+        // Filter only high-potential partners (score > 0)
+        return partnerPotential
+          .filter((p) => p.potentialScore > 0)
+          .sort((a, b) => b.potentialScore - a.potentialScore)
+          .slice(0, 20);
+      }),
+
+    /**
+     * Get overall partner performance overview
+     */
+    getOverview: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const dateFilter = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const [
+          totalPartners,
+          activePartners,
+          totalReferrals,
+          referralsInPeriod,
+          payoutsCompleted,
+        ] = await Promise.all([
+          // Total partners
+          ctx.db.partnerProfile.count(),
+
+          // Active partners (at least one referral in period)
+          ctx.db.partnerProfile.count({
+            where: {
+              referrals: {
+                some: dateFilter,
+              },
+            },
+          }),
+
+          // Total referrals ever
+          ctx.db.partnerReferral.count(),
+
+          // Referrals in period with booking info
+          ctx.db.partnerReferral.findMany({
+            where: dateFilter,
+            include: {
+              booking: {
+                select: { status: true, totalPrice: true },
+              },
+            },
+          }),
+
+          // Completed payouts
+          ctx.db.partnerPayout.aggregate({
+            where: {
+              status: 'COMPLETED',
+              ...(input?.startDate && { processedAt: { gte: input.startDate } }),
+              ...(input?.endDate && { processedAt: { lte: input.endDate } }),
+            },
+            _sum: { amountInCents: true },
+            _count: true,
+          }),
+        ]);
+
+        const conversions = referralsInPeriod.filter(
+          (r) => r.booking.status === 'CONFIRMED' || r.booking.status === 'COMPLETED'
+        ).length;
+        const totalRevenue = referralsInPeriod.reduce((sum, r) => sum + r.booking.totalPrice, 0);
+        const conversionRate = referralsInPeriod.length > 0
+          ? (conversions / referralsInPeriod.length) * 100
+          : 0;
+
+        return {
+          totalPartners,
+          activePartners,
+          totalReferrals,
+          referralsInPeriod: referralsInPeriod.length,
+          conversions,
+          conversionRate: Number(conversionRate.toFixed(1)),
+          totalRevenue,
+          avgRevenuePerReferral: conversions > 0 ? Math.round(totalRevenue / conversions) : 0,
+          totalPaidOut: payoutsCompleted._sum.amountInCents || 0,
+          payoutsCount: payoutsCompleted._count,
+        };
+      }),
+  }),
+
+  // ============================================================================
   // PARTNER REFERRAL ANALYTICS
   // ============================================================================
 

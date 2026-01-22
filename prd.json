@@ -133,7 +133,7 @@
       "id": "E13-S7",
       "title": "Partner Performance",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "description": "Track and analyze partner referral performance",
       "acceptanceCriteria": [
         "Dashboard showing top partners by referrals, conversions, revenue",
