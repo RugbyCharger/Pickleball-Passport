@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import crypto from 'crypto';
 
 const TOKEN_EXPIRY_DAYS = 90;
@@ -31,7 +31,7 @@ export async function generateEmailToken(userId: string): Promise<string> {
   expiry.setDate(expiry.getDate() + TOKEN_EXPIRY_DAYS);
 
   // Store hash in database
-  await db.user.update({
+  await prisma.user.update({
     where: { id: userId },
     data: {
       preferenceEmailToken: hash,
@@ -54,7 +54,7 @@ export async function verifyEmailToken(token: string): Promise<string | null> {
     .digest('hex');
 
   // Find user with matching hash and non-expired token
-  const user = await db.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       preferenceEmailToken: {
         not: null,

@@ -17,7 +17,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import { emailLogger } from '@/lib/logger';
 
 interface SendGridEvent {
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       );
 
       // Find user by email
-      const user = await db.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { email: event.email },
         select: { id: true, email: true },
       });
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
       // Handle unsubscribe and spam report events
       if (event.event === 'unsubscribe' || event.event === 'spamreport') {
-        await db.user.update({
+        await prisma.user.update({
           where: { id: user.id },
           data: {
             notificationPreferences: {
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
         );
         // TODO: Implement granular group-based unsubscribe if needed
         // For now, treat the same as full unsubscribe
-        await db.user.update({
+        await prisma.user.update({
           where: { id: user.id },
           data: {
             notificationPreferences: {

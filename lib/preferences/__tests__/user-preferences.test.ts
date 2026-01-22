@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getUserPreferences, canSendNotification, updateUserPreferences, unsubscribeFromAll } from '../user-preferences';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 vi.mock('@/lib/db', () => ({
-  db: {
+  prisma: {
     user: {
       findUnique: vi.fn(),
       update: vi.fn(),
@@ -28,7 +28,7 @@ describe('getUserPreferences', () => {
       whatsappEnabled: true,
     };
 
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: mockPrefs,
     });
@@ -38,7 +38,7 @@ describe('getUserPreferences', () => {
   });
 
   it('should return default preferences when user has no preferences', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: null,
     });
@@ -49,7 +49,7 @@ describe('getUserPreferences', () => {
   });
 
   it('should throw error when user not found', async () => {
-    (db.user.findUnique as any).mockResolvedValue(null);
+    (prisma.user.findUnique as any).mockResolvedValue(null);
     await expect(getUserPreferences('nonexistent')).rejects.toThrow('User not found');
   });
 });
@@ -60,7 +60,7 @@ describe('canSendNotification', () => {
   });
 
   it('should return true when preference is enabled', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: { emailPreTripSequence: true },
     });
@@ -70,7 +70,7 @@ describe('canSendNotification', () => {
   });
 
   it('should return false when preference is disabled', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: { emailMarketing: false },
     });
@@ -80,7 +80,7 @@ describe('canSendNotification', () => {
   });
 
   it('should use default when preference not set', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: {},
     });
@@ -96,19 +96,19 @@ describe('updateUserPreferences', () => {
   });
 
   it('should update user preferences', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: { emailMarketing: false },
     });
 
-    (db.user.update as any).mockResolvedValue({
+    (prisma.user.update as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: { emailMarketing: true },
     });
 
     await updateUserPreferences('user_123', { emailMarketing: true });
 
-    expect(db.user.update).toHaveBeenCalledWith({
+    expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user_123' },
       data: {
         notificationPreferences: expect.objectContaining({ emailMarketing: true }),
@@ -118,18 +118,18 @@ describe('updateUserPreferences', () => {
   });
 
   it('should merge with existing preferences', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: { emailMarketing: false, smsEnabled: true },
     });
 
-    (db.user.update as any).mockResolvedValue({
+    (prisma.user.update as any).mockResolvedValue({
       id: 'user_123',
     });
 
     await updateUserPreferences('user_123', { emailMarketing: true });
 
-    expect(db.user.update).toHaveBeenCalledWith({
+    expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user_123' },
       data: {
         notificationPreferences: expect.objectContaining({
@@ -148,7 +148,7 @@ describe('unsubscribeFromAll', () => {
   });
 
   it('should disable all optional notifications', async () => {
-    (db.user.findUnique as any).mockResolvedValue({
+    (prisma.user.findUnique as any).mockResolvedValue({
       id: 'user_123',
       notificationPreferences: {
         emailPreTripSequence: true,
@@ -156,11 +156,11 @@ describe('unsubscribeFromAll', () => {
       },
     });
 
-    (db.user.update as any).mockResolvedValue({ id: 'user_123' });
+    (prisma.user.update as any).mockResolvedValue({ id: 'user_123' });
 
     await unsubscribeFromAll('user_123');
 
-    expect(db.user.update).toHaveBeenCalledWith({
+    expect(prisma.user.update).toHaveBeenCalledWith({
       where: { id: 'user_123' },
       data: {
         notificationPreferences: {
