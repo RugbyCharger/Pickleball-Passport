@@ -2332,6 +2332,563 @@ export const analyticsRouter = router({
             uniqueGuests > 0 ? (totalBookings / uniqueGuests).toFixed(1) : '0.0',
         };
       }),
+
+    // ============================================================================
+    // E13-S5: ENHANCED GUEST DEMOGRAPHICS
+    // ============================================================================
+
+    /**
+     * Get guest age distribution
+     */
+    getAgeDistribution: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get guests with bookings in date range
+        const guestProfiles = await ctx.db.guestProfile.findMany({
+          where: {
+            age: { not: null },
+            user: {
+              bookings: {
+                some: {
+                  status: { not: 'DRAFT' as BookingStatus },
+                  ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+                  ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+                },
+              },
+            },
+          },
+          select: {
+            age: true,
+          },
+        });
+
+        // Group by age brackets
+        const ageBrackets: Record<string, number> = {
+          '18-30': 0,
+          '31-40': 0,
+          '41-50': 0,
+          '51-60': 0,
+          '61-70': 0,
+          '71+': 0,
+        };
+
+        guestProfiles.forEach((profile) => {
+          const age = profile.age;
+          if (age !== null) {
+            if (age >= 18 && age <= 30) ageBrackets['18-30']++;
+            else if (age >= 31 && age <= 40) ageBrackets['31-40']++;
+            else if (age >= 41 && age <= 50) ageBrackets['41-50']++;
+            else if (age >= 51 && age <= 60) ageBrackets['51-60']++;
+            else if (age >= 61 && age <= 70) ageBrackets['61-70']++;
+            else if (age > 70) ageBrackets['71+']++;
+          }
+        });
+
+        const totalWithAge = guestProfiles.length;
+
+        return {
+          distribution: Object.entries(ageBrackets).map(([bracket, count]) => ({
+            bracket,
+            count,
+            percentage: totalWithAge > 0 ? ((count / totalWithAge) * 100).toFixed(1) : '0.0',
+          })),
+          totalWithAge,
+          averageAge:
+            totalWithAge > 0
+              ? Math.round(
+                  guestProfiles.reduce((sum, p) => sum + (p.age || 0), 0) / totalWithAge
+                )
+              : 0,
+        };
+      }),
+
+    /**
+     * Get guest location distribution (geographic)
+     */
+    getLocationDistribution: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(50).default(20),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get guests with bookings in date range
+        const guestProfiles = await ctx.db.guestProfile.findMany({
+          where: {
+            location: { not: null },
+            user: {
+              bookings: {
+                some: {
+                  status: { not: 'DRAFT' as BookingStatus },
+                  ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+                  ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+                },
+              },
+            },
+          },
+          select: {
+            location: true,
+          },
+        });
+
+        // Count by location
+        const locationCounts: Record<string, number> = {};
+        guestProfiles.forEach((profile) => {
+          if (profile.location) {
+            // Normalize location (trim and capitalize)
+            const normalizedLocation = profile.location.trim();
+            locationCounts[normalizedLocation] = (locationCounts[normalizedLocation] || 0) + 1;
+          }
+        });
+
+        const totalWithLocation = guestProfiles.length;
+
+        // Sort by count descending and take top N
+        const sortedLocations = Object.entries(locationCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, input?.limit || 20)
+          .map(([location, count]) => ({
+            location,
+            count,
+            percentage: totalWithLocation > 0 ? ((count / totalWithLocation) * 100).toFixed(1) : '0.0',
+          }));
+
+        return {
+          locations: sortedLocations,
+          totalWithLocation,
+          totalLocations: Object.keys(locationCounts).length,
+        };
+      }),
+
+    /**
+     * Get most popular packages by demographic (age group)
+     */
+    getPackagesByDemographic: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            ageGroup: z.enum(['18-30', '31-40', '41-50', '51-60', '61-70', '71+']).optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get bookings with guest profile info
+        const bookings = await ctx.db.booking.findMany({
+          where: {
+            status: { not: 'DRAFT' as BookingStatus },
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            user: {
+              guestProfile: {
+                age: { not: null },
+              },
+            },
+          },
+          select: {
+            packageId: true,
+            package: {
+              select: {
+                name: true,
+              },
+            },
+            user: {
+              select: {
+                guestProfile: {
+                  select: {
+                    age: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Helper to determine age bracket
+        const getAgeBracket = (age: number): string => {
+          if (age >= 18 && age <= 30) return '18-30';
+          if (age >= 31 && age <= 40) return '31-40';
+          if (age >= 41 && age <= 50) return '41-50';
+          if (age >= 51 && age <= 60) return '51-60';
+          if (age >= 61 && age <= 70) return '61-70';
+          return '71+';
+        };
+
+        // Group by age bracket and package
+        const packagesByAge: Record<string, Record<string, { count: number; packageName: string }>> = {};
+        const allAgeBrackets = ['18-30', '31-40', '41-50', '51-60', '61-70', '71+'];
+        allAgeBrackets.forEach((bracket) => {
+          packagesByAge[bracket] = {};
+        });
+
+        bookings.forEach((booking) => {
+          const age = booking.user.guestProfile?.age;
+          if (age !== null && age !== undefined) {
+            const bracket = getAgeBracket(age);
+
+            // Filter by age group if specified
+            if (input?.ageGroup && bracket !== input.ageGroup) return;
+
+            if (!packagesByAge[bracket][booking.packageId]) {
+              packagesByAge[bracket][booking.packageId] = {
+                count: 0,
+                packageName: booking.package.name,
+              };
+            }
+            packagesByAge[bracket][booking.packageId].count++;
+          }
+        });
+
+        // Convert to result format
+        const result = Object.entries(packagesByAge).map(([ageGroup, packages]) => ({
+          ageGroup,
+          packages: Object.entries(packages)
+            .map(([packageId, data]) => ({
+              packageId,
+              packageName: data.packageName,
+              count: data.count,
+            }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5), // Top 5 packages per age group
+        }));
+
+        return result;
+      }),
+
+    /**
+     * Get guest acquisition source breakdown
+     */
+    getAcquisitionSources: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get applications with referral source info
+        const applications = await ctx.db.application.findMany({
+          where: {
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          },
+          select: {
+            referralSource: true,
+            utmSource: true,
+            utmMedium: true,
+            utmCampaign: true,
+          },
+        });
+
+        // Count by referral source
+        const sourceCounts: Record<string, number> = {};
+        applications.forEach((app) => {
+          const source = app.referralSource || 'Unknown';
+          sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+        });
+
+        // Count by UTM source
+        const utmSourceCounts: Record<string, number> = {};
+        applications.forEach((app) => {
+          if (app.utmSource) {
+            utmSourceCounts[app.utmSource] = (utmSourceCounts[app.utmSource] || 0) + 1;
+          }
+        });
+
+        // Count by UTM medium
+        const utmMediumCounts: Record<string, number> = {};
+        applications.forEach((app) => {
+          if (app.utmMedium) {
+            utmMediumCounts[app.utmMedium] = (utmMediumCounts[app.utmMedium] || 0) + 1;
+          }
+        });
+
+        const total = applications.length;
+
+        return {
+          byReferralSource: Object.entries(sourceCounts)
+            .sort((a, b) => b[1] - a[1])
+            .map(([source, count]) => ({
+              source,
+              count,
+              percentage: total > 0 ? ((count / total) * 100).toFixed(1) : '0.0',
+            })),
+          byUtmSource: Object.entries(utmSourceCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([source, count]) => ({
+              source,
+              count,
+              percentage: total > 0 ? ((count / total) * 100).toFixed(1) : '0.0',
+            })),
+          byUtmMedium: Object.entries(utmMediumCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([medium, count]) => ({
+              medium,
+              count,
+              percentage: total > 0 ? ((count / total) * 100).toFixed(1) : '0.0',
+            })),
+          totalApplications: total,
+        };
+      }),
+
+    /**
+     * Get medical procedures popularity by demographic (age group)
+     */
+    getMedicalProceduresByDemographic: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get booking add-ons with guest age info (medical add-ons only)
+        const bookingAddOns = await ctx.db.bookingAddOn.findMany({
+          where: {
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            addOn: {
+              category: {
+                in: ['DENTAL', 'FACIAL_COSMETIC', 'BODY', 'HEALTH_SCREENING'],
+              },
+            },
+            booking: {
+              status: { not: 'DRAFT' as BookingStatus },
+              user: {
+                guestProfile: {
+                  age: { not: null },
+                },
+              },
+            },
+          },
+          select: {
+            quantity: true,
+            addOn: {
+              select: {
+                id: true,
+                name: true,
+                category: true,
+              },
+            },
+            booking: {
+              select: {
+                user: {
+                  select: {
+                    guestProfile: {
+                      select: {
+                        age: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Helper to determine age bracket
+        const getAgeBracket = (age: number): string => {
+          if (age >= 18 && age <= 30) return '18-30';
+          if (age >= 31 && age <= 40) return '31-40';
+          if (age >= 41 && age <= 50) return '41-50';
+          if (age >= 51 && age <= 60) return '51-60';
+          if (age >= 61 && age <= 70) return '61-70';
+          return '71+';
+        };
+
+        // Group by age bracket and procedure category
+        const proceduresByAge: Record<
+          string,
+          Record<string, { count: number; procedures: Record<string, number> }>
+        > = {};
+
+        const allAgeBrackets = ['18-30', '31-40', '41-50', '51-60', '61-70', '71+'];
+        allAgeBrackets.forEach((bracket) => {
+          proceduresByAge[bracket] = {
+            DENTAL: { count: 0, procedures: {} },
+            FACIAL_COSMETIC: { count: 0, procedures: {} },
+            BODY: { count: 0, procedures: {} },
+            HEALTH_SCREENING: { count: 0, procedures: {} },
+          };
+        });
+
+        bookingAddOns.forEach((item) => {
+          const age = item.booking.user.guestProfile?.age;
+          if (age !== null && age !== undefined) {
+            const bracket = getAgeBracket(age);
+            const category = item.addOn.category;
+
+            if (proceduresByAge[bracket][category]) {
+              proceduresByAge[bracket][category].count += item.quantity;
+              const procName = item.addOn.name;
+              proceduresByAge[bracket][category].procedures[procName] =
+                (proceduresByAge[bracket][category].procedures[procName] || 0) + item.quantity;
+            }
+          }
+        });
+
+        // Convert to result format
+        return Object.entries(proceduresByAge).map(([ageGroup, categories]) => ({
+          ageGroup,
+          categories: Object.entries(categories).map(([category, data]) => ({
+            category,
+            totalCount: data.count,
+            topProcedures: Object.entries(data.procedures)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([name, count]) => ({ name, count })),
+          })),
+        }));
+      }),
+
+    /**
+     * Get comprehensive guest demographics overview
+     */
+    getOverview: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const bookingWhere = {
+          status: { not: 'DRAFT' as BookingStatus },
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get total guests with bookings
+        const totalGuests = await ctx.db.user.count({
+          where: {
+            role: 'GUEST',
+            bookings: {
+              some: bookingWhere,
+            },
+          },
+        });
+
+        // Get guests with complete profiles
+        const guestsWithProfile = await ctx.db.guestProfile.count({
+          where: {
+            profileCompleted: true,
+            user: {
+              bookings: {
+                some: bookingWhere,
+              },
+            },
+          },
+        });
+
+        // Get repeat guest count
+        const guestsWithMultipleBookings = await ctx.db.user.findMany({
+          where: {
+            role: 'GUEST',
+            bookings: {
+              some: bookingWhere,
+            },
+          },
+          select: {
+            _count: {
+              select: {
+                bookings: {
+                  where: bookingWhere,
+                },
+              },
+            },
+          },
+        });
+
+        const repeatGuestCount = guestsWithMultipleBookings.filter(
+          (g) => g._count.bookings > 1
+        ).length;
+
+        // Get average age
+        const profiles = await ctx.db.guestProfile.aggregate({
+          where: {
+            age: { not: null },
+            user: {
+              bookings: {
+                some: bookingWhere,
+              },
+            },
+          },
+          _avg: { age: true },
+        });
+
+        // Get top locations
+        const locationData = await ctx.db.guestProfile.groupBy({
+          by: ['location'],
+          where: {
+            location: { not: null },
+            user: {
+              bookings: {
+                some: bookingWhere,
+              },
+            },
+          },
+          _count: true,
+          orderBy: { _count: { location: 'desc' } },
+          take: 5,
+        });
+
+        // Get skill level distribution
+        const skillLevels = await ctx.db.guestProfile.groupBy({
+          by: ['pickleballSkillLevel'],
+          where: {
+            pickleballSkillLevel: { not: null },
+            user: {
+              bookings: {
+                some: bookingWhere,
+              },
+            },
+          },
+          _count: true,
+        });
+
+        return {
+          totalGuests,
+          guestsWithProfile,
+          profileCompletionRate:
+            totalGuests > 0
+              ? ((guestsWithProfile / totalGuests) * 100).toFixed(1)
+              : '0.0',
+          repeatGuestCount,
+          repeatGuestRate:
+            totalGuests > 0
+              ? ((repeatGuestCount / totalGuests) * 100).toFixed(1)
+              : '0.0',
+          averageAge: profiles._avg.age ? Math.round(profiles._avg.age) : null,
+          topLocations: locationData.map((l) => ({
+            location: l.location || 'Unknown',
+            count: l._count,
+          })),
+          skillLevelDistribution: skillLevels.map((s) => ({
+            level: s.pickleballSkillLevel || 'Unknown',
+            count: s._count,
+          })),
+        };
+      }),
   }),
 
   // ============================================================================

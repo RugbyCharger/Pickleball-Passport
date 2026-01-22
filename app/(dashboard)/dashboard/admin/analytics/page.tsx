@@ -47,6 +47,11 @@ import {
   PiggyBank,
   ArrowRightLeft,
   Wallet,
+  MapPin,
+  Heart,
+  UserCheck,
+  Stethoscope,
+  Repeat,
 } from 'lucide-react';
 import {
   XAxis,
@@ -233,7 +238,7 @@ const FUNNEL_STAGE_COLORS = [
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
-type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports';
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
@@ -396,6 +401,28 @@ export default function AnalyticsDashboardPage() {
   const { data: revenueByAddOnCategory } =
     trpc.analytics.revenue.getByAddOnCategory.useQuery(dateRange);
 
+  // Guest Demographics Analytics (E13-S5)
+  const { data: demographicsOverview, isLoading: loadingDemographicsOverview } =
+    trpc.analytics.demographics.getOverview.useQuery(dateRange);
+
+  const { data: ageDistribution, isLoading: loadingAgeDistribution } =
+    trpc.analytics.demographics.getAgeDistribution.useQuery(dateRange);
+
+  const { data: locationDistribution, isLoading: loadingLocationDistribution } =
+    trpc.analytics.demographics.getLocationDistribution.useQuery({
+      ...dateRange,
+      limit: 15,
+    });
+
+  const { data: packagesByDemographic, isLoading: loadingPackagesByDemographic } =
+    trpc.analytics.demographics.getPackagesByDemographic.useQuery(dateRange);
+
+  const { data: acquisitionSources, isLoading: loadingAcquisitionSources } =
+    trpc.analytics.demographics.getAcquisitionSources.useQuery(dateRange);
+
+  const { data: medicalProceduresByDemographic, isLoading: loadingMedicalProcedures } =
+    trpc.analytics.demographics.getMedicalProceduresByDemographic.useQuery(dateRange);
+
   // CSV Export handler
   const handleExport = async (
     reportType: 'bookings' | 'revenue' | 'addons' | 'trips' | 'referrals'
@@ -484,6 +511,16 @@ export default function AnalyticsDashboardPage() {
             }`}
           >
             Revenue Reports
+          </button>
+          <button
+            onClick={() => setActiveTab('guest-demographics')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'guest-demographics'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Guest Demographics
           </button>
         </nav>
       </div>
@@ -1525,6 +1562,401 @@ export default function AnalyticsDashboardPage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* GUEST DEMOGRAPHICS TAB (E13-S5) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'guest-demographics' && (
+        <div className="space-y-6">
+          {/* Demographics Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <StatCard
+              title="Total Guests"
+              value={demographicsOverview?.totalGuests ?? 0}
+              icon={Users}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Avg. Age"
+              value={demographicsOverview?.averageAge ?? 'N/A'}
+              icon={Calendar}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Profile Completion"
+              value={`${demographicsOverview?.profileCompletionRate ?? '0.0'}%`}
+              icon={UserCheck}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Repeat Guests"
+              value={demographicsOverview?.repeatGuestCount ?? 0}
+              icon={Repeat}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Repeat Rate"
+              value={`${demographicsOverview?.repeatGuestRate ?? '0.0'}%`}
+              icon={Heart}
+              trend={Number(demographicsOverview?.repeatGuestRate ?? 0) > 10 ? 'up' : undefined}
+              loading={loadingDemographicsOverview}
+            />
+          </div>
+
+          {/* Age Distribution and Location */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Age Distribution Chart */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Distribution</h3>
+
+              {loadingAgeDistribution ? (
+                <div className="flex items-center justify-center h-[300px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : ageDistribution?.distribution && ageDistribution.distribution.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={ageDistribution.distribution}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="bracket"
+                        stroke="#6b7280"
+                        style={{ fontSize: '12px' }}
+                      />
+                      <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#fff',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                        }}
+                        formatter={(value) => [Number(value ?? 0), 'Guests']}
+                      />
+                      <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="mt-4 text-center text-sm text-gray-600">
+                    Average Age: <span className="font-bold">{ageDistribution.averageAge}</span> |
+                    Total with Age Data: <span className="font-bold">{ageDistribution.totalWithAge}</span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                  <Calendar className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No age distribution data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Location Distribution */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Guest Locations</h3>
+
+              {loadingLocationDistribution ? (
+                <div className="flex items-center justify-center h-[300px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : locationDistribution?.locations && locationDistribution.locations.length > 0 ? (
+                <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                  {locationDistribution.locations.map((loc, index) => (
+                    <div
+                      key={loc.location}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-gray-500" />
+                          <span className="font-medium text-gray-900">{loc.location}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">{loc.count}</div>
+                        <div className="text-xs text-gray-500">{loc.percentage}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                  <MapPin className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No location data available.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Popular Packages by Age Group */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Popular Packages by Age Group
+            </h3>
+
+            {loadingPackagesByDemographic ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : packagesByDemographic && packagesByDemographic.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                        Age Group
+                      </th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                        Top Packages
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {packagesByDemographic.map((ageData) => (
+                      <tr key={ageData.ageGroup} className="border-b border-gray-100">
+                        <td className="py-3 px-4">
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-lg">
+                            {ageData.ageGroup}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          {ageData.packages.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {ageData.packages.map((pkg) => (
+                                <span
+                                  key={pkg.packageId}
+                                  className="inline-flex items-center gap-1 px-2 py-1 text-sm bg-gray-100 text-gray-700 rounded"
+                                >
+                                  {pkg.packageName}
+                                  <span className="text-xs font-bold text-gray-500">
+                                    ({pkg.count})
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-sm text-gray-400">No data</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Package className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No package preference data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Guest Acquisition Sources */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Guest Acquisition Sources
+            </h3>
+
+            {loadingAcquisitionSources ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : acquisitionSources ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* By Referral Source */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By Referral Source</h4>
+                  <div className="space-y-2">
+                    {acquisitionSources.byReferralSource.slice(0, 8).map((source) => (
+                      <div
+                        key={source.source}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      >
+                        <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                          {source.source}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-gray-900">{source.count}</span>
+                          <span className="text-xs text-gray-500">({source.percentage}%)</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* By UTM Source */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By UTM Source</h4>
+                  {acquisitionSources.byUtmSource.length > 0 ? (
+                    <div className="space-y-2">
+                      {acquisitionSources.byUtmSource.map((source) => (
+                        <div
+                          key={source.source}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        >
+                          <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                            {source.source}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-900">{source.count}</span>
+                            <span className="text-xs text-gray-500">({source.percentage}%)</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">No UTM source data</p>
+                  )}
+                </div>
+
+                {/* By UTM Medium */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By UTM Medium</h4>
+                  {acquisitionSources.byUtmMedium.length > 0 ? (
+                    <div className="space-y-2">
+                      {acquisitionSources.byUtmMedium.map((medium) => (
+                        <div
+                          key={medium.medium}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        >
+                          <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                            {medium.medium}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-900">{medium.count}</span>
+                            <span className="text-xs text-gray-500">({medium.percentage}%)</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">No UTM medium data</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Globe className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No acquisition source data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Medical Procedures by Age Group */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Stethoscope className="h-6 w-6 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                Medical Procedures by Age Group
+              </h3>
+            </div>
+
+            {loadingMedicalProcedures ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : medicalProceduresByDemographic && medicalProceduresByDemographic.length > 0 ? (
+              <div className="space-y-6">
+                {medicalProceduresByDemographic.map((ageGroup) => {
+                  const hasData = ageGroup.categories.some((c) => c.totalCount > 0);
+                  if (!hasData) return null;
+
+                  return (
+                    <div key={ageGroup.ageGroup} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="text-md font-semibold text-gray-800 mb-3">
+                        Age {ageGroup.ageGroup}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {ageGroup.categories.map((category) => {
+                          if (category.totalCount === 0) return null;
+
+                          const categoryColors: Record<string, string> = {
+                            DENTAL: 'bg-blue-50 border-blue-200',
+                            FACIAL_COSMETIC: 'bg-pink-50 border-pink-200',
+                            BODY: 'bg-green-50 border-green-200',
+                            HEALTH_SCREENING: 'bg-purple-50 border-purple-200',
+                          };
+
+                          const colorClass = categoryColors[category.category] || 'bg-gray-50 border-gray-200';
+
+                          return (
+                            <div
+                              key={category.category}
+                              className={`p-3 rounded-lg border ${colorClass}`}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium text-gray-700 capitalize">
+                                  {category.category.toLowerCase().replace('_', ' ')}
+                                </span>
+                                <span className="text-lg font-bold text-gray-900">
+                                  {category.totalCount}
+                                </span>
+                              </div>
+                              {category.topProcedures.length > 0 && (
+                                <div className="space-y-1">
+                                  {category.topProcedures.slice(0, 3).map((proc) => (
+                                    <div
+                                      key={proc.name}
+                                      className="flex items-center justify-between text-xs text-gray-600"
+                                    >
+                                      <span className="truncate max-w-[120px]">{proc.name}</span>
+                                      <span className="font-medium">{proc.count}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Stethoscope className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No medical procedure data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Skill Level Distribution */}
+          {demographicsOverview?.skillLevelDistribution &&
+            demographicsOverview.skillLevelDistribution.length > 0 && (
+              <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Pickleball Skill Level Distribution
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {demographicsOverview.skillLevelDistribution.map((skill) => {
+                    const skillColors: Record<string, string> = {
+                      RECREATIONAL: 'bg-green-100 text-green-800',
+                      INTERMEDIATE: 'bg-yellow-100 text-yellow-800',
+                      ADVANCED: 'bg-red-100 text-red-800',
+                    };
+                    const colorClass = skillColors[skill.level] || 'bg-gray-100 text-gray-800';
+
+                    return (
+                      <div
+                        key={skill.level}
+                        className="text-center p-4 bg-gray-50 rounded-lg"
+                      >
+                        <div className="text-3xl font-bold text-gray-900">{skill.count}</div>
+                        <div
+                          className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full capitalize ${colorClass}`}
+                        >
+                          {skill.level.toLowerCase()}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
         </div>
       )}
 
