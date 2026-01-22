@@ -1779,6 +1779,382 @@ export const analyticsRouter = router({
 
         return trends;
       }),
+
+    /**
+     * Get revenue trends by period (daily/weekly/monthly/yearly)
+     * E13-S4: Revenue Reports
+     */
+    getRevenueTrends: adminProcedure
+      .input(
+        z.object({
+          period: z.enum(['day', 'week', 'month', 'year']),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const { period, startDate, endDate } = input;
+
+        const where = {
+          status: 'SUCCEEDED' as PaymentStatus,
+          ...(startDate && { createdAt: { gte: startDate } }),
+          ...(endDate && { createdAt: { lte: endDate } }),
+        };
+
+        const payments = await ctx.db.payment.findMany({
+          where,
+          select: {
+            amount: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: 'asc',
+          },
+        });
+
+        // Group by period
+        const groupedData = payments.reduce(
+          (acc, payment) => {
+            let key: string;
+            const date = payment.createdAt;
+
+            switch (period) {
+              case 'day':
+                key = date.toISOString().substring(0, 10); // YYYY-MM-DD
+                break;
+              case 'week': {
+                // Get the Monday of the week
+                const d = new Date(date);
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                d.setDate(diff);
+                key = d.toISOString().substring(0, 10);
+                break;
+              }
+              case 'month':
+                key = date.toISOString().substring(0, 7); // YYYY-MM
+                break;
+              case 'year':
+                key = date.toISOString().substring(0, 4); // YYYY
+                break;
+            }
+
+            if (!acc[key]) {
+              acc[key] = { revenue: 0, count: 0 };
+            }
+            acc[key].revenue += payment.amount;
+            acc[key].count += 1;
+            return acc;
+          },
+          {} as Record<string, { revenue: number; count: number }>
+        );
+
+        const trends = Object.entries(groupedData)
+          .map(([periodKey, data]) => ({
+            period: periodKey,
+            revenue: data.revenue,
+            paymentCount: data.count,
+            averagePayment: data.count > 0 ? Math.round(data.revenue / data.count) : 0,
+          }))
+          .sort((a, b) => a.period.localeCompare(b.period));
+
+        return {
+          trends,
+          totalRevenue: trends.reduce((sum, t) => sum + t.revenue, 0),
+          totalPayments: trends.reduce((sum, t) => sum + t.paymentCount, 0),
+        };
+      }),
+
+    /**
+     * Compare revenue between two time periods
+     * E13-S4: Revenue Reports
+     */
+    getRevenueComparison: adminProcedure
+      .input(
+        z.object({
+          currentPeriodStart: z.date(),
+          currentPeriodEnd: z.date(),
+          previousPeriodStart: z.date(),
+          previousPeriodEnd: z.date(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const { currentPeriodStart, currentPeriodEnd, previousPeriodStart, previousPeriodEnd } = input;
+
+        // Current period metrics
+        const currentPayments = await ctx.db.payment.aggregate({
+          where: {
+            status: 'SUCCEEDED',
+            createdAt: {
+              gte: currentPeriodStart,
+              lte: currentPeriodEnd,
+            },
+          },
+          _sum: { amount: true },
+          _count: { id: true },
+        });
+
+        // Previous period metrics
+        const previousPayments = await ctx.db.payment.aggregate({
+          where: {
+            status: 'SUCCEEDED',
+            createdAt: {
+              gte: previousPeriodStart,
+              lte: previousPeriodEnd,
+            },
+          },
+          _sum: { amount: true },
+          _count: { id: true },
+        });
+
+        // Current period bookings
+        const currentBookings = await ctx.db.booking.count({
+          where: {
+            status: 'CONFIRMED',
+            createdAt: {
+              gte: currentPeriodStart,
+              lte: currentPeriodEnd,
+            },
+          },
+        });
+
+        // Previous period bookings
+        const previousBookings = await ctx.db.booking.count({
+          where: {
+            status: 'CONFIRMED',
+            createdAt: {
+              gte: previousPeriodStart,
+              lte: previousPeriodEnd,
+            },
+          },
+        });
+
+        const currentRevenue = currentPayments._sum.amount || 0;
+        const previousRevenue = previousPayments._sum.amount || 0;
+        const revenueChange = previousRevenue > 0
+          ? ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1)
+          : currentRevenue > 0 ? '100.0' : '0.0';
+
+        const bookingChange = previousBookings > 0
+          ? ((currentBookings - previousBookings) / previousBookings * 100).toFixed(1)
+          : currentBookings > 0 ? '100.0' : '0.0';
+
+        const currentAverage = currentPayments._count.id > 0
+          ? Math.round(currentRevenue / currentPayments._count.id)
+          : 0;
+        const previousAverage = previousPayments._count.id > 0
+          ? Math.round(previousRevenue / previousPayments._count.id)
+          : 0;
+        const averageChange = previousAverage > 0
+          ? ((currentAverage - previousAverage) / previousAverage * 100).toFixed(1)
+          : currentAverage > 0 ? '100.0' : '0.0';
+
+        return {
+          current: {
+            revenue: currentRevenue,
+            payments: currentPayments._count.id,
+            bookings: currentBookings,
+            averagePayment: currentAverage,
+          },
+          previous: {
+            revenue: previousRevenue,
+            payments: previousPayments._count.id,
+            bookings: previousBookings,
+            averagePayment: previousAverage,
+          },
+          changes: {
+            revenue: parseFloat(revenueChange),
+            bookings: parseFloat(bookingChange),
+            averagePayment: parseFloat(averageChange),
+          },
+        };
+      }),
+
+    /**
+     * Get projected revenue based on pending/upcoming bookings
+     * E13-S4: Revenue Reports
+     */
+    getProjectedRevenue: adminProcedure.query(async ({ ctx }) => {
+      // Get all pending and confirmed bookings that haven't been fully paid
+      // Valid BookingStatus values: DRAFT, PENDING_PAYMENT, CONFIRMED, CANCELLED, COMPLETED
+      const pendingBookings = await ctx.db.booking.findMany({
+        where: {
+          status: {
+            in: ['PENDING_PAYMENT', 'CONFIRMED'] as BookingStatus[],
+          },
+        },
+        include: {
+          payments: {
+            where: {
+              status: 'SUCCEEDED',
+            },
+            select: {
+              amount: true,
+            },
+          },
+          trip: {
+            select: {
+              startDate: true,
+            },
+          },
+        },
+      });
+
+      // Calculate outstanding revenue
+      let projectedRevenue = 0;
+      let upcomingTripsRevenue = 0;
+      let pendingPaymentsRevenue = 0;
+      const now = new Date();
+
+      for (const booking of pendingBookings) {
+        const paidAmount = booking.payments.reduce((sum: number, p: { amount: number }) => sum + p.amount, 0);
+        const outstanding = booking.totalPrice - paidAmount;
+
+        if (outstanding > 0) {
+          projectedRevenue += outstanding;
+
+          // Check if trip is upcoming (within next 90 days)
+          if (booking.trip?.startDate) {
+            const tripDate = new Date(booking.trip.startDate);
+            const daysUntilTrip = Math.ceil((tripDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+            if (daysUntilTrip > 0 && daysUntilTrip <= 90) {
+              upcomingTripsRevenue += outstanding;
+            }
+          }
+
+          if (booking.status === 'PENDING_PAYMENT') {
+            pendingPaymentsRevenue += outstanding;
+          }
+        }
+      }
+
+      // Get MRR (Monthly Recurring Revenue estimate based on last 3 months)
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+      const recentRevenue = await ctx.db.payment.aggregate({
+        where: {
+          status: 'SUCCEEDED',
+          createdAt: { gte: threeMonthsAgo },
+        },
+        _sum: { amount: true },
+      });
+
+      const mrr = Math.round((recentRevenue._sum.amount || 0) / 3);
+
+      // Get booking pipeline (bookings by status)
+      const bookingPipeline = await ctx.db.booking.groupBy({
+        by: ['status'],
+        where: {
+          status: {
+            in: ['PENDING_PAYMENT', 'CONFIRMED'] as BookingStatus[],
+          },
+        },
+        _count: true,
+        _sum: { totalPrice: true },
+      });
+
+      return {
+        projectedRevenue,
+        upcomingTripsRevenue,
+        pendingPaymentsRevenue,
+        mrr,
+        annualizedRevenue: mrr * 12,
+        bookingPipeline: bookingPipeline.map((b) => ({
+          status: b.status,
+          count: b._count,
+          totalValue: b._sum?.totalPrice || 0,
+        })),
+        totalPendingBookings: pendingBookings.length,
+      };
+    }),
+
+    /**
+     * Get comprehensive revenue overview including MRR
+     * E13-S4: Enhanced Overview
+     */
+    getComprehensiveOverview: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: 'SUCCEEDED' as PaymentStatus,
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all successful payments
+        const payments = await ctx.db.payment.aggregate({
+          where,
+          _sum: { amount: true },
+          _count: { id: true },
+        });
+
+        // Get confirmed bookings total value
+        const bookingsWhere = {
+          status: 'CONFIRMED' as BookingStatus,
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const bookings = await ctx.db.booking.aggregate({
+          where: bookingsWhere,
+          _sum: { totalPrice: true },
+          _count: { id: true },
+        });
+
+        // Calculate MRR from last 30 days
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const lastMonthPayments = await ctx.db.payment.aggregate({
+          where: {
+            status: 'SUCCEEDED',
+            createdAt: { gte: thirtyDaysAgo },
+          },
+          _sum: { amount: true },
+        });
+
+        const mrr = lastMonthPayments._sum.amount || 0;
+
+        // Get add-ons revenue
+        const addOnsWhere = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const addOns = await ctx.db.bookingAddOn.findMany({
+          where: addOnsWhere,
+          select: {
+            price: true,
+            quantity: true,
+          },
+        });
+
+        const addOnsRevenue = addOns.reduce((sum, a) => sum + a.price * a.quantity, 0);
+
+        return {
+          totalRevenue: payments._sum.amount || 0,
+          totalPayments: payments._count.id,
+          averagePayment: payments._count.id > 0
+            ? Math.round((payments._sum.amount || 0) / payments._count.id)
+            : 0,
+          mrr,
+          arr: mrr * 12, // Annualized
+          totalBookingsValue: bookings._sum.totalPrice || 0,
+          totalBookings: bookings._count.id,
+          averageBookingValue: bookings._count.id > 0
+            ? Math.round((bookings._sum.totalPrice || 0) / bookings._count.id)
+            : 0,
+          addOnsRevenue,
+        };
+      }),
   }),
 
   // ============================================================================

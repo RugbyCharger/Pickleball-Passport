@@ -43,6 +43,10 @@ import {
   Globe,
   Megaphone,
   FlaskConical,
+  Calendar,
+  PiggyBank,
+  ArrowRightLeft,
+  Wallet,
 } from 'lucide-react';
 import {
   XAxis,
@@ -53,6 +57,8 @@ import {
   LineChart,
   Line,
   Legend,
+  BarChart,
+  Bar,
 } from 'recharts';
 
 // ============================================================================
@@ -227,7 +233,7 @@ const FUNNEL_STAGE_COLORS = [
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
-type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking';
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
@@ -239,6 +245,10 @@ export default function AnalyticsDashboardPage() {
   const [conversionGroupBy, setConversionGroupBy] = useState<'source' | 'medium' | 'campaign'>('source');
   const [conversionTrendPeriod, setConversionTrendPeriod] = useState<'day' | 'week' | 'month'>('day');
   const [conversionTypeFilter, setConversionTypeFilter] = useState<'APPLICATION_SUBMITTED' | 'BOOKING_COMPLETED' | 'PAYMENT_MADE' | 'ALL'>('ALL');
+
+  // Revenue Reports filters (E13-S4)
+  const [revenueTrendPeriod, setRevenueTrendPeriod] = useState<'day' | 'week' | 'month' | 'year'>('month');
+  const [comparisonPeriod, setComparisonPeriod] = useState<'month' | 'quarter' | 'year'>('month');
 
   // Fetch analytics data
   const { data: conversionFunnel, isLoading: loadingConversion } =
@@ -327,6 +337,65 @@ export default function AnalyticsDashboardPage() {
   const { data: variantPerformance, isLoading: loadingVariants } =
     trpc.analytics.conversionTracking.getVariantPerformance.useQuery(dateRange);
 
+  // Revenue Reports Analytics (E13-S4)
+  const { data: comprehensiveRevenue, isLoading: loadingComprehensiveRevenue } =
+    trpc.analytics.revenue.getComprehensiveOverview.useQuery(dateRange);
+
+  const { data: revenueTrends, isLoading: loadingRevenueTrends } =
+    trpc.analytics.revenue.getRevenueTrends.useQuery({
+      period: revenueTrendPeriod,
+      ...dateRange,
+    });
+
+  const { data: projectedRevenue, isLoading: loadingProjectedRevenue } =
+    trpc.analytics.revenue.getProjectedRevenue.useQuery();
+
+  // Calculate comparison dates based on selected period
+  const getComparisonDates = () => {
+    const now = new Date();
+    let currentStart: Date;
+    let currentEnd: Date;
+    let previousStart: Date;
+    let previousEnd: Date;
+
+    switch (comparisonPeriod) {
+      case 'month':
+        currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        previousEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case 'quarter':
+        const currentQuarter = Math.floor(now.getMonth() / 3);
+        currentStart = new Date(now.getFullYear(), currentQuarter * 3, 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear(), (currentQuarter - 1) * 3, 1);
+        previousEnd = new Date(now.getFullYear(), currentQuarter * 3, 0);
+        break;
+      case 'year':
+        currentStart = new Date(now.getFullYear(), 0, 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear() - 1, 0, 1);
+        previousEnd = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+    }
+
+    return { currentStart, currentEnd, previousStart, previousEnd };
+  };
+
+  const comparisonDates = getComparisonDates();
+
+  const { data: revenueComparison, isLoading: loadingRevenueComparison } =
+    trpc.analytics.revenue.getRevenueComparison.useQuery({
+      currentPeriodStart: comparisonDates.currentStart,
+      currentPeriodEnd: comparisonDates.currentEnd,
+      previousPeriodStart: comparisonDates.previousStart,
+      previousPeriodEnd: comparisonDates.previousEnd,
+    });
+
+  const { data: revenueByAddOnCategory } =
+    trpc.analytics.revenue.getByAddOnCategory.useQuery(dateRange);
+
   // CSV Export handler
   const handleExport = async (
     reportType: 'bookings' | 'revenue' | 'addons' | 'trips' | 'referrals'
@@ -405,6 +474,16 @@ export default function AnalyticsDashboardPage() {
             }`}
           >
             Conversion Tracking
+          </button>
+          <button
+            onClick={() => setActiveTab('revenue-reports')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'revenue-reports'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Revenue Reports
           </button>
         </nav>
       </div>
@@ -1083,6 +1162,369 @@ export default function AnalyticsDashboardPage() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* REVENUE REPORTS TAB (E13-S4) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'revenue-reports' && (
+        <div className="space-y-6">
+          {/* Revenue Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <StatCard
+              title="Total Revenue"
+              value={`$${((comprehensiveRevenue?.totalRevenue ?? 0) / 100).toLocaleString()}`}
+              icon={DollarSign}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="MRR"
+              value={`$${((comprehensiveRevenue?.mrr ?? 0) / 100).toLocaleString()}`}
+              icon={Calendar}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="Average Booking Value"
+              value={`$${((comprehensiveRevenue?.averageBookingValue ?? 0) / 100).toLocaleString()}`}
+              icon={Wallet}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="Add-Ons Revenue"
+              value={`$${((comprehensiveRevenue?.addOnsRevenue ?? 0) / 100).toLocaleString()}`}
+              icon={Package}
+              loading={loadingComprehensiveRevenue}
+            />
+          </div>
+
+          {/* Period Comparison */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Revenue Comparison</h3>
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Compare:</label>
+                <select
+                  value={comparisonPeriod}
+                  onChange={(e) => setComparisonPeriod(e.target.value as 'month' | 'quarter' | 'year')}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="month">This Month vs Last Month</option>
+                  <option value="quarter">This Quarter vs Last Quarter</option>
+                  <option value="year">This Year vs Last Year</option>
+                </select>
+              </div>
+            </div>
+
+            {loadingRevenueComparison ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : revenueComparison ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Revenue Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Revenue</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${(revenueComparison.current.revenue / 100).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs ${(revenueComparison.previous.revenue / 100).toLocaleString()}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.revenue >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.revenue >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.revenue)}%
+                  </div>
+                </div>
+
+                {/* Bookings Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Bookings</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {revenueComparison.current.bookings}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs {revenueComparison.previous.bookings}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.bookings >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.bookings >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.bookings)}%
+                  </div>
+                </div>
+
+                {/* Average Payment Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Avg. Payment</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${(revenueComparison.current.averagePayment / 100).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs ${(revenueComparison.previous.averagePayment / 100).toLocaleString()}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.averagePayment >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.averagePayment >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.averagePayment)}%
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <ArrowRightLeft className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No comparison data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Revenue Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Revenue Trends</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Period:</label>
+                  <select
+                    value={revenueTrendPeriod}
+                    onChange={(e) => setRevenueTrendPeriod(e.target.value as 'day' | 'week' | 'month' | 'year')}
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="day">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                    <option value="year">Yearly</option>
+                  </select>
+                </div>
+                <button
+                  onClick={() => handleExport('revenue')}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            {loadingRevenueTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : revenueTrends?.trends && revenueTrends.trends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={revenueTrends.trends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      if (revenueTrendPeriod === 'year') return value;
+                      if (revenueTrendPeriod === 'month') {
+                        const [year, month] = value.split('-');
+                        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                      }
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `$${(value / 100).toLocaleString()}`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    formatter={(value) => [`$${(Number(value ?? 0) / 100).toLocaleString()}`, 'Revenue']}
+                    labelFormatter={(value) => {
+                      if (revenueTrendPeriod === 'year') return value;
+                      if (revenueTrendPeriod === 'month') {
+                        const [year, month] = value.split('-');
+                        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                      }
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    }}
+                  />
+                  <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                <BarChartIcon className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No revenue trend data available for the selected period.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Revenue Breakdown by Package and Add-Ons */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Revenue by Package */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Package</h3>
+              {revenueByPackage && revenueByPackage.length > 0 ? (
+                <div className="space-y-3">
+                  {revenueByPackage.map((pkg, index) => (
+                    <div key={pkg.packageId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{pkg.packageName}</div>
+                          <div className="text-xs text-gray-500">{pkg.bookingCount} bookings</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">${(pkg.totalRevenue / 100).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500">
+                          Avg: ${(pkg.averageBookingValue / 100).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Package className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No package revenue data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Revenue by Add-On Category */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Add-On Category</h3>
+              {revenueByAddOnCategory && revenueByAddOnCategory.length > 0 ? (
+                <div className="space-y-3">
+                  {revenueByAddOnCategory.map((category) => (
+                    <div key={category.category} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-gray-900 capitalize">
+                          {category.category.toLowerCase().replace('_', ' ')}
+                        </div>
+                        <div className="text-xs text-gray-500">{category.totalCount} items sold</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">${(category.totalRevenue / 100).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500">
+                          Avg: ${(category.averagePrice / 100).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Package className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No add-on revenue data available.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Projected Revenue */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <PiggyBank className="h-6 w-6 text-green-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Projected Revenue</h3>
+            </div>
+
+            {loadingProjectedRevenue ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : projectedRevenue ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <div className="text-sm font-medium text-green-700 mb-1">Total Projected</div>
+                    <div className="text-2xl font-bold text-green-800">
+                      ${(projectedRevenue.projectedRevenue / 100).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-green-600 mt-1">
+                      From {projectedRevenue.totalPendingBookings} pending bookings
+                    </div>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="text-sm font-medium text-blue-700 mb-1">Upcoming Trips (90d)</div>
+                    <div className="text-2xl font-bold text-blue-800">
+                      ${(projectedRevenue.upcomingTripsRevenue / 100).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-yellow-50 rounded-lg">
+                    <div className="text-sm font-medium text-yellow-700 mb-1">Pending Payments</div>
+                    <div className="text-2xl font-bold text-yellow-800">
+                      ${(projectedRevenue.pendingPaymentsRevenue / 100).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-purple-50 rounded-lg">
+                    <div className="text-sm font-medium text-purple-700 mb-1">Annualized Revenue</div>
+                    <div className="text-2xl font-bold text-purple-800">
+                      ${(projectedRevenue.annualizedRevenue / 100).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-purple-600 mt-1">
+                      Based on MRR of ${(projectedRevenue.mrr / 100).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Booking Pipeline */}
+                {projectedRevenue.bookingPipeline && projectedRevenue.bookingPipeline.length > 0 && (
+                  <div>
+                    <h4 className="text-md font-medium text-gray-700 mb-3">Booking Pipeline</h4>
+                    <div className="flex gap-4 flex-wrap">
+                      {projectedRevenue.bookingPipeline.map((stage) => (
+                        <div key={stage.status} className="flex-1 min-w-[150px] p-4 bg-gray-50 rounded-lg">
+                          <div className="text-sm text-gray-600 capitalize">
+                            {stage.status.toLowerCase().replace('_', ' ')}
+                          </div>
+                          <div className="text-xl font-bold text-gray-900">{stage.count}</div>
+                          <div className="text-sm text-gray-500">
+                            ${(stage.totalValue / 100).toLocaleString()}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <PiggyBank className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No projected revenue data available.</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
