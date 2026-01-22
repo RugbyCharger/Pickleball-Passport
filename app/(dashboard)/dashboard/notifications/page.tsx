@@ -15,14 +15,9 @@
 
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
-import { Mail, MessageSquare, Check, Trash2, Calendar, CreditCard, Plane, Info, Bell } from 'lucide-react';
+import { Mail, MessageSquare, Check, Trash2, Calendar, CreditCard, Plane, Info, Bell, MousePointer, FileText, Award, TrendingUp, DollarSign } from 'lucide-react';
 import type { ComponentType } from 'react';
-
-type NotificationType =
-  | 'BOOKING_CONFIRMATION'
-  | 'PAYMENT_RECEIPT'
-  | 'TRIP_REMINDER'
-  | 'GENERAL';
+import { NotificationType } from '@prisma/client';
 
 type NotificationIcon = ComponentType<{ className?: string }>;
 
@@ -49,6 +44,36 @@ const NOTIFICATION_TYPE_CONFIG: Record<
     label: 'General',
     icon: Info,
     color: 'text-gray-600 bg-gray-50',
+  },
+  REFERRAL_CLICK: {
+    label: 'Referral Click',
+    icon: MousePointer,
+    color: 'text-emerald-600 bg-emerald-50',
+  },
+  REFERRAL_APPLICATION: {
+    label: 'Referral Application',
+    icon: FileText,
+    color: 'text-emerald-600 bg-emerald-50',
+  },
+  REFERRAL_BOOKING: {
+    label: 'Referral Booking',
+    icon: Calendar,
+    color: 'text-emerald-600 bg-emerald-50',
+  },
+  POINTS_EARNED: {
+    label: 'Points Earned',
+    icon: Award,
+    color: 'text-amber-600 bg-amber-50',
+  },
+  TIER_CHANGE: {
+    label: 'Tier Change',
+    icon: TrendingUp,
+    color: 'text-purple-600 bg-purple-50',
+  },
+  COMMISSION_AVAILABLE: {
+    label: 'Commission Available',
+    icon: DollarSign,
+    color: 'text-green-600 bg-green-50',
   },
 };
 

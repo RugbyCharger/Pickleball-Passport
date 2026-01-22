@@ -117,6 +117,73 @@ export function BookingConfirmationClient({ bookingReference }: BookingConfirmat
     )
   }
 
+  // E4-S11: Handle PENDING_PAYMENT status (Affirm canceled or still processing)
+  if (booking.status === 'PENDING_PAYMENT') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white py-12">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-amber-100 mb-6">
+              <AlertCircle className="h-12 w-12 text-amber-600" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+              Payment Pending
+            </h1>
+            <p className="mt-4 text-lg text-slate-600">
+              Your booking is reserved but payment hasn't been completed yet.
+            </p>
+
+            {/* Booking Reference */}
+            <div className="mt-8 rounded-xl border-2 border-amber-200 bg-white p-6 shadow-lg">
+              <p className="text-sm font-semibold text-amber-600 uppercase tracking-wide">
+                Booking Reference
+              </p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 tracking-wider">
+                {booking.bookingReference}
+              </p>
+            </div>
+
+            {/* Options */}
+            <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm text-left">
+              <h2 className="text-lg font-bold text-slate-900 mb-4">What would you like to do?</h2>
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-amber-50 border border-amber-200">
+                  <p className="text-sm font-medium text-slate-900">Affirm Checkout Incomplete?</p>
+                  <p className="text-xs text-slate-600 mt-1">
+                    If you didn't complete the Affirm checkout or were declined, you can try a different payment method.
+                  </p>
+                </div>
+                <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+                  <p className="text-sm font-medium text-slate-900">Want to try again?</p>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Return to the payment page to complete your booking with a different payment method.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href={`/booking/payment?bookingRef=${booking.bookingReference}`}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-blue-600 px-8 py-4 text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
+              >
+                <CreditCard className="h-5 w-5" />
+                Complete Payment
+              </Link>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-8 py-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                View Dashboard
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white py-12">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">

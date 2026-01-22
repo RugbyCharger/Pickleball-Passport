@@ -209,7 +209,7 @@ export default function PartnerTrainingPage() {
                   <div key={category} className="rounded-lg border border-slate-200 bg-white shadow-sm">
                     <div className="border-b border-slate-200 px-6 py-4">
                       <h2 className="text-lg font-semibold text-slate-900">
-                        {CATEGORY_LABELS[category]}
+                        {CATEGORY_LABELS[category as ResourceCategory]}
                       </h2>
                     </div>
                     <div className="p-6">

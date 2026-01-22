@@ -1,0 +1,301 @@
+# Ralph Progress Log
+Started: Thu Jan 22 09:01:56 +07 2026
+---
+
+## Codebase Patterns
+- Admin analytics page already exists at `app/(dashboard)/dashboard/admin/analytics/page.tsx` with existing conversion, revenue, demographics sections
+- Analytics tRPC router already exists at `lib/trpc/server/routers/analytics.ts` with conversion, revenue, demographics, addOns, tripUtilization, partnerReferrals, and export sub-routers
+- Use `z.any()` for JSON fields in tRPC input schemas (not `z.record(z.unknown())`)
+- App providers are at `app/providers.tsx` - wrap new providers with Suspense if they use hooks like `useSearchParams`
+- Use `adminProcedure` for admin-only endpoints, `publicProcedure` for public endpoints
+
+---
+
+## 2026-01-22 - E13-S1
+Iteration: 1
+- What was implemented:
+  - Added AnalyticsEvent and AnalyticsSession models to Prisma schema
+  - Added events and sessions sub-routers to analytics tRPC router with track, getSummary, getRecent, getByTimePeriod endpoints
+  - Created client-side analytics tracking utility at lib/utils/analytics.ts with session management and event tracking
+  - Created AnalyticsProvider component for automatic page view tracking
+  - Updated admin analytics dashboard with Event Tracking section showing total events, unique users, total sessions, session conversion rate
+
+- Files changed:
+  - prisma/schema.prisma (added AnalyticsEventType enum, AnalyticsEvent model, AnalyticsSession model)
+  - lib/trpc/server/routers/analytics.ts (added events and sessions sub-routers)
+  - lib/utils/analytics.ts (new file - client-side tracking utility)
+  - components/analytics-provider.tsx (new file - React provider for auto page view tracking)
+  - app/providers.tsx (added AnalyticsProvider)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Event Tracking section)
+
+- **Learnings for future iterations:**
+  - The analytics router already had comprehensive conversion, revenue, demographics, add-ons, trip utilization, and partner referrals functionality
+  - The analytics dashboard page already has extensive UI - just needed to add the event tracking section
+  - Remember to run `npx prisma generate` after modifying the schema
+---
+
+## 2026-01-22 - E13-S2
+Iteration: 2
+- What was implemented:
+  - Added bookingFunnel sub-router to analytics tRPC router with:
+    - getFunnelData: Complete funnel data with drop-off rates for each stage
+    - getTimeAtStages: Average time spent at each funnel stage
+    - getFunnelTrends: Daily/weekly/monthly trend analysis
+    - getFilterOptions: Available packages and UTM sources for filtering
+  - Funnel stages: Homepage → Package View → Configurator → Review → Payment → Confirmation
+  - Updated analytics dashboard with:
+    - Tab navigation (Overview / Booking Funnel)
+    - Funnel filters (date range, package, traffic source)
+    - Visual funnel with drop-off and conversion rates at each stage
+    - Time spent at each stage visualization
+    - Daily conversion trends chart using Recharts
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added bookingFunnel sub-router with 4 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Booking Funnel tab with visualization)
+
+- **Learnings for future iterations:**
+  - Recharts is already imported and used in the partner analytics page - follow same patterns
+  - The funnel visualization uses styled divs rather than a FunnelChart component for better customization
+  - Use FUNNEL_STEP event type with step property for tracking user progress through booking flow
+  - PAGE_VIEW events with path detection handle HOMEPAGE and PACKAGE_VIEW stages automatically
+---
+
+## 2026-01-22 - E13-S3
+Iteration: 3
+- What was implemented:
+  - Added conversionTracking sub-router to analytics tRPC router with 5 endpoints:
+    - getConversionsByType: Tracks Application Submitted, Booking Completed, Payment Made conversions
+    - getByTrafficSource: Calculates conversion rates by utm_source, utm_medium, or utm_campaign
+    - getConversionTrends: Shows daily/weekly/monthly conversion trends with type filtering
+    - getTopConverters: Lists top converting sources and campaigns
+    - getVariantPerformance: A/B test variant tracking (optional feature)
+  - Added Conversion Tracking tab to analytics dashboard with:
+    - Summary metrics (total conversions, applications, bookings, payments)
+    - Conversion rates by traffic source (groupable by source/medium/campaign)
+    - Conversion trends chart with period and type filtering
+    - Top converting sources table with conversion rates
+    - Top converting campaigns table
+    - A/B test variant performance section (shown when data exists)
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added conversionTracking sub-router with 5 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Conversion Tracking tab, new state variables, UI components)
+
+- **Learnings for future iterations:**
+  - AnalyticsSession uses `startedAt` not `createdAt` for the date field
+  - UTM parameters (utm_source, utm_medium, utm_campaign) are already tracked in both AnalyticsEvent and AnalyticsSession models
+  - Conversion events use eventType: 'CONVERSION' with properties containing type (APPLICATION_SUBMITTED, BOOKING_COMPLETED, PAYMENT_MADE)
+  - A/B test tracking uses properties.experimentId and properties.variant in events
+---
+
+## 2026-01-22 - E13-S4
+Iteration: 4
+- What was implemented:
+  - Added 4 new endpoints to revenue sub-router in analytics tRPC router:
+    - getRevenueTrends: Revenue trends by period (daily/weekly/monthly/yearly)
+    - getRevenueComparison: Compare revenue between two time periods
+    - getProjectedRevenue: Projected revenue from pending bookings with MRR calculation
+    - getComprehensiveOverview: Enhanced overview including MRR, ARR, and add-ons revenue
+  - Added Revenue Reports tab to analytics dashboard with:
+    - Summary metrics (Total Revenue, MRR, Average Booking Value, Add-Ons Revenue)
+    - Period comparison component (this month vs last month, quarter, year) with change indicators
+    - Revenue trends bar chart with configurable periods (daily/weekly/monthly/yearly)
+    - Revenue breakdown by package
+    - Revenue breakdown by add-on category
+    - Projected revenue section with booking pipeline status
+  - CSV export functionality reuses existing export.generateCSV endpoint
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added 4 revenue endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Revenue Reports tab, new state variables, UI)
+
+- **Learnings for future iterations:**
+  - BookingStatus enum only has: DRAFT, PENDING_PAYMENT, CONFIRMED, CANCELLED, COMPLETED (no PENDING_REVIEW)
+  - When using groupBy with _count, use `_count: true` instead of `_count: { id: true }` for simpler access
+  - Prisma payments.reduce requires explicit types for accumulator and item
+  - Recharts Tooltip formatter should handle undefined values with `Number(value ?? 0)`
+---
+
+## 2026-01-22 - E13-S5
+Iteration: 5
+- What was implemented:
+  - Added 6 new endpoints to demographics sub-router in analytics tRPC router:
+    - getAgeDistribution: Age bracket distribution (18-30, 31-40, etc.) with averages
+    - getLocationDistribution: Geographic distribution of guests by location
+    - getPackagesByDemographic: Most popular packages grouped by age group
+    - getAcquisitionSources: Guest acquisition breakdown by referral source, UTM source, UTM medium
+    - getMedicalProceduresByDemographic: Medical procedure popularity by age group and category
+    - getOverview: Comprehensive demographics summary with key metrics
+  - Added Guest Demographics tab to analytics dashboard with:
+    - Summary metrics (total guests, avg age, profile completion rate, repeat guests, repeat rate)
+    - Age distribution bar chart using Recharts
+    - Guest locations list with ranking and percentages
+    - Popular packages by age group table
+    - Guest acquisition sources breakdown (three columns: referral, UTM source, UTM medium)
+    - Medical procedures by age group with category breakdown (Dental, Facial Cosmetic, Body, Health Screening)
+    - Pickleball skill level distribution
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added 6 demographics endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Guest Demographics tab, new queries, new icons)
+
+- **Learnings for future iterations:**
+  - GuestProfile model has `age`, `location`, and `pickleballSkillLevel` fields for demographics
+  - Application model has `referralSource`, `utmSource`, `utmMedium`, `utmCampaign` for acquisition tracking
+  - Medical add-ons are categorized as: DENTAL, FACIAL_COSMETIC, BODY, HEALTH_SCREENING
+  - Recharts Tooltip formatter must handle undefined values with `Number(value ?? 0)` pattern
+  - BookingAddOn includes quantity field for counting procedures
+---
+
+## 2026-01-22 - E13-S6
+Iteration: 6
+- What was implemented:
+  - Added packagePerformance sub-router to analytics tRPC router with 7 endpoints:
+    - getOverview: Package summary metrics (bookings, revenue, avg value, conversion rate)
+    - getAddOnAttachRates: Add-on attach rates per booking
+    - getPackageComparison: Package comparison with bookings, revenue, testimonials, satisfaction
+    - getSeasonalTrends: Monthly booking trends by package for the year
+    - getUnderperformingPackages: Identify packages below average performance
+    - getTopAddOns: Top performing add-ons with attach rates
+    - getPackageRatings: Package satisfaction from testimonials
+  - Added Package Performance tab to analytics dashboard with:
+    - Overview metrics (total packages, bookings, revenue, avg booking value)
+    - Package comparison table (bookings, revenue, completed, testimonials, satisfaction)
+    - Top add-ons table with attach rates and category breakdown
+    - Seasonal trends bar chart using Recharts
+    - Package satisfaction from testimonials with High/Medium/Low indicators
+    - Underperforming packages alert section with issue identification
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added packagePerformance sub-router with 7 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Package Performance tab, new queries, UI)
+  - prd.json (marked E13-S6 as passes: true)
+
+- **Learnings for future iterations:**
+  - Cannot use both `include` and `select` in the same Prisma query - use only `select` with nested relation selection
+  - Testimonial model doesn't have a rating field, but testimonial count can serve as a satisfaction proxy
+  - GuestTestimonial has a `status` field with 'PUBLISHED' value for approved testimonials
+  - Package.name is stored in Testimonial.packageType for linking packages to their reviews
+---
+
+## 2026-01-22 - E13-S7
+Iteration: 7
+- What was implemented:
+  - E13-S7 Partner Performance was already fully implemented in a previous iteration
+  - Verified partnerPerformance sub-router exists with 7 endpoints:
+    - getTopPartners: Top partners by referrals, conversions, revenue
+    - getTierDistribution: Partner tier distribution chart data
+    - getConversionRatesByPartner: Referral-to-booking conversion rates
+    - getGrowthTrends: Partner growth trends over time (daily/weekly/monthly)
+    - getCommissionSummary: Commission payouts summary with status breakdown
+    - getHighPotentialPartners: Identifies high-potential partners for outreach
+    - getOverview: Overall partner performance metrics
+  - Verified Partner Performance tab exists in analytics dashboard with:
+    - Overview metrics (Total Partners, Active Partners, Referrals, Conversion Rate, Total Paid Out)
+    - Top Partners table sortable by revenue/referrals/conversions
+    - Partner Tier Distribution chart (horizontal bar chart)
+    - Commission Payouts summary with completed/pending status
+    - Partner Growth Trends line chart
+    - Referral-to-Booking Conversion table by partner
+    - High-Potential Partners for Outreach section
+  - Fixed TypeScript errors:
+    - Fixed Tooltip formatter types (name parameter can be undefined)
+    - Fixed User model reference (removed firstName/lastName not in schema)
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (fixed User select to only include email, fixed partnerName to use clubName)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (fixed Tooltip formatter type signatures)
+  - prd.json (marked E13-S7 as passes: true)
+
+- **Learnings for future iterations:**
+  - User model only has `email` field - no firstName/lastName
+  - Use `partner.clubName` for partner display names
+  - Recharts Tooltip formatter's `name` parameter type is `string | undefined`, not `string`
+---
+
+## 2026-01-22 - E13-S8
+Iteration: 8
+- What was implemented:
+  - Added EmailCampaign, EmailSend, and EmailLinkClick models to Prisma schema for email tracking
+  - Added emailCampaigns sub-router to analytics tRPC router with 8 endpoints:
+    - getOverview: Send volume, open rates, click rates, bounce rates, unsubscribe rates
+    - getCampaigns: Campaign list with performance metrics (opens, clicks, bounces)
+    - getAbTestComparison: A/B test campaign comparison with winner detection
+    - getTopTemplates: Best performing email templates sorted by open/click rate or sends
+    - getEngagementTrends: Email engagement trends over time (daily/weekly/monthly)
+    - getUnsubscribeMetrics: Unsubscribe tracking and trends by campaign
+    - getLinkClickBreakdown: Link click heatmap/breakdown by position and CTA text
+    - getTemplateAnalyticsSummary: Template analytics from existing EmailTemplateAnalytics model
+  - Added Email Campaigns tab to analytics dashboard with:
+    - Overview metrics (7 stat cards: total sends, open rate, click rate, delivery rate, bounce rate, unsubscribe rate, campaigns)
+    - Recent campaigns table with performance metrics
+    - A/B test results comparison with variant winner indication
+    - Best performing templates table with sort options
+    - Engagement trends line chart using Recharts
+    - Unsubscribe tracking section with campaign breakdown
+    - Link click breakdown showing position heatmap and top CTAs
+
+- Files changed:
+  - prisma/schema.prisma (added EmailCampaignStatus, EmailSendStatus enums; EmailCampaign, EmailSend, EmailLinkClick models; relation to EmailTemplate)
+  - lib/trpc/server/routers/analytics.ts (added emailCampaigns sub-router with 8 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Email Campaigns tab with UI components)
+  - prd.json (marked E13-S8 as passes: true)
+
+- **Learnings for future iterations:**
+  - When API returns union types based on input, use type guards in UI: `'property' in object && object.property`
+  - Recharts Tooltip formatter value parameter type should be `number | undefined` not just `number`
+  - EmailTemplateAnalytics model already exists for aggregate template metrics (last 30 days)
+  - For A/B tests, EmailCampaign has abTestParentId to link variants to parent campaign
+---
+
+## 2026-01-22 - E13-S10
+Iteration: 9
+- What was implemented:
+  - Added CustomReport model to Prisma schema for saving custom report configurations
+  - Added customReports sub-router to analytics tRPC router with 7 endpoints:
+    - getAvailableMetrics: Returns all available metrics organized by category
+    - runReport: Executes custom report with selected metrics, grouping, and date range
+    - save: Save a custom report configuration
+    - list: List all saved reports
+    - getById: Get a specific saved report
+    - update: Update a saved report
+    - delete: Delete a saved report
+    - exportCSV: Export report data as CSV format
+  - Created /dashboard/admin/analytics/reports page with:
+    - Left panel: Metric selection, visualization type, date range, group by, saved reports
+    - Right panel: Results display with table, bar chart, line chart, or pie chart
+    - Recharts integration for all chart types
+    - Save/load custom reports functionality
+    - CSV export functionality
+
+- Files changed:
+  - prisma/schema.prisma (added ReportVisualizationType enum, CustomReport model)
+  - lib/trpc/server/routers/analytics.ts (added customReports sub-router with 7 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/reports/page.tsx (new file - Custom Report Builder UI)
+  - prd.json (marked E13-S10 as passes: true)
+
+- **Learnings for future iterations:**
+  - React Hooks must be called before any conditional returns (rules of hooks)
+  - Pie chart label function receives optional `percent` - must handle undefined
+  - tRPC queries return inferred types that may need casting when component expects stricter types
+  - When building grouped data for charts, combine all metric arrays into single array of objects with period/name key
+---
+
+## 2026-01-22 - E13-S11
+Iteration: 10
+- What was implemented:
+  - Added "Custom Report Builder" link to analytics dashboard header
+  - Fixed Link icon naming conflict (Link from next/link vs Link from lucide-react)
+  - Ran final TypeScript and lint checks - all new code passes
+  - Verified navigation from admin dashboard to analytics to custom reports
+  - All 10 user stories in Epic 13 now pass
+
+- Files changed:
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Link import, FileSpreadsheet icon, navigation button, fixed LinkIcon)
+  - prd.json (marked E13-S11 as passes: true)
+
+- **Learnings for future iterations:**
+  - When importing Link from next/link, check if lucide-react Link icon is also used - rename one to avoid conflict
+  - Admin dashboard already has quick access links to major features - just add analytics link there
+---

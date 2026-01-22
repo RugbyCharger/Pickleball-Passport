@@ -15,10 +15,12 @@ import { chargeInstallment } from '../charge-installment'
 import Stripe from 'stripe'
 import * as stripeModule from '@/lib/stripe/get-stripe'
 import * as emailModule from '@/lib/email/send-email'
+import * as adminAlertsModule from '@/lib/email/admin-alerts'
 
 // Mock modules
 vi.mock('@/lib/stripe/get-stripe')
 vi.mock('@/lib/email/send-email')
+vi.mock('@/lib/email/admin-alerts')
 vi.mock('@/lib/db', () => ({
   prisma: {
     paymentRecord: {
@@ -48,6 +50,8 @@ describe('chargeInstallment', () => {
 
     vi.mocked(stripeModule.getStripe).mockReturnValue(mockStripe)
     vi.mocked(emailModule.sendEmail).mockResolvedValue(undefined)
+    // Mock admin alerts service
+    vi.mocked(adminAlertsModule.sendPaymentFailureAlert).mockResolvedValue(undefined)
   })
 
   // Helper to create mock payment record with booking
@@ -233,11 +237,10 @@ describe('chargeInstallment', () => {
       expect(result.isPermanentFailure).toBe(true)
       expect(mockPaymentIntents.create).not.toHaveBeenCalled()
 
-      // Verify admin alert sent
-      expect(emailModule.sendEmail).toHaveBeenCalledWith(
+      // Verify admin alert sent via admin-alerts service
+      expect(adminAlertsModule.sendPaymentFailureAlert).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: expect.stringContaining('admin'),
-          subject: expect.stringContaining('Failed'),
+          bookingReference: 'BK-TEST-001',
         })
       )
     })
@@ -325,11 +328,10 @@ describe('chargeInstallment', () => {
         },
       })
 
-      // Verify admin alert sent (max retries)
-      expect(emailModule.sendEmail).toHaveBeenCalledWith(
+      // Verify admin alert sent via admin-alerts service (max retries)
+      expect(adminAlertsModule.sendPaymentFailureAlert).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: expect.stringContaining('admin'),
-          subject: expect.stringContaining('Failed'),
+          bookingReference: 'BK-TEST-001',
         })
       )
 
@@ -406,11 +408,10 @@ describe('chargeInstallment', () => {
         },
       })
 
-      // Verify admin alert sent
-      expect(emailModule.sendEmail).toHaveBeenCalledWith(
+      // Verify admin alert sent via admin-alerts service
+      expect(adminAlertsModule.sendPaymentFailureAlert).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: expect.stringContaining('admin'),
-          subject: expect.stringContaining('Failed'),
+          bookingReference: 'BK-TEST-001',
         })
       )
 

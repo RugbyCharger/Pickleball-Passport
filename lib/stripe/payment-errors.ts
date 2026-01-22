@@ -14,7 +14,7 @@ export interface PaymentErrorInfo {
   message: string
   canRetry: boolean
   suggestAlternative: boolean
-  category: 'card' | 'validation' | 'network' | 'generic'
+  category: 'card' | 'validation' | 'network' | 'generic' | 'affirm'
 }
 
 /**
@@ -168,6 +168,40 @@ const ERROR_MESSAGES: Record<string, PaymentErrorInfo> = {
     suggestAlternative: false,
     category: 'network',
   },
+
+  // E4-S11: Affirm-specific errors
+  payment_method_not_available: {
+    title: 'Affirm Not Available',
+    message:
+      'Affirm financing is not available for this transaction. This may be due to order amount, location, or other eligibility requirements. Please try paying with a card instead.',
+    canRetry: true,
+    suggestAlternative: true,
+    category: 'affirm',
+  },
+  payment_intent_payment_attempt_expired: {
+    title: 'Session Expired',
+    message:
+      'Your Affirm payment session has expired. Please start a new payment attempt.',
+    canRetry: true,
+    suggestAlternative: true,
+    category: 'affirm',
+  },
+  payment_method_provider_decline: {
+    title: 'Affirm Application Declined',
+    message:
+      'Your Affirm financing application was not approved. This decision is made by Affirm based on their eligibility criteria. You can still complete your booking by paying with a credit or debit card.',
+    canRetry: true,
+    suggestAlternative: true,
+    category: 'affirm',
+  },
+  affirm_canceled: {
+    title: 'Affirm Checkout Canceled',
+    message:
+      'You canceled the Affirm checkout process. You can try again with Affirm or choose a different payment method.',
+    canRetry: true,
+    suggestAlternative: true,
+    category: 'affirm',
+  },
 }
 
 /**
@@ -261,6 +295,11 @@ export function getAlternativePaymentSuggestions(errorInfo: PaymentErrorInfo): s
     case 'network':
       suggestions.push('Check your internet connection')
       suggestions.push('Try again in a few moments')
+      break
+    case 'affirm':
+      suggestions.push('Pay with a credit or debit card instead')
+      suggestions.push('Try Affirm financing again')
+      suggestions.push('Contact Affirm support for eligibility questions')
       break
     default:
       suggestions.push('Try a different payment method')

@@ -8,15 +8,17 @@
  * - React Query (for tRPC and data fetching)
  * - tRPC client
  * - Toaster (for toast notifications)
+ * - Analytics tracking (E13-S1)
  */
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { trpc } from '@/lib/trpc/client'
 import superjson from 'superjson'
 import { Toaster } from 'sonner'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
+import { AnalyticsProvider } from '@/components/analytics-provider'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') return '' // browser should use relative url
@@ -60,8 +62,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Toaster position="top-right" richColors />
-          {children}
+          <Suspense fallback={null}>
+            <AnalyticsProvider>
+              <Toaster position="top-right" richColors />
+              {children}
+            </AnalyticsProvider>
+          </Suspense>
         </QueryClientProvider>
       </trpc.Provider>
     </GoogleReCaptchaProvider>

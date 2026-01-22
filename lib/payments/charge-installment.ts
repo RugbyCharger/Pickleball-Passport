@@ -8,11 +8,20 @@
 
 import Stripe from 'stripe'
 import { prisma } from '@/lib/db'
-import { getStripe } from '@/lib/stripe/get-stripe'
 import { isTransientError, isPermanentError, getNextRetryDate } from './retry-calculator'
 import { sendEmail } from '@/lib/email/send-email'
 import { generateInstallmentReminderEmail } from '@/lib/email/templates/installment-payment-reminder'
 import { paymentLogger, logError } from '@/lib/logger'
+
+// Initialize Stripe client for server-side use
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+if (!stripeSecretKey) {
+  throw new Error('STRIPE_SECRET_KEY is not set')
+}
+const stripeClient = new Stripe(stripeSecretKey, {
+  apiVersion: '2025-12-15.clover',
+  typescript: true,
+})
 
 export interface ChargeInstallmentInput {
   paymentRecordId: string
@@ -37,8 +46,6 @@ export interface ChargeInstallmentResult {
 export async function chargeInstallment(
   input: ChargeInstallmentInput
 ): Promise<ChargeInstallmentResult> {
-  const stripe = getStripe()
-
   try {
     // Fetch payment record with related booking data
     const paymentRecord = await prisma.paymentRecord.findUnique({
@@ -104,7 +111,7 @@ export async function chargeInstallment(
     paymentLogger.info({ bookingReference: booking.bookingReference, installmentNumber: paymentRecord.installmentNumber }, 'Charging installment')
 
     // Create payment intent with off_session confirmation
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await stripeClient.paymentIntents.create({
       amount: paymentRecord.amountCents,
       currency: 'usd',
       customer: booking.stripeCustomerId,

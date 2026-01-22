@@ -12,6 +12,8 @@ import { router, adminProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import { generateTripReminderEmail } from '@/lib/email/templates/trip-reminder'
 import { sendEmail } from '@/lib/email/sendgrid'
+import { canSendNotification } from '@/lib/preferences/user-preferences'
+import { emailLogger } from '@/lib/logger'
 
 /**
  * Calculate days between two dates
@@ -183,8 +185,22 @@ export const reminderRouter = router({
       const now = new Date()
       const daysUntil = daysBetween(now, booking.trip.startDate)
 
+      // Check preference before sending (E11-S12)
+      const canSend = await canSendNotification(booking.user.id, 'emailPreTripSequence')
+      if (!canSend) {
+        emailLogger.info(
+          { userId: booking.user.id, bookingId: booking.id },
+          'User opted out of pre-trip emails, skipping reminder'
+        )
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'User has opted out of pre-trip reminder emails',
+        })
+      }
+
       // Generate email
       const emailData = generateTripReminderEmail({
+        userId: booking.user.id, // For preference token generation (E11-S12)
         firstName: booking.user.guestProfile?.firstName || 'Traveler',
         email: booking.user.email,
         bookingReference: booking.bookingReference,
@@ -213,6 +229,8 @@ export const reminderRouter = router({
         subject: emailData.subject,
         html: emailData.html,
         text: emailData.text,
+        userId: booking.user.id, // For List-Unsubscribe header (E11-S12)
+        isMarketing: false, // Pre-trip reminders are not marketing
       })
 
       // Create reminder history entry

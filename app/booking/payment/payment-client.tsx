@@ -5,6 +5,8 @@
  * 1. Validates booking state
  * 2. Creates payment intent via tRPC
  * 3. Renders Stripe payment form
+ *
+ * E4-S13: Multi-currency support with currency selector
  */
 
 'use client'
@@ -15,7 +17,9 @@ import { useBookingStore } from '@/lib/stores/booking-store'
 import { trpc } from '@/lib/trpc/client'
 import { StripeProvider } from '@/components/payments/stripe-provider'
 import { PaymentForm } from '@/components/payments/payment-form'
+import { CurrencySelector } from '@/components/payments/currency-selector'
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react'
+import { getExchangeRates, type SupportedCurrency } from '@/lib/services/currency'
 
 interface PaymentPageClientProps {
   userEmail: string
@@ -30,17 +34,27 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     selectedAddOns,
     referralCode,
     paymentPlan,
+    currency,
+    setCurrency,
+    setExchangeRates,
     isReadyForReview,
     calculateTotal,
     getDiscountedTotal,
     getInstallmentSchedule,
+    formatDisplayPrice,
   } = useBookingStore()
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [bookingReference, setBookingReference] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [paymentCurrency, setPaymentCurrency] = useState<SupportedCurrency>(currency)
 
   const createPaymentIntentMutation = trpc.booking.createPaymentIntent.useMutation()
+
+  // Fetch exchange rates on mount
+  useEffect(() => {
+    getExchangeRates().then(setExchangeRates).catch(console.error)
+  }, [setExchangeRates])
 
   useEffect(() => {
     // Validate booking selections
@@ -64,6 +78,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
           addOnIds: selectedAddOns.map((a) => a.id),
           referralCode: referralCode || undefined,
           paymentPlan, // E4-S6: Include payment plan
+          currency: paymentCurrency, // E4-S13: Include selected currency
         })
 
         setClientSecret(result.clientSecret)
@@ -76,7 +91,17 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     }
 
     createIntent()
-  }, []) // Run once on mount
+  }, [paymentCurrency]) // Re-run when currency changes
+
+  // Handle currency change
+  const handleCurrencyChange = (newCurrency: SupportedCurrency) => {
+    setPaymentCurrency(newCurrency)
+    setCurrency(newCurrency)
+    // Reset payment state to recreate intent with new currency
+    setClientSecret(null)
+    setBookingReference(null)
+    setError(null)
+  }
 
   // Loading state
   if (createPaymentIntentMutation.isPending || (!clientSecret && !error)) {
@@ -128,6 +153,29 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
 
   return (
     <div className="grid grid-cols-1 gap-8">
+      {/* Currency Selector - E4-S13 */}
+      <div className="rounded-xl border border-slate-200 bg-white p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">Payment Currency</h3>
+            <p className="text-xs text-slate-500 mt-1">
+              Select your preferred payment currency
+            </p>
+          </div>
+          <CurrencySelector
+            value={paymentCurrency}
+            onChange={handleCurrencyChange}
+            showLabel={false}
+            size="md"
+          />
+        </div>
+        {paymentCurrency !== 'USD' && (
+          <p className="text-xs text-amber-600 mt-3 bg-amber-50 rounded-lg px-3 py-2">
+            Prices are converted from USD at current exchange rates. Your card will be charged in {paymentCurrency}.
+          </p>
+        )}
+      </div>
+
       {/* Payment Form */}
       <StripeProvider clientSecret={clientSecret}>
         <PaymentForm
@@ -136,6 +184,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
           totalAmount={totalAmount}
           paymentPlan={paymentPlan}
           installmentSchedule={installmentSchedule}
+          currency={paymentCurrency}
         />
       </StripeProvider>
     </div>

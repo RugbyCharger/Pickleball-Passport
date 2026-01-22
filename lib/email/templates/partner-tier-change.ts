@@ -90,7 +90,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
 
   const html = baseEmailTemplate({
     preheader: `You've unlocked ${newTierDisplay} tier benefits!`,
-    heading: `${tierEmoji} Congratulations, ${data.partnerName}!`,
+    title: `${tierEmoji} Congratulations, ${data.partnerName}!`,
     content: `
       <!-- Hero Section -->
       <div style="background: linear-gradient(135deg, ${tierColor} 0%, #003D5C 100%); border-radius: 12px; padding: 40px 24px; margin: 24px 0; text-align: center; color: white;">

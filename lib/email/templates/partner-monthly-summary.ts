@@ -52,7 +52,7 @@ export function generatePartnerMonthlySummaryEmail(data: PartnerMonthlySummaryDa
 
   const html = baseEmailTemplate({
     preheader: `Your ${data.month} performance summary is ready`,
-    heading: `📊 ${data.month} Performance Summary`,
+    title: `📊 ${data.month} Performance Summary`,
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

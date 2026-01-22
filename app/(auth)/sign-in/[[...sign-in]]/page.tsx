@@ -7,9 +7,14 @@
  * - Google OAuth
  * - Apple OAuth
  * - Magic link
+ *
+ * Story 2-5: Password Reset Flow
+ * - "Forgot password?" link is available both in Clerk's component and below
+ * - Links to dedicated /forgot-password route for better UX
  */
 
 import { SignIn } from '@clerk/nextjs'
+import Link from 'next/link'
 
 export default function SignInPage() {
   return (
@@ -38,6 +43,15 @@ export default function SignInPage() {
           path="/sign-in"
           forceRedirectUrl="/redirect"
         />
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Trouble signing in?{' '}
+            <Link href="/forgot-password" className="text-primary hover:underline font-medium">
+              Reset your password
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -15,22 +15,72 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { trpc } from '@/lib/trpc/client';
 import { exportToCSV, generateFilename } from '@/lib/utils/csv-export';
 import { toast } from 'sonner';
 import {
-  BarChart,
+  BarChart as BarChartIcon,
+  FileSpreadsheet,
   TrendingUp,
   Users,
   DollarSign,
   Package,
-  Calendar,
   Download,
   Loader2,
   ArrowUpRight,
   ArrowDownRight,
   Filter,
+  Activity,
+  Monitor,
+  ChevronDown,
+  Clock,
+  Home,
+  Eye,
+  Settings,
+  FileCheck,
+  CreditCard,
+  CheckCircle,
+  Target,
+  Globe,
+  Megaphone,
+  FlaskConical,
+  Calendar,
+  PiggyBank,
+  ArrowRightLeft,
+  Wallet,
+  MapPin,
+  Heart,
+  UserCheck,
+  Stethoscope,
+  Repeat,
+  Handshake,
+  Star,
+  Award,
+  Sparkles,
+  AlertTriangle,
+  Percent,
+  MousePointerClick,
+  Mail,
+  Send,
+  MousePointer,
+  Link as LinkIcon,
+  UserMinus,
+  Trophy,
+  FlaskRound,
 } from 'lucide-react';
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Legend,
+  BarChart,
+  Bar,
+} from 'recharts';
 
 // ============================================================================
 // TYPES
@@ -179,52 +229,234 @@ function DateRangeFilter({
 }
 
 // ============================================================================
+// FUNNEL STAGE ICONS
+// ============================================================================
+
+const FUNNEL_STAGE_ICONS: Record<string, React.ElementType> = {
+  HOMEPAGE: Home,
+  PACKAGE_VIEW: Eye,
+  CONFIGURATOR: Settings,
+  REVIEW: FileCheck,
+  PAYMENT: CreditCard,
+  CONFIRMATION: CheckCircle,
+};
+
+const FUNNEL_STAGE_COLORS = [
+  '#3b82f6', // blue
+  '#8b5cf6', // purple
+  '#ec4899', // pink
+  '#f97316', // orange
+  '#eab308', // yellow
+  '#22c55e', // green
+];
+
+// ============================================================================
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics' | 'package-performance' | 'partner-performance' | 'email-campaigns';
+
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
+  const [activeTab, setActiveTab] = useState<AnalyticsTab>('overview');
+  const [funnelPackageFilter, setFunnelPackageFilter] = useState<string>('');
+  const [funnelUtmSourceFilter, setFunnelUtmSourceFilter] = useState<string>('');
+
+  // Conversion Tracking filters (E13-S3)
+  const [conversionGroupBy, setConversionGroupBy] = useState<'source' | 'medium' | 'campaign'>('source');
+  const [conversionTrendPeriod, setConversionTrendPeriod] = useState<'day' | 'week' | 'month'>('day');
+  const [conversionTypeFilter, setConversionTypeFilter] = useState<'APPLICATION_SUBMITTED' | 'BOOKING_COMPLETED' | 'PAYMENT_MADE' | 'ALL'>('ALL');
+
+  // Revenue Reports filters (E13-S4)
+  const [revenueTrendPeriod, setRevenueTrendPeriod] = useState<'day' | 'week' | 'month' | 'year'>('month');
+  const [comparisonPeriod, setComparisonPeriod] = useState<'month' | 'quarter' | 'year'>('month');
 
   // Fetch analytics data
   const { data: conversionFunnel, isLoading: loadingConversion } =
     trpc.analytics.conversion.getFunnel.useQuery(dateRange);
 
-  const { data: statusBreakdown, isLoading: loadingStatus } =
+  const { data: statusBreakdown } =
     trpc.analytics.conversion.getStatusBreakdown.useQuery(dateRange);
 
   const { data: revenueOverview, isLoading: loadingRevenue } =
     trpc.analytics.revenue.getOverview.useQuery(dateRange);
 
-  const { data: revenueByPackage, isLoading: loadingPackageRevenue } =
+  const { data: revenueByPackage } =
     trpc.analytics.revenue.getByPackage.useQuery(dateRange);
 
-  const { data: demographics, isLoading: loadingDemographics } =
+  const { data: demographics } =
     trpc.analytics.demographics.getByRole.useQuery();
 
-  const { data: accommodationTiers, isLoading: loadingAccommodation } =
+  const { data: accommodationTiers } =
     trpc.analytics.demographics.getAccommodationTiers.useQuery(dateRange);
 
-  const { data: topAddOns, isLoading: loadingAddOns } =
+  const { data: topAddOns } =
     trpc.analytics.addOns.getTopAddOns.useQuery({ limit: 10 });
 
-  const { data: tripUtilization, isLoading: loadingTrips } =
+  const { data: tripUtilization } =
     trpc.analytics.tripUtilization.getAll.useQuery({ isActive: true, limit: 10 });
 
-  const { data: partnerStats, isLoading: loadingPartners } =
+  const { data: partnerStats } =
     trpc.analytics.partnerReferrals.getByPartner.useQuery({ limit: 10 });
 
   const { data: bookingPatterns } =
     trpc.analytics.demographics.getBookingPatterns.useQuery(dateRange);
 
-  // CSV Export mutation
-  const exportMutation = trpc.analytics.export.generateCSV.useQuery(
-    {
-      reportType: 'bookings',
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
-    },
-    { enabled: false }
-  );
+  // Event tracking metrics (E13-S1)
+  const { data: eventSummary, isLoading: loadingEventSummary } =
+    trpc.analytics.events.getSummary.useQuery(dateRange);
+
+  const { data: sessionSummary, isLoading: loadingSessionSummary } =
+    trpc.analytics.sessions.getSummary.useQuery(dateRange);
+
+  // Booking Funnel Analytics (E13-S2)
+  const { data: funnelData, isLoading: loadingFunnel } =
+    trpc.analytics.bookingFunnel.getFunnelData.useQuery({
+      ...dateRange,
+      packageId: funnelPackageFilter || undefined,
+      utmSource: funnelUtmSourceFilter || undefined,
+    });
+
+  const { data: funnelTimeData, isLoading: loadingFunnelTime } =
+    trpc.analytics.bookingFunnel.getTimeAtStages.useQuery({
+      ...dateRange,
+      packageId: funnelPackageFilter || undefined,
+    });
+
+  const { data: funnelTrends, isLoading: loadingFunnelTrends } =
+    trpc.analytics.bookingFunnel.getFunnelTrends.useQuery({
+      period: 'day',
+      ...dateRange,
+    });
+
+  const { data: filterOptions } =
+    trpc.analytics.bookingFunnel.getFilterOptions.useQuery();
+
+  // Conversion Tracking Analytics (E13-S3)
+  const { data: conversionsByType, isLoading: loadingConversionsByType } =
+    trpc.analytics.conversionTracking.getConversionsByType.useQuery(dateRange);
+
+  const { data: conversionsBySource, isLoading: loadingConversionsBySource } =
+    trpc.analytics.conversionTracking.getByTrafficSource.useQuery({
+      ...dateRange,
+      groupBy: conversionGroupBy,
+    });
+
+  const { data: conversionTrends, isLoading: loadingConversionTrends } =
+    trpc.analytics.conversionTracking.getConversionTrends.useQuery({
+      period: conversionTrendPeriod,
+      ...dateRange,
+      conversionType: conversionTypeFilter,
+    });
+
+  const { data: topConverters, isLoading: loadingTopConverters } =
+    trpc.analytics.conversionTracking.getTopConverters.useQuery({
+      ...dateRange,
+      limit: 10,
+    });
+
+  const { data: variantPerformance, isLoading: loadingVariants } =
+    trpc.analytics.conversionTracking.getVariantPerformance.useQuery(dateRange);
+
+  // Revenue Reports Analytics (E13-S4)
+  const { data: comprehensiveRevenue, isLoading: loadingComprehensiveRevenue } =
+    trpc.analytics.revenue.getComprehensiveOverview.useQuery(dateRange);
+
+  const { data: revenueTrends, isLoading: loadingRevenueTrends } =
+    trpc.analytics.revenue.getRevenueTrends.useQuery({
+      period: revenueTrendPeriod,
+      ...dateRange,
+    });
+
+  const { data: projectedRevenue, isLoading: loadingProjectedRevenue } =
+    trpc.analytics.revenue.getProjectedRevenue.useQuery();
+
+  // Calculate comparison dates based on selected period
+  const getComparisonDates = () => {
+    const now = new Date();
+    let currentStart: Date;
+    let currentEnd: Date;
+    let previousStart: Date;
+    let previousEnd: Date;
+
+    switch (comparisonPeriod) {
+      case 'month':
+        currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        previousEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        break;
+      case 'quarter':
+        const currentQuarter = Math.floor(now.getMonth() / 3);
+        currentStart = new Date(now.getFullYear(), currentQuarter * 3, 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear(), (currentQuarter - 1) * 3, 1);
+        previousEnd = new Date(now.getFullYear(), currentQuarter * 3, 0);
+        break;
+      case 'year':
+        currentStart = new Date(now.getFullYear(), 0, 1);
+        currentEnd = now;
+        previousStart = new Date(now.getFullYear() - 1, 0, 1);
+        previousEnd = new Date(now.getFullYear() - 1, 11, 31);
+        break;
+    }
+
+    return { currentStart, currentEnd, previousStart, previousEnd };
+  };
+
+  const comparisonDates = getComparisonDates();
+
+  const { data: revenueComparison, isLoading: loadingRevenueComparison } =
+    trpc.analytics.revenue.getRevenueComparison.useQuery({
+      currentPeriodStart: comparisonDates.currentStart,
+      currentPeriodEnd: comparisonDates.currentEnd,
+      previousPeriodStart: comparisonDates.previousStart,
+      previousPeriodEnd: comparisonDates.previousEnd,
+    });
+
+  const { data: revenueByAddOnCategory } =
+    trpc.analytics.revenue.getByAddOnCategory.useQuery(dateRange);
+
+  // Guest Demographics Analytics (E13-S5)
+  const { data: demographicsOverview, isLoading: loadingDemographicsOverview } =
+    trpc.analytics.demographics.getOverview.useQuery(dateRange);
+
+  const { data: ageDistribution, isLoading: loadingAgeDistribution } =
+    trpc.analytics.demographics.getAgeDistribution.useQuery(dateRange);
+
+  const { data: locationDistribution, isLoading: loadingLocationDistribution } =
+    trpc.analytics.demographics.getLocationDistribution.useQuery({
+      ...dateRange,
+      limit: 15,
+    });
+
+  const { data: packagesByDemographic, isLoading: loadingPackagesByDemographic } =
+    trpc.analytics.demographics.getPackagesByDemographic.useQuery(dateRange);
+
+  const { data: acquisitionSources, isLoading: loadingAcquisitionSources } =
+    trpc.analytics.demographics.getAcquisitionSources.useQuery(dateRange);
+
+  const { data: medicalProceduresByDemographic, isLoading: loadingMedicalProcedures } =
+    trpc.analytics.demographics.getMedicalProceduresByDemographic.useQuery(dateRange);
+
+  // Package Performance Analytics (E13-S6)
+  const { data: packageOverview, isLoading: loadingPackageOverview } =
+    trpc.analytics.packagePerformance.getOverview.useQuery(dateRange);
+
+  const { data: packageComparison, isLoading: loadingPackageComparison } =
+    trpc.analytics.packagePerformance.getPackageComparison.useQuery(dateRange);
+
+  const { data: seasonalTrends, isLoading: loadingSeasonalTrends } =
+    trpc.analytics.packagePerformance.getSeasonalTrends.useQuery();
+
+  const { data: underperformingPackages, isLoading: loadingUnderperforming } =
+    trpc.analytics.packagePerformance.getUnderperformingPackages.useQuery(dateRange);
+
+  const { data: topPackageAddOns, isLoading: loadingTopPackageAddOns } =
+    trpc.analytics.packagePerformance.getTopAddOns.useQuery({ ...dateRange, limit: 10 });
+
+  const { data: packageRatings, isLoading: loadingPackageRatings } =
+    trpc.analytics.packagePerformance.getPackageRatings.useQuery(dateRange);
 
   // CSV Export handler
   const handleExport = async (
@@ -265,15 +497,1660 @@ export default function AnalyticsDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-        <p className="mt-2 text-gray-600">
-          Comprehensive business intelligence and reporting
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
+          <p className="mt-2 text-gray-600">
+            Comprehensive business intelligence and reporting
+          </p>
+        </div>
+        <Link
+          href="/dashboard/admin/analytics/reports"
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
+          <FileSpreadsheet className="h-4 w-4" />
+          Custom Report Builder
+        </Link>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-8">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'overview'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('booking-funnel')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'booking-funnel'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Booking Funnel
+          </button>
+          <button
+            onClick={() => setActiveTab('conversion-tracking')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'conversion-tracking'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Conversion Tracking
+          </button>
+          <button
+            onClick={() => setActiveTab('revenue-reports')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'revenue-reports'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Revenue Reports
+          </button>
+          <button
+            onClick={() => setActiveTab('guest-demographics')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'guest-demographics'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Guest Demographics
+          </button>
+          <button
+            onClick={() => setActiveTab('package-performance')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'package-performance'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Package Performance
+          </button>
+          <button
+            onClick={() => setActiveTab('partner-performance')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'partner-performance'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Partner Performance
+          </button>
+          <button
+            onClick={() => setActiveTab('email-campaigns')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'email-campaigns'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Email Campaigns
+          </button>
+        </nav>
       </div>
 
       {/* Date Range Filter */}
       <DateRangeFilter onChange={setDateRange} />
+
+      {/* ================================================================ */}
+      {/* BOOKING FUNNEL TAB (E13-S2) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'booking-funnel' && (
+        <div className="space-y-6">
+          {/* Funnel Filters */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center gap-6 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Filters:</span>
+              </div>
+
+              {/* Package Filter */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Package:</label>
+                <select
+                  value={funnelPackageFilter}
+                  onChange={(e) => setFunnelPackageFilter(e.target.value)}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">All Packages</option>
+                  {filterOptions?.packages.map((pkg) => (
+                    <option key={pkg.id} value={pkg.id}>
+                      {pkg.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* UTM Source Filter */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Traffic Source:</label>
+                <select
+                  value={funnelUtmSourceFilter}
+                  onChange={(e) => setFunnelUtmSourceFilter(e.target.value)}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">All Sources</option>
+                  {filterOptions?.utmSources.map((source) => (
+                    <option key={source} value={source}>
+                      {source}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Funnel Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StatCard
+              title="Total Sessions"
+              value={funnelData?.totalSessions ?? 0}
+              icon={Users}
+              loading={loadingFunnel}
+            />
+            <StatCard
+              title="Completed Bookings"
+              value={funnelData?.finalConversions ?? 0}
+              icon={CheckCircle}
+              loading={loadingFunnel}
+            />
+            <StatCard
+              title="Overall Conversion Rate"
+              value={`${funnelData?.overallConversionRate ?? '0.00'}%`}
+              icon={TrendingUp}
+              trend={Number(funnelData?.overallConversionRate ?? 0) > 0 ? 'up' : undefined}
+              loading={loadingFunnel}
+            />
+          </div>
+
+          {/* Funnel Visualization */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Booking Funnel
+            </h3>
+
+            {loadingFunnel ? (
+              <div className="flex items-center justify-center h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelData?.funnelData && funnelData.funnelData.length > 0 ? (
+              <div className="space-y-4">
+                {funnelData.funnelData.map((stage, index) => {
+                  const Icon = FUNNEL_STAGE_ICONS[stage.stage] || Activity;
+                  const widthPercent = funnelData.totalSessions > 0
+                    ? Math.max(10, (stage.count / funnelData.totalSessions) * 100)
+                    : 100;
+                  const color = FUNNEL_STAGE_COLORS[index];
+
+                  return (
+                    <div key={stage.stage} className="relative">
+                      {/* Stage Row */}
+                      <div
+                        className="flex items-center justify-between p-4 rounded-lg transition-all"
+                        style={{
+                          backgroundColor: `${color}15`,
+                          width: `${widthPercent}%`,
+                          minWidth: '300px',
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="h-10 w-10 rounded-lg flex items-center justify-center"
+                            style={{ backgroundColor: `${color}30` }}
+                          >
+                            <Icon className="h-5 w-5" style={{ color }} />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-900">
+                              {stage.stageLabel}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {index > 0 && (
+                                <>
+                                  <span className="text-green-600">{stage.conversionRate}%</span>
+                                  {' from previous • '}
+                                  <span className="text-red-500">{stage.dropOffRate}% drop-off</span>
+                                </>
+                              )}
+                              {index === 0 && 'Starting point'}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-gray-900">
+                            {stage.count.toLocaleString()}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {stage.overallConversionRate}% of total
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Arrow between stages */}
+                      {index < funnelData.funnelData.length - 1 && (
+                        <div className="flex justify-center my-2">
+                          <ChevronDown className="h-5 w-5 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                <Activity className="h-12 w-12 mb-4 text-gray-300" />
+                <p>No funnel data available for the selected filters.</p>
+                <p className="text-sm mt-2">
+                  Funnel events are tracked automatically as users navigate the booking flow.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Time at Each Stage */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Average Time at Each Stage
+            </h3>
+
+            {loadingFunnelTime ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelTimeData && funnelTimeData.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {funnelTimeData.map((stage, index) => {
+                  const Icon = FUNNEL_STAGE_ICONS[stage.stage] || Activity;
+                  const color = FUNNEL_STAGE_COLORS[index];
+
+                  return (
+                    <div
+                      key={stage.stage}
+                      className="text-center p-4 rounded-lg"
+                      style={{ backgroundColor: `${color}10` }}
+                    >
+                      <div
+                        className="h-10 w-10 rounded-lg flex items-center justify-center mx-auto mb-2"
+                        style={{ backgroundColor: `${color}20` }}
+                      >
+                        <Icon className="h-5 w-5" style={{ color }} />
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {stage.averageTimeFormatted || '—'}
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {stage.stageLabel}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {stage.sampleCount} samples
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[150px] text-gray-500">
+                <div className="text-center">
+                  <Clock className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No timing data available yet.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Funnel Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Daily Conversion Trends
+            </h3>
+
+            {loadingFunnelTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelTrends && funnelTrends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={funnelTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    labelFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      });
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="homepage"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    name="Homepage"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="packageView"
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    name="Package View"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="configurator"
+                    stroke="#ec4899"
+                    strokeWidth={2}
+                    name="Configurator"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="confirmation"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    name="Confirmation"
+                    dot={{ r: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-gray-500">
+                <div className="text-center">
+                  <BarChartIcon className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No trend data available for the selected period.</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* CONVERSION TRACKING TAB (E13-S3) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'conversion-tracking' && (
+        <div className="space-y-6">
+          {/* Conversion Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <StatCard
+              title="Total Conversions"
+              value={conversionsByType?.totalConversionEvents ?? 0}
+              icon={Target}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Applications"
+              value={conversionsByType?.databaseBased.applications ?? 0}
+              icon={FileCheck}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Confirmed Bookings"
+              value={conversionsByType?.databaseBased.confirmedBookings ?? 0}
+              icon={CheckCircle}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Successful Payments"
+              value={conversionsByType?.databaseBased.successfulPayments ?? 0}
+              icon={CreditCard}
+              loading={loadingConversionsByType}
+            />
+          </div>
+
+          {/* Conversion by Traffic Source */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Conversion Rates by Traffic Source
+              </h3>
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Group by:</label>
+                <select
+                  value={conversionGroupBy}
+                  onChange={(e) =>
+                    setConversionGroupBy(e.target.value as 'source' | 'medium' | 'campaign')
+                  }
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="source">UTM Source</option>
+                  <option value="medium">UTM Medium</option>
+                  <option value="campaign">UTM Campaign</option>
+                </select>
+              </div>
+            </div>
+
+            {loadingConversionsBySource ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : conversionsBySource?.results && conversionsBySource.results.length > 0 ? (
+              <div className="space-y-3">
+                {conversionsBySource.results.slice(0, 10).map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Globe className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">{item.name}</div>
+                        <div className="text-sm text-gray-600">
+                          {item.totalSessions.toLocaleString()} sessions
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-gray-900">
+                        {item.conversionRate}%
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {item.conversions.toLocaleString()} conversions
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Globe className="h-12 w-12 mb-4 text-gray-300" />
+                <p>No traffic source data available.</p>
+                <p className="text-sm mt-2">
+                  UTM parameters are tracked automatically from URLs.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Conversion Trends */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Conversion Trends</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Period:</label>
+                  <select
+                    value={conversionTrendPeriod}
+                    onChange={(e) =>
+                      setConversionTrendPeriod(e.target.value as 'day' | 'week' | 'month')
+                    }
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="day">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Type:</label>
+                  <select
+                    value={conversionTypeFilter}
+                    onChange={(e) =>
+                      setConversionTypeFilter(
+                        e.target.value as
+                          | 'APPLICATION_SUBMITTED'
+                          | 'BOOKING_COMPLETED'
+                          | 'PAYMENT_MADE'
+                          | 'ALL'
+                      )
+                    }
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="ALL">All Conversions</option>
+                    <option value="APPLICATION_SUBMITTED">Applications</option>
+                    <option value="BOOKING_COMPLETED">Bookings</option>
+                    <option value="PAYMENT_MADE">Payments</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {loadingConversionTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : conversionTrends?.trends && conversionTrends.trends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={conversionTrends.trends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    labelFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      });
+                    }}
+                  />
+                  <Legend />
+                  {conversionTypeFilter === 'ALL' ? (
+                    <>
+                      <Line
+                        type="monotone"
+                        dataKey="applications"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        name="Applications"
+                        dot={{ r: 3 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="bookings"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        name="Bookings"
+                        dot={{ r: 3 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="payments"
+                        stroke="#8b5cf6"
+                        strokeWidth={2}
+                        name="Payments"
+                        dot={{ r: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <Line
+                      type="monotone"
+                      dataKey="total"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      name={conversionTypeFilter.replace('_', ' ').toLowerCase()}
+                      dot={{ r: 3 }}
+                    />
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-gray-500">
+                <div className="text-center">
+                  <BarChartIcon className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No conversion trend data available for the selected period.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Top Converting Sources & Campaigns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Top Sources */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Top Converting Sources
+              </h3>
+
+              {loadingTopConverters ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : topConverters?.topSources && topConverters.topSources.length > 0 ? (
+                <div className="space-y-3">
+                  {topConverters.topSources.map((source, index) => (
+                    <div
+                      key={source.name}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-green-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{source.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {source.totalSessions.toLocaleString()} sessions
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-green-600">{source.conversionRate}%</div>
+                        <div className="text-xs text-gray-500">
+                          {source.conversions} conversions
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Globe className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No source data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Top Campaigns */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Top Converting Campaigns
+              </h3>
+
+              {loadingTopConverters ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : topConverters?.topCampaigns && topConverters.topCampaigns.length > 0 ? (
+                <div className="space-y-3">
+                  {topConverters.topCampaigns.map((campaign, index) => (
+                    <div
+                      key={campaign.name}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-purple-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{campaign.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {campaign.breakdown && Object.entries(campaign.breakdown)
+                              .map(([type, count]) => `${type.split('_')[0]}: ${count}`)
+                              .join(', ')}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-purple-600">
+                          {campaign.conversions} conversions
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Megaphone className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No campaign data available.</p>
+                  <p className="text-xs mt-1">Use utm_campaign parameter in URLs</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* A/B Test Variant Performance (Optional) */}
+          {variantPerformance?.hasData && (
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <FlaskConical className="h-6 w-6 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  A/B Test Variant Performance
+                </h3>
+              </div>
+
+              {loadingVariants ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(variantPerformance.experiments).map(([experimentId, variants]) => (
+                    <div key={experimentId} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Experiment: {experimentId}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {variants.map((variant, index) => (
+                          <div
+                            key={variant.variant}
+                            className={`p-3 rounded-lg ${
+                              index === 0 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-medium text-gray-900">
+                                {variant.variant}
+                              </span>
+                              {index === 0 && (
+                                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                                  Winner
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-2xl font-bold text-gray-900">
+                              {variant.conversionRate}%
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {variant.conversions} / {variant.sessions} sessions
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* REVENUE REPORTS TAB (E13-S4) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'revenue-reports' && (
+        <div className="space-y-6">
+          {/* Revenue Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <StatCard
+              title="Total Revenue"
+              value={`$${((comprehensiveRevenue?.totalRevenue ?? 0) / 100).toLocaleString()}`}
+              icon={DollarSign}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="MRR"
+              value={`$${((comprehensiveRevenue?.mrr ?? 0) / 100).toLocaleString()}`}
+              icon={Calendar}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="Average Booking Value"
+              value={`$${((comprehensiveRevenue?.averageBookingValue ?? 0) / 100).toLocaleString()}`}
+              icon={Wallet}
+              loading={loadingComprehensiveRevenue}
+            />
+            <StatCard
+              title="Add-Ons Revenue"
+              value={`$${((comprehensiveRevenue?.addOnsRevenue ?? 0) / 100).toLocaleString()}`}
+              icon={Package}
+              loading={loadingComprehensiveRevenue}
+            />
+          </div>
+
+          {/* Period Comparison */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Revenue Comparison</h3>
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Compare:</label>
+                <select
+                  value={comparisonPeriod}
+                  onChange={(e) => setComparisonPeriod(e.target.value as 'month' | 'quarter' | 'year')}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="month">This Month vs Last Month</option>
+                  <option value="quarter">This Quarter vs Last Quarter</option>
+                  <option value="year">This Year vs Last Year</option>
+                </select>
+              </div>
+            </div>
+
+            {loadingRevenueComparison ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : revenueComparison ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Revenue Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Revenue</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${(revenueComparison.current.revenue / 100).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs ${(revenueComparison.previous.revenue / 100).toLocaleString()}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.revenue >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.revenue >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.revenue)}%
+                  </div>
+                </div>
+
+                {/* Bookings Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Bookings</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {revenueComparison.current.bookings}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs {revenueComparison.previous.bookings}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.bookings >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.bookings >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.bookings)}%
+                  </div>
+                </div>
+
+                {/* Average Payment Comparison */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-600">Avg. Payment</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${(revenueComparison.current.averagePayment / 100).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    vs ${(revenueComparison.previous.averagePayment / 100).toLocaleString()}
+                  </div>
+                  <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${
+                    revenueComparison.changes.averagePayment >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {revenueComparison.changes.averagePayment >= 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-4 w-4" />
+                    )}
+                    {Math.abs(revenueComparison.changes.averagePayment)}%
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <ArrowRightLeft className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No comparison data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Revenue Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Revenue Trends</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Period:</label>
+                  <select
+                    value={revenueTrendPeriod}
+                    onChange={(e) => setRevenueTrendPeriod(e.target.value as 'day' | 'week' | 'month' | 'year')}
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="day">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                    <option value="year">Yearly</option>
+                  </select>
+                </div>
+                <button
+                  onClick={() => handleExport('revenue')}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  <Download className="h-4 w-4" />
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            {loadingRevenueTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : revenueTrends?.trends && revenueTrends.trends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={revenueTrends.trends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      if (revenueTrendPeriod === 'year') return value;
+                      if (revenueTrendPeriod === 'month') {
+                        const [year, month] = value.split('-');
+                        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                      }
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `$${(value / 100).toLocaleString()}`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    formatter={(value) => [`$${(Number(value ?? 0) / 100).toLocaleString()}`, 'Revenue']}
+                    labelFormatter={(value) => {
+                      if (revenueTrendPeriod === 'year') return value;
+                      if (revenueTrendPeriod === 'month') {
+                        const [year, month] = value.split('-');
+                        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                      }
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    }}
+                  />
+                  <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                <BarChartIcon className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No revenue trend data available for the selected period.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Revenue Breakdown by Package and Add-Ons */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Revenue by Package */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Package</h3>
+              {revenueByPackage && revenueByPackage.length > 0 ? (
+                <div className="space-y-3">
+                  {revenueByPackage.map((pkg, index) => (
+                    <div key={pkg.packageId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{pkg.packageName}</div>
+                          <div className="text-xs text-gray-500">{pkg.bookingCount} bookings</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">${(pkg.totalRevenue / 100).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500">
+                          Avg: ${(pkg.averageBookingValue / 100).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Package className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No package revenue data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Revenue by Add-On Category */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Add-On Category</h3>
+              {revenueByAddOnCategory && revenueByAddOnCategory.length > 0 ? (
+                <div className="space-y-3">
+                  {revenueByAddOnCategory.map((category) => (
+                    <div key={category.category} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-gray-900 capitalize">
+                          {category.category.toLowerCase().replace('_', ' ')}
+                        </div>
+                        <div className="text-xs text-gray-500">{category.totalCount} items sold</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">${(category.totalRevenue / 100).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500">
+                          Avg: ${(category.averagePrice / 100).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Package className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No add-on revenue data available.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Projected Revenue */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <PiggyBank className="h-6 w-6 text-green-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Projected Revenue</h3>
+            </div>
+
+            {loadingProjectedRevenue ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : projectedRevenue ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <div className="text-sm font-medium text-green-700 mb-1">Total Projected</div>
+                    <div className="text-2xl font-bold text-green-800">
+                      ${(projectedRevenue.projectedRevenue / 100).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-green-600 mt-1">
+                      From {projectedRevenue.totalPendingBookings} pending bookings
+                    </div>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="text-sm font-medium text-blue-700 mb-1">Upcoming Trips (90d)</div>
+                    <div className="text-2xl font-bold text-blue-800">
+                      ${(projectedRevenue.upcomingTripsRevenue / 100).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-yellow-50 rounded-lg">
+                    <div className="text-sm font-medium text-yellow-700 mb-1">Pending Payments</div>
+                    <div className="text-2xl font-bold text-yellow-800">
+                      ${(projectedRevenue.pendingPaymentsRevenue / 100).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-purple-50 rounded-lg">
+                    <div className="text-sm font-medium text-purple-700 mb-1">Annualized Revenue</div>
+                    <div className="text-2xl font-bold text-purple-800">
+                      ${(projectedRevenue.annualizedRevenue / 100).toLocaleString()}
+                    </div>
+                    <div className="text-xs text-purple-600 mt-1">
+                      Based on MRR of ${(projectedRevenue.mrr / 100).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Booking Pipeline */}
+                {projectedRevenue.bookingPipeline && projectedRevenue.bookingPipeline.length > 0 && (
+                  <div>
+                    <h4 className="text-md font-medium text-gray-700 mb-3">Booking Pipeline</h4>
+                    <div className="flex gap-4 flex-wrap">
+                      {projectedRevenue.bookingPipeline.map((stage) => (
+                        <div key={stage.status} className="flex-1 min-w-[150px] p-4 bg-gray-50 rounded-lg">
+                          <div className="text-sm text-gray-600 capitalize">
+                            {stage.status.toLowerCase().replace('_', ' ')}
+                          </div>
+                          <div className="text-xl font-bold text-gray-900">{stage.count}</div>
+                          <div className="text-sm text-gray-500">
+                            ${(stage.totalValue / 100).toLocaleString()}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <PiggyBank className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No projected revenue data available.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* GUEST DEMOGRAPHICS TAB (E13-S5) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'guest-demographics' && (
+        <div className="space-y-6">
+          {/* Demographics Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <StatCard
+              title="Total Guests"
+              value={demographicsOverview?.totalGuests ?? 0}
+              icon={Users}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Avg. Age"
+              value={demographicsOverview?.averageAge ?? 'N/A'}
+              icon={Calendar}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Profile Completion"
+              value={`${demographicsOverview?.profileCompletionRate ?? '0.0'}%`}
+              icon={UserCheck}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Repeat Guests"
+              value={demographicsOverview?.repeatGuestCount ?? 0}
+              icon={Repeat}
+              loading={loadingDemographicsOverview}
+            />
+            <StatCard
+              title="Repeat Rate"
+              value={`${demographicsOverview?.repeatGuestRate ?? '0.0'}%`}
+              icon={Heart}
+              trend={Number(demographicsOverview?.repeatGuestRate ?? 0) > 10 ? 'up' : undefined}
+              loading={loadingDemographicsOverview}
+            />
+          </div>
+
+          {/* Age Distribution and Location */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Age Distribution Chart */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Distribution</h3>
+
+              {loadingAgeDistribution ? (
+                <div className="flex items-center justify-center h-[300px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : ageDistribution?.distribution && ageDistribution.distribution.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={ageDistribution.distribution}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="bracket"
+                        stroke="#6b7280"
+                        style={{ fontSize: '12px' }}
+                      />
+                      <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#fff',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                        }}
+                        formatter={(value) => [Number(value ?? 0), 'Guests']}
+                      />
+                      <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="mt-4 text-center text-sm text-gray-600">
+                    Average Age: <span className="font-bold">{ageDistribution.averageAge}</span> |
+                    Total with Age Data: <span className="font-bold">{ageDistribution.totalWithAge}</span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                  <Calendar className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No age distribution data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Location Distribution */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Guest Locations</h3>
+
+              {loadingLocationDistribution ? (
+                <div className="flex items-center justify-center h-[300px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : locationDistribution?.locations && locationDistribution.locations.length > 0 ? (
+                <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                  {locationDistribution.locations.map((loc, index) => (
+                    <div
+                      key={loc.location}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-gray-500" />
+                          <span className="font-medium text-gray-900">{loc.location}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-gray-900">{loc.count}</div>
+                        <div className="text-xs text-gray-500">{loc.percentage}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                  <MapPin className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No location data available.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Popular Packages by Age Group */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Popular Packages by Age Group
+            </h3>
+
+            {loadingPackagesByDemographic ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : packagesByDemographic && packagesByDemographic.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                        Age Group
+                      </th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">
+                        Top Packages
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {packagesByDemographic.map((ageData) => (
+                      <tr key={ageData.ageGroup} className="border-b border-gray-100">
+                        <td className="py-3 px-4">
+                          <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-lg">
+                            {ageData.ageGroup}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          {ageData.packages.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {ageData.packages.map((pkg) => (
+                                <span
+                                  key={pkg.packageId}
+                                  className="inline-flex items-center gap-1 px-2 py-1 text-sm bg-gray-100 text-gray-700 rounded"
+                                >
+                                  {pkg.packageName}
+                                  <span className="text-xs font-bold text-gray-500">
+                                    ({pkg.count})
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-sm text-gray-400">No data</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Package className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No package preference data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Guest Acquisition Sources */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Guest Acquisition Sources
+            </h3>
+
+            {loadingAcquisitionSources ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : acquisitionSources ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* By Referral Source */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By Referral Source</h4>
+                  <div className="space-y-2">
+                    {acquisitionSources.byReferralSource.slice(0, 8).map((source) => (
+                      <div
+                        key={source.source}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      >
+                        <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                          {source.source}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-gray-900">{source.count}</span>
+                          <span className="text-xs text-gray-500">({source.percentage}%)</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* By UTM Source */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By UTM Source</h4>
+                  {acquisitionSources.byUtmSource.length > 0 ? (
+                    <div className="space-y-2">
+                      {acquisitionSources.byUtmSource.map((source) => (
+                        <div
+                          key={source.source}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        >
+                          <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                            {source.source}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-900">{source.count}</span>
+                            <span className="text-xs text-gray-500">({source.percentage}%)</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">No UTM source data</p>
+                  )}
+                </div>
+
+                {/* By UTM Medium */}
+                <div>
+                  <h4 className="text-md font-medium text-gray-700 mb-3">By UTM Medium</h4>
+                  {acquisitionSources.byUtmMedium.length > 0 ? (
+                    <div className="space-y-2">
+                      {acquisitionSources.byUtmMedium.map((medium) => (
+                        <div
+                          key={medium.medium}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        >
+                          <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                            {medium.medium}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-900">{medium.count}</span>
+                            <span className="text-xs text-gray-500">({medium.percentage}%)</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">No UTM medium data</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Globe className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No acquisition source data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Medical Procedures by Age Group */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Stethoscope className="h-6 w-6 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                Medical Procedures by Age Group
+              </h3>
+            </div>
+
+            {loadingMedicalProcedures ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : medicalProceduresByDemographic && medicalProceduresByDemographic.length > 0 ? (
+              <div className="space-y-6">
+                {medicalProceduresByDemographic.map((ageGroup) => {
+                  const hasData = ageGroup.categories.some((c) => c.totalCount > 0);
+                  if (!hasData) return null;
+
+                  return (
+                    <div key={ageGroup.ageGroup} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="text-md font-semibold text-gray-800 mb-3">
+                        Age {ageGroup.ageGroup}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {ageGroup.categories.map((category) => {
+                          if (category.totalCount === 0) return null;
+
+                          const categoryColors: Record<string, string> = {
+                            DENTAL: 'bg-blue-50 border-blue-200',
+                            FACIAL_COSMETIC: 'bg-pink-50 border-pink-200',
+                            BODY: 'bg-green-50 border-green-200',
+                            HEALTH_SCREENING: 'bg-purple-50 border-purple-200',
+                          };
+
+                          const colorClass = categoryColors[category.category] || 'bg-gray-50 border-gray-200';
+
+                          return (
+                            <div
+                              key={category.category}
+                              className={`p-3 rounded-lg border ${colorClass}`}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium text-gray-700 capitalize">
+                                  {category.category.toLowerCase().replace('_', ' ')}
+                                </span>
+                                <span className="text-lg font-bold text-gray-900">
+                                  {category.totalCount}
+                                </span>
+                              </div>
+                              {category.topProcedures.length > 0 && (
+                                <div className="space-y-1">
+                                  {category.topProcedures.slice(0, 3).map((proc) => (
+                                    <div
+                                      key={proc.name}
+                                      className="flex items-center justify-between text-xs text-gray-600"
+                                    >
+                                      <span className="truncate max-w-[120px]">{proc.name}</span>
+                                      <span className="font-medium">{proc.count}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Stethoscope className="h-8 w-8 mb-2 text-gray-300" />
+                <p>No medical procedure data available.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Skill Level Distribution */}
+          {demographicsOverview?.skillLevelDistribution &&
+            demographicsOverview.skillLevelDistribution.length > 0 && (
+              <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Pickleball Skill Level Distribution
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {demographicsOverview.skillLevelDistribution.map((skill) => {
+                    const skillColors: Record<string, string> = {
+                      RECREATIONAL: 'bg-green-100 text-green-800',
+                      INTERMEDIATE: 'bg-yellow-100 text-yellow-800',
+                      ADVANCED: 'bg-red-100 text-red-800',
+                    };
+                    const colorClass = skillColors[skill.level] || 'bg-gray-100 text-gray-800';
+
+                    return (
+                      <div
+                        key={skill.level}
+                        className="text-center p-4 bg-gray-50 rounded-lg"
+                      >
+                        <div className="text-3xl font-bold text-gray-900">{skill.count}</div>
+                        <div
+                          className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full capitalize ${colorClass}`}
+                        >
+                          {skill.level.toLowerCase()}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* OVERVIEW TAB */}
+      {/* ================================================================ */}
+
+      {activeTab === 'overview' && (
+        <>
+      {/* ================================================================ */}
+      {/* EVENT TRACKING SUMMARY (E13-S1) */}
+      {/* ================================================================ */}
+
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Event Tracking</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Events"
+            value={eventSummary?.totalEvents ?? 0}
+            icon={Activity}
+            loading={loadingEventSummary}
+          />
+          <StatCard
+            title="Unique Users"
+            value={eventSummary?.uniqueUsers ?? 0}
+            icon={Users}
+            loading={loadingEventSummary}
+          />
+          <StatCard
+            title="Total Sessions"
+            value={sessionSummary?.totalSessions ?? 0}
+            icon={Monitor}
+            loading={loadingSessionSummary}
+          />
+          <StatCard
+            title="Session Conversion"
+            value={`${sessionSummary?.conversionRate ?? '0.00'}%`}
+            icon={TrendingUp}
+            trend={Number(sessionSummary?.conversionRate ?? 0) > 0 ? 'up' : undefined}
+            trendLabel={`${sessionSummary?.convertedSessions ?? 0} converted`}
+            loading={loadingSessionSummary}
+          />
+        </div>
+
+        {/* Events by Type */}
+        {eventSummary?.eventsByType && eventSummary.eventsByType.length > 0 && (
+          <div className="mt-6 bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Events by Type
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {eventSummary.eventsByType.map((item) => (
+                <div key={item.eventType} className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-gray-900">{item.count}</div>
+                  <div className="text-sm text-gray-600 capitalize">
+                    {item.eventType.toLowerCase().replace('_', ' ')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Session Metrics */}
+        {sessionSummary && (
+          <div className="mt-6 bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Session Metrics
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.averagePageViews}
+                </div>
+                <div className="text-sm text-gray-600">Avg. Page Views</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.averageEventCount}
+                </div>
+                <div className="text-sm text-gray-600">Avg. Events/Session</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.convertedSessions}
+                </div>
+                <div className="text-sm text-gray-600">Converted Sessions</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.conversionRate}%
+                </div>
+                <div className="text-sm text-gray-600">Conversion Rate</div>
+              </div>
+            </div>
+
+            {/* Device Breakdown */}
+            {sessionSummary.sessionsByDevice && sessionSummary.sessionsByDevice.length > 0 && (
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <h4 className="text-md font-medium text-gray-700 mb-3">Sessions by Device</h4>
+                <div className="flex gap-4 flex-wrap">
+                  {sessionSummary.sessionsByDevice.map((device) => (
+                    <div
+                      key={device.deviceType}
+                      className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg"
+                    >
+                      <Monitor className="h-4 w-4 text-gray-600" />
+                      <span className="text-sm text-gray-700 capitalize">
+                        {device.deviceType}:
+                      </span>
+                      <span className="text-sm font-bold text-gray-900">{device.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* ================================================================ */}
       {/* CONVERSION METRICS */}
@@ -307,7 +2184,7 @@ export default function AnalyticsDashboardPage() {
           <StatCard
             title="Confirmed Bookings"
             value={conversionFunnel?.confirmedBookings ?? 0}
-            icon={BarChart}
+            icon={BarChartIcon}
             loading={loadingConversion}
           />
           <StatCard
@@ -643,6 +2520,1409 @@ export default function AnalyticsDashboardPage() {
           </div>
         </div>
       )}
+        </>
+      )}
+
+      {/* ================================================================ */}
+      {/* PACKAGE PERFORMANCE TAB (E13-S6) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'package-performance' && (
+        <div className="space-y-6">
+          {/* Package Overview Summary */}
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Package Overview</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Packages"
+                value={packageOverview?.length ?? 0}
+                icon={Package}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Total Bookings"
+                value={packageOverview?.reduce((sum, p) => sum + p.totalBookings, 0) ?? 0}
+                icon={Users}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Total Revenue"
+                value={`$${((packageOverview?.reduce((sum, p) => sum + p.totalRevenue, 0) ?? 0) / 100).toLocaleString()}`}
+                icon={DollarSign}
+                loading={loadingPackageOverview}
+              />
+              <StatCard
+                title="Avg Booking Value"
+                value={`$${(((packageOverview?.reduce((sum, p) => sum + p.avgBookingValue, 0) ?? 0) / (packageOverview?.length || 1)) / 100).toLocaleString()}`}
+                icon={TrendingUp}
+                loading={loadingPackageOverview}
+              />
+            </div>
+          </div>
+
+          {/* Package Comparison Table */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Package Comparison</h3>
+            {loadingPackageComparison ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Package</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Bookings</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Revenue</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Completed</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Testimonials</th>
+                      <th className="text-center py-3 px-4 font-medium text-gray-600">Satisfaction</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {packageComparison?.map((pkg) => (
+                      <tr key={pkg.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium text-gray-900">{pkg.name}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.totalBookings}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">
+                          ${(pkg.totalRevenue / 100).toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.completedBookings}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{pkg.testimonialCount}</td>
+                        <td className="py-3 px-4 text-center">
+                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded ${
+                            pkg.satisfactionScore === 'Positive'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {pkg.satisfactionScore}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Top Add-Ons with Attach Rates */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Add-Ons by Attach Rate</h3>
+            {loadingTopPackageAddOns ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Add-On</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Category</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Bookings</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Quantity</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Revenue</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Attach Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topPackageAddOns?.map((addOn) => (
+                      <tr key={addOn.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium text-gray-900">{addOn.name}</td>
+                        <td className="py-3 px-4">
+                          <span className="inline-flex px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800 capitalize">
+                            {addOn.category.toLowerCase().replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-700">{addOn.bookingCount}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{addOn.totalQuantity}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">
+                          ${(addOn.totalRevenue / 100).toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span className={`font-medium ${
+                            Number(addOn.attachRate) >= 20 ? 'text-green-600' :
+                            Number(addOn.attachRate) >= 10 ? 'text-yellow-600' : 'text-gray-600'
+                          }`}>
+                            {addOn.attachRate}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Seasonal Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Seasonal Trends ({seasonalTrends?.year || new Date().getFullYear()})
+            </h3>
+            {loadingSeasonalTrends ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : seasonalTrends?.months && seasonalTrends.months.length > 0 ? (
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={seasonalTrends.months}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value: number | undefined) => [Number(value ?? 0), 'Bookings']}
+                    />
+                    <Legend />
+                    {seasonalTrends.packageNames.map((name, index) => (
+                      <Bar
+                        key={name}
+                        dataKey={name}
+                        fill={FUNNEL_STAGE_COLORS[index % FUNNEL_STAGE_COLORS.length]}
+                        stackId="a"
+                      />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No seasonal data available
+              </div>
+            )}
+          </div>
+
+          {/* Package Ratings from Testimonials */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Package Satisfaction (from Testimonials)</h3>
+            {loadingPackageRatings ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : packageRatings && packageRatings.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {packageRatings.map((rating) => (
+                  <div key={rating.packageName} className="p-4 bg-gray-50 rounded-lg">
+                    <div className="font-semibold text-gray-900 mb-2">{rating.packageName}</div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-gray-600">
+                          {rating.testimonialCount} testimonial{rating.testimonialCount !== 1 ? 's' : ''}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {rating.totalViewCount.toLocaleString()} views
+                        </div>
+                      </div>
+                      <span className={`px-3 py-1 text-sm font-medium rounded ${
+                        rating.satisfactionIndicator === 'High'
+                          ? 'bg-green-100 text-green-800'
+                          : rating.satisfactionIndicator === 'Medium'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {rating.satisfactionIndicator}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No testimonial data available
+              </div>
+            )}
+          </div>
+
+          {/* Underperforming Packages Alert */}
+          {!loadingUnderperforming && underperformingPackages && underperformingPackages.length > 0 && (
+            <div className="bg-amber-50 rounded-lg shadow border border-amber-200 p-6">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Underperforming Packages
+              </h3>
+              <div className="space-y-4">
+                {underperformingPackages.map((pkg) => (
+                  <div key={pkg.id} className="p-4 bg-white rounded-lg border border-amber-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-semibold text-gray-900">{pkg.name}</div>
+                      <div className="flex gap-2">
+                        {pkg.issues.map((issue) => (
+                          <span
+                            key={issue}
+                            className="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded"
+                          >
+                            {issue}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Bookings:</span>{' '}
+                        <span className="font-medium">{pkg.totalBookings}</span>
+                        <span className={`ml-1 ${Number(pkg.bookingsVsAvg) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          ({pkg.bookingsVsAvg}%)
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Revenue:</span>{' '}
+                        <span className="font-medium">${(pkg.totalRevenue / 100).toLocaleString()}</span>
+                        <span className={`ml-1 ${Number(pkg.revenueVsAvg) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          ({pkg.revenueVsAvg}%)
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Conversion:</span>{' '}
+                        <span className="font-medium">{pkg.conversionRate.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* PARTNER PERFORMANCE TAB (E13-S7) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'partner-performance' && (
+        <PartnerPerformanceTab dateRange={dateRange} />
+      )}
+
+      {/* ================================================================ */}
+      {/* EMAIL CAMPAIGNS TAB (E13-S8) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'email-campaigns' && (
+        <EmailCampaignsTab dateRange={dateRange} />
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// PARTNER PERFORMANCE TAB COMPONENT (E13-S7)
+// ============================================================================
+
+function PartnerPerformanceTab({ dateRange }: { dateRange: DateRangeFilter }) {
+  const [sortBy, setSortBy] = useState<'referrals' | 'conversions' | 'revenue'>('revenue');
+  const [growthPeriod, setGrowthPeriod] = useState<'daily' | 'weekly' | 'monthly'>('monthly');
+
+  // Fetch partner performance data
+  const { data: overview, isLoading: overviewLoading } = trpc.analytics.partnerPerformance.getOverview.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: topPartners, isLoading: topPartnersLoading } = trpc.analytics.partnerPerformance.getTopPartners.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    sortBy,
+    limit: 15,
+  });
+
+  const { data: tierDistribution, isLoading: tierLoading } = trpc.analytics.partnerPerformance.getTierDistribution.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: conversionRates, isLoading: conversionLoading } = trpc.analytics.partnerPerformance.getConversionRatesByPartner.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    minReferrals: 1,
+  });
+
+  const { data: growthTrends, isLoading: growthLoading } = trpc.analytics.partnerPerformance.getGrowthTrends.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    period: growthPeriod,
+  });
+
+  const { data: commissionSummary, isLoading: commissionLoading } = trpc.analytics.partnerPerformance.getCommissionSummary.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: highPotentialPartners, isLoading: potentialLoading } = trpc.analytics.partnerPerformance.getHighPotentialPartners.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  // Helper for tier badge colors
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'DIAMOND': return 'bg-purple-100 text-purple-800';
+      case 'PLATINUM': return 'bg-gray-100 text-gray-800';
+      case 'GOLD': return 'bg-yellow-100 text-yellow-800';
+      case 'SILVER': return 'bg-slate-100 text-slate-800';
+      case 'BRONZE': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  // Helper for tier bar colors in chart
+  const getTierBarColor = (tier: string) => {
+    switch (tier) {
+      case 'DIAMOND': return '#9333ea';
+      case 'PLATINUM': return '#6b7280';
+      case 'GOLD': return '#eab308';
+      case 'SILVER': return '#94a3b8';
+      case 'BRONZE': return '#ea580c';
+      default: return '#6b7280';
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Overview Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <StatCard
+          title="Total Partners"
+          value={overview?.totalPartners || 0}
+          icon={Handshake}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Active Partners"
+          value={overview?.activePartners || 0}
+          icon={Users}
+          trendLabel={overview ? `${((overview.activePartners / overview.totalPartners) * 100).toFixed(0)}% active` : undefined}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Referrals (Period)"
+          value={overview?.referralsInPeriod || 0}
+          icon={Target}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Conversion Rate"
+          value={`${overview?.conversionRate || 0}%`}
+          icon={Percent}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Total Paid Out"
+          value={`$${((overview?.totalPaidOut || 0) / 100).toLocaleString()}`}
+          icon={Wallet}
+          loading={overviewLoading}
+        />
+      </div>
+
+      {/* Top Partners by Revenue/Referrals/Conversions */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <Award className="h-5 w-5 text-yellow-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Top Partners</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Sort by:</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="px-3 py-1.5 border border-gray-300 rounded-md text-sm"
+            >
+              <option value="revenue">Revenue</option>
+              <option value="referrals">Referrals</option>
+              <option value="conversions">Conversions</option>
+            </select>
+          </div>
+        </div>
+
+        {topPartnersLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-2 font-medium text-gray-600">#</th>
+                  <th className="text-left py-3 px-2 font-medium text-gray-600">Club</th>
+                  <th className="text-left py-3 px-2 font-medium text-gray-600">Tier</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Clicks</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Referrals</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Conversions</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Conv. Rate</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Revenue</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Commissions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topPartners?.map((partner, index) => (
+                  <tr key={partner.partnerId} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-2 text-gray-500">{index + 1}</td>
+                    <td className="py-3 px-2">
+                      <div className="font-medium text-gray-900">{partner.clubName}</div>
+                      <div className="text-xs text-gray-500">{partner.partnerName}</div>
+                    </td>
+                    <td className="py-3 px-2">
+                      <span className={`px-2 py-1 text-xs font-medium rounded ${getTierColor(partner.tier)}`}>
+                        {partner.tier}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.referralCodeClicks.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.totalReferrals}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.conversions}</td>
+                    <td className="py-3 px-2 text-right">
+                      <span className={partner.conversionRate >= 50 ? 'text-green-600' : partner.conversionRate >= 25 ? 'text-yellow-600' : 'text-gray-600'}>
+                        {partner.conversionRate}%
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right font-medium text-gray-900">
+                      ${(partner.totalRevenue / 100).toLocaleString()}
+                    </td>
+                    <td className="py-3 px-2 text-right text-gray-700">
+                      ${(partner.totalCommissions / 100).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(!topPartners || topPartners.length === 0) && (
+              <div className="text-center py-8 text-gray-500">No partner data available</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Two Column: Tier Distribution & Commission Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Tier Distribution Chart */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Star className="h-5 w-5 text-yellow-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Partner Tier Distribution</h3>
+          </div>
+
+          {tierLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <>
+              <div className="h-64 mb-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={tierDistribution || []} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="tier" type="category" width={80} />
+                    <Tooltip
+                      formatter={(value: number | undefined, name: string | undefined) => {
+                        const v = Number(value ?? 0);
+                        if (name === 'partnerCount') return [v, 'Partners'];
+                        if (name === 'totalReferrals') return [v, 'Referrals'];
+                        return [v, name ?? ''];
+                      }}
+                    />
+                    <Bar dataKey="partnerCount" name="partnerCount" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-2">
+                {tierDistribution?.map((tier) => (
+                  <div key={tier.tier} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 text-xs font-medium rounded ${getTierColor(tier.tier)}`}>
+                        {tier.tier}
+                      </span>
+                      <span className="text-gray-600">{tier.partnerCount} partners</span>
+                    </div>
+                    <div className="text-gray-700">
+                      {tier.totalReferrals} referrals • ${(tier.totalRevenue / 100).toLocaleString()} revenue
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Commission Payouts Summary */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Wallet className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Commission Payouts</h3>
+          </div>
+
+          {commissionLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <>
+              {/* Status Summary */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-green-50 rounded-lg p-4">
+                  <div className="text-sm text-green-700">Completed</div>
+                  <div className="text-2xl font-bold text-green-800">
+                    ${((commissionSummary?.statusTotals.COMPLETED.amount || 0) / 100).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-green-600">{commissionSummary?.statusTotals.COMPLETED.count || 0} payouts</div>
+                </div>
+                <div className="bg-yellow-50 rounded-lg p-4">
+                  <div className="text-sm text-yellow-700">Pending</div>
+                  <div className="text-2xl font-bold text-yellow-800">
+                    ${((commissionSummary?.totalPending || 0) / 100).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-yellow-600">
+                    {(commissionSummary?.statusTotals.PENDING.count || 0) + (commissionSummary?.statusTotals.PROCESSING.count || 0)} pending
+                  </div>
+                </div>
+              </div>
+
+              {/* Top Partners by Payouts */}
+              <h4 className="text-sm font-medium text-gray-700 mb-3">Top Partners by Commissions</h4>
+              <div className="space-y-2">
+                {commissionSummary?.topPartnersByPayouts.slice(0, 5).map((partner) => (
+                  <div key={partner.partnerId} className="flex items-center justify-between py-2 border-b border-gray-100">
+                    <div>
+                      <span className="font-medium text-gray-900">{partner.clubName}</span>
+                      <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded ${getTierColor(partner.tier)}`}>
+                        {partner.tier}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium text-gray-900">
+                        ${(partner.totalAmount / 100).toLocaleString()}
+                      </div>
+                      <div className="text-xs text-gray-500">{partner.totalPayouts} payouts</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Partner Growth Trends */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Partner Growth Trends</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Period:</label>
+            <select
+              value={growthPeriod}
+              onChange={(e) => setGrowthPeriod(e.target.value as typeof growthPeriod)}
+              className="px-3 py-1.5 border border-gray-300 rounded-md text-sm"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+
+        {growthLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={growthTrends || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="period"
+                  tick={{ fontSize: 12 }}
+                  tickFormatter={(value) => {
+                    if (growthPeriod === 'monthly') {
+                      const [year, month] = value.split('-');
+                      return `${month}/${year.slice(2)}`;
+                    }
+                    return value.slice(5);
+                  }}
+                />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `$${(value / 100).toLocaleString()}`} />
+                <Tooltip
+                  formatter={(value: number | undefined, name: string | undefined) => {
+                    const v = Number(value ?? 0);
+                    if (name === 'revenue') return [`$${(v / 100).toLocaleString()}`, 'Revenue'];
+                    const label = name ? name.charAt(0).toUpperCase() + name.slice(1) : '';
+                    return [v, label];
+                  }}
+                />
+                <Legend />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="newPartners"
+                  name="New Partners"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="referrals"
+                  name="Referrals"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="conversions"
+                  name="Conversions"
+                  stroke="#f59e0b"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="revenue"
+                  name="revenue"
+                  stroke="#8b5cf6"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
+
+      {/* Conversion Rates by Partner */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <MousePointerClick className="h-5 w-5 text-indigo-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Referral-to-Booking Conversion by Partner</h3>
+        </div>
+
+        {conversionLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-2 font-medium text-gray-600">Club</th>
+                  <th className="text-left py-3 px-2 font-medium text-gray-600">Tier</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Clicks</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Referrals</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Click → Referral</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Converted</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Pending</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Cancelled</th>
+                  <th className="text-right py-3 px-2 font-medium text-gray-600">Conversion Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {conversionRates?.slice(0, 15).map((partner) => (
+                  <tr key={partner.partnerId} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-2 font-medium text-gray-900">{partner.clubName}</td>
+                    <td className="py-3 px-2">
+                      <span className={`px-2 py-1 text-xs font-medium rounded ${getTierColor(partner.tier)}`}>
+                        {partner.tier}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.referralCodeClicks.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.totalReferrals}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{partner.clickToReferralRate}%</td>
+                    <td className="py-3 px-2 text-right text-green-600">{partner.converted}</td>
+                    <td className="py-3 px-2 text-right text-yellow-600">{partner.pending}</td>
+                    <td className="py-3 px-2 text-right text-red-600">{partner.cancelled}</td>
+                    <td className="py-3 px-2 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full ${
+                              partner.conversionRate >= 70 ? 'bg-green-500' :
+                              partner.conversionRate >= 50 ? 'bg-green-400' :
+                              partner.conversionRate >= 30 ? 'bg-yellow-400' : 'bg-orange-400'
+                            }`}
+                            style={{ width: `${Math.min(partner.conversionRate, 100)}%` }}
+                          />
+                        </div>
+                        <span className="font-medium">{partner.conversionRate}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(!conversionRates || conversionRates.length === 0) && (
+              <div className="text-center py-8 text-gray-500">No conversion data available</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* High-Potential Partners for Outreach */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-amber-500" />
+          <h3 className="text-lg font-semibold text-gray-900">High-Potential Partners for Outreach</h3>
+        </div>
+        <p className="text-sm text-gray-600 mb-6">
+          Partners identified with growth potential based on conversion patterns, engagement, and tier status.
+        </p>
+
+        {potentialLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {highPotentialPartners?.map((partner) => (
+              <div key={partner.partnerId} className="p-4 bg-amber-50 rounded-lg border border-amber-100">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <span className="font-semibold text-gray-900">{partner.clubName}</span>
+                    <span className="text-sm text-gray-600 ml-2">({partner.partnerName})</span>
+                    <span className={`ml-2 px-2 py-1 text-xs font-medium rounded ${getTierColor(partner.tier)}`}>
+                      {partner.tier}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600">Potential Score:</span>
+                    <span className="px-2 py-1 bg-amber-200 text-amber-800 rounded font-medium text-sm">
+                      {partner.potentialScore}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Signals */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {partner.signals.map((signal) => (
+                    <span
+                      key={signal}
+                      className="px-2 py-1 text-xs font-medium bg-white text-amber-700 rounded border border-amber-200"
+                    >
+                      {signal}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Metrics */}
+                <div className="grid grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-600">Clicks:</span>{' '}
+                    <span className="font-medium">{partner.referralCodeClicks}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Referrals:</span>{' '}
+                    <span className="font-medium">{partner.totalReferrals}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Conversions:</span>{' '}
+                    <span className="font-medium">{partner.conversions}</span>
+                    <span className="text-gray-500 ml-1">({partner.conversionRate}%)</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Revenue:</span>{' '}
+                    <span className="font-medium">${(partner.totalRevenue / 100).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {(!highPotentialPartners || highPotentialPartners.length === 0) && (
+              <div className="text-center py-8 text-gray-500">
+                <Sparkles className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                <p>No high-potential partners identified in this period.</p>
+                <p className="text-sm">Adjust the date range or check back later.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// EMAIL CAMPAIGNS TAB COMPONENT (E13-S8)
+// ============================================================================
+
+function EmailCampaignsTab({ dateRange }: { dateRange: DateRangeFilter }) {
+  const [engagementPeriod, setEngagementPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [sortTemplatesBy, setSortTemplatesBy] = useState<'openRate' | 'clickRate' | 'sends'>('clickRate');
+
+  // Fetch email campaign analytics data
+  const { data: overview, isLoading: overviewLoading } = trpc.analytics.emailCampaigns.getOverview.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: campaigns, isLoading: campaignsLoading } = trpc.analytics.emailCampaigns.getCampaigns.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    limit: 20,
+  });
+
+  const { data: abTestComparison, isLoading: abTestLoading } = trpc.analytics.emailCampaigns.getAbTestComparison.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: topTemplates, isLoading: templatesLoading } = trpc.analytics.emailCampaigns.getTopTemplates.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    sortBy: sortTemplatesBy,
+    limit: 10,
+  });
+
+  const { data: engagementTrends, isLoading: trendsLoading } = trpc.analytics.emailCampaigns.getEngagementTrends.useQuery({
+    period: engagementPeriod,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: unsubscribeMetrics, isLoading: unsubscribeLoading } = trpc.analytics.emailCampaigns.getUnsubscribeMetrics.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: linkClickBreakdown, isLoading: linkClickLoading } = trpc.analytics.emailCampaigns.getLinkClickBreakdown.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    limit: 15,
+  });
+
+  // Format percentage for display
+  const formatRate = (rate: number) => `${rate.toFixed(2)}%`;
+
+  // Color coding for rates
+  const getRateColor = (rate: number, type: 'open' | 'click' | 'bounce' | 'unsubscribe') => {
+    if (type === 'open') {
+      if (rate >= 25) return 'text-green-600';
+      if (rate >= 15) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'click') {
+      if (rate >= 5) return 'text-green-600';
+      if (rate >= 2) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'bounce') {
+      if (rate <= 2) return 'text-green-600';
+      if (rate <= 5) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'unsubscribe') {
+      if (rate <= 0.5) return 'text-green-600';
+      if (rate <= 1) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    return 'text-gray-600';
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Overview Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <StatCard
+          title="Total Sends"
+          value={overview?.totalSends?.toLocaleString() ?? 0}
+          icon={Send}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Open Rate"
+          value={overview ? formatRate(overview.openRate) : '0%'}
+          icon={Eye}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Click Rate"
+          value={overview ? formatRate(overview.clickRate) : '0%'}
+          icon={MousePointer}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Delivery Rate"
+          value={overview ? formatRate(overview.deliveryRate) : '0%'}
+          icon={CheckCircle}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Bounce Rate"
+          value={overview ? formatRate(overview.bounceRate) : '0%'}
+          icon={AlertTriangle}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Unsubscribe Rate"
+          value={overview ? formatRate(overview.unsubscribeRate) : '0%'}
+          icon={UserMinus}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Campaigns"
+          value={overview?.totalCampaigns ?? 0}
+          icon={Mail}
+          loading={overviewLoading}
+        />
+      </div>
+
+      {/* Campaign List and A/B Test Results */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Campaign Performance Table */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Mail className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Recent Campaigns</h3>
+          </div>
+
+          {campaignsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="overflow-x-auto max-h-96">
+              <table className="w-full text-sm">
+                <thead className="text-xs uppercase text-gray-500 border-b sticky top-0 bg-white">
+                  <tr>
+                    <th className="py-2 px-2 text-left">Campaign</th>
+                    <th className="py-2 px-2 text-right">Sent</th>
+                    <th className="py-2 px-2 text-right">Open</th>
+                    <th className="py-2 px-2 text-right">Click</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {campaigns?.map((campaign) => (
+                    <tr key={campaign.id} className="hover:bg-gray-50">
+                      <td className="py-3 px-2">
+                        <div className="font-medium text-gray-900 truncate max-w-[200px]" title={campaign.name}>
+                          {campaign.name}
+                        </div>
+                        {campaign.isAbTest && (
+                          <span className="text-xs text-purple-600 font-medium">
+                            A/B Test: {campaign.abTestVariant}
+                          </span>
+                        )}
+                        <div className="text-xs text-gray-500">
+                          {campaign.sentAt ? new Date(campaign.sentAt).toLocaleDateString() : 'Draft'}
+                        </div>
+                      </td>
+                      <td className="py-3 px-2 text-right text-gray-700">
+                        {campaign.totalSends.toLocaleString()}
+                      </td>
+                      <td className={`py-3 px-2 text-right font-medium ${getRateColor(campaign.openRate, 'open')}`}>
+                        {formatRate(campaign.openRate)}
+                      </td>
+                      <td className={`py-3 px-2 text-right font-medium ${getRateColor(campaign.clickRate, 'click')}`}>
+                        {formatRate(campaign.clickRate)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {(!campaigns || campaigns.length === 0) && (
+                <div className="text-center py-8 text-gray-500">No campaigns found in this period</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* A/B Test Comparison */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FlaskRound className="h-5 w-5 text-purple-600" />
+            <h3 className="text-lg font-semibold text-gray-900">A/B Test Results</h3>
+          </div>
+
+          {abTestLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {abTestComparison?.map((test) => {
+                // Type guard to check which structure we have
+                const hasVariants = 'variants' in test && test.variants;
+
+                return (
+                  <div key={test.campaignId} className="p-4 bg-purple-50 rounded-lg border border-purple-100">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold text-gray-900 truncate max-w-[200px]" title={test.name}>
+                        {test.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {'sentAt' in test && test.sentAt ? new Date(test.sentAt).toLocaleDateString() : '-'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {hasVariants ? (
+                        test.variants.map((variant: { variant: string; openRate: number; clickRate: number; isWinner: boolean }) => (
+                          <div
+                            key={variant.variant}
+                            className={`flex items-center justify-between p-2 rounded ${
+                              variant.isWinner ? 'bg-green-100 border border-green-200' : 'bg-white'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-gray-700">Variant {variant.variant}</span>
+                              {variant.isWinner && (
+                                <Trophy className="h-4 w-4 text-green-600" />
+                              )}
+                            </div>
+                            <div className="flex gap-4 text-sm">
+                              <span className="text-gray-600">
+                                Open: <span className={getRateColor(variant.openRate, 'open')}>{formatRate(variant.openRate)}</span>
+                              </span>
+                              <span className="text-gray-600">
+                                Click: <span className={getRateColor(variant.clickRate, 'click')}>{formatRate(variant.clickRate)}</span>
+                              </span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        // Single variant display (when parentCampaignId is specified)
+                        <div className="flex items-center justify-between p-2 rounded bg-white">
+                          <span className="font-medium text-gray-700">
+                            Variant {'variant' in test ? test.variant : '-'}
+                          </span>
+                          <div className="flex gap-4 text-sm">
+                            <span className="text-gray-600">
+                              Open: <span className={getRateColor('openRate' in test ? test.openRate : 0, 'open')}>{formatRate('openRate' in test ? test.openRate : 0)}</span>
+                            </span>
+                            <span className="text-gray-600">
+                              Click: <span className={getRateColor('clickRate' in test ? test.clickRate : 0, 'click')}>{formatRate('clickRate' in test ? test.clickRate : 0)}</span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {(!abTestComparison || abTestComparison.length === 0) && (
+                <div className="text-center py-8 text-gray-500">
+                  <FlaskRound className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p>No A/B tests found in this period</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Best Performing Templates */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-yellow-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Best Performing Templates</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Sort by:</label>
+            <select
+              value={sortTemplatesBy}
+              onChange={(e) => setSortTemplatesBy(e.target.value as 'openRate' | 'clickRate' | 'sends')}
+              className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="clickRate">Click Rate</option>
+              <option value="openRate">Open Rate</option>
+              <option value="sends">Total Sends</option>
+            </select>
+          </div>
+        </div>
+
+        {templatesLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase text-gray-500 border-b">
+                <tr>
+                  <th className="py-2 px-2 text-left">Template</th>
+                  <th className="py-2 px-2 text-left">Category</th>
+                  <th className="py-2 px-2 text-right">Sends</th>
+                  <th className="py-2 px-2 text-right">Opens</th>
+                  <th className="py-2 px-2 text-right">Clicks</th>
+                  <th className="py-2 px-2 text-right">Open Rate</th>
+                  <th className="py-2 px-2 text-right">Click Rate</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {topTemplates?.map((template, index) => (
+                  <tr key={template.templateId} className="hover:bg-gray-50">
+                    <td className="py-3 px-2">
+                      <div className="flex items-center gap-2">
+                        {index < 3 && (
+                          <span className={`text-lg ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : 'text-amber-600'}`}>
+                            {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                          </span>
+                        )}
+                        <span className="font-medium text-gray-900">{template.templateName}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-2">
+                      <span className="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                        {template.category}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.totalSends.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.opens.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.clicks.toLocaleString()}</td>
+                    <td className={`py-3 px-2 text-right font-medium ${getRateColor(template.openRate, 'open')}`}>
+                      {formatRate(template.openRate)}
+                    </td>
+                    <td className={`py-3 px-2 text-right font-medium ${getRateColor(template.clickRate, 'click')}`}>
+                      {formatRate(template.clickRate)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(!topTemplates || topTemplates.length === 0) && (
+              <div className="text-center py-8 text-gray-500">No template data available</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Engagement Trends Chart */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Engagement Trends</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Period:</label>
+            <select
+              value={engagementPeriod}
+              onChange={(e) => setEngagementPeriod(e.target.value as 'daily' | 'weekly' | 'monthly')}
+              className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+
+        {trendsLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="h-80">
+            {engagementTrends && engagementTrends.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={engagementTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(value) => {
+                      if (engagementPeriod === 'monthly') return value;
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} domain={[0, 100]} />
+                  <Tooltip
+                    formatter={(value: number | undefined, name: string | undefined) => {
+                      if (name === 'openRate' || name === 'clickRate') {
+                        return [`${Number(value ?? 0).toFixed(2)}%`, name === 'openRate' ? 'Open Rate' : 'Click Rate'];
+                      }
+                      return [Number(value ?? 0).toLocaleString(), name === 'sends' ? 'Sends' : name === 'opens' ? 'Opens' : 'Clicks'];
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="sends"
+                    name="sends"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="openRate"
+                    name="openRate"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="clickRate"
+                    name="clickRate"
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="text-center">
+                  <TrendingUp className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p>No engagement data available</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Unsubscribe Tracking and Link Click Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Unsubscribe Tracking */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <UserMinus className="h-5 w-5 text-red-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Unsubscribe Tracking</h3>
+          </div>
+
+          {unsubscribeLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Summary */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-red-50 rounded-lg">
+                  <div className="text-sm text-red-600 font-medium">Total Unsubscribes</div>
+                  <div className="text-2xl font-bold text-red-700">
+                    {unsubscribeMetrics?.totalUnsubscribes ?? 0}
+                  </div>
+                </div>
+                <div className="p-4 bg-red-50 rounded-lg">
+                  <div className="text-sm text-red-600 font-medium">Unsubscribe Rate</div>
+                  <div className="text-2xl font-bold text-red-700">
+                    {unsubscribeMetrics?.unsubscribeRate?.toFixed(3) ?? 0}%
+                  </div>
+                </div>
+              </div>
+
+              {/* By Campaign */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">By Campaign</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {unsubscribeMetrics?.byCampaign?.slice(0, 5).map((item) => (
+                    <div key={item.campaignName} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="text-sm text-gray-700 truncate max-w-[200px]" title={item.campaignName}>
+                        {item.campaignName}
+                      </span>
+                      <span className="text-sm font-medium text-red-600">{item.count}</span>
+                    </div>
+                  ))}
+                  {(!unsubscribeMetrics?.byCampaign || unsubscribeMetrics.byCampaign.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No unsubscribes in this period</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Link Click Breakdown */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <LinkIcon className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Link Click Breakdown</h3>
+          </div>
+
+          {linkClickLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* By Position (Heatmap style) */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">By Position</h4>
+                <div className="flex flex-wrap gap-2">
+                  {linkClickBreakdown?.byPosition?.map((item) => (
+                    <div
+                      key={item.position}
+                      className="px-3 py-2 rounded-lg bg-blue-50 border border-blue-200"
+                      style={{
+                        backgroundColor: `rgba(59, 130, 246, ${0.1 + (item.percentage / 100) * 0.5})`,
+                      }}
+                    >
+                      <div className="text-xs text-blue-600 font-medium uppercase">{item.position}</div>
+                      <div className="text-lg font-bold text-blue-700">{item.clicks}</div>
+                      <div className="text-xs text-blue-500">{item.percentage}%</div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.byPosition || linkClickBreakdown.byPosition.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm w-full">No click data available</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Top CTAs */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Top CTAs</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {linkClickBreakdown?.byCTA?.slice(0, 5).map((item) => (
+                    <div key={item.text} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="text-sm text-gray-700 truncate max-w-[200px]" title={item.text}>
+                        {item.text}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-blue-600">{item.clicks}</span>
+                        <span className="text-xs text-gray-500">({item.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.byCTA || linkClickBreakdown.byCTA.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No CTA click data available</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Top Links */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Top Links</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {linkClickBreakdown?.topLinks?.slice(0, 5).map((link) => (
+                    <div key={link.url} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-gray-700 truncate block max-w-[200px]" title={link.url}>
+                          {link.text || new URL(link.url).pathname}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-blue-600">{link.clicks}</span>
+                        <span className="text-xs text-gray-500">({link.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.topLinks || linkClickBreakdown.topLinks.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No link click data available</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

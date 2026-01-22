@@ -100,7 +100,7 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
 
   const html = baseEmailTemplate({
     preheader: `Congratulations! Your referral booked ${data.packageName}`,
-    heading: '🎉 Your Referral Just Booked!',
+    title: '🎉 Your Referral Just Booked!',
     content: `
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
         Hi ${data.partnerName},

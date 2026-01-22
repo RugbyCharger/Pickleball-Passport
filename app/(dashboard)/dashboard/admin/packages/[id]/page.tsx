@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/client';
 import {
@@ -66,29 +66,31 @@ export default function PackageFormPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof PackageFormData, string>>>({});
 
   // Fetch existing package data if editing
-  const { isLoading: isLoadingPackage } = trpc.package.adminGetById.useQuery(
+  const { data: packageData, isLoading: isLoadingPackage } = trpc.package.adminGetById.useQuery(
     { id: packageId! },
     {
       enabled: !isNew && !!packageId,
-      onSuccess: (data) => {
-        if (data && !isNew) {
-          setFormData({
-            slug: data.slug,
-            name: data.name,
-            tagline: data.tagline || '',
-            description: data.description,
-            basePrice: (data.basePrice / 100).toString(),
-            durationOptions: data.durationOptions.join(', '),
-            heroImageUrl: data.heroImageUrl || '',
-            imageUrls: data.imageUrls.join('\n'),
-            metaTitle: data.metaTitle || '',
-            metaDescription: data.metaDescription || '',
-            isActive: data.isActive,
-          });
-        }
-      },
     }
   );
+
+  // Populate form when data is loaded
+  useEffect(() => {
+    if (packageData && !isNew) {
+      setFormData({
+        slug: packageData.slug,
+        name: packageData.name,
+        tagline: packageData.tagline || '',
+        description: packageData.description,
+        basePrice: (packageData.basePrice / 100).toString(),
+        durationOptions: packageData.durationOptions.join(', '),
+        heroImageUrl: packageData.heroImageUrl || '',
+        imageUrls: packageData.imageUrls.join('\n'),
+        metaTitle: packageData.metaTitle || '',
+        metaDescription: packageData.metaDescription || '',
+        isActive: packageData.isActive,
+      });
+    }
+  }, [packageData, isNew]);
 
   // Mutations
   const createMutation = trpc.package.adminCreate.useMutation({

@@ -27,6 +27,16 @@ import { giftRouter } from './routers/gift'
 import { taskRouter } from './routers/task'
 import { paymentRouter } from './routers/payment'
 import { forumRouter } from './routers/forum'
+import { preferencesRouter } from './routers/preferences'
+import { emailTemplateRouter } from './routers/email-template'
+import { whatsappRouter } from './routers/whatsapp'
+import { cmsRouter } from './routers/cms'
+import { packageCmsRouter } from './routers/package-cms'
+import { blogRouter } from './routers/blog'
+import { faqRouter } from './routers/faq'
+import { guestTestimonialRouter } from './routers/guest-testimonial'
+import { mediaRouter } from './routers/media'
+import { itineraryRouter } from './routers/itinerary'
 
 export const appRouter = router({
   user: userRouter,
@@ -50,6 +60,16 @@ export const appRouter = router({
   task: taskRouter,
   payment: paymentRouter,
   forum: forumRouter,
+  preferences: preferencesRouter,
+  emailTemplate: emailTemplateRouter,
+  whatsapp: whatsappRouter,
+  cms: cmsRouter,
+  packageCms: packageCmsRouter,
+  blog: blogRouter,
+  faq: faqRouter,
+  guestTestimonial: guestTestimonialRouter,
+  media: mediaRouter,
+  itinerary: itineraryRouter,
 })
 
 // Export type definition for the router

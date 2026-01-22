@@ -28,7 +28,13 @@ import {
   REFUND_POLICY,
   INSTALLMENT_CONFIG,
   PARTNER_POINTS_CONFIG,
+  calculateGuestReferralPoints,
 } from '@/lib/config/business-constants'
+import { ReferralEventType, GuestReferralStatus } from '@prisma/client'
+import { sendEmail } from '@/lib/email/sendgrid'
+import { generateGuestReferralBookingEmail } from '@/lib/email/templates/guest-referral-booking'
+
+const REFERRAL_COOKIE_NAME = 'referral_code'
 
 // Initialize Stripe client (server-side)
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -37,7 +43,7 @@ if (!stripeSecretKey) {
 }
 
 const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-12-15.clover',
   timeout: 10000, // E4-S6: 10 second timeout for Stripe API calls
 })
 
@@ -54,6 +60,8 @@ const createPaymentIntentInput = z.object({
   tripId: z.string().cuid().optional(),
   referralCode: z.string().optional(),
   paymentPlan: z.enum(['FULL', 'INSTALLMENT_4', 'FINANCING']).optional().default('FULL'),
+  // E4-S13: Multi-currency support
+  currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD']).optional().default('USD'),
 })
 
 // Accommodation tier pricing imported from @/lib/config/business-constants
@@ -84,7 +92,7 @@ export const bookingRouter = router({
   createPaymentIntent: guestProcedure
     .input(createPaymentIntentInput)
     .mutation(async ({ ctx, input }) => {
-      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode, paymentPlan } = input
+      const { packageId, duration, accommodationTier, addOnIds, tripId, referralCode, paymentPlan, currency } = input
 
       // 1. Validate package exists and is active
       const pkg = await ctx.db.package.findFirst({
@@ -173,30 +181,99 @@ export const bookingRouter = router({
       // 6. Calculate subtotal (before discount)
       const subtotal = basePrice + accommodationPrice + addOnsTotal
 
-      // 7. Validate referral code and calculate discount
+      // 7. Epic 10 - US-003: Validate referral code and calculate discount
+      // Support both partner and guest referral codes
+      // Manual code takes precedence over cookie
       let discount = 0
       let referredByPartnerId: string | undefined
+      let guestReferralCode: string | undefined
+      let guestReferrerUserId: string | undefined
 
+      // Epic 10 - US-007: Extract UTM params from cookies
+      let utmSource: string | null = null
+      let utmMedium: string | null = null
+      let utmCampaign: string | null = null
+
+      // Get referral code from cookie if no manual code provided
+      // Manual code takes precedence over cookie
+      let effectiveReferralCode: string | undefined
       if (referralCode) {
-        const partner = await ctx.db.partnerProfile.findUnique({
-          where: { referralCode },
-          select: {
-            id: true,
-            tier: true,
-          },
-        })
-
-        if (!partner) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'Invalid referral code',
-          })
+        effectiveReferralCode = referralCode.toUpperCase()
+      } else {
+        const cookieHeader = ctx.headers.get('cookie')
+        if (cookieHeader) {
+          const cookies = cookieHeader.split(';').map(c => c.trim())
+          for (const cookie of cookies) {
+            const [name, value] = cookie.split('=')
+            if (name === REFERRAL_COOKIE_NAME && value) {
+              effectiveReferralCode = decodeURIComponent(value).toUpperCase()
+            }
+            // Extract UTM params from cookies
+            if (name === 'utm_source' && value) {
+              utmSource = decodeURIComponent(value)
+            }
+            if (name === 'utm_medium' && value) {
+              utmMedium = decodeURIComponent(value)
+            }
+            if (name === 'utm_campaign' && value) {
+              utmCampaign = decodeURIComponent(value)
+            }
+          }
         }
+      }
 
-        // Calculate discount based on partner tier
-        const discountRate = PARTNER_TIER_DISCOUNTS[partner.tier as keyof typeof PARTNER_TIER_DISCOUNTS] || 0
-        discount = Math.round(subtotal * discountRate)
-        referredByPartnerId = partner.id
+      // Also parse cookies for UTM params even if we have a manual referral code
+      if (referralCode) {
+        const cookieHeader = ctx.headers.get('cookie')
+        if (cookieHeader) {
+          const cookies = cookieHeader.split(';').map(c => c.trim())
+          for (const cookie of cookies) {
+            const [name, value] = cookie.split('=')
+            if (name === 'utm_source' && value) {
+              utmSource = decodeURIComponent(value)
+            }
+            if (name === 'utm_medium' && value) {
+              utmMedium = decodeURIComponent(value)
+            }
+            if (name === 'utm_campaign' && value) {
+              utmCampaign = decodeURIComponent(value)
+            }
+          }
+        }
+      }
+
+      if (effectiveReferralCode) {
+        // Check both partner and guest referral codes in parallel
+        const [partner, guestUser] = await Promise.all([
+          ctx.db.partnerProfile.findUnique({
+            where: { referralCode: effectiveReferralCode },
+            select: {
+              id: true,
+              tier: true,
+              userId: true,
+            },
+          }),
+          ctx.db.user.findUnique({
+            where: { referralCode: effectiveReferralCode },
+            select: {
+              id: true,
+              email: true,
+            },
+          }),
+        ])
+
+        if (partner) {
+          // Partner referral - apply discount based on tier
+          const discountRate = PARTNER_TIER_DISCOUNTS[partner.tier as keyof typeof PARTNER_TIER_DISCOUNTS] || 0
+          discount = Math.round(subtotal * discountRate)
+          referredByPartnerId = partner.id
+        } else if (guestUser) {
+          // Guest referral - no discount, just attribution
+          guestReferralCode = effectiveReferralCode
+          guestReferrerUserId = guestUser.id
+        }
+        // Note: If neither partner nor guest code is valid, we silently ignore
+        // This matches the expected behavior from the acceptance criteria
       }
 
       // 8. E4-S6: Validate 70-day requirement for installment plans
@@ -332,9 +409,14 @@ export const bookingRouter = router({
         accommodationPrice,
         addOnsTotal,
         totalPrice,
+        currency, // E4-S13: Store currency for booking
         referredBy: referredByPartnerId || null,
         paymentPlan,
         stripeCustomerId,
+        // Epic 10 - US-007: Store UTM params
+        utmSource,
+        utmMedium,
+        utmCampaign,
       }
 
       // E4-S6: Use transaction wrapper for installment plans to ensure atomicity
@@ -361,11 +443,18 @@ export const bookingRouter = router({
 
       // 16. Create Stripe payment intent (first installment or full amount)
       try {
+        // E4-S11: For financing, use Affirm payment method with card as fallback
+        // Affirm requirements: USD/CAD currency, minimum $50 USD, US/Canada only
+        const paymentMethodTypes = paymentPlan === 'FINANCING' ? ['affirm', 'card'] : undefined
+
         const paymentIntent = await createStripePaymentIntent({
           amount: paymentAmount, // E4-S6: First installment or full amount
           bookingId: booking.id,
           guestEmail,
           guestName,
+          currency: currency.toLowerCase(), // E4-S13: Pass currency to Stripe
+          // E4-S11: Use explicit payment method types for financing
+          ...(paymentMethodTypes && { paymentMethodTypes }),
           // E4-S6: For installment plans, attach customer and save payment method
           ...(paymentPlan === 'INSTALLMENT_4' && stripeCustomerId && {
             customerId: stripeCustomerId,
@@ -380,6 +469,7 @@ export const bookingRouter = router({
             referralCode: referralCode || '',
             paymentPlan, // E4-S6: Store payment plan in metadata
             totalPrice: totalPrice.toString(), // E4-S6: Store total for reference
+            currency, // E4-S13: Store currency in metadata
             ...(paymentPlan === 'INSTALLMENT_4' && {
               installmentNumber: '1',
               installmentOf: '4',
@@ -393,6 +483,7 @@ export const bookingRouter = router({
           data: {
             bookingId: booking.id,
             amount: paymentAmount, // E4-S6: First installment or full amount
+            currency, // E4-S13: Store currency for payment
             status: 'PENDING',
             stripePaymentIntentId: paymentIntent.paymentIntentId,
             stripeCustomerId, // E4-S6: Store customer ID for installment plans
@@ -425,7 +516,113 @@ export const bookingRouter = router({
           })
         }
 
-        // 19. Return client secret and booking info
+        // 19. Epic 10 - US-003: Create guest referral record if applicable
+        if (guestReferrerUserId && guestReferralCode) {
+          try {
+            // Calculate points: 1000 pts for < $15K, 1500 pts for >= $15K
+            const pointsEarned = calculateGuestReferralPoints(totalPrice)
+
+            // Create ReferralEvent with type BOOKING
+            await ctx.db.referralEvent.create({
+              data: {
+                referralCode: guestReferralCode,
+                eventType: ReferralEventType.BOOKING,
+                userId: user.id, // The booking guest's user ID
+              },
+            })
+
+            // Create GuestReferral record with status BOOKED
+            await ctx.db.guestReferral.create({
+              data: {
+                referrerUserId: guestReferrerUserId,
+                referredUserId: user.id,
+                referralCode: guestReferralCode,
+                status: GuestReferralStatus.BOOKED,
+                pointsEarned,
+              },
+            })
+
+            // Update referrer's points balance
+            const updatedReferrer = await ctx.db.user.update({
+              where: { id: guestReferrerUserId },
+              data: {
+                referralPointsBalance: { increment: pointsEarned },
+              },
+              select: {
+                email: true,
+                referralPointsBalance: true,
+              },
+            })
+
+            // Update booking with the referral code
+            await ctx.db.booking.update({
+              where: { id: booking.id },
+              data: { referredBy: guestReferralCode },
+            })
+
+            // Get trip dates for email
+            let tripStartDate: string | undefined
+            let tripEndDate: string | undefined
+            if (tripId) {
+              const trip = await ctx.db.trip.findUnique({
+                where: { id: tripId },
+                select: { startDate: true, endDate: true },
+              })
+              if (trip) {
+                tripStartDate = trip.startDate.toISOString()
+                tripEndDate = trip.endDate.toISOString()
+              }
+            }
+
+            // Send notification email to referrer (non-blocking)
+            if (updatedReferrer.email) {
+              try {
+                const referrerFirstName = updatedReferrer.email.split('@')[0] || 'Friend'
+                const emailContent = generateGuestReferralBookingEmail({
+                  referrerName: referrerFirstName,
+                  referrerEmail: updatedReferrer.email,
+                  guestName: guestName,
+                  guestInitials: `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() || undefined,
+                  bookingReference,
+                  packageName: pkg.name,
+                  tripDates: {
+                    start: tripStartDate || new Date().toISOString(),
+                    end: tripEndDate || new Date().toISOString(),
+                  },
+                  totalValue: totalPrice,
+                  pointsEarned,
+                  newPointsBalance: updatedReferrer.referralPointsBalance,
+                })
+
+                await sendEmail({
+                  to: updatedReferrer.email,
+                  subject: emailContent.subject,
+                  html: emailContent.html,
+                  text: emailContent.text,
+                })
+
+                bookingLogger.info(
+                  `[Guest Referral] Email sent to referrer: ${updatedReferrer.email}, ` +
+                  `code=${guestReferralCode}, points=${pointsEarned}`
+                )
+              } catch (emailError) {
+                // Log but don't fail the booking for email errors
+                logError(emailLogger, emailError, 'Failed to send guest referral booking email')
+              }
+            }
+
+            bookingLogger.info(
+              `[Guest Referral] Booking attribution: code=${guestReferralCode}, ` +
+              `referrerId=${guestReferrerUserId}, bookerId=${user.id}, ` +
+              `points=${pointsEarned}, totalPrice=${totalPrice}`
+            )
+          } catch (referralError) {
+            // Log but don't fail the booking for referral errors
+            logError(bookingLogger, referralError, 'Error processing guest referral at booking')
+          }
+        }
+
+        // 20. Return client secret and booking info
         return {
           clientSecret: paymentIntent.clientSecret,
           bookingId: booking.id,
@@ -435,6 +632,9 @@ export const bookingRouter = router({
           discount,
           paymentPlan, // E4-S6: Payment plan selected
           stripeCustomerId, // E4-S6: Customer ID for installment plans
+          currency, // E4-S13: Currency used for payment
+          // Epic 10: Flag to indicate referral was attributed (cookie should be cleared)
+          referralAttributed: !!(referredByPartnerId || guestReferrerUserId),
         }
       } catch (error) {
         // If Stripe payment intent creation fails, delete the booking

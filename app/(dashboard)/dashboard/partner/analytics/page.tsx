@@ -306,7 +306,7 @@ export default function PartnerAnalyticsPage() {
                       border: '1px solid #e5e7eb',
                       borderRadius: '8px',
                     }}
-                    formatter={(value: number) => `$${(value / 100).toLocaleString()}`}
+                    formatter={(value) => value != null ? `$${(Number(value) / 100).toLocaleString()}` : '$0'}
                   />
                   <Bar dataKey="revenue" fill="#10b981" name="Revenue ($)" radius={[4, 4, 0, 0]} />
                 </BarChart>

@@ -15,6 +15,9 @@ import { headers } from 'next/headers';
 import { verifyWebhookSignature } from '@/lib/stripe/stripe-service';
 import { prisma } from '@/lib/db';
 import { sendBookingConfirmation } from '@/lib/email/sendgrid';
+import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
+import { whatsappLogger, stripeLogger } from '@/lib/logger';
+import { parseAccountUpdatedEvent, parseTransferEvent } from '@/lib/stripe/stripe-connect';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
@@ -100,6 +103,19 @@ export async function POST(req: NextRequest) {
 
       case 'charge.dispute.closed':
         await handleDisputeClosed(event.data.object as Stripe.Dispute);
+        break;
+
+      // E4-S14: Stripe Connect events
+      case 'account.updated':
+        await handleAccountUpdated(event);
+        break;
+
+      case 'transfer.created':
+        await handleTransferCreated(event);
+        break;
+
+      case 'transfer.reversed':
+        await handleTransferReversed(event);
         break;
 
       default:
@@ -268,14 +284,21 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       // Send payment receipt email
       const { sendPaymentReceipt } = await import('@/lib/email/sendgrid');
 
+      // E4-S11: Detect Affirm financing payment method
+      const isAffirmFinancing = paymentIntent.payment_method_types?.includes('affirm') ||
+        paymentIntent.metadata.paymentPlan === 'FINANCING';
+      const paymentMethodDisplay = isAffirmFinancing
+        ? 'Affirm Financing'
+        : paymentIntent.payment_method_types?.[0]
+          ? `${paymentIntent.payment_method_types[0].charAt(0).toUpperCase()}${paymentIntent.payment_method_types[0].slice(1)}`
+          : 'Card';
+
       await sendPaymentReceipt(booking.user.email, {
         firstName: guestFirstName,
         email: booking.user.email,
         receiptNumber: `RCPT-${payment.id.slice(-8).toUpperCase()}`,
         paymentDate: new Date().toISOString(),
-        paymentMethod: paymentIntent.payment_method_types?.[0]
-          ? `${paymentIntent.payment_method_types[0].charAt(0).toUpperCase()}${paymentIntent.payment_method_types[0].slice(1)}`
-          : 'Card',
+        paymentMethod: paymentMethodDisplay,
         bookingReference: bookingId.slice(-8).toUpperCase(),
         packageName: booking.package.name,
         items: [
@@ -379,6 +402,33 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
           }).catch(err => console.error('Failed to send high-value booking alert:', err))
         }
       }
+
+      // Story 11-10: Send WhatsApp group invitation (non-blocking)
+      // Only send if trip has an active WhatsApp group
+      if (booking.trip?.whatsappGroupStatus === 'ACTIVE' && booking.trip?.whatsappGroupInviteLink) {
+        // TODO: Check user notification preferences (whatsappEnabled) when Story 11-12 is implemented
+        // For now, send to all guests who have a phone number on file
+        inviteGuestByBookingId(booking.id)
+          .then((result) => {
+            if (result.success) {
+              whatsappLogger.info(
+                { bookingId: booking.id, messageId: result.messageId },
+                'WhatsApp group invitation sent after booking confirmation'
+              );
+            } else {
+              whatsappLogger.warn(
+                { bookingId: booking.id, error: result.error },
+                'Failed to send WhatsApp group invitation after booking'
+              );
+            }
+          })
+          .catch((err) => {
+            whatsappLogger.error(
+              { bookingId: booking.id, error: err instanceof Error ? err.message : String(err) },
+              'Error sending WhatsApp group invitation'
+            );
+          });
+      }
     }
 
     console.log(`Payment succeeded for booking: ${bookingId}`);
@@ -476,7 +526,6 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
         user: {
           select: {
             id: true,
-            firstName: true,
             email: true,
           },
         },
@@ -496,8 +545,7 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
         trip: true,
         user: {
           select: {
-            firstName: true,
-            lastName: true,
+            email: true,
           },
         },
       },
@@ -546,9 +594,9 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
       const tierProgress = calculateBookingsUntilNextTier(totalBookings, updatedPartner.tier);
 
       await sendPartnerBookingNotification(partner.id, partner.user.id, {
-        partnerName: partner.user.firstName || 'Partner',
+        partnerName: partner.user.email.split('@')[0] || 'Partner',
         partnerEmail: partner.user.email,
-        guestName: `${booking.user.firstName} ${booking.user.lastName}`,
+        guestName: booking.user.email.split('@')[0],
         bookingReference: booking.bookingReference || bookingId.slice(-8).toUpperCase(),
         packageName: booking.package.name,
         tripDates: {
@@ -794,6 +842,134 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
     }
   } catch (error) {
     console.error('Error handling dispute closure:', error);
+    // Don't throw - log error but acknowledge webhook
+  }
+}
+
+// ============================================================================
+// E4-S14: Stripe Connect Event Handlers
+// ============================================================================
+
+/**
+ * Handle account.updated Webhook Event
+ *
+ * Updates partner's Stripe Connect status when their account changes.
+ * This is called when partners complete onboarding steps.
+ */
+async function handleAccountUpdated(event: Stripe.Event) {
+  const accountData = parseAccountUpdatedEvent(event);
+
+  if (!accountData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse account.updated event');
+    return;
+  }
+
+  const { accountId, detailsSubmitted, payoutsEnabled } = accountData;
+
+  try {
+    // Find partner by Stripe Connect account ID
+    const partner = await prisma.partnerProfile.findFirst({
+      where: { stripeConnectAccountId: accountId },
+    });
+
+    if (!partner) {
+      stripeLogger.info(
+        { accountId },
+        'No partner found for Stripe Connect account (may be a non-partner account)'
+      );
+      return;
+    }
+
+    // Update partner's Stripe Connect status
+    await prisma.partnerProfile.update({
+      where: { id: partner.id },
+      data: {
+        stripeConnectOnboardingComplete: detailsSubmitted,
+        stripeConnectPayoutsEnabled: payoutsEnabled,
+      },
+    });
+
+    stripeLogger.info(
+      { partnerId: partner.id, accountId, detailsSubmitted, payoutsEnabled },
+      'Updated partner Stripe Connect status'
+    );
+  } catch (error) {
+    stripeLogger.error(
+      { accountId, error: error instanceof Error ? error.message : String(error) },
+      'Error handling account.updated event'
+    );
+    // Don't throw - log error but acknowledge webhook
+  }
+}
+
+/**
+ * Handle transfer.created Webhook Event
+ *
+ * Logs transfer creation for audit purposes.
+ */
+async function handleTransferCreated(event: Stripe.Event) {
+  const transferData = parseTransferEvent(event);
+
+  if (!transferData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse transfer.created event');
+    return;
+  }
+
+  const { transferId, amount, destination, payoutId } = transferData;
+
+  stripeLogger.info(
+    { transferId, amount, destination, payoutId },
+    'Stripe transfer created'
+  );
+}
+
+/**
+ * Handle transfer.reversed Webhook Event
+ *
+ * Updates PartnerPayout status to FAILED when a transfer is reversed.
+ */
+async function handleTransferReversed(event: Stripe.Event) {
+  const transferData = parseTransferEvent(event);
+
+  if (!transferData) {
+    stripeLogger.warn({ eventType: event.type }, 'Could not parse transfer.reversed event');
+    return;
+  }
+
+  const { transferId, payoutId } = transferData;
+
+  try {
+    // Find payout by Stripe transfer ID
+    const payout = await prisma.partnerPayout.findFirst({
+      where: { stripeTransferId: transferId },
+    });
+
+    if (!payout) {
+      stripeLogger.warn(
+        { transferId, payoutId },
+        'No PartnerPayout found for reversed transfer'
+      );
+      return;
+    }
+
+    // Update payout status to FAILED
+    await prisma.partnerPayout.update({
+      where: { id: payout.id },
+      data: {
+        status: 'FAILED',
+        stripeError: 'Transfer was reversed by Stripe',
+      },
+    });
+
+    stripeLogger.warn(
+      { payoutId: payout.id, transferId },
+      'PartnerPayout marked as FAILED due to transfer reversal'
+    );
+  } catch (error) {
+    stripeLogger.error(
+      { transferId, error: error instanceof Error ? error.message : String(error) },
+      'Error handling transfer.reversed event'
+    );
     // Don't throw - log error but acknowledge webhook
   }
 }

@@ -12,7 +12,7 @@
 
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { Settings, Users, FileCheck, Calendar, Bell, BarChart } from 'lucide-react';
+import { Settings, Users, FileCheck, Calendar, Bell, BarChart, FileText } from 'lucide-react';
 
 export default async function AdminDashboardPage() {
   const user = await currentUser();
@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Quick Access */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <a
           href="/dashboard/admin/documents"
           className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
@@ -212,6 +212,22 @@ export default async function AdminDashboardPage() {
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Analytics Dashboard</h3>
           <p className="text-sm text-gray-600">View comprehensive business analytics</p>
+        </a>
+
+        <a
+          href="/dashboard/admin/cms"
+          className="bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-12 w-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <FileText className="h-6 w-6 text-emerald-600" />
+            </div>
+            <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
+              ACTIVE
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Content Management</h3>
+          <p className="text-sm text-gray-600">Manage website content, pages, and media</p>
         </a>
       </div>
 

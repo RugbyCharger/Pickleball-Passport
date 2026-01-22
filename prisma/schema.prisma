@@ -23,25 +23,25 @@ enum Role {
 }
 
 enum BookingStatus {
-  DRAFT           // User is configuring package
+  DRAFT // User is configuring package
   PENDING_PAYMENT // Booking created, awaiting payment
-  CONFIRMED       // Payment received, booking confirmed
-  CANCELLED       // Booking cancelled
-  COMPLETED       // Trip completed
+  CONFIRMED // Payment received, booking confirmed
+  CANCELLED // Booking cancelled
+  COMPLETED // Trip completed
 }
 
 enum PaymentStatus {
-  PENDING   // Payment not yet processed
+  PENDING // Payment not yet processed
   SUCCEEDED // Payment successful
-  FAILED    // Payment failed
-  REFUNDED  // Payment refunded
+  FAILED // Payment failed
+  REFUNDED // Payment refunded
 }
 
 enum ApplicationStatus {
   SUBMITTED // Application submitted by guest
   REVIEWING // Admin is reviewing
-  APPROVED  // Application approved
-  REJECTED  // Application rejected
+  APPROVED // Application approved
+  REJECTED // Application rejected
 }
 
 enum PartnerTier {
@@ -94,6 +94,22 @@ enum TicketPriority {
   URGENT
 }
 
+enum TicketCategory {
+  GENERAL_INQUIRY
+  BOOKING_QUESTION
+  MEDICAL_WELLNESS_QUESTION
+  PAYMENT_ISSUE
+  PARTNERSHIP_INQUIRY
+  OTHER
+}
+
+enum TicketSource {
+  WEBSITE_CONTACT
+  GUEST_DASHBOARD
+  ADMIN_CREATED
+  EMAIL
+}
+
 enum ForumCategory {
   BEST_PRACTICES
   SUCCESS_STORIES
@@ -125,11 +141,32 @@ enum SubscriberStatus {
   BOUNCED
 }
 
+enum WhatsAppGroupStatus {
+  PENDING // Group not yet created
+  ACTIVE // Group is active and accepting members
+  ARCHIVED // Trip completed, group archived
+}
+
 enum GiftStatus {
-  PENDING   // Payment complete, waiting to send notification
-  SENT      // Gift notification email sent to recipient
-  ACCEPTED  // Recipient accepted gift, booking transferred
-  DECLINED  // Recipient declined gift, refund processed
+  PENDING // Payment complete, waiting to send notification
+  SENT // Gift notification email sent to recipient
+  ACCEPTED // Recipient accepted gift, booking transferred
+  DECLINED // Recipient declined gift, refund processed
+}
+
+// Guest Referral System (Epic 10)
+enum GuestReferralStatus {
+  CLICKED // Referral link was clicked
+  APPLIED // Referred person submitted application
+  BOOKED // Referred person completed booking
+  COMPLETED // Referred person completed their trip
+}
+
+enum ReferralEventType {
+  CLICK // Link clicked
+  APPLICATION // Application submitted
+  BOOKING // Booking completed
+  COMPLETION // Trip completed
 }
 
 // Gift State Machine (GS-001)
@@ -155,15 +192,15 @@ enum TaskStatus {
 }
 
 enum PaymentPlan {
-  FULL          // Pay in full (2% discount)
+  FULL // Pay in full (2% discount)
   INSTALLMENT_4 // 4 payments (50%, 25%, 15%, 10%)
-  FINANCING     // Affirm financing (future)
+  FINANCING // Affirm financing (future)
 }
 
 enum PaymentRecordStatus {
-  PAID    // Payment completed successfully
+  PAID // Payment completed successfully
   PENDING // Payment scheduled but not yet processed
-  FAILED  // Payment attempt failed
+  FAILED // Payment attempt failed
 }
 
 // ============================================================================
@@ -180,6 +217,16 @@ model User {
   // Stripe Integration (E4-S6)
   stripeCustomerId String? // Stripe customer ID for installment plans
 
+  // Guest Referral System (Epic 10)
+  referralCode          String? @unique // Format: FIRSTNAME-YEAR (e.g., SUSAN-2026)
+  referralPointsBalance Int     @default(0) // Points earned from guest referrals
+
+  // Notification Preferences (E11-S12)
+  notificationPreferences    Json?     @default("{\"emailPreTripSequence\":true,\"emailPostTripFollowUp\":true,\"emailAlumniEvents\":true,\"emailMarketing\":false,\"emailNewsletter\":false,\"smsEnabled\":true,\"inAppEnabled\":true,\"whatsappEnabled\":true}")
+  preferenceEmailToken       String?   @unique
+  preferenceEmailTokenExpiry DateTime?
+  preferenceUpdatedAt        DateTime?
+
   // Relationships
   guestProfile   GuestProfile?
   partnerProfile PartnerProfile?
@@ -187,10 +234,22 @@ model User {
   bookings       Booking[]
   notifications  Notification[]
   testimonials   Testimonial[]
+  guestTestimonials GuestTestimonial[] @relation("GuestTestimonials")
+
+  // Guest Referral Relationships (Epic 10)
+  referralsMade    GuestReferral[] @relation("ReferrerUser") // Referrals this user made
+  referralReceived GuestReferral?  @relation("ReferredUser") // How this user was referred (if any)
+
+  // Support System (E1-S12)
+  supportTickets       SupportTicket[] // Tickets created by this user
+  assignedTickets      SupportTicket[]      @relation("AssignedTickets") // Tickets assigned to admin
+  supportTicketReplies SupportTicketReply[] // Replies from this user
 
   @@index([email])
   @@index([role])
   @@index([stripeCustomerId])
+  @@index([preferenceEmailToken])
+  @@index([referralCode])
 }
 
 // ============================================================================
@@ -198,9 +257,9 @@ model User {
 // ============================================================================
 
 model GuestProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Personal Information
   firstName String
@@ -238,9 +297,9 @@ model GuestProfile {
 // ============================================================================
 
 model PartnerProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Club Information
   clubName     String
@@ -248,26 +307,42 @@ model PartnerProfile {
   jobTitle     String?
 
   // Partner Program
-  referralCode  String        @unique // e.g., "VILLAGES-JEN-2025"
-  tier          PartnerTier   @default(BRONZE)
-  passportPoints Int          @default(0)
-  onboardingCompleted Boolean @default(false) // E9-S14: Onboarding wizard
+  referralCode        String      @unique // e.g., "VILLAGES-JEN-2025"
+  tier                PartnerTier @default(BRONZE)
+  passportPoints      Int         @default(0)
+  onboardingCompleted Boolean     @default(false) // E9-S14: Onboarding wizard
+
+  // Referral Tracking (Epic 10)
+  referralCodeClickCount Int @default(0) // Track total clicks on this partner's referral code
 
   // Notification Preferences (E11-S9)
   notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
 
+  // E4-S14: Stripe Connect for Partner Payouts
+  stripeConnectAccountId          String?  // Stripe Connect account ID (acct_xxx)
+  stripeConnectOnboardingComplete Boolean  @default(false) // Has completed Stripe onboarding
+  stripeConnectAccountType        String?  // "express" or "standard"
+  stripeConnectPayoutsEnabled     Boolean  @default(false) // Can receive payouts
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Leaderboard Settings (E9-S19)
+  showOnLeaderboard Boolean @default(true) // Partners can opt-out of leaderboard
+
   // Relationships
-  referrals PartnerReferral[]
-  landingPages PartnerLandingPage[]
-  payouts PartnerPayout[]
-  payoutMethod PartnerPayoutMethod?
-  forumThreads ForumThread[]
-  forumReplies ForumReply[]
-  forumLikes ForumLike[]
-  forumReplyLikes ForumReplyLike[]
+  referrals          PartnerReferral[]
+  landingPages       PartnerLandingPage[]
+  payouts            PartnerPayout[]
+  payoutMethod       PartnerPayoutMethod?
+  forumThreads       ForumThread[]
+  forumReplies       ForumReply[]
+  forumLikes         ForumLike[]
+  forumReplyLikes    ForumReplyLike[]
+  agreements         PartnerAgreement[] // E9-S15
+  supportTickets     PartnerSupportTicket[] // E9-S16
+  eventRegistrations PartnerEventRegistration[] // E9-S17
+  testimonials       PartnerTestimonial[] // E9-S18
 
   @@index([userId])
   @@index([referralCode])
@@ -279,11 +354,19 @@ model PartnerProfile {
 // ============================================================================
 
 model Package {
-  id          String   @id @default(cuid())
-  slug        String   @unique // URL-friendly name
-  name        String   // e.g., "Pure Play", "Smile Makeover"
+  id          String  @id @default(cuid())
+  slug        String  @unique // URL-friendly name
+  name        String // e.g., "Pure Play", "Smile Makeover"
   tagline     String?
-  description String   @db.Text // Markdown content
+  description String  @db.Text // Markdown content
+
+  // CMS Rich Text Content (Epic 12-2)
+  cmsDescription     Json?   // TipTap JSON content for rich description
+  cmsPricingText     String? @db.Text // Custom pricing display text
+  cmsDurationText    String? @db.Text // Custom duration options text
+  cmsHighlights      Json?   // Array of highlight items
+  cmsIncludedItems   Json?   // What's included list
+  cmsNotIncludedItems Json?  // What's not included list
 
   // Pricing
   basePrice Int // Base price in USD cents (e.g., 1500000 = $15,000)
@@ -304,15 +387,18 @@ model Package {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookings    Booking[]
-  itineraries Itinerary[]
+  bookings            Booking[]
+  itineraries         Itinerary[]
+  contentBlocks       ContentBlock[]    // CMS content blocks linked to this package
+  contentVersions     PackageContentVersion[] // Audit log of content changes
+  itineraryTemplates  ItineraryTemplate[]
 
   @@index([slug])
   @@index([isActive])
 }
 
 model Itinerary {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   packageId String
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
 
@@ -329,9 +415,9 @@ model Itinerary {
 }
 
 model Trip {
-  id          String   @id @default(cuid())
-  name        String   // e.g., "Phuket January 2026"
-  destination String   // Thailand location
+  id          String @id @default(cuid())
+  name        String // e.g., "Phuket January 2026"
+  destination String // Thailand location
 
   // Dates
   startDate DateTime
@@ -344,6 +430,13 @@ model Trip {
   // Status
   isActive Boolean @default(true)
 
+  // WhatsApp Group (E11-S10)
+  whatsappGroupId          String?             @unique // External WhatsApp group ID
+  whatsappGroupInviteLink  String? // https://chat.whatsapp.com/{inviteCode}
+  whatsappGroupCreatedAt   DateTime? // When group was created
+  whatsappGroupStatus      WhatsAppGroupStatus @default(PENDING)
+  whatsappGroupMemberCount Int                 @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -353,6 +446,7 @@ model Trip {
   @@index([startDate])
   @@index([isActive])
   @@index([isActive, startDate, currentBookings]) // Composite index for getAvailable query
+  @@index([whatsappGroupStatus])
 }
 
 // ============================================================================
@@ -360,29 +454,35 @@ model Trip {
 // ============================================================================
 
 model Booking {
-  id               String        @id @default(cuid())
-  bookingReference String        @unique // PBP-{YEAR}-{6-DIGIT}
+  id               String  @id @default(cuid())
+  bookingReference String  @unique // PBP-{YEAR}-{6-DIGIT}
   userId           String
-  user             User          @relation(fields: [userId], references: [id])
+  user             User    @relation(fields: [userId], references: [id])
   packageId        String
-  package          Package       @relation(fields: [packageId], references: [id])
+  package          Package @relation(fields: [packageId], references: [id])
   tripId           String?
-  trip             Trip?         @relation(fields: [tripId], references: [id])
+  trip             Trip?   @relation(fields: [tripId], references: [id])
 
   status BookingStatus @default(DRAFT)
 
   // Configuration
-  duration           Int    // Days selected (7, 10, 14, 21)
-  accommodationTier  String // Luxury, Ultra-Luxury, Villa
+  duration          Int // Days selected (7, 10, 14, 21)
+  accommodationTier String // Luxury, Ultra-Luxury, Villa
 
   // Pricing
   basePrice          Int // Snapshot of package base price
   accommodationPrice Int // Additional cost for tier
   addOnsTotal        Int // Sum of all add-ons
   totalPrice         Int // Final total price in cents
+  currency           String @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
 
   // Referral
   referredBy String? // Partner referral code
+
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
 
   // Payment Plan (E4-S6)
   paymentPlan      PaymentPlan @default(FULL)
@@ -391,7 +491,7 @@ model Booking {
   // Rescheduling
   rescheduleCount Int       @default(0) // Track number of reschedules (max: 1)
   rescheduledAt   DateTime? // Last reschedule timestamp
-  originalTripId  String?   // Original trip before reschedule (audit trail)
+  originalTripId  String? // Original trip before reschedule (audit trail)
 
   // Companion Booking (E3-S17)
   isCompanionBooking  Boolean @default(false) // True if this is a companion booking
@@ -427,6 +527,12 @@ model Booking {
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
 
+  // E11-S10: WhatsApp Group Integration
+  whatsappInvitationSentAt DateTime? // When WhatsApp invitation was sent
+  whatsappGroupJoinedAt    DateTime? // When guest clicked join link
+  whatsappInvitationStatus String?   @default("pending") // pending, sent, joined, failed
+  whatsappMilestonesSent   Json? // Tracks sent milestones: { "60_DAYS": true, "30_DAYS": true, ... }
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -438,6 +544,7 @@ model Booking {
   referral             PartnerReferral?
   reminderHistory      ReminderHistory[]
   tasks                Task[]
+  supportTickets       SupportTicket[] // E1-S12: Support tickets linked to this booking
   giftStateTransitions GiftStateTransition[] // GS-001: Gift state audit trail
 
   // Companion booking relationships
@@ -455,6 +562,8 @@ model Booking {
   @@index([giftStatus])
   @@index([giftDeliveryDate])
   @@index([giftExpiresAt]) // GS-001: For expiration cron queries
+  @@index([whatsappInvitationStatus])
+  @@index([utmSource])
 }
 
 model AddOn {
@@ -481,14 +590,14 @@ model AddOn {
 }
 
 model BookingAddOn {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   addOnId   String
   addOn     AddOn   @relation(fields: [addOnId], references: [id])
 
-  quantity Int     @default(1) // For things like veneers (multiple teeth)
-  price    Int     // Snapshot of price at booking time
+  quantity Int @default(1) // For things like veneers (multiple teeth)
+  price    Int // Snapshot of price at booking time
 
   createdAt DateTime @default(now())
 
@@ -502,32 +611,33 @@ model BookingAddOn {
 // ============================================================================
 
 model Payment {
-  id        String        @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  amount Int // Amount in cents
-  status PaymentStatus @default(PENDING)
+  amount   Int // Amount in cents
+  currency String        @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
+  status   PaymentStatus @default(PENDING)
 
   // Stripe Integration
   stripePaymentIntentId String? @unique
   stripeCustomerId      String?
 
   // Installment Plan
-  isInstallment   Boolean   @default(false)
-  installmentNumber Int?    // 1 of 4, 2 of 4, etc.
-  scheduledDate   DateTime? // When installment is due
+  isInstallment     Boolean   @default(false)
+  installmentNumber Int? // 1 of 4, 2 of 4, etc.
+  scheduledDate     DateTime? // When installment is due
 
   // Metadata
   failureReason String? // Error message if payment failed
 
   // Receipt Generation (E4-S8)
-  receiptUrl         String?   // Supabase Storage URL
+  receiptUrl         String? // Supabase Storage URL
   receiptNumber      String?   @unique // Format: RCPT-YYYYMMDD-XXXXX
   receiptGeneratedAt DateTime? // When PDF was generated
 
   // Refund Tracking (E4-S4, E4-S9)
-  refundedAmount Int?    // Amount refunded in cents
+  refundedAmount Int? // Amount refunded in cents
   stripeRefundId String? // Stripe refund ID (re_...)
 
   // Relations
@@ -547,30 +657,31 @@ model Payment {
 // ============================================================================
 
 model PaymentRecord {
-  id        String              @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   // Amount and Status
-  amountCents Int                 // Payment amount in cents
+  amountCents Int // Payment amount in cents
+  currency    String              @default("USD") // E4-S13: Currency code (USD, EUR, GBP, CAD, AUD)
   status      PaymentRecordStatus @default(PENDING)
 
   // Installment Details
-  dueDate            DateTime  // When this payment is due
-  paidDate           DateTime? // When payment was completed
-  percentage         Int?      // Percentage of total (50, 25, 15, 10)
-  installmentNumber  Int?      // Which installment (1, 2, 3, 4)
+  dueDate           DateTime // When this payment is due
+  paidDate          DateTime? // When payment was completed
+  percentage        Int? // Percentage of total (50, 25, 15, 10)
+  installmentNumber Int? // Which installment (1, 2, 3, 4)
 
   // Stripe Integration
   stripePaymentIntentId String? @unique // Stripe payment intent for this installment
 
   // E4-S6 Phase 8: Retry Logic
-  retryCount     Int      @default(0)  // Track retry attempts (0-3)
-  lastAttemptAt  DateTime?             // When last charge was attempted
-  failureReason  String?               // Stripe error message for debugging
+  retryCount    Int       @default(0) // Track retry attempts (0-3)
+  lastAttemptAt DateTime? // When last charge was attempted
+  failureReason String? // Stripe error message for debugging
 
   // E4-S8: Payment Reminders
-  reminderSentAt DateTime?             // When 7-day reminder was sent
+  reminderSentAt DateTime? // When 7-day reminder was sent
 
   // Metadata
   createdAt DateTime @default(now())
@@ -588,9 +699,9 @@ model PaymentRecord {
 // ============================================================================
 
 model Application {
-  id     String            @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
-  user   User              @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   status ApplicationStatus @default(SUBMITTED)
 
@@ -610,13 +721,21 @@ model Application {
   interests String[] // dental, cosmetic, wellness, spiritual, pure_play
 
   // Step 4: Travel Preferences
-  preferredDuration  String   // 7, 10, 14, 21 days
-  preferredDates     String?  // Rough timeframe
-  travelingAlone     Boolean
-  budgetRange        String?  // e.g., "$10-15K"
+  preferredDuration String // 7, 10, 14, 21 days
+  preferredDates    String? // Rough timeframe
+  travelingAlone    Boolean
+  budgetRange       String? // e.g., "$10-15K"
 
   // Step 5: Discovery
   referralSource String // How did you hear about us?
+
+  // Guest Referral Attribution (Epic 10)
+  referralCode String? // Referral code used when submitting application (from cookie)
+
+  // UTM Tracking (Epic 10 - US-007)
+  utmSource   String? // UTM source parameter
+  utmMedium   String? // UTM medium parameter
+  utmCampaign String? // UTM campaign parameter
 
   // Admin Notes
   adminNotes String? @db.Text
@@ -627,6 +746,8 @@ model Application {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([referralCode])
+  @@index([utmSource])
 }
 
 // ============================================================================
@@ -639,11 +760,11 @@ model Testimonial {
   user   User   @relation(fields: [userId], references: [id])
 
   // Guest Info (snapshot for display)
-  guestName    String
-  guestAge     Int?
+  guestName     String
+  guestAge      Int?
   guestLocation String?
-  packageType  String // Which package they booked
-  tripDate     DateTime?
+  packageType   String // Which package they booked
+  tripDate      DateTime?
 
   // Video (Mux integration)
   muxAssetId    String? @unique
@@ -654,9 +775,9 @@ model Testimonial {
   quote String? @db.Text
 
   // Metadata
-  isFeatured Boolean  @default(false)
-  isApproved Boolean  @default(false)
-  viewCount  Int      @default(0)
+  isFeatured Boolean @default(false)
+  isApproved Boolean @default(false)
+  viewCount  Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -671,7 +792,7 @@ model Testimonial {
 // ============================================================================
 
 model PartnerReferral {
-  id        String @id @default(cuid())
+  id        String         @id @default(cuid())
   partnerId String
   partner   PartnerProfile @relation(fields: [partnerId], references: [id])
   bookingId String         @unique
@@ -692,33 +813,33 @@ model PartnerReferral {
 
 // E9-S8: Co-Branded Landing Pages
 model PartnerLandingPage {
-  id          String   @id @default(cuid())
-  partnerId   String
-  partner     PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Basic Info
   name        String
-  slug        String   @unique
-  isPublished Boolean  @default(false)
-  
+  slug        String  @unique
+  isPublished Boolean @default(false)
+
   // Branding
-  clubLogoUrl String?
-  primaryColor String?  @default("#003D5C")
+  clubLogoUrl    String?
+  primaryColor   String? @default("#003D5C")
   secondaryColor String? @default("#D4AF37")
-  
+
   // Content
   headline    String?
   subheadline String?
   clubContact String?
-  
+
   // Analytics
-  viewCount     Int @default(0)
-  clickCount    Int @default(0)
+  viewCount       Int @default(0)
+  clickCount      Int @default(0)
   conversionCount Int @default(0)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@index([partnerId])
   @@index([slug])
 }
@@ -733,73 +854,80 @@ enum PayoutStatus {
 }
 
 model PartnerPayout {
-  id            String       @id @default(cuid())
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Payout Details
-  pointsRedeemed Int         // Points converted to cash
-  amountInCents  Int         // Amount in cents ($0.80/point)
-  
+  pointsRedeemed Int // Points converted to cash
+  amountInCents  Int // Amount in cents ($0.80/point)
+
   // Status
-  status        PayoutStatus @default(PENDING)
-  
-  // Bank Account (masked for display)
+  status PayoutStatus @default(PENDING)
+
+  // Bank Account (masked for display) - Legacy manual payout
   bankAccountLast4 String?
-  
+
+  // E4-S14: Stripe Connect Payout Fields
+  stripeTransferId String? // Transfer ID from platform to connected account (tr_xxx)
+  stripePayoutId   String? // Payout ID from connected account to bank (po_xxx)
+  payoutMethod     String  @default("manual") // "manual" or "stripe_connect"
+  stripeError      String? // Last Stripe error message if failed
+
   // Processing
-  requestedAt   DateTime     @default(now())
+  requestedAt   DateTime  @default(now())
   processedAt   DateTime?
-  transactionId String?      // External transaction ID
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  transactionId String? // External transaction ID (legacy)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([partnerId])
   @@index([status])
+  @@index([stripeTransferId])
 }
 
 model PartnerPayoutMethod {
-  id            String   @id @default(cuid())
-  partnerId     String   @unique
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String         @unique
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Bank Account (encrypted storage in production)
   bankName      String
-  accountNumber String   // TODO: Encrypt in production
-  routingNumber String   // TODO: Encrypt in production
-  
+  accountNumber String // TODO: Encrypt in production
+  routingNumber String // TODO: Encrypt in production
+
   // Display
-  accountLast4  String   // Last 4 digits for display
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  accountLast4 String // Last 4 digits for display
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // E9-S13: Directors Circle (Community Forum)
 model ForumThread {
-  id            String       @id @default(cuid())
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-  
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
   // Thread Content
-  title         String
-  category      ForumCategory
-  content       String       @db.Text
-  
+  title    String
+  category ForumCategory
+  content  String        @db.Text
+
   // Metadata
-  replyCount    Int          @default(0)
-  likeCount     Int          @default(0)
-  isPinned      Boolean      @default(false)
-  isAnnouncement Boolean     @default(false)
-  
+  replyCount     Int     @default(0)
+  likeCount      Int     @default(0)
+  isPinned       Boolean @default(false)
+  isAnnouncement Boolean @default(false)
+
   // Relationships
-  replies       ForumReply[]
-  likes         ForumLike[]
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  replies ForumReply[]
+  likes   ForumLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([partnerId])
   @@index([category])
   @@index([createdAt])
@@ -807,49 +935,49 @@ model ForumThread {
 }
 
 model ForumReply {
-  id            String       @id @default(cuid())
-  threadId      String
-  thread        ForumThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  content       String       @db.Text
-  
-  likeCount     Int          @default(0)
-  
+  id        String         @id @default(cuid())
+  threadId  String
+  thread    ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  content String @db.Text
+
+  likeCount Int @default(0)
+
   // Relationships
-  likes         ForumReplyLike[]
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
+  likes ForumReplyLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([threadId])
   @@index([partnerId])
 }
 
 model ForumLike {
-  id            String       @id @default(cuid())
-  threadId      String
-  thread        ForumThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  createdAt     DateTime     @default(now())
-  
+  id        String         @id @default(cuid())
+  threadId  String
+  thread    ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+
   @@unique([threadId, partnerId])
   @@index([threadId])
   @@index([partnerId])
 }
 
 model ForumReplyLike {
-  id            String       @id @default(cuid())
-  replyId       String
-  reply         ForumReply   @relation(fields: [replyId], references: [id], onDelete: Cascade)
-  partnerId     String
-  partner       PartnerProfile @relation(fields: [partnerId], references: [id])
-  
-  createdAt     DateTime     @default(now())
-  
+  id        String         @id @default(cuid())
+  replyId   String
+  reply     ForumReply     @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+
   @@unique([replyId, partnerId])
   @@index([replyId])
   @@index([partnerId])
@@ -860,9 +988,9 @@ model ForumReplyLike {
 // ============================================================================
 
 model Notification {
-  id     String           @id @default(cuid())
+  id     String @id @default(cuid())
   userId String
-  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   type    NotificationType
   title   String
@@ -883,13 +1011,13 @@ model Notification {
 }
 
 model ReminderHistory {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   reminderType String // "30_DAY", "7_DAY", "1_DAY"
   sentAt       DateTime @default(now())
-  sentBy       String   // Admin user ID who triggered it
+  sentBy       String // Admin user ID who triggered it
 
   @@index([bookingId])
   @@index([reminderType])
@@ -902,18 +1030,18 @@ model ReminderHistory {
 
 model Document {
   id         String         @id @default(cuid())
-  userId     String         // Clerk user ID
-  bookingId  String?        // Optional link to booking
+  userId     String // Clerk user ID
+  bookingId  String? // Optional link to booking
   type       DocumentType
   fileName   String
-  fileUrl    String         // Supabase Storage URL
-  fileSize   Int            // Bytes
+  fileUrl    String // Supabase Storage URL
+  fileSize   Int // Bytes
   mimeType   String
   status     DocumentStatus @default(PENDING_REVIEW)
   uploadedAt DateTime       @default(now())
   reviewedAt DateTime?
-  reviewedBy String?        // Admin user ID
-  notes      String?        // Admin notes
+  reviewedBy String? // Admin user ID
+  notes      String? // Admin notes
 
   booking Booking? @relation(fields: [bookingId], references: [id])
 
@@ -928,17 +1056,93 @@ model Document {
 // ============================================================================
 
 model SupportTicket {
-  id        String         @id @default(cuid())
-  userId    String
-  subject   String
-  message   String         @db.Text
-  status    TicketStatus   @default(OPEN)
-  priority  TicketPriority @default(NORMAL)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id              String @id @default(cuid())
+  referenceNumber String @unique // Format: TKT-{nanoid(8)}
+
+  // Ticket Content
+  subject String
+  message String @db.Text
+
+  // Classification
+  category TicketCategory @default(GENERAL_INQUIRY)
+  source   TicketSource   @default(WEBSITE_CONTACT)
+  status   TicketStatus   @default(OPEN)
+  priority TicketPriority @default(NORMAL)
+
+  // Contact Information (email required, others optional for public submissions)
+  email String
+  name  String?
+  phone String?
+
+  // Optional User Relations
+  userId String? // Null for public/unauthenticated submissions
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Optional Booking Relation
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  // Assignment (admin handling the ticket)
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  // Resolution
+  resolvedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  replies     SupportTicketReply[]
+  attachments SupportTicketAttachment[]
 
   @@index([userId])
+  @@index([assignedToId])
+  @@index([bookingId])
   @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([source])
+  @@index([email])
+  @@index([referenceNumber])
+  @@index([createdAt])
+}
+
+model SupportTicketReply {
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // Reply author (can be guest user or admin)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Reply content
+  message      String  @db.Text
+  isAdminReply Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SupportTicketAttachment {
+  id       String        @id @default(cuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // File information
+  fileName String
+  fileUrl  String // Supabase Storage URL
+  fileSize Int // Bytes
+  mimeType String
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
   @@index([createdAt])
 }
 
@@ -953,7 +1157,7 @@ model Message {
   name    String
   email   String
   phone   String?
-  message String @db.Text
+  message String  @db.Text
 
   // Status
   isRead    Boolean   @default(false)
@@ -972,7 +1176,7 @@ model Message {
 model WebhookEvent {
   id            String   @id @default(cuid())
   stripeEventId String   @unique // Stripe event ID (evt_...)
-  type          String   // Event type (charge.refunded, etc.)
+  type          String // Event type (charge.refunded, etc.)
   processed     Boolean  @default(true)
   processedAt   DateTime @default(now())
   createdAt     DateTime @default(now())
@@ -990,11 +1194,11 @@ model RefundLog {
   id             String   @id @default(cuid())
   paymentId      String
   payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  amount         Int      // Refund amount in cents
+  amount         Int // Refund amount in cents
   stripeRefundId String   @unique // Stripe refund ID (re_...)
-  reason         String   // RefundReason enum value
-  notes          String?  // Admin notes (optional)
-  processedBy    String   // Admin user ID (Clerk ID)
+  reason         String // RefundReason enum value
+  notes          String? // Admin notes (optional)
+  processedBy    String // Admin user ID (Clerk ID)
   processedAt    DateTime @default(now())
 
   @@index([paymentId])
@@ -1040,8 +1244,8 @@ model Task {
   // Relations
   bookingId        String?
   booking          Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  assignedToUserId String?  // User ID who is assigned this task
-  createdByUserId  String   // User ID who created this task (admin)
+  assignedToUserId String? // User ID who is assigned this task
+  createdByUserId  String // User ID who created this task (admin)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1061,10 +1265,10 @@ model Task {
 model NewsletterSubscriber {
   id             String           @id @default(cuid())
   email          String           @unique
-  firstName      String?          // Optional for single-opt-in
+  firstName      String? // Optional for single-opt-in
   status         SubscriberStatus @default(PENDING)
   confirmToken   String?          @unique // For double opt-in confirmation
-  confirmedAt    DateTime?        // When user confirmed subscription
+  confirmedAt    DateTime? // When user confirmed subscription
   subscribedAt   DateTime         @default(now())
   unsubscribedAt DateTime?
   createdAt      DateTime         @default(now())
@@ -1073,4 +1277,1213 @@ model NewsletterSubscriber {
   @@index([email])
   @@index([status])
   @@index([confirmToken])
+}
+
+// ============================================================================
+// EMAIL TEMPLATE MANAGEMENT (E11-S11)
+// ============================================================================
+
+enum EmailTemplateCategory {
+  TRANSACTIONAL // Booking, payment, account
+  MARKETING // Pre-trip, post-trip, promotions
+  NOTIFICATIONS // Admin alerts, partner notifications
+  SYSTEM // Welcome, verification, password reset
+}
+
+enum EmailTemplateStatus {
+  DRAFT // In progress, not live
+  ACTIVE // Published and in use
+  ARCHIVED // No longer in use
+}
+
+model EmailTemplate {
+  id          String                @id @default(cuid())
+  name        String // "Booking Confirmation Email"
+  slug        String                @unique // "booking-confirmation"
+  description String? // "Sent after guest completes booking"
+  category    EmailTemplateCategory
+  status      EmailTemplateStatus   @default(DRAFT)
+
+  // Content
+  subjectLine   String // "Your Pickleball Passport Booking Confirmed!"
+  preheaderText String? // Preview text shown in inbox
+  htmlContent   String  @db.Text // Full HTML content
+  textContent   String  @db.Text // Plain text version
+  variables     Json // ["guestName", "bookingReference", "tripName"]
+
+  // Visual Editor (E12-S8)
+  useVisualEditor Boolean @default(false) // Toggle between visual/code editor
+  visualBlocks    Json? // Array of visual block definitions
+  // Block schema: [{ id, type, order, content, settings }]
+  // Types: HEADER, TEXT, IMAGE, BUTTON, DIVIDER, FOOTER
+
+  // Branding - Base template inheritance
+  baseTemplateId String?
+  baseTemplate   EmailTemplate?  @relation("TemplateToBase", fields: [baseTemplateId], references: [id])
+  childTemplates EmailTemplate[] @relation("TemplateToBase")
+
+  // Metadata
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  versions  EmailTemplateVersion[]
+  analytics EmailTemplateAnalytics?
+  campaigns EmailCampaign[]        // E13-S8: Campaign analytics
+
+  @@index([category])
+  @@index([status])
+  @@index([slug])
+}
+
+model EmailTemplateVersion {
+  id         String        @id @default(cuid())
+  templateId String
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  versionNumber  Int // 1, 2, 3...
+  content        Json // Snapshot of template at this version
+  changesSummary String? // What changed in this version
+  createdBy      String
+  createdAt      DateTime @default(now())
+
+  @@unique([templateId, versionNumber])
+  @@index([templateId])
+}
+
+model EmailTemplateAnalytics {
+  id         String        @id @default(cuid())
+  templateId String        @unique
+  template   EmailTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  // Metrics (last 30 days)
+  sentCount        Int @default(0)
+  openCount        Int @default(0)
+  clickCount       Int @default(0)
+  bounceCount      Int @default(0)
+  unsubscribeCount Int @default(0)
+
+  // Calculated rates
+  openRate        Float? // openCount / sentCount
+  clickRate       Float? // clickCount / sentCount
+  bounceRate      Float? // bounceCount / sentCount
+  unsubscribeRate Float? // unsubscribeCount / sentCount
+
+  lastUpdatedAt DateTime @updatedAt
+
+  @@index([templateId])
+}
+
+// ============================================================================
+// PARTNER PORTAL COMPLETION (Epic 9)
+// ============================================================================
+
+// Partner Event Types
+enum PartnerEventType {
+  WEBINAR
+  MEETUP
+  TRAINING
+  SUMMIT
+}
+
+// Partner Support Ticket Status (separate from guest support)
+enum PartnerTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+// Partner Support Ticket Priority
+enum PartnerTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// E9-S15: Partner Agreement E-Signature
+model PartnerAgreement {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Agreement Details
+  version     String // e.g., "1.0", "2.0"
+  signedAt    DateTime
+  ipAddress   String // IP address at time of signing
+  signature   String   @db.Text // Base64-encoded signature image
+  documentUrl String? // URL to the agreement document
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([version])
+}
+
+// E9-S16: Partner Support Ticket
+model PartnerSupportTicket {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Ticket Content
+  subject     String
+  description String @db.Text
+
+  // Classification
+  status   PartnerTicketStatus   @default(OPEN)
+  priority PartnerTicketPriority @default(MEDIUM)
+
+  // Resolution
+  resolvedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  replies PartnerSupportReply[]
+
+  @@index([partnerId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+// E9-S16: Partner Support Ticket Reply
+model PartnerSupportReply {
+  id       String               @id @default(cuid())
+  ticketId String
+  ticket   PartnerSupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  // Reply author
+  userId  String // User ID (can be partner or admin)
+  message String  @db.Text
+  isStaff Boolean @default(false) // True if reply is from staff
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// E9-S17: Partner Event
+model PartnerEvent {
+  id String @id @default(cuid())
+
+  // Event Details
+  title           String
+  description     String           @db.Text
+  eventType       PartnerEventType
+  startDate       DateTime
+  endDate         DateTime
+  location        String? // Physical location or null if virtual
+  isVirtual       Boolean          @default(false)
+  registrationUrl String? // External registration URL if applicable
+  maxAttendees    Int? // Null means unlimited
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  registrations PartnerEventRegistration[]
+
+  @@index([eventType])
+  @@index([startDate])
+  @@index([isActive])
+}
+
+// E9-S17: Partner Event Registration
+model PartnerEventRegistration {
+  id        String         @id @default(cuid())
+  eventId   String
+  event     PartnerEvent   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Registration Details
+  registeredAt DateTime  @default(now())
+  attendedAt   DateTime? // Marked when partner attends
+
+  @@unique([eventId, partnerId]) // Partner can only register once per event
+  @@index([eventId])
+  @@index([partnerId])
+}
+
+// E9-S18: Partner Testimonial
+model PartnerTestimonial {
+  id        String         @id @default(cuid())
+  partnerId String
+  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  // Testimonial Content
+  content String @db.Text // Max 500 chars enforced at application level
+  rating  Int // 1-5 star rating
+
+  // Status
+  isApproved Boolean   @default(false)
+  isFeatured Boolean   @default(false)
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([isApproved])
+  @@index([isFeatured])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// GUEST REFERRAL SYSTEM (Epic 10)
+// ============================================================================
+
+model GuestReferral {
+  id             String              @id @default(cuid())
+  referrerUserId String // User who made the referral (alumni guest)
+  referrerUser   User                @relation("ReferrerUser", fields: [referrerUserId], references: [id], onDelete: Cascade)
+  referredUserId String              @unique // New guest who was referred
+  referredUser   User                @relation("ReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  referralCode   String // Code used for this referral
+  status         GuestReferralStatus @default(CLICKED)
+  pointsEarned   Int                 @default(0) // Total points earned from this referral
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([referrerUserId])
+  @@index([referredUserId])
+  @@index([referralCode])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ReferralEvent {
+  id           String            @id @default(cuid())
+  referralCode String // Code that triggered this event
+  eventType    ReferralEventType
+  userId       String? // User ID if known (null for anonymous clicks)
+  ipAddress    String? // IP address of the visitor
+  userAgent    String? // Browser user agent
+  utmSource    String? // UTM tracking: source
+  utmMedium    String? // UTM tracking: medium
+  utmCampaign  String? // UTM tracking: campaign
+
+  createdAt DateTime @default(now())
+
+  @@index([referralCode])
+  @@index([eventType])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([utmSource])
+}
+
+// ============================================================================
+// GUEST TESTIMONIALS (Epic 12-5)
+// ============================================================================
+
+// Guest testimonial types
+enum GuestTestimonialType {
+  TEXT // Written testimonial only
+  VIDEO // Video testimonial
+  BEFORE_AFTER // Before/after photos with text
+  COMBINED // Video + photos + text
+}
+
+// Guest testimonial moderation status
+enum GuestTestimonialStatus {
+  PENDING // Submitted, awaiting review
+  APPROVED // Approved by admin, ready to publish
+  PUBLISHED // Live on website
+  REJECTED // Rejected by admin
+  EDIT_REQUESTED // Admin requested edits from guest
+}
+
+// Guest testimonial submissions for moderation
+model GuestTestimonial {
+  id     String @id @default(cuid())
+
+  // Guest reference
+  guestId String
+  guest   User   @relation("GuestTestimonials", fields: [guestId], references: [id], onDelete: Cascade)
+
+  // Testimonial type and content
+  type    GuestTestimonialType @default(TEXT)
+  content String?              @db.Text // Written testimonial text
+
+  // Video (S3 or Mux)
+  videoUrl      String? // S3 presigned URL or Mux playback URL
+  videoAssetId  String? // Mux asset ID if using Mux
+  videoThumbnail String? // Video thumbnail URL
+
+  // Before/After Photos (S3)
+  beforePhotoUrl String? // S3 URL for before photo
+  afterPhotoUrl  String? // S3 URL for after photo
+
+  // Moderation workflow
+  status           GuestTestimonialStatus @default(PENDING)
+  submittedAt      DateTime               @default(now())
+  reviewedAt       DateTime?
+  reviewedBy       String? // Admin user ID
+  publishedAt      DateTime?
+  rejectionReason  String? // Reason for rejection
+  editRequestNotes String?                @db.Text // Notes for requested edits
+
+  // GDPR Consent
+  consentGiven      Boolean   @default(false) // Guest consented to use
+  consentTimestamp  DateTime? // When consent was given
+  consentIpAddress  String? // IP address when consent given
+
+  // Display info (snapshot from guest profile)
+  guestName     String // Display name
+  guestLocation String? // City, Country
+  packageType   String? // Package they booked
+  tripDate      DateTime? // When they traveled
+
+  // Link to booking/package (optional)
+  bookingId String?
+  packageId String?
+
+  // Public display settings
+  isFeatured Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([guestId])
+  @@index([status])
+  @@index([type])
+  @@index([submittedAt])
+  @@index([publishedAt])
+  @@index([isFeatured])
+  @@index([bookingId])
+}
+
+// ============================================================================
+// ITINERARY TEMPLATES (Epic 12-7)
+// ============================================================================
+
+// Activity types for itinerary activities
+enum ItineraryActivityType {
+  PICKLEBALL
+  MEDICAL
+  WELLNESS
+  CULTURAL
+  MEAL
+  FREE_TIME
+}
+
+// Itinerary template - defines a reusable day-by-day schedule for packages
+model ItineraryTemplate {
+  id          String  @id @default(cuid())
+  name        String // e.g., "7-Day Pure Play Itinerary"
+  packageId   String?
+  package     Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  duration    Int // Total number of days
+  description String? @db.Text // Rich text description
+
+  // Status
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  days ItineraryDay[]
+
+  @@index([packageId])
+  @@index([duration])
+  @@index([isActive])
+}
+
+// Itinerary day - represents a single day within a template
+model ItineraryDay {
+  id         String            @id @default(cuid())
+  templateId String
+  template   ItineraryTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  dayNumber  Int // 1, 2, 3, etc.
+  title      String // e.g., "Arrival & Welcome"
+  activities String? @db.Text // JSON array of activity references (legacy, deprecated)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  itineraryActivities ItineraryActivity[]
+
+  @@unique([templateId, dayNumber])
+  @@index([templateId])
+  @@index([dayNumber])
+}
+
+// Itinerary activity - a single activity within a day
+model ItineraryActivity {
+  id          String                @id @default(cuid())
+  dayId       String
+  day         ItineraryDay          @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  time        String? // e.g., "09:00", "14:30"
+  title       String // e.g., "Morning Pickleball Session"
+  description String?   @db.Text // Rich text description
+  location    String? // e.g., "Main Resort Courts"
+  type        ItineraryActivityType // Activity category
+  sortOrder   Int       @default(0) // For drag-and-drop ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dayId])
+  @@index([type])
+  @@index([sortOrder])
+}
+
+// ============================================================================
+// CMS - CONTENT MANAGEMENT SYSTEM (Epic 12)
+// ============================================================================
+
+// Content status for draft/publish workflow
+enum ContentStatus {
+  DRAFT // Content is being edited, not visible publicly
+  PUBLISHED // Content is live and visible
+  ARCHIVED // Content removed from public view but preserved
+}
+
+// Content block types for different content structures
+enum ContentBlockType {
+  TEXT // Rich text content
+  HERO // Hero section with title/image
+  FEATURE // Feature highlight block
+  TESTIMONIAL // Testimonial display
+  CTA // Call to action section
+  FAQ // FAQ accordion
+  GALLERY // Image gallery
+  VIDEO // Video embed
+  CUSTOM // Custom HTML/component
+}
+
+// Content categories for organization
+model ContentCategory {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique // URL-friendly identifier
+  description String?
+  parentId    String? // For nested categories
+  parent      ContentCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    ContentCategory[] @relation("CategoryHierarchy")
+  sortOrder   Int               @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  pages  ContentPage[]
+  blocks ContentBlock[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([sortOrder])
+}
+
+// Content pages represent full pages in the CMS
+model ContentPage {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique // URL path
+  description String? // Meta description
+  status      ContentStatus @default(DRAFT)
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String? // Open Graph image URL
+
+  // Page settings
+  template    String? // Page template to use
+  isHomepage  Boolean   @default(false) // Homepage flag
+  publishedAt DateTime? // When page was published
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Category
+  categoryId String?
+  category   ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Audit
+  createdBy String // User ID who created
+  updatedBy String // User ID who last updated
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  blocks   ContentBlock[]
+  versions ContentPageVersion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@index([deletedAt])
+  @@index([isHomepage])
+}
+
+// Content blocks are reusable content components
+model ContentBlock {
+  id     String           @id @default(cuid())
+  name   String // Internal name for reference
+  slug   String           @unique // Unique identifier for lookup
+  type   ContentBlockType @default(TEXT)
+  status ContentStatus    @default(DRAFT)
+
+  // Content stored as JSON (TipTap native format)
+  content   Json // Rich text content in TipTap JSON format
+  plainText String? @db.Text // Plain text extraction for search
+
+  // Settings and metadata
+  settings  Json? // Type-specific settings
+  sortOrder Int   @default(0) // For ordering within pages
+
+  // Page association (optional - blocks can be standalone)
+  pageId String?
+  page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: SetNull)
+
+  // Package association (Epic 12-2 - blocks can be linked to packages)
+  packageId String?
+  package   Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+
+  // Category for organization
+  categoryId String?
+  category   ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Publish timestamp
+  publishedAt DateTime?
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  versions ContentBlockVersion[]
+
+  @@index([slug])
+  @@index([type])
+  @@index([status])
+  @@index([pageId])
+  @@index([packageId])
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@index([deletedAt])
+  @@index([publishedAt])
+}
+
+// Version history for content pages (keep last 5)
+model ContentPageVersion {
+  id            String      @id @default(cuid())
+  pageId        String
+  page          ContentPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of page data at this version
+  content        Json // Full page data snapshot
+  changesSummary String? // Description of changes
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([pageId, versionNumber])
+  @@index([pageId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
+
+// Version history for content blocks (keep last 5)
+model ContentBlockVersion {
+  id            String       @id @default(cuid())
+  blockId       String
+  block         ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of block data at this version
+  content        Json // Block content snapshot
+  settings       Json? // Block settings snapshot
+  changesSummary String?
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([blockId, versionNumber])
+  @@index([blockId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// PACKAGE CONTENT VERSIONS (Epic 12-2 - Audit Log)
+// ============================================================================
+
+// Audit log for package content changes
+model PackageContentVersion {
+  id            String  @id @default(cuid())
+  packageId     String
+  package       Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of package content data at this version
+  content       Json // Full package content snapshot (all CMS fields)
+  changesSummary String? // Description of what changed
+
+  // Audit
+  createdBy String // User ID who made the change
+  createdAt DateTime @default(now())
+
+  @@unique([packageId, versionNumber])
+  @@index([packageId])
+  @@index([versionNumber])
+  @@index([createdAt])
+  @@index([createdBy])
+}
+
+// ============================================================================
+// BLOG SYSTEM (Epic 12-3)
+// ============================================================================
+
+// Blog post status for draft/scheduled/published workflow
+enum BlogPostStatus {
+  DRAFT       // Post is being edited, not visible publicly
+  SCHEDULED   // Post is scheduled for future publication
+  PUBLISHED   // Post is live and visible
+  ARCHIVED    // Post removed from public view but preserved
+}
+
+// Blog category for organizing posts
+model BlogCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique // URL-friendly identifier
+  description String?
+  color       String? // Optional color for UI display (hex code)
+  sortOrder   Int    @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts BlogPost[]
+
+  @@index([slug])
+  @@index([sortOrder])
+}
+
+// Blog post model with full content marketing features
+model BlogPost {
+  id     String         @id @default(cuid())
+  title  String
+  slug   String         @unique // URL path for /blog/[slug]
+  status BlogPostStatus @default(DRAFT)
+
+  // Content
+  content     Json     @db.Json // Rich text content in TipTap JSON format
+  excerpt     String?  @db.Text // Short summary for listings and SEO
+  plainText   String?  @db.Text // Plain text extraction for search
+
+  // Featured image
+  featuredImage    String? // URL to featured image
+  featuredImageAlt String? // Alt text for accessibility
+
+  // Author (admin user ID)
+  authorId String
+
+  // Publication timing
+  publishedAt DateTime? // When post was/will be published
+  scheduledAt DateTime? // For scheduled posts
+
+  // SEO fields
+  metaTitle       String? // Custom meta title (defaults to title if null)
+  metaDescription String? // Custom meta description (defaults to excerpt if null)
+  metaKeywords    String[] // SEO keywords array
+
+  // Open Graph
+  ogImage String? // Custom OG image (defaults to featuredImage if null)
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  categoryId String?
+  category   BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags       BlogPostTag[]
+  versions   BlogPostVersion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([scheduledAt])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([deletedAt])
+  @@index([status, publishedAt]) // For public listing query
+}
+
+// Blog tags for flexible categorization
+model BlogTag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique // URL-friendly identifier
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts BlogPostTag[]
+
+  @@index([slug])
+}
+
+// Many-to-many relation between posts and tags
+model BlogPostTag {
+  id     String   @id @default(cuid())
+  postId String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, tagId])
+  @@index([postId])
+  @@index([tagId])
+}
+
+// Version history for blog posts (keep last 5)
+model BlogPostVersion {
+  id            String   @id @default(cuid())
+  postId        String
+  post          BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  versionNumber Int
+
+  // Snapshot of post data at this version
+  content        Json // Post content snapshot
+  title          String
+  excerpt        String?
+  changesSummary String?
+
+  // Audit
+  createdBy String
+  createdAt DateTime @default(now())
+
+  @@unique([postId, versionNumber])
+  @@index([postId])
+  @@index([versionNumber])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// FAQ MANAGEMENT (Epic 12, Story 12-4)
+// ============================================================================
+
+// FAQ Category for organizing FAQs
+model FAQCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique // URL-friendly identifier
+  description String?
+  sortOrder   Int    @default(0) // For custom ordering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  faqs FAQ[]
+
+  @@index([slug])
+  @@index([sortOrder])
+}
+
+// FAQ items with rich text answers
+model FAQ {
+  id          String  @id @default(cuid())
+  question    String  // The FAQ question
+  answer      Json    // Rich text answer in TipTap JSON format
+  answerPlain String? @db.Text // Plain text extraction for search
+  sortOrder   Int     @default(0) // For custom ordering within category
+  isPublished Boolean @default(false) // Draft/publish status
+
+  // Category relationship
+  categoryId String?
+  category   FAQCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Audit
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@index([isPublished])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// MEDIA LIBRARY (Epic 12 - Story 12-6)
+// ============================================================================
+
+// Media asset types
+enum MediaAssetType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+// Media folder for organizing assets
+model MediaFolder {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique // URL-friendly identifier
+  description String?
+
+  // Nested folder support
+  parentId    String?
+  parent      MediaFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    MediaFolder[] @relation("FolderHierarchy")
+
+  // Audit
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  assets      MediaAsset[]
+
+  @@index([parentId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+// Media asset (images, videos, documents)
+model MediaAsset {
+  id          String         @id @default(cuid())
+
+  // File information
+  filename    String         // Original filename
+  url         String         // S3/Storage URL
+  thumbnailUrl String?       // Generated thumbnail URL (for images/videos)
+  type        MediaAssetType // IMAGE, VIDEO, DOCUMENT
+  mimeType    String         // e.g., image/jpeg, video/mp4
+  size        Int            // File size in bytes
+
+  // Image/Video metadata
+  width       Int?           // Image/video width in pixels
+  height      Int?           // Image/video height in pixels
+  duration    Int?           // Video duration in seconds
+
+  // Accessibility & SEO
+  alt         String?        // Alt text for images
+  title       String?        // Title attribute
+  caption     String?        // Caption/description
+
+  // Organization
+  tags        String[]       // Array of tags for filtering
+  folderId    String?
+  folder      MediaFolder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  // S3 metadata
+  s3Key       String?        // S3 object key for deletion
+  s3Bucket    String?        // S3 bucket name
+
+  // Audit
+  createdBy   String
+  uploadedAt  DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([folderId])
+  @@index([type])
+  @@index([mimeType])
+  @@index([uploadedAt])
+  @@index([createdBy])
+}
+
+// ============================================================================
+// ANALYTICS EVENT TRACKING (Epic 13)
+// ============================================================================
+
+// Analytics event types for tracking user actions
+enum AnalyticsEventType {
+  PAGE_VIEW           // User views a page
+  BUTTON_CLICK        // User clicks a button/CTA
+  FUNNEL_STEP         // User progresses through booking funnel
+  FORM_SUBMIT         // User submits a form
+  CONVERSION          // User completes a conversion (booking, payment, etc.)
+  SEARCH              // User performs a search
+  FILTER              // User applies filters
+  ERROR               // Error occurred during user action
+}
+
+// Analytics events for tracking user behavior
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  eventType   AnalyticsEventType
+  userId      String?            // Clerk user ID (null for anonymous)
+  sessionId   String             // Browser session ID for tracking anonymous users
+
+  // Event details stored as JSON
+  properties  Json               // Flexible JSON for event-specific data
+  // Example properties:
+  // PAGE_VIEW: { path: "/packages/pure-play", referrer: "google.com" }
+  // BUTTON_CLICK: { buttonId: "book-now", location: "hero-section" }
+  // FUNNEL_STEP: { step: "CONFIGURATOR", packageId: "xxx" }
+  // CONVERSION: { type: "BOOKING_COMPLETED", bookingId: "xxx", value: 150000 }
+
+  // Context
+  pageUrl     String?            // Full URL where event occurred
+  userAgent   String?            // Browser user agent
+  ipAddress   String?            // IP address (for geo-location)
+
+  // UTM tracking
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  createdAt   DateTime           @default(now())
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([utmSource])
+  @@index([pageUrl])
+}
+
+// Analytics session tracking for user journey analysis
+model AnalyticsSession {
+  id              String    @id @default(cuid())
+  sessionId       String    @unique // Browser session ID
+  userId          String?   // Clerk user ID (null for anonymous until login)
+
+  // Session timing
+  startedAt       DateTime  @default(now())
+  lastActivityAt  DateTime  @default(now())
+
+  // Session metadata
+  deviceType      String?   // desktop, mobile, tablet
+  browser         String?   // chrome, firefox, safari, etc.
+  os              String?   // windows, macos, ios, android
+  screenResolution String?  // e.g., "1920x1080"
+
+  // Traffic source
+  landingPage     String?   // First page visited
+  referrer        String?   // Referral source
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+
+  // Session metrics (updated on each activity)
+  pageViews       Int       @default(0)
+  eventCount      Int       @default(0)
+
+  // Conversion tracking
+  hasConverted    Boolean   @default(false) // Did this session result in a conversion?
+  conversionType  String?   // Type of conversion (e.g., "BOOKING", "APPLICATION")
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([startedAt])
+  @@index([lastActivityAt])
+  @@index([hasConverted])
+  @@index([utmSource])
+}
+
+// ============================================================================
+// EMAIL CAMPAIGN ANALYTICS (E13-S8)
+// ============================================================================
+
+enum EmailCampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+}
+
+enum EmailSendStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  UNSUBSCRIBED
+  COMPLAINED
+}
+
+// Email Campaign - Groups sends for analytics (marketing blasts, A/B tests)
+model EmailCampaign {
+  id          String              @id @default(cuid())
+  name        String              // "January Newsletter" or "Welcome Series - Day 1"
+  subject     String              // Email subject line
+  templateId  String?             // Optional link to EmailTemplate
+  template    EmailTemplate?      @relation(fields: [templateId], references: [id])
+
+  // Campaign settings
+  status      EmailCampaignStatus @default(DRAFT)
+  scheduledAt DateTime?           // When to send (null = immediate)
+  sentAt      DateTime?           // When actually sent
+
+  // Targeting
+  recipientCount Int             @default(0) // Total recipients targeted
+  segmentCriteria Json?          // Optional: criteria used to select recipients
+
+  // A/B Testing
+  isAbTest       Boolean         @default(false)
+  abTestVariant  String?         // "A", "B", "C", etc.
+  abTestParentId String?         // Links variants to parent campaign
+  abTestParent   EmailCampaign?  @relation("AbTestVariants", fields: [abTestParentId], references: [id])
+  abTestVariants EmailCampaign[] @relation("AbTestVariants")
+
+  // Metadata
+  createdBy   String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  // Relations
+  sends       EmailSend[]
+
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+  @@index([abTestParentId])
+}
+
+// Individual email send - tracks each email delivery
+model EmailSend {
+  id          String          @id @default(cuid())
+  campaignId  String?
+  campaign    EmailCampaign?  @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  // Recipient
+  recipientEmail String
+  recipientUserId String?     // Optional: Clerk user ID if known
+  recipientName   String?
+
+  // Email details
+  subject     String
+  templateId  String?         // Template used (slug or ID)
+
+  // Status tracking
+  status      EmailSendStatus @default(QUEUED)
+  queuedAt    DateTime        @default(now())
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?       // First open
+  clickedAt   DateTime?       // First click
+  bouncedAt   DateTime?
+  unsubscribedAt DateTime?
+
+  // Engagement metrics
+  openCount   Int             @default(0) // Total opens (includes re-opens)
+  clickCount  Int             @default(0) // Total clicks
+
+  // Bounce/Error details
+  bounceType  String?         // "hard", "soft"
+  bounceReason String?
+
+  // Tracking
+  utmSource   String?
+  utmMedium   String?         @default("email")
+  utmCampaign String?
+
+  createdAt   DateTime        @default(now())
+
+  // Relations
+  linkClicks  EmailLinkClick[]
+
+  @@index([campaignId])
+  @@index([recipientEmail])
+  @@index([recipientUserId])
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+}
+
+// Track individual link clicks within emails
+model EmailLinkClick {
+  id          String    @id @default(cuid())
+  sendId      String
+  send        EmailSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
+
+  // Link details
+  linkUrl     String    // Original URL
+  linkText    String?   // CTA text (e.g., "Book Now", "View Details")
+  linkPosition String?  // Position in email (e.g., "header", "body", "footer")
+
+  // Click tracking
+  clickedAt   DateTime  @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  @@index([sendId])
+  @@index([clickedAt])
+  @@index([linkUrl])
+}
+
+// ============================================================================
+// CUSTOM REPORTS (E13-S10)
+// ============================================================================
+
+// Visualization types for custom reports
+enum ReportVisualizationType {
+  TABLE
+  BAR_CHART
+  LINE_CHART
+  PIE_CHART
+}
+
+// Saved custom reports for admin users
+model CustomReport {
+  id          String                  @id @default(cuid())
+  name        String                  // Report name for display
+  description String?                 // Optional description
+
+  // Report configuration stored as JSON
+  metrics     Json                    // Selected metrics: ["bookings", "revenue", "conversions"]
+  filters     Json?                   // Filter configuration
+  dateRange   Json?                   // Date range configuration: { preset: "last30days" } or { startDate, endDate }
+  visualization ReportVisualizationType @default(TABLE)
+  groupBy     String?                 // Optional grouping (daily, weekly, monthly, by package, etc.)
+
+  // Scheduling (optional - for email delivery)
+  isScheduled      Boolean   @default(false)
+  scheduleFrequency String?  // "daily", "weekly", "monthly"
+  scheduleRecipients String[] // Email addresses to send to
+  lastRunAt        DateTime?
+  nextRunAt        DateTime?
+
+  // Audit
+  createdBy   String                  // Admin user ID who created
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  @@index([createdBy])
+  @@index([createdAt])
+  @@index([isScheduled])
 }
