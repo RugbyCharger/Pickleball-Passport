@@ -1292,6 +1292,7 @@ model EmailTemplate {
   // Relations
   versions  EmailTemplateVersion[]
   analytics EmailTemplateAnalytics?
+  campaigns EmailCampaign[]        // E13-S8: Campaign analytics
 
   @@index([category])
   @@index([status])
@@ -2271,4 +2272,137 @@ model AnalyticsSession {
   @@index([lastActivityAt])
   @@index([hasConverted])
   @@index([utmSource])
+}
+
+// ============================================================================
+// EMAIL CAMPAIGN ANALYTICS (E13-S8)
+// ============================================================================
+
+enum EmailCampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+}
+
+enum EmailSendStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  UNSUBSCRIBED
+  COMPLAINED
+}
+
+// Email Campaign - Groups sends for analytics (marketing blasts, A/B tests)
+model EmailCampaign {
+  id          String              @id @default(cuid())
+  name        String              // "January Newsletter" or "Welcome Series - Day 1"
+  subject     String              // Email subject line
+  templateId  String?             // Optional link to EmailTemplate
+  template    EmailTemplate?      @relation(fields: [templateId], references: [id])
+
+  // Campaign settings
+  status      EmailCampaignStatus @default(DRAFT)
+  scheduledAt DateTime?           // When to send (null = immediate)
+  sentAt      DateTime?           // When actually sent
+
+  // Targeting
+  recipientCount Int             @default(0) // Total recipients targeted
+  segmentCriteria Json?          // Optional: criteria used to select recipients
+
+  // A/B Testing
+  isAbTest       Boolean         @default(false)
+  abTestVariant  String?         // "A", "B", "C", etc.
+  abTestParentId String?         // Links variants to parent campaign
+  abTestParent   EmailCampaign?  @relation("AbTestVariants", fields: [abTestParentId], references: [id])
+  abTestVariants EmailCampaign[] @relation("AbTestVariants")
+
+  // Metadata
+  createdBy   String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  // Relations
+  sends       EmailSend[]
+
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+  @@index([abTestParentId])
+}
+
+// Individual email send - tracks each email delivery
+model EmailSend {
+  id          String          @id @default(cuid())
+  campaignId  String?
+  campaign    EmailCampaign?  @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  // Recipient
+  recipientEmail String
+  recipientUserId String?     // Optional: Clerk user ID if known
+  recipientName   String?
+
+  // Email details
+  subject     String
+  templateId  String?         // Template used (slug or ID)
+
+  // Status tracking
+  status      EmailSendStatus @default(QUEUED)
+  queuedAt    DateTime        @default(now())
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?       // First open
+  clickedAt   DateTime?       // First click
+  bouncedAt   DateTime?
+  unsubscribedAt DateTime?
+
+  // Engagement metrics
+  openCount   Int             @default(0) // Total opens (includes re-opens)
+  clickCount  Int             @default(0) // Total clicks
+
+  // Bounce/Error details
+  bounceType  String?         // "hard", "soft"
+  bounceReason String?
+
+  // Tracking
+  utmSource   String?
+  utmMedium   String?         @default("email")
+  utmCampaign String?
+
+  createdAt   DateTime        @default(now())
+
+  // Relations
+  linkClicks  EmailLinkClick[]
+
+  @@index([campaignId])
+  @@index([recipientEmail])
+  @@index([recipientUserId])
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+}
+
+// Track individual link clicks within emails
+model EmailLinkClick {
+  id          String    @id @default(cuid())
+  sendId      String
+  send        EmailSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
+
+  // Link details
+  linkUrl     String    // Original URL
+  linkText    String?   // CTA text (e.g., "Book Now", "View Details")
+  linkPosition String?  // Position in email (e.g., "header", "body", "footer")
+
+  // Click tracking
+  clickedAt   DateTime  @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  @@index([sendId])
+  @@index([clickedAt])
+  @@index([linkUrl])
 }

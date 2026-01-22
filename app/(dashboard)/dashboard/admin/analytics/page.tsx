@@ -59,6 +59,13 @@ import {
   AlertTriangle,
   Percent,
   MousePointerClick,
+  Mail,
+  Send,
+  MousePointer,
+  Link,
+  UserMinus,
+  Trophy,
+  FlaskRound,
 } from 'lucide-react';
 import {
   XAxis,
@@ -245,7 +252,7 @@ const FUNNEL_STAGE_COLORS = [
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
-type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics' | 'package-performance' | 'partner-performance';
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking' | 'revenue-reports' | 'guest-demographics' | 'package-performance' | 'partner-performance' | 'email-campaigns';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
@@ -567,6 +574,16 @@ export default function AnalyticsDashboardPage() {
             }`}
           >
             Partner Performance
+          </button>
+          <button
+            onClick={() => setActiveTab('email-campaigns')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'email-campaigns'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Email Campaigns
           </button>
         </nav>
       </div>
@@ -2766,6 +2783,14 @@ export default function AnalyticsDashboardPage() {
       {activeTab === 'partner-performance' && (
         <PartnerPerformanceTab dateRange={dateRange} />
       )}
+
+      {/* ================================================================ */}
+      {/* EMAIL CAMPAIGNS TAB (E13-S8) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'email-campaigns' && (
+        <EmailCampaignsTab dateRange={dateRange} />
+      )}
     </div>
   );
 }
@@ -3308,6 +3333,584 @@ function PartnerPerformanceTab({ dateRange }: { dateRange: DateRangeFilter }) {
             )}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// EMAIL CAMPAIGNS TAB COMPONENT (E13-S8)
+// ============================================================================
+
+function EmailCampaignsTab({ dateRange }: { dateRange: DateRangeFilter }) {
+  const [engagementPeriod, setEngagementPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [sortTemplatesBy, setSortTemplatesBy] = useState<'openRate' | 'clickRate' | 'sends'>('clickRate');
+
+  // Fetch email campaign analytics data
+  const { data: overview, isLoading: overviewLoading } = trpc.analytics.emailCampaigns.getOverview.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: campaigns, isLoading: campaignsLoading } = trpc.analytics.emailCampaigns.getCampaigns.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    limit: 20,
+  });
+
+  const { data: abTestComparison, isLoading: abTestLoading } = trpc.analytics.emailCampaigns.getAbTestComparison.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: topTemplates, isLoading: templatesLoading } = trpc.analytics.emailCampaigns.getTopTemplates.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    sortBy: sortTemplatesBy,
+    limit: 10,
+  });
+
+  const { data: engagementTrends, isLoading: trendsLoading } = trpc.analytics.emailCampaigns.getEngagementTrends.useQuery({
+    period: engagementPeriod,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: unsubscribeMetrics, isLoading: unsubscribeLoading } = trpc.analytics.emailCampaigns.getUnsubscribeMetrics.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+
+  const { data: linkClickBreakdown, isLoading: linkClickLoading } = trpc.analytics.emailCampaigns.getLinkClickBreakdown.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    limit: 15,
+  });
+
+  // Format percentage for display
+  const formatRate = (rate: number) => `${rate.toFixed(2)}%`;
+
+  // Color coding for rates
+  const getRateColor = (rate: number, type: 'open' | 'click' | 'bounce' | 'unsubscribe') => {
+    if (type === 'open') {
+      if (rate >= 25) return 'text-green-600';
+      if (rate >= 15) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'click') {
+      if (rate >= 5) return 'text-green-600';
+      if (rate >= 2) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'bounce') {
+      if (rate <= 2) return 'text-green-600';
+      if (rate <= 5) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    if (type === 'unsubscribe') {
+      if (rate <= 0.5) return 'text-green-600';
+      if (rate <= 1) return 'text-yellow-600';
+      return 'text-red-600';
+    }
+    return 'text-gray-600';
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Overview Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <StatCard
+          title="Total Sends"
+          value={overview?.totalSends?.toLocaleString() ?? 0}
+          icon={Send}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Open Rate"
+          value={overview ? formatRate(overview.openRate) : '0%'}
+          icon={Eye}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Click Rate"
+          value={overview ? formatRate(overview.clickRate) : '0%'}
+          icon={MousePointer}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Delivery Rate"
+          value={overview ? formatRate(overview.deliveryRate) : '0%'}
+          icon={CheckCircle}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Bounce Rate"
+          value={overview ? formatRate(overview.bounceRate) : '0%'}
+          icon={AlertTriangle}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Unsubscribe Rate"
+          value={overview ? formatRate(overview.unsubscribeRate) : '0%'}
+          icon={UserMinus}
+          loading={overviewLoading}
+        />
+        <StatCard
+          title="Campaigns"
+          value={overview?.totalCampaigns ?? 0}
+          icon={Mail}
+          loading={overviewLoading}
+        />
+      </div>
+
+      {/* Campaign List and A/B Test Results */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Campaign Performance Table */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Mail className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Recent Campaigns</h3>
+          </div>
+
+          {campaignsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="overflow-x-auto max-h-96">
+              <table className="w-full text-sm">
+                <thead className="text-xs uppercase text-gray-500 border-b sticky top-0 bg-white">
+                  <tr>
+                    <th className="py-2 px-2 text-left">Campaign</th>
+                    <th className="py-2 px-2 text-right">Sent</th>
+                    <th className="py-2 px-2 text-right">Open</th>
+                    <th className="py-2 px-2 text-right">Click</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {campaigns?.map((campaign) => (
+                    <tr key={campaign.id} className="hover:bg-gray-50">
+                      <td className="py-3 px-2">
+                        <div className="font-medium text-gray-900 truncate max-w-[200px]" title={campaign.name}>
+                          {campaign.name}
+                        </div>
+                        {campaign.isAbTest && (
+                          <span className="text-xs text-purple-600 font-medium">
+                            A/B Test: {campaign.abTestVariant}
+                          </span>
+                        )}
+                        <div className="text-xs text-gray-500">
+                          {campaign.sentAt ? new Date(campaign.sentAt).toLocaleDateString() : 'Draft'}
+                        </div>
+                      </td>
+                      <td className="py-3 px-2 text-right text-gray-700">
+                        {campaign.totalSends.toLocaleString()}
+                      </td>
+                      <td className={`py-3 px-2 text-right font-medium ${getRateColor(campaign.openRate, 'open')}`}>
+                        {formatRate(campaign.openRate)}
+                      </td>
+                      <td className={`py-3 px-2 text-right font-medium ${getRateColor(campaign.clickRate, 'click')}`}>
+                        {formatRate(campaign.clickRate)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {(!campaigns || campaigns.length === 0) && (
+                <div className="text-center py-8 text-gray-500">No campaigns found in this period</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* A/B Test Comparison */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FlaskRound className="h-5 w-5 text-purple-600" />
+            <h3 className="text-lg font-semibold text-gray-900">A/B Test Results</h3>
+          </div>
+
+          {abTestLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {abTestComparison?.map((test) => {
+                // Type guard to check which structure we have
+                const hasVariants = 'variants' in test && test.variants;
+
+                return (
+                  <div key={test.campaignId} className="p-4 bg-purple-50 rounded-lg border border-purple-100">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold text-gray-900 truncate max-w-[200px]" title={test.name}>
+                        {test.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {'sentAt' in test && test.sentAt ? new Date(test.sentAt).toLocaleDateString() : '-'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {hasVariants ? (
+                        test.variants.map((variant: { variant: string; openRate: number; clickRate: number; isWinner: boolean }) => (
+                          <div
+                            key={variant.variant}
+                            className={`flex items-center justify-between p-2 rounded ${
+                              variant.isWinner ? 'bg-green-100 border border-green-200' : 'bg-white'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-gray-700">Variant {variant.variant}</span>
+                              {variant.isWinner && (
+                                <Trophy className="h-4 w-4 text-green-600" />
+                              )}
+                            </div>
+                            <div className="flex gap-4 text-sm">
+                              <span className="text-gray-600">
+                                Open: <span className={getRateColor(variant.openRate, 'open')}>{formatRate(variant.openRate)}</span>
+                              </span>
+                              <span className="text-gray-600">
+                                Click: <span className={getRateColor(variant.clickRate, 'click')}>{formatRate(variant.clickRate)}</span>
+                              </span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        // Single variant display (when parentCampaignId is specified)
+                        <div className="flex items-center justify-between p-2 rounded bg-white">
+                          <span className="font-medium text-gray-700">
+                            Variant {'variant' in test ? test.variant : '-'}
+                          </span>
+                          <div className="flex gap-4 text-sm">
+                            <span className="text-gray-600">
+                              Open: <span className={getRateColor('openRate' in test ? test.openRate : 0, 'open')}>{formatRate('openRate' in test ? test.openRate : 0)}</span>
+                            </span>
+                            <span className="text-gray-600">
+                              Click: <span className={getRateColor('clickRate' in test ? test.clickRate : 0, 'click')}>{formatRate('clickRate' in test ? test.clickRate : 0)}</span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {(!abTestComparison || abTestComparison.length === 0) && (
+                <div className="text-center py-8 text-gray-500">
+                  <FlaskRound className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p>No A/B tests found in this period</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Best Performing Templates */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-yellow-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Best Performing Templates</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Sort by:</label>
+            <select
+              value={sortTemplatesBy}
+              onChange={(e) => setSortTemplatesBy(e.target.value as 'openRate' | 'clickRate' | 'sends')}
+              className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="clickRate">Click Rate</option>
+              <option value="openRate">Open Rate</option>
+              <option value="sends">Total Sends</option>
+            </select>
+          </div>
+        </div>
+
+        {templatesLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase text-gray-500 border-b">
+                <tr>
+                  <th className="py-2 px-2 text-left">Template</th>
+                  <th className="py-2 px-2 text-left">Category</th>
+                  <th className="py-2 px-2 text-right">Sends</th>
+                  <th className="py-2 px-2 text-right">Opens</th>
+                  <th className="py-2 px-2 text-right">Clicks</th>
+                  <th className="py-2 px-2 text-right">Open Rate</th>
+                  <th className="py-2 px-2 text-right">Click Rate</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {topTemplates?.map((template, index) => (
+                  <tr key={template.templateId} className="hover:bg-gray-50">
+                    <td className="py-3 px-2">
+                      <div className="flex items-center gap-2">
+                        {index < 3 && (
+                          <span className={`text-lg ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : 'text-amber-600'}`}>
+                            {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                          </span>
+                        )}
+                        <span className="font-medium text-gray-900">{template.templateName}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-2">
+                      <span className="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                        {template.category}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.totalSends.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.opens.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-right text-gray-700">{template.clicks.toLocaleString()}</td>
+                    <td className={`py-3 px-2 text-right font-medium ${getRateColor(template.openRate, 'open')}`}>
+                      {formatRate(template.openRate)}
+                    </td>
+                    <td className={`py-3 px-2 text-right font-medium ${getRateColor(template.clickRate, 'click')}`}>
+                      {formatRate(template.clickRate)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(!topTemplates || topTemplates.length === 0) && (
+              <div className="text-center py-8 text-gray-500">No template data available</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Engagement Trends Chart */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Engagement Trends</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Period:</label>
+            <select
+              value={engagementPeriod}
+              onChange={(e) => setEngagementPeriod(e.target.value as 'daily' | 'weekly' | 'monthly')}
+              className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+
+        {trendsLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div className="h-80">
+            {engagementTrends && engagementTrends.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={engagementTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(value) => {
+                      if (engagementPeriod === 'monthly') return value;
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} domain={[0, 100]} />
+                  <Tooltip
+                    formatter={(value: number | undefined, name: string | undefined) => {
+                      if (name === 'openRate' || name === 'clickRate') {
+                        return [`${Number(value ?? 0).toFixed(2)}%`, name === 'openRate' ? 'Open Rate' : 'Click Rate'];
+                      }
+                      return [Number(value ?? 0).toLocaleString(), name === 'sends' ? 'Sends' : name === 'opens' ? 'Opens' : 'Clicks'];
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="sends"
+                    name="sends"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="openRate"
+                    name="openRate"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="clickRate"
+                    name="clickRate"
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="text-center">
+                  <TrendingUp className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p>No engagement data available</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Unsubscribe Tracking and Link Click Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Unsubscribe Tracking */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <UserMinus className="h-5 w-5 text-red-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Unsubscribe Tracking</h3>
+          </div>
+
+          {unsubscribeLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Summary */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-red-50 rounded-lg">
+                  <div className="text-sm text-red-600 font-medium">Total Unsubscribes</div>
+                  <div className="text-2xl font-bold text-red-700">
+                    {unsubscribeMetrics?.totalUnsubscribes ?? 0}
+                  </div>
+                </div>
+                <div className="p-4 bg-red-50 rounded-lg">
+                  <div className="text-sm text-red-600 font-medium">Unsubscribe Rate</div>
+                  <div className="text-2xl font-bold text-red-700">
+                    {unsubscribeMetrics?.unsubscribeRate?.toFixed(3) ?? 0}%
+                  </div>
+                </div>
+              </div>
+
+              {/* By Campaign */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">By Campaign</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {unsubscribeMetrics?.byCampaign?.slice(0, 5).map((item) => (
+                    <div key={item.campaignName} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="text-sm text-gray-700 truncate max-w-[200px]" title={item.campaignName}>
+                        {item.campaignName}
+                      </span>
+                      <span className="text-sm font-medium text-red-600">{item.count}</span>
+                    </div>
+                  ))}
+                  {(!unsubscribeMetrics?.byCampaign || unsubscribeMetrics.byCampaign.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No unsubscribes in this period</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Link Click Breakdown */}
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Link className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Link Click Breakdown</h3>
+          </div>
+
+          {linkClickLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* By Position (Heatmap style) */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">By Position</h4>
+                <div className="flex flex-wrap gap-2">
+                  {linkClickBreakdown?.byPosition?.map((item) => (
+                    <div
+                      key={item.position}
+                      className="px-3 py-2 rounded-lg bg-blue-50 border border-blue-200"
+                      style={{
+                        backgroundColor: `rgba(59, 130, 246, ${0.1 + (item.percentage / 100) * 0.5})`,
+                      }}
+                    >
+                      <div className="text-xs text-blue-600 font-medium uppercase">{item.position}</div>
+                      <div className="text-lg font-bold text-blue-700">{item.clicks}</div>
+                      <div className="text-xs text-blue-500">{item.percentage}%</div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.byPosition || linkClickBreakdown.byPosition.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm w-full">No click data available</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Top CTAs */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Top CTAs</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {linkClickBreakdown?.byCTA?.slice(0, 5).map((item) => (
+                    <div key={item.text} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <span className="text-sm text-gray-700 truncate max-w-[200px]" title={item.text}>
+                        {item.text}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-blue-600">{item.clicks}</span>
+                        <span className="text-xs text-gray-500">({item.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.byCTA || linkClickBreakdown.byCTA.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No CTA click data available</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Top Links */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Top Links</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {linkClickBreakdown?.topLinks?.slice(0, 5).map((link) => (
+                    <div key={link.url} className="flex items-center justify-between py-2 border-b border-gray-100">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-gray-700 truncate block max-w-[200px]" title={link.url}>
+                          {link.text || new URL(link.url).pathname}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-blue-600">{link.clicks}</span>
+                        <span className="text-xs text-gray-500">({link.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                  {(!linkClickBreakdown?.topLinks || linkClickBreakdown.topLinks.length === 0) && (
+                    <div className="text-center py-4 text-gray-500 text-sm">No link click data available</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

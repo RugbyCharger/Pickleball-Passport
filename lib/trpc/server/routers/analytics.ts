@@ -4823,4 +4823,674 @@ export const analyticsRouter = router({
         }
       }),
   }),
+
+  // ============================================================================
+  // EMAIL CAMPAIGN ANALYTICS (E13-S8)
+  // ============================================================================
+
+  emailCampaigns: router({
+    /**
+     * Get email campaign overview metrics
+     * Returns send volume, open rates, click rates
+     */
+    getOverview: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+        };
+
+        // Get overall email send metrics
+        const [
+          totalSends,
+          delivered,
+          opened,
+          clicked,
+          bounced,
+          unsubscribed,
+        ] = await Promise.all([
+          ctx.db.emailSend.count({ where: { ...where, sentAt: { not: null } } }),
+          ctx.db.emailSend.count({ where: { ...where, deliveredAt: { not: null } } }),
+          ctx.db.emailSend.count({ where: { ...where, openedAt: { not: null } } }),
+          ctx.db.emailSend.count({ where: { ...where, clickedAt: { not: null } } }),
+          ctx.db.emailSend.count({ where: { ...where, bouncedAt: { not: null } } }),
+          ctx.db.emailSend.count({ where: { ...where, unsubscribedAt: { not: null } } }),
+        ]);
+
+        // Calculate rates
+        const openRate = totalSends > 0 ? (opened / totalSends) * 100 : 0;
+        const clickRate = totalSends > 0 ? (clicked / totalSends) * 100 : 0;
+        const deliveryRate = totalSends > 0 ? (delivered / totalSends) * 100 : 0;
+        const bounceRate = totalSends > 0 ? (bounced / totalSends) * 100 : 0;
+        const unsubscribeRate = totalSends > 0 ? (unsubscribed / totalSends) * 100 : 0;
+        const clickToOpenRate = opened > 0 ? (clicked / opened) * 100 : 0;
+
+        // Get total campaigns
+        const totalCampaigns = await ctx.db.emailCampaign.count({
+          where: {
+            status: 'SENT',
+            ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+            ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+          },
+        });
+
+        return {
+          totalSends,
+          delivered,
+          opened,
+          clicked,
+          bounced,
+          unsubscribed,
+          openRate: Number(openRate.toFixed(2)),
+          clickRate: Number(clickRate.toFixed(2)),
+          deliveryRate: Number(deliveryRate.toFixed(2)),
+          bounceRate: Number(bounceRate.toFixed(2)),
+          unsubscribeRate: Number(unsubscribeRate.toFixed(2)),
+          clickToOpenRate: Number(clickToOpenRate.toFixed(2)),
+          totalCampaigns,
+        };
+      }),
+
+    /**
+     * Get campaign list with performance metrics
+     */
+    getCampaigns: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(100).default(20),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          status: 'SENT' as const,
+          ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+        };
+
+        const campaigns = await ctx.db.emailCampaign.findMany({
+          where,
+          include: {
+            template: {
+              select: { name: true, slug: true },
+            },
+            sends: {
+              select: {
+                id: true,
+                status: true,
+                openedAt: true,
+                clickedAt: true,
+                bouncedAt: true,
+                unsubscribedAt: true,
+                openCount: true,
+                clickCount: true,
+              },
+            },
+          },
+          orderBy: { sentAt: 'desc' },
+          take: input?.limit || 20,
+        });
+
+        return campaigns.map((campaign) => {
+          const totalSends = campaign.sends.length;
+          const opened = campaign.sends.filter((s) => s.openedAt).length;
+          const clicked = campaign.sends.filter((s) => s.clickedAt).length;
+          const bounced = campaign.sends.filter((s) => s.bouncedAt).length;
+          const unsubscribed = campaign.sends.filter((s) => s.unsubscribedAt).length;
+          const totalOpens = campaign.sends.reduce((sum, s) => sum + s.openCount, 0);
+          const totalClicks = campaign.sends.reduce((sum, s) => sum + s.clickCount, 0);
+
+          return {
+            id: campaign.id,
+            name: campaign.name,
+            subject: campaign.subject,
+            templateName: campaign.template?.name || null,
+            templateSlug: campaign.template?.slug || null,
+            sentAt: campaign.sentAt,
+            recipientCount: campaign.recipientCount,
+            totalSends,
+            opened,
+            clicked,
+            bounced,
+            unsubscribed,
+            totalOpens,
+            totalClicks,
+            openRate: totalSends > 0 ? Number(((opened / totalSends) * 100).toFixed(2)) : 0,
+            clickRate: totalSends > 0 ? Number(((clicked / totalSends) * 100).toFixed(2)) : 0,
+            bounceRate: totalSends > 0 ? Number(((bounced / totalSends) * 100).toFixed(2)) : 0,
+            unsubscribeRate: totalSends > 0 ? Number(((unsubscribed / totalSends) * 100).toFixed(2)) : 0,
+            isAbTest: campaign.isAbTest,
+            abTestVariant: campaign.abTestVariant,
+          };
+        });
+      }),
+
+    /**
+     * Get A/B test campaign comparison
+     */
+    getAbTestComparison: adminProcedure
+      .input(
+        z.object({
+          parentCampaignId: z.string().optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        // Get all A/B test campaigns
+        const whereBase = {
+          isAbTest: true,
+          status: 'SENT' as const,
+          ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+        };
+
+        // If a specific parent is requested, get its variants
+        if (input.parentCampaignId) {
+          const variants = await ctx.db.emailCampaign.findMany({
+            where: {
+              OR: [
+                { id: input.parentCampaignId },
+                { abTestParentId: input.parentCampaignId },
+              ],
+              status: 'SENT',
+            },
+            include: {
+              sends: {
+                select: {
+                  openedAt: true,
+                  clickedAt: true,
+                  bouncedAt: true,
+                  unsubscribedAt: true,
+                },
+              },
+            },
+            orderBy: { abTestVariant: 'asc' },
+          });
+
+          return variants.map((v) => {
+            const totalSends = v.sends.length;
+            const opened = v.sends.filter((s) => s.openedAt).length;
+            const clicked = v.sends.filter((s) => s.clickedAt).length;
+
+            return {
+              campaignId: v.id,
+              name: v.name,
+              subject: v.subject,
+              variant: v.abTestVariant,
+              totalSends,
+              openRate: totalSends > 0 ? Number(((opened / totalSends) * 100).toFixed(2)) : 0,
+              clickRate: totalSends > 0 ? Number(((clicked / totalSends) * 100).toFixed(2)) : 0,
+              isWinner: false, // Will be calculated
+            };
+          });
+        }
+
+        // Get all parent campaigns with A/B tests
+        const parentCampaigns = await ctx.db.emailCampaign.findMany({
+          where: {
+            ...whereBase,
+            abTestParentId: null,
+          },
+          include: {
+            abTestVariants: {
+              where: { status: 'SENT' },
+              include: {
+                sends: {
+                  select: {
+                    openedAt: true,
+                    clickedAt: true,
+                  },
+                },
+              },
+            },
+            sends: {
+              select: {
+                openedAt: true,
+                clickedAt: true,
+              },
+            },
+          },
+          orderBy: { sentAt: 'desc' },
+          take: 10,
+        });
+
+        return parentCampaigns.map((parent) => {
+          const allVariants = [parent, ...parent.abTestVariants];
+          const variantStats = allVariants.map((v) => {
+            const totalSends = v.sends.length;
+            const opened = v.sends.filter((s) => s.openedAt).length;
+            const clicked = v.sends.filter((s) => s.clickedAt).length;
+            const openRate = totalSends > 0 ? (opened / totalSends) * 100 : 0;
+            const clickRate = totalSends > 0 ? (clicked / totalSends) * 100 : 0;
+
+            return {
+              variant: v.abTestVariant || 'A',
+              subject: v.subject,
+              totalSends,
+              openRate: Number(openRate.toFixed(2)),
+              clickRate: Number(clickRate.toFixed(2)),
+            };
+          });
+
+          // Determine winner based on click rate
+          const winner = variantStats.reduce((best, current) =>
+            current.clickRate > best.clickRate ? current : best
+          );
+
+          return {
+            campaignId: parent.id,
+            name: parent.name,
+            sentAt: parent.sentAt,
+            variants: variantStats.map((v) => ({
+              ...v,
+              isWinner: v.variant === winner.variant,
+            })),
+            winningVariant: winner.variant,
+          };
+        });
+      }),
+
+    /**
+     * Get best performing email templates
+     */
+    getTopTemplates: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(50).default(10),
+            sortBy: z.enum(['openRate', 'clickRate', 'sends']).default('clickRate'),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          sentAt: {
+            ...(input?.startDate && { gte: input.startDate }),
+            ...(input?.endDate && { lte: input.endDate }),
+          },
+          templateId: { not: null },
+        };
+
+        // Get all sends grouped by template
+        const sends = await ctx.db.emailSend.findMany({
+          where: {
+            ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+            ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+            templateId: { not: null },
+          },
+          select: {
+            templateId: true,
+            openedAt: true,
+            clickedAt: true,
+            bouncedAt: true,
+          },
+        });
+
+        // Group by template
+        const templateStats = sends.reduce(
+          (acc, send) => {
+            const templateId = send.templateId!;
+            if (!acc[templateId]) {
+              acc[templateId] = { sends: 0, opens: 0, clicks: 0, bounces: 0 };
+            }
+            acc[templateId].sends++;
+            if (send.openedAt) acc[templateId].opens++;
+            if (send.clickedAt) acc[templateId].clicks++;
+            if (send.bouncedAt) acc[templateId].bounces++;
+            return acc;
+          },
+          {} as Record<string, { sends: number; opens: number; clicks: number; bounces: number }>
+        );
+
+        // Get template details
+        const templateIds = Object.keys(templateStats);
+        const templates = await ctx.db.emailTemplate.findMany({
+          where: { id: { in: templateIds } },
+          select: { id: true, name: true, slug: true, category: true },
+        });
+
+        const templateMap = new Map(templates.map((t) => [t.id, t]));
+
+        // Calculate rates and sort
+        const results = Object.entries(templateStats).map(([templateId, stats]) => {
+          const template = templateMap.get(templateId);
+          const openRate = stats.sends > 0 ? (stats.opens / stats.sends) * 100 : 0;
+          const clickRate = stats.sends > 0 ? (stats.clicks / stats.sends) * 100 : 0;
+          const bounceRate = stats.sends > 0 ? (stats.bounces / stats.sends) * 100 : 0;
+
+          return {
+            templateId,
+            templateName: template?.name || 'Unknown',
+            templateSlug: template?.slug || null,
+            category: template?.category || 'UNKNOWN',
+            totalSends: stats.sends,
+            opens: stats.opens,
+            clicks: stats.clicks,
+            bounces: stats.bounces,
+            openRate: Number(openRate.toFixed(2)),
+            clickRate: Number(clickRate.toFixed(2)),
+            bounceRate: Number(bounceRate.toFixed(2)),
+          };
+        });
+
+        // Sort by the specified metric
+        const sortBy = input?.sortBy || 'clickRate';
+        results.sort((a, b) => {
+          if (sortBy === 'sends') return b.totalSends - a.totalSends;
+          if (sortBy === 'openRate') return b.openRate - a.openRate;
+          return b.clickRate - a.clickRate;
+        });
+
+        return results.slice(0, input?.limit || 10);
+      }),
+
+    /**
+     * Get email engagement trends over time
+     */
+    getEngagementTrends: adminProcedure
+      .input(
+        z.object({
+          period: z.enum(['daily', 'weekly', 'monthly']).default('daily'),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          sentAt: { not: null },
+          ...(input.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input.endDate && { sentAt: { lte: input.endDate } }),
+        };
+
+        const sends = await ctx.db.emailSend.findMany({
+          where,
+          select: {
+            sentAt: true,
+            openedAt: true,
+            clickedAt: true,
+            bouncedAt: true,
+            unsubscribedAt: true,
+          },
+          orderBy: { sentAt: 'asc' },
+        });
+
+        // Group by period
+        const grouped = sends.reduce(
+          (acc, send) => {
+            if (!send.sentAt) return acc;
+
+            let key: string;
+            const date = send.sentAt;
+
+            switch (input.period) {
+              case 'daily':
+                key = date.toISOString().slice(0, 10);
+                break;
+              case 'weekly':
+                const d = new Date(date);
+                d.setDate(d.getDate() - d.getDay());
+                key = d.toISOString().slice(0, 10);
+                break;
+              case 'monthly':
+                key = date.toISOString().slice(0, 7);
+                break;
+            }
+
+            if (!acc[key]) {
+              acc[key] = { sends: 0, opens: 0, clicks: 0, bounces: 0, unsubscribes: 0 };
+            }
+            acc[key].sends++;
+            if (send.openedAt) acc[key].opens++;
+            if (send.clickedAt) acc[key].clicks++;
+            if (send.bouncedAt) acc[key].bounces++;
+            if (send.unsubscribedAt) acc[key].unsubscribes++;
+            return acc;
+          },
+          {} as Record<string, { sends: number; opens: number; clicks: number; bounces: number; unsubscribes: number }>
+        );
+
+        return Object.entries(grouped)
+          .map(([period, stats]) => ({
+            period,
+            sends: stats.sends,
+            opens: stats.opens,
+            clicks: stats.clicks,
+            bounces: stats.bounces,
+            unsubscribes: stats.unsubscribes,
+            openRate: stats.sends > 0 ? Number(((stats.opens / stats.sends) * 100).toFixed(2)) : 0,
+            clickRate: stats.sends > 0 ? Number(((stats.clicks / stats.sends) * 100).toFixed(2)) : 0,
+          }))
+          .sort((a, b) => a.period.localeCompare(b.period));
+      }),
+
+    /**
+     * Get unsubscribe tracking and trends
+     */
+    getUnsubscribeMetrics: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          unsubscribedAt: { not: null },
+          ...(input?.startDate && { unsubscribedAt: { gte: input.startDate } }),
+          ...(input?.endDate && { unsubscribedAt: { lte: input.endDate } }),
+        };
+
+        // Get unsubscribe details
+        const unsubscribes = await ctx.db.emailSend.findMany({
+          where,
+          include: {
+            campaign: {
+              select: { id: true, name: true },
+            },
+          },
+          orderBy: { unsubscribedAt: 'desc' },
+        });
+
+        // Group by campaign
+        const byCampaign = unsubscribes.reduce(
+          (acc, u) => {
+            const campaignName = u.campaign?.name || 'No Campaign';
+            if (!acc[campaignName]) {
+              acc[campaignName] = 0;
+            }
+            acc[campaignName]++;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        // Get total sends for calculating rates
+        const totalSends = await ctx.db.emailSend.count({
+          where: {
+            sentAt: { not: null },
+            ...(input?.startDate && { sentAt: { gte: input.startDate } }),
+            ...(input?.endDate && { sentAt: { lte: input.endDate } }),
+          },
+        });
+
+        return {
+          totalUnsubscribes: unsubscribes.length,
+          unsubscribeRate: totalSends > 0 ? Number(((unsubscribes.length / totalSends) * 100).toFixed(3)) : 0,
+          byCampaign: Object.entries(byCampaign)
+            .map(([name, count]) => ({ campaignName: name, count }))
+            .sort((a, b) => b.count - a.count),
+          recentUnsubscribes: unsubscribes.slice(0, 20).map((u) => ({
+            email: u.recipientEmail,
+            campaign: u.campaign?.name || 'N/A',
+            unsubscribedAt: u.unsubscribedAt,
+          })),
+        };
+      }),
+
+    /**
+     * Get link click breakdown/heatmap data
+     */
+    getLinkClickBreakdown: adminProcedure
+      .input(
+        z.object({
+          campaignId: z.string().optional(),
+          templateId: z.string().optional(),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          limit: z.number().min(1).max(100).default(20),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const sendWhere = {
+          ...(input.campaignId && { campaignId: input.campaignId }),
+          ...(input.templateId && { templateId: input.templateId }),
+          ...(input.startDate && { sentAt: { gte: input.startDate } }),
+          ...(input.endDate && { sentAt: { lte: input.endDate } }),
+        };
+
+        // Get link clicks
+        const clicks = await ctx.db.emailLinkClick.findMany({
+          where: {
+            send: sendWhere,
+            ...(input.startDate && { clickedAt: { gte: input.startDate } }),
+            ...(input.endDate && { clickedAt: { lte: input.endDate } }),
+          },
+          select: {
+            linkUrl: true,
+            linkText: true,
+            linkPosition: true,
+          },
+        });
+
+        // Group by URL
+        const byUrl = clicks.reduce(
+          (acc, click) => {
+            const key = click.linkUrl;
+            if (!acc[key]) {
+              acc[key] = {
+                url: click.linkUrl,
+                text: click.linkText || 'Unknown',
+                position: click.linkPosition || 'Unknown',
+                clicks: 0,
+              };
+            }
+            acc[key].clicks++;
+            return acc;
+          },
+          {} as Record<string, { url: string; text: string; position: string; clicks: number }>
+        );
+
+        // Group by position for heatmap data
+        const byPosition = clicks.reduce(
+          (acc, click) => {
+            const position = click.linkPosition || 'unknown';
+            if (!acc[position]) {
+              acc[position] = 0;
+            }
+            acc[position]++;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        // Group by CTA text
+        const byText = clicks.reduce(
+          (acc, click) => {
+            const text = click.linkText || 'Unknown';
+            if (!acc[text]) {
+              acc[text] = 0;
+            }
+            acc[text]++;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        const totalClicks = clicks.length;
+
+        return {
+          totalClicks,
+          topLinks: Object.values(byUrl)
+            .sort((a, b) => b.clicks - a.clicks)
+            .slice(0, input.limit)
+            .map((link) => ({
+              ...link,
+              percentage: totalClicks > 0 ? Number(((link.clicks / totalClicks) * 100).toFixed(1)) : 0,
+            })),
+          byPosition: Object.entries(byPosition)
+            .map(([position, count]) => ({
+              position,
+              clicks: count,
+              percentage: totalClicks > 0 ? Number(((count / totalClicks) * 100).toFixed(1)) : 0,
+            }))
+            .sort((a, b) => b.clicks - a.clicks),
+          byCTA: Object.entries(byText)
+            .map(([text, count]) => ({
+              text,
+              clicks: count,
+              percentage: totalClicks > 0 ? Number(((count / totalClicks) * 100).toFixed(1)) : 0,
+            }))
+            .sort((a, b) => b.clicks - a.clicks)
+            .slice(0, 10),
+        };
+      }),
+
+    /**
+     * Get email template analytics summary (using existing EmailTemplateAnalytics model)
+     */
+    getTemplateAnalyticsSummary: adminProcedure
+      .input(
+        z
+          .object({
+            limit: z.number().min(1).max(50).default(10),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get template analytics from the existing model
+        const templateAnalytics = await ctx.db.emailTemplateAnalytics.findMany({
+          include: {
+            template: {
+              select: { id: true, name: true, slug: true, category: true, status: true },
+            },
+          },
+          orderBy: { sentCount: 'desc' },
+          take: input?.limit || 10,
+        });
+
+        return templateAnalytics.map((ta) => ({
+          templateId: ta.templateId,
+          templateName: ta.template.name,
+          templateSlug: ta.template.slug,
+          category: ta.template.category,
+          status: ta.template.status,
+          sentCount: ta.sentCount,
+          openCount: ta.openCount,
+          clickCount: ta.clickCount,
+          bounceCount: ta.bounceCount,
+          unsubscribeCount: ta.unsubscribeCount,
+          openRate: ta.openRate || 0,
+          clickRate: ta.clickRate || 0,
+          bounceRate: ta.bounceRate || 0,
+          unsubscribeRate: ta.unsubscribeRate || 0,
+          lastUpdatedAt: ta.lastUpdatedAt,
+        }));
+      }),
+  }),
 });

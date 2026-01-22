@@ -149,7 +149,7 @@
       "id": "E13-S8",
       "title": "Email Campaign Analytics",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "description": "Track email campaign performance and engagement",
       "acceptanceCriteria": [
         "Dashboard showing email send volume, open rates, click rates",
