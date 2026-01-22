@@ -139,7 +139,23 @@ export const bookingRouter = router({
           })
         }
 
-        if (trip.currentBookings >= trip.capacity) {
+        // P1-004: Count both confirmed and recent pending bookings to prevent race conditions
+        // Pending bookings older than 30 minutes are considered abandoned
+        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000)
+        const activeReservations = await ctx.db.booking.count({
+          where: {
+            tripId,
+            OR: [
+              { status: 'CONFIRMED' },
+              {
+                status: 'PENDING_PAYMENT',
+                createdAt: { gt: thirtyMinutesAgo },
+              },
+            ],
+          },
+        })
+
+        if (activeReservations >= trip.capacity) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'This trip is fully booked',
@@ -793,9 +809,24 @@ export const bookingRouter = router({
           })
         }
 
-        // Check capacity for both guests
+        // P1-004: Check capacity for both guests using active reservations count
+        // Count confirmed + recent pending bookings to prevent race conditions
+        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000)
+        const activeReservations = await ctx.db.booking.count({
+          where: {
+            tripId: primary.tripId,
+            OR: [
+              { status: 'CONFIRMED' },
+              {
+                status: 'PENDING_PAYMENT',
+                createdAt: { gt: thirtyMinutesAgo },
+              },
+            ],
+          },
+        })
+
         const requiredCapacity = 2
-        if (trip.currentBookings + requiredCapacity > trip.capacity) {
+        if (activeReservations + requiredCapacity > trip.capacity) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'Trip does not have capacity for 2 guests',
@@ -1294,15 +1325,7 @@ export const bookingRouter = router({
         })
       }
 
-      // 5. Check trip capacity
-      if (trip.currentBookings >= trip.capacity) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'This trip is fully booked',
-        })
-      }
-
-      // 6. Check if trip is in the future
+      // 5. Check if trip is in the future
       if (new Date(trip.startDate) < new Date()) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -1310,21 +1333,31 @@ export const bookingRouter = router({
         })
       }
 
-      // 7. Assign trip to booking and increment trip bookings
-      const [updatedBooking] = await ctx.db.$transaction([
-        ctx.db.booking.update({
+      // 6. P1-004: Atomically check capacity and increment in single operation
+      // This prevents race conditions where two bookings could exceed capacity
+      const [updatedBooking] = await ctx.db.$transaction(async (tx) => {
+        // Atomic: only increment if currentBookings < capacity
+        const incrementResult = await tx.$executeRaw`
+          UPDATE "Trip"
+          SET "currentBookings" = "currentBookings" + 1
+          WHERE id = ${tripId}
+          AND "currentBookings" < capacity
+        `
+
+        if (incrementResult === 0) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'This trip is fully booked',
+          })
+        }
+
+        const booking = await tx.booking.update({
           where: { id: bookingId },
           data: { tripId },
-        }),
-        ctx.db.trip.update({
-          where: { id: tripId },
-          data: {
-            currentBookings: {
-              increment: 1,
-            },
-          },
-        }),
-      ])
+        })
+
+        return [booking]
+      })
 
       return {
         success: true,
@@ -2456,7 +2489,22 @@ export const bookingRouter = router({
           })
         }
 
-        if (trip.currentBookings >= trip.capacity) {
+        // P1-004: Count both confirmed and recent pending bookings to prevent race conditions
+        const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000)
+        const activeReservations = await ctx.db.booking.count({
+          where: {
+            tripId,
+            OR: [
+              { status: 'CONFIRMED' },
+              {
+                status: 'PENDING_PAYMENT',
+                createdAt: { gt: thirtyMinutesAgo },
+              },
+            ],
+          },
+        })
+
+        if (activeReservations >= trip.capacity) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'This trip is fully booked',

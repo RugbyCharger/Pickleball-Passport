@@ -8,10 +8,24 @@
 
 import Stripe from 'stripe'
 import { prisma } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 import { isTransientError, isPermanentError, getNextRetryDate } from './retry-calculator'
 import { sendEmail } from '@/lib/email/send-email'
 import { generateInstallmentReminderEmail } from '@/lib/email/templates/installment-payment-reminder'
 import { paymentLogger, logError } from '@/lib/logger'
+
+// P1-008: Type for PaymentRecord with booking relations
+type PaymentRecordWithBooking = Prisma.PaymentRecordGetPayload<{
+  include: {
+    booking: {
+      include: {
+        user: true
+        trip: true
+        package: true
+      }
+    }
+  }
+}>
 
 // Initialize Stripe client for server-side use
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -227,7 +241,7 @@ export async function chargeInstallment(
  * Send customer reminder email for failed payment
  */
 async function sendCustomerReminder(
-  paymentRecord: any,
+  paymentRecord: PaymentRecordWithBooking,
   newRetryCount: number
 ): Promise<void> {
   try {
@@ -278,7 +292,7 @@ async function sendCustomerReminder(
  * Story 11-8: Uses centralized admin-alerts service
  */
 async function sendAdminAlert(
-  paymentRecord: any,
+  paymentRecord: PaymentRecordWithBooking,
   errorCode: string,
   errorMessage: string
 ): Promise<void> {
