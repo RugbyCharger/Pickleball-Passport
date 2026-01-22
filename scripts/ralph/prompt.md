@@ -4,8 +4,8 @@ You are an autonomous coding agent working on the Pickleball Passport project us
 
 ## Your Task
 
-1. Read the PRD at `prd.json` in the project root
-2. Read the progress log at `progress-contact.txt` (check Codebase Patterns section first)
+1. Read the PRD at `prd-gift-state-machine.json` in the project root
+2. Read the progress log at `progress-gift.txt` (check Codebase Patterns section first)
 3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from main.
 4. Pick the **highest priority** user story where `passes: false`
 5. Implement that single user story

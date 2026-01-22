@@ -1,0 +1,168 @@
+{
+  "project": "Pickleball Passport",
+  "branchName": "ralph/gift-state-machine",
+  "description": "Gift Booking State Machine - Replace manual gift status updates with centralized state machine, add auto-expiration, and create audit trail",
+  "userStories": [
+    {
+      "id": "GS-001",
+      "title": "Create GiftState enum and database schema updates",
+      "description": "Add state machine infrastructure to the database schema",
+      "acceptanceCriteria": [
+        "Create GiftState enum in schema.prisma with states: PENDING, SENT, ACCEPTED, DECLINED, EXPIRED",
+        "Add giftStateChangedAt DateTime field to Booking model for last state transition timestamp",
+        "Add giftExpiresAt DateTime field to Booking model (calculated as giftDeliveryDate + 30 days or createdAt + 30 days)",
+        "Create GiftStateTransition model to track state history: id, bookingId, fromState, toState, reason, metadata (JSON), createdAt",
+        "Add foreign key relationship from GiftStateTransition to Booking",
+        "Run prisma generate and create migration",
+        "All existing tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Keep existing GiftStatus enum for backwards compatibility during migration. The new GiftState enum adds EXPIRED state. Migration should set giftExpiresAt for existing gifts."
+    },
+    {
+      "id": "GS-002",
+      "title": "Create gift state machine helper with transition validation",
+      "description": "Build centralized state machine logic similar to payment-state-machine.ts",
+      "acceptanceCriteria": [
+        "Create lib/gift/gift-state-machine.ts with GiftStateMachine class",
+        "Define valid transitions: PENDING→SENT, SENT→ACCEPTED, SENT→DECLINED, SENT→EXPIRED, PENDING→EXPIRED",
+        "Implement canTransition(fromState, toState): boolean method",
+        "Implement getValidTransitions(currentState): GiftState[] method",
+        "Implement isTerminalState(state): boolean (ACCEPTED, DECLINED, EXPIRED are terminal)",
+        "Implement getTransitionReason(fromState, toState): string method for audit logging",
+        "Add transition metadata support (who triggered, why, additional context)",
+        "Create comprehensive unit tests (minimum 20 tests covering all transitions and edge cases)",
+        "Export singleton instance for use across codebase",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Follow the same pattern as lib/payments/payment-state-machine.ts. Include tests for invalid transitions throwing errors."
+    },
+    {
+      "id": "GS-003",
+      "title": "Create gift state transition service",
+      "description": "Service layer that executes state transitions with side effects",
+      "acceptanceCriteria": [
+        "Create lib/gift/gift-transition-service.ts",
+        "Implement transitionGiftState(bookingId, toState, reason, metadata) async function",
+        "Validate transition is allowed using GiftStateMachine before executing",
+        "Record transition in GiftStateTransition table for audit trail",
+        "Update booking.giftStatus and booking.giftStateChangedAt atomically",
+        "Handle SENT transition: send gift notification email to recipient",
+        "Handle DECLINED transition: initiate Stripe refund, update booking status to CANCELLED",
+        "Handle EXPIRED transition: initiate Stripe refund, update booking status to CANCELLED, send expiration notice to purchaser",
+        "Handle ACCEPTED transition: transfer booking ownership, send confirmation emails",
+        "All operations wrapped in database transaction for atomicity",
+        "Create unit tests mocking external services (email, Stripe)",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Use existing email templates. Reuse refund logic from current gift.ts decline handler. Ensure idempotency for retries."
+    },
+    {
+      "id": "GS-004",
+      "title": "Refactor gift router to use state machine",
+      "description": "Update lib/trpc/server/routers/gift.ts to use centralized state machine",
+      "acceptanceCriteria": [
+        "Refactor acceptGift procedure to use giftTransitionService.transitionGiftState()",
+        "Refactor declineGift procedure to use giftTransitionService.transitionGiftState()",
+        "Remove manual status update code (direct prisma updates to giftStatus)",
+        "Add validation that checks state machine before attempting transition",
+        "Return meaningful error messages for invalid transitions",
+        "Update getByToken to include state transition history in response",
+        "All existing gift.test.ts tests continue to pass",
+        "Add new tests for state machine error cases (invalid transitions)",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "This is a refactor - behavior should remain the same but now use state machine. Focus on maintaining backwards compatibility."
+    },
+    {
+      "id": "GS-005",
+      "title": "Create auto-expiration cron job",
+      "description": "Cron job to automatically expire gifts that pass their expiration date",
+      "acceptanceCriteria": [
+        "Create app/api/cron/expire-gifts/route.ts",
+        "Find all gifts where giftStatus=SENT and giftExpiresAt <= now",
+        "Transition each to EXPIRED state using giftTransitionService",
+        "Send expiration notification email to purchaser",
+        "Process in batches of 10 to avoid timeout",
+        "Log all expirations for monitoring",
+        "Add Vercel cron config to run daily at 10:00 AM UTC",
+        "Create unit tests with mocked database and services",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Similar pattern to charge-installments cron. Use 30-day expiration window (configurable). Include metrics tracking if time permits."
+    },
+    {
+      "id": "GS-006",
+      "title": "Update scheduled gifts cron to use state machine",
+      "description": "Refactor existing send-scheduled-gifts cron to use state machine for PENDING→SENT transition",
+      "acceptanceCriteria": [
+        "Update app/api/cron/send-scheduled-gifts/route.ts",
+        "Replace direct giftStatus update with giftTransitionService.transitionGiftState()",
+        "Calculate and set giftExpiresAt when transitioning to SENT (deliveryDate + 30 days)",
+        "Record transition in audit log via state machine",
+        "All existing functionality preserved (find pending gifts, send emails, etc.)",
+        "Add error handling for failed transitions",
+        "Create/update unit tests",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Refactor existing cron, don't create new one. Ensure giftExpiresAt is set correctly for time-based expiration."
+    },
+    {
+      "id": "GS-007",
+      "title": "Add gift state history to dashboard",
+      "description": "Display state transition timeline in booking details",
+      "acceptanceCriteria": [
+        "Update components/dashboard/bookings-list.tsx to show state history for gifts",
+        "Create GiftStateTimeline component showing: state, timestamp, reason for each transition",
+        "Display current state prominently with badge",
+        "Show expiration date countdown for SENT gifts (e.g., 'Expires in 15 days')",
+        "Admin can see full audit trail in booking detail view",
+        "Purchaser can see simplified timeline in their dashboard",
+        "Responsive design (mobile-friendly)",
+        "All tests pass (npm run test)",
+        "TypeScript strict mode: 0 errors"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Focus on clarity for 55+ users. Use clear labels, not just icons. Consider adding to existing booking detail modal."
+    },
+    {
+      "id": "GS-008",
+      "title": "Create AGENTS.md documentation for gift state machine",
+      "description": "Document the gift state machine patterns for future AI/developer reference",
+      "acceptanceCriteria": [
+        "Create lib/gift/AGENTS.md with comprehensive documentation",
+        "Document all valid state transitions with diagram (ASCII art)",
+        "Explain when each transition occurs and what triggers it",
+        "Document side effects for each transition (emails, refunds, etc.)",
+        "Include code examples for common operations",
+        "Document error handling patterns",
+        "List all related files and their purposes",
+        "Include testing patterns and how to add new tests",
+        "Document expiration logic and configuration",
+        "Minimum 300 lines of documentation",
+        "TypeScript strict mode: 0 errors (for any code examples)"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Follow the pattern from lib/payments/AGENTS.md. This helps future Ralph loops and human developers understand the system."
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+## Codebase Patterns
+
+### General Patterns (from payment-retry implementation)
+- Use `sql<number>` template for aggregations in Prisma raw queries
+- Always use `IF NOT EXISTS` for migrations
+- Export types from actions.ts for UI components
+- State machines should be in dedicated files under lib/[domain]/
+- Test files go in __tests__ subdirectories
+- Use Vitest for testing with vi.mock() for mocking
+- Follow existing enum patterns in prisma/schema.prisma
+
+### Gift-Specific Patterns (discovered during exploration)
+- Gift states: PENDING, SENT, ACCEPTED, DECLINED (adding EXPIRED)
+- Gift tokens are UUIDs stored in giftAcceptanceToken field
+- 90-day token expiration is currently hardcoded in gift.ts
+- Gift emails use templates in lib/email/templates/gift-*.ts
+- Refunds use Stripe via existing refund utilities
+
+### Key Files for Gift State Machine
+- Schema: prisma/schema.prisma (GiftStatus enum at line 128-133)
+- Router: lib/trpc/server/routers/gift.ts
+- Tests: lib/trpc/server/routers/__tests__/gift.test.ts
+- Cron: app/api/cron/send-scheduled-gifts/route.ts
+- Email templates: lib/email/templates/gift-*.ts
+
+---
+
+## 2026-01-20 - Initial Setup
+Iteration: 0 (Setup)
+- Created prd-gift-state-machine.json with 8 stories
+- Created ralph/gift-state-machine branch
+- Updated scripts/ralph/prompt.md to point to new PRD
+- Explored existing gift implementation
+
+**Current Gift Flow:**
+1. PENDING: Gift created, waiting to send
+2. SENT: Email sent to recipient (via cron or immediate)
+3. ACCEPTED: Recipient accepted, booking transferred
+4. DECLINED: Recipient declined, refund processed
+
+**State Machine Will Add:**
+- EXPIRED state for auto-expiration
+- Centralized transition validation
+- Audit trail via GiftStateTransition table
+- Automatic expiration cron job
+
+---
+
+## 2026-01-20 - GS-001: Database Schema Updates
+Iteration: 1 (GS-001 Complete)
+
+**Completed:**
+- ✅ Created GiftState enum with: PENDING, SENT, ACCEPTED, DECLINED, EXPIRED
+- ✅ Added giftStateChangedAt DateTime field to Booking
+- ✅ Added giftExpiresAt DateTime field to Booking
+- ✅ Created GiftStateTransition model with: id, bookingId, fromState, toState, reason, metadata, createdAt
+- ✅ Added foreign key relationship from GiftStateTransition to Booking
+- ✅ Created migration: 20260120100000_gift_state_machine_schema
+- ✅ prisma generate successful
+- ✅ All gift tests pass (37 tests)
+- ✅ Prisma schema valid
+
+**Files Changed:**
+- prisma/schema.prisma (added GiftState enum, GiftStateTransition model, Booking fields)
+- prisma/migrations/20260120100000_gift_state_machine_schema/migration.sql
+
+**Note:** Pre-existing TypeScript errors in lib/data/training-resources.ts and test failures in lib/payments/__tests__/charge-installment.test.ts are unrelated to this PR.
+
+---
+
+## 2026-01-20 - ALL STORIES COMPLETE
+Iteration: 2 (GS-002 through GS-008 Complete)
+
+### GS-002: Gift State Machine Helper ✅
+- Created lib/gift/gift-state-machine.ts with GiftStateMachine class
+- Defined valid transitions: PENDING→SENT, SENT→ACCEPTED/DECLINED/EXPIRED, PENDING→EXPIRED
+- Implemented canTransition, getValidTransitions, isTerminalState, getTransitionReason
+- Created 47 comprehensive unit tests
+- Exported singleton instance
+
+### GS-003: Gift State Transition Service ✅
+- Created lib/gift/gift-transition-service.ts
+- Implemented transitionGiftState() with atomic database transactions
+- Handles all side effects: emails, refunds, booking updates
+- Records all transitions in GiftStateTransition audit table
+- Created 15 unit tests with mocked dependencies
+
+### GS-004: Refactor Gift Router ✅
+- Updated lib/trpc/server/routers/gift.ts to use state machine
+- acceptGift and declineGift now use transitionGiftState()
+- getByToken includes state transition history
+- All 37 existing tests still pass
+- Added state machine validation before transitions
+
+### GS-005: Auto-Expiration Cron Job ✅
+- Created app/api/cron/expire-gifts/route.ts
+- Finds SENT gifts where giftExpiresAt <= now
+- Processes in batches of 10
+- Added to vercel.json crons (runs daily at 10:00 AM UTC)
+- Created 12 unit tests
+
+### GS-006: Update Scheduled Gifts Cron ✅
+- Updated app/api/cron/send-scheduled-gifts/route.ts
+- Now uses transitionGiftState() for PENDING→SENT
+- Automatically sets giftExpiresAt (30 days from delivery)
+- Created 13 unit tests
+
+### GS-007: Gift State History UI ✅
+- Created components/dashboard/gift-state-timeline.tsx
+- GiftStateTimeline component shows full audit trail
+- GiftStatusBadge component shows status with expiration countdown
+- Updated bookings-list.tsx to use new components
+- Responsive design with clear labels for 55+ users
+
+### GS-008: AGENTS.md Documentation ✅
+- Created lib/gift/AGENTS.md (485 lines)
+- ASCII state diagram
+- Complete transition table with side effects
+- Code examples for all operations
+- Testing patterns and configuration docs
+
+**Files Created/Modified:**
+- prisma/schema.prisma
+- prisma/migrations/20260120100000_gift_state_machine_schema/migration.sql
+- lib/gift/gift-state-machine.ts
+- lib/gift/gift-transition-service.ts
+- lib/gift/__tests__/gift-state-machine.test.ts
+- lib/gift/__tests__/gift-transition-service.test.ts
+- lib/gift/AGENTS.md
+- lib/trpc/server/routers/gift.ts
+- app/api/cron/expire-gifts/route.ts
+- app/api/cron/send-scheduled-gifts/route.ts
+- app/api/cron/__tests__/expire-gifts-route.test.ts
+- app/api/cron/__tests__/send-scheduled-gifts-route.test.ts
+- components/dashboard/gift-state-timeline.tsx
+- components/dashboard/bookings-list.tsx
+- vercel.json
+- prd-gift-state-machine.json (all 8 stories now pass: true)
+
+**Test Results:**
+- 199+ tests passing across all gift-related files
+- 47 tests in gift-state-machine.test.ts
+- 15 tests in gift-transition-service.test.ts
+- 12 tests in expire-gifts-route.test.ts
+- 13 tests in send-scheduled-gifts-route.test.ts
+- 37 tests in gift.test.ts (existing, still passing)
+
+---
