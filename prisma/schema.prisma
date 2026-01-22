@@ -1292,6 +1292,7 @@ model EmailTemplate {
   // Relations
   versions  EmailTemplateVersion[]
   analytics EmailTemplateAnalytics?
+  campaigns EmailCampaign[]        // E13-S8: Campaign analytics
 
   @@index([category])
   @@index([status])
@@ -2181,4 +2182,269 @@ model MediaAsset {
   @@index([mimeType])
   @@index([uploadedAt])
   @@index([createdBy])
+}
+
+// ============================================================================
+// ANALYTICS EVENT TRACKING (Epic 13)
+// ============================================================================
+
+// Analytics event types for tracking user actions
+enum AnalyticsEventType {
+  PAGE_VIEW           // User views a page
+  BUTTON_CLICK        // User clicks a button/CTA
+  FUNNEL_STEP         // User progresses through booking funnel
+  FORM_SUBMIT         // User submits a form
+  CONVERSION          // User completes a conversion (booking, payment, etc.)
+  SEARCH              // User performs a search
+  FILTER              // User applies filters
+  ERROR               // Error occurred during user action
+}
+
+// Analytics events for tracking user behavior
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  eventType   AnalyticsEventType
+  userId      String?            // Clerk user ID (null for anonymous)
+  sessionId   String             // Browser session ID for tracking anonymous users
+
+  // Event details stored as JSON
+  properties  Json               // Flexible JSON for event-specific data
+  // Example properties:
+  // PAGE_VIEW: { path: "/packages/pure-play", referrer: "google.com" }
+  // BUTTON_CLICK: { buttonId: "book-now", location: "hero-section" }
+  // FUNNEL_STEP: { step: "CONFIGURATOR", packageId: "xxx" }
+  // CONVERSION: { type: "BOOKING_COMPLETED", bookingId: "xxx", value: 150000 }
+
+  // Context
+  pageUrl     String?            // Full URL where event occurred
+  userAgent   String?            // Browser user agent
+  ipAddress   String?            // IP address (for geo-location)
+
+  // UTM tracking
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  createdAt   DateTime           @default(now())
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([utmSource])
+  @@index([pageUrl])
+}
+
+// Analytics session tracking for user journey analysis
+model AnalyticsSession {
+  id              String    @id @default(cuid())
+  sessionId       String    @unique // Browser session ID
+  userId          String?   // Clerk user ID (null for anonymous until login)
+
+  // Session timing
+  startedAt       DateTime  @default(now())
+  lastActivityAt  DateTime  @default(now())
+
+  // Session metadata
+  deviceType      String?   // desktop, mobile, tablet
+  browser         String?   // chrome, firefox, safari, etc.
+  os              String?   // windows, macos, ios, android
+  screenResolution String?  // e.g., "1920x1080"
+
+  // Traffic source
+  landingPage     String?   // First page visited
+  referrer        String?   // Referral source
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+
+  // Session metrics (updated on each activity)
+  pageViews       Int       @default(0)
+  eventCount      Int       @default(0)
+
+  // Conversion tracking
+  hasConverted    Boolean   @default(false) // Did this session result in a conversion?
+  conversionType  String?   // Type of conversion (e.g., "BOOKING", "APPLICATION")
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([startedAt])
+  @@index([lastActivityAt])
+  @@index([hasConverted])
+  @@index([utmSource])
+}
+
+// ============================================================================
+// EMAIL CAMPAIGN ANALYTICS (E13-S8)
+// ============================================================================
+
+enum EmailCampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+}
+
+enum EmailSendStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  UNSUBSCRIBED
+  COMPLAINED
+}
+
+// Email Campaign - Groups sends for analytics (marketing blasts, A/B tests)
+model EmailCampaign {
+  id          String              @id @default(cuid())
+  name        String              // "January Newsletter" or "Welcome Series - Day 1"
+  subject     String              // Email subject line
+  templateId  String?             // Optional link to EmailTemplate
+  template    EmailTemplate?      @relation(fields: [templateId], references: [id])
+
+  // Campaign settings
+  status      EmailCampaignStatus @default(DRAFT)
+  scheduledAt DateTime?           // When to send (null = immediate)
+  sentAt      DateTime?           // When actually sent
+
+  // Targeting
+  recipientCount Int             @default(0) // Total recipients targeted
+  segmentCriteria Json?          // Optional: criteria used to select recipients
+
+  // A/B Testing
+  isAbTest       Boolean         @default(false)
+  abTestVariant  String?         // "A", "B", "C", etc.
+  abTestParentId String?         // Links variants to parent campaign
+  abTestParent   EmailCampaign?  @relation("AbTestVariants", fields: [abTestParentId], references: [id])
+  abTestVariants EmailCampaign[] @relation("AbTestVariants")
+
+  // Metadata
+  createdBy   String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  // Relations
+  sends       EmailSend[]
+
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+  @@index([abTestParentId])
+}
+
+// Individual email send - tracks each email delivery
+model EmailSend {
+  id          String          @id @default(cuid())
+  campaignId  String?
+  campaign    EmailCampaign?  @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  // Recipient
+  recipientEmail String
+  recipientUserId String?     // Optional: Clerk user ID if known
+  recipientName   String?
+
+  // Email details
+  subject     String
+  templateId  String?         // Template used (slug or ID)
+
+  // Status tracking
+  status      EmailSendStatus @default(QUEUED)
+  queuedAt    DateTime        @default(now())
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?       // First open
+  clickedAt   DateTime?       // First click
+  bouncedAt   DateTime?
+  unsubscribedAt DateTime?
+
+  // Engagement metrics
+  openCount   Int             @default(0) // Total opens (includes re-opens)
+  clickCount  Int             @default(0) // Total clicks
+
+  // Bounce/Error details
+  bounceType  String?         // "hard", "soft"
+  bounceReason String?
+
+  // Tracking
+  utmSource   String?
+  utmMedium   String?         @default("email")
+  utmCampaign String?
+
+  createdAt   DateTime        @default(now())
+
+  // Relations
+  linkClicks  EmailLinkClick[]
+
+  @@index([campaignId])
+  @@index([recipientEmail])
+  @@index([recipientUserId])
+  @@index([status])
+  @@index([sentAt])
+  @@index([templateId])
+}
+
+// Track individual link clicks within emails
+model EmailLinkClick {
+  id          String    @id @default(cuid())
+  sendId      String
+  send        EmailSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
+
+  // Link details
+  linkUrl     String    // Original URL
+  linkText    String?   // CTA text (e.g., "Book Now", "View Details")
+  linkPosition String?  // Position in email (e.g., "header", "body", "footer")
+
+  // Click tracking
+  clickedAt   DateTime  @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  @@index([sendId])
+  @@index([clickedAt])
+  @@index([linkUrl])
+}
+
+// ============================================================================
+// CUSTOM REPORTS (E13-S10)
+// ============================================================================
+
+// Visualization types for custom reports
+enum ReportVisualizationType {
+  TABLE
+  BAR_CHART
+  LINE_CHART
+  PIE_CHART
+}
+
+// Saved custom reports for admin users
+model CustomReport {
+  id          String                  @id @default(cuid())
+  name        String                  // Report name for display
+  description String?                 // Optional description
+
+  // Report configuration stored as JSON
+  metrics     Json                    // Selected metrics: ["bookings", "revenue", "conversions"]
+  filters     Json?                   // Filter configuration
+  dateRange   Json?                   // Date range configuration: { preset: "last30days" } or { startDate, endDate }
+  visualization ReportVisualizationType @default(TABLE)
+  groupBy     String?                 // Optional grouping (daily, weekly, monthly, by package, etc.)
+
+  // Scheduling (optional - for email delivery)
+  isScheduled      Boolean   @default(false)
+  scheduleFrequency String?  // "daily", "weekly", "monthly"
+  scheduleRecipients String[] // Email addresses to send to
+  lastRunAt        DateTime?
+  nextRunAt        DateTime?
+
+  // Audit
+  createdBy   String                  // Admin user ID who created
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  @@index([createdBy])
+  @@index([createdAt])
+  @@index([isScheduled])
 }
