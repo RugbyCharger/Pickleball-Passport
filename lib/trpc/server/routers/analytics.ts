@@ -858,6 +858,505 @@ export const analyticsRouter = router({
   }),
 
   // ============================================================================
+  // CONVERSION TRACKING (E13-S3)
+  // ============================================================================
+
+  conversionTracking: router({
+    /**
+     * Get conversion events by type (Application Submitted, Booking Completed, Payment Made)
+     */
+    getConversionsByType: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const eventWhere = {
+          eventType: 'CONVERSION' as AnalyticsEventType,
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all conversion events
+        const conversionEvents = await ctx.db.analyticsEvent.findMany({
+          where: eventWhere,
+          select: {
+            id: true,
+            properties: true,
+            utmSource: true,
+            utmMedium: true,
+            utmCampaign: true,
+            createdAt: true,
+          },
+        });
+
+        // Count conversions by type
+        const conversionsByType: Record<string, number> = {
+          APPLICATION_SUBMITTED: 0,
+          BOOKING_COMPLETED: 0,
+          PAYMENT_MADE: 0,
+        };
+
+        conversionEvents.forEach((event) => {
+          const props = event.properties as { type?: string } | null;
+          const type = props?.type || 'UNKNOWN';
+          if (type in conversionsByType) {
+            conversionsByType[type]++;
+          }
+        });
+
+        // Also count from actual database records for accuracy
+        const [applicationsCount, bookingsCount, paymentsCount] = await Promise.all([
+          ctx.db.application.count({
+            where: {
+              ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+              ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            },
+          }),
+          ctx.db.booking.count({
+            where: {
+              status: 'CONFIRMED',
+              ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+              ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            },
+          }),
+          ctx.db.payment.count({
+            where: {
+              status: 'SUCCEEDED',
+              ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+              ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            },
+          }),
+        ]);
+
+        return {
+          eventBased: conversionsByType,
+          databaseBased: {
+            applications: applicationsCount,
+            confirmedBookings: bookingsCount,
+            successfulPayments: paymentsCount,
+          },
+          totalConversionEvents: conversionEvents.length,
+        };
+      }),
+
+    /**
+     * Get conversion rates by traffic source (utm_source, utm_medium, utm_campaign)
+     */
+    getByTrafficSource: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            groupBy: z.enum(['source', 'medium', 'campaign']).default('source'),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const sessionWhere = {
+          ...(input?.startDate && { startedAt: { gte: input.startDate } }),
+          ...(input?.endDate && { startedAt: { lte: input.endDate } }),
+        };
+
+        // Get sessions with UTM data
+        const sessions = await ctx.db.analyticsSession.findMany({
+          where: sessionWhere,
+          select: {
+            id: true,
+            utmSource: true,
+            utmMedium: true,
+            utmCampaign: true,
+            hasConverted: true,
+            conversionType: true,
+          },
+        });
+
+        // Group by the selected attribute
+        const groupKey = input?.groupBy || 'source';
+        const getGroupValue = (session: {
+          utmSource: string | null;
+          utmMedium: string | null;
+          utmCampaign: string | null;
+        }) => {
+          switch (groupKey) {
+            case 'source':
+              return session.utmSource || 'Direct';
+            case 'medium':
+              return session.utmMedium || 'None';
+            case 'campaign':
+              return session.utmCampaign || 'None';
+          }
+        };
+
+        const grouped: Record<
+          string,
+          { totalSessions: number; convertedSessions: number }
+        > = {};
+
+        sessions.forEach((session) => {
+          const key = getGroupValue(session);
+          if (!grouped[key]) {
+            grouped[key] = { totalSessions: 0, convertedSessions: 0 };
+          }
+          grouped[key].totalSessions++;
+          if (session.hasConverted) {
+            grouped[key].convertedSessions++;
+          }
+        });
+
+        // Convert to array and calculate rates
+        const results = Object.entries(grouped)
+          .map(([name, data]) => ({
+            name,
+            totalSessions: data.totalSessions,
+            conversions: data.convertedSessions,
+            conversionRate:
+              data.totalSessions > 0
+                ? ((data.convertedSessions / data.totalSessions) * 100).toFixed(2)
+                : '0.00',
+          }))
+          .sort((a, b) => b.conversions - a.conversions);
+
+        return {
+          groupBy: groupKey,
+          results,
+          totalSessions: sessions.length,
+          totalConversions: sessions.filter((s) => s.hasConverted).length,
+        };
+      }),
+
+    /**
+     * Get conversion trends over time (daily/weekly/monthly)
+     */
+    getConversionTrends: adminProcedure
+      .input(
+        z.object({
+          period: z.enum(['day', 'week', 'month']),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+          conversionType: z
+            .enum(['APPLICATION_SUBMITTED', 'BOOKING_COMPLETED', 'PAYMENT_MADE', 'ALL'])
+            .default('ALL'),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const { period, startDate, endDate, conversionType } = input;
+
+        // Get conversion events
+        const eventWhere = {
+          eventType: 'CONVERSION' as AnalyticsEventType,
+          ...(startDate && { createdAt: { gte: startDate } }),
+          ...(endDate && { createdAt: { lte: endDate } }),
+        };
+
+        const events = await ctx.db.analyticsEvent.findMany({
+          where: eventWhere,
+          select: {
+            properties: true,
+            createdAt: true,
+            utmSource: true,
+          },
+        });
+
+        // Group by time period
+        const grouped: Record<
+          string,
+          { total: number; byType: Record<string, number>; bySources: Record<string, number> }
+        > = {};
+
+        events.forEach((event) => {
+          const props = event.properties as { type?: string } | null;
+          const type = props?.type || 'UNKNOWN';
+
+          // Filter by conversion type if specified
+          if (conversionType !== 'ALL' && type !== conversionType) {
+            return;
+          }
+
+          let periodKey: string;
+          const date = event.createdAt;
+
+          switch (period) {
+            case 'day':
+              periodKey = date.toISOString().slice(0, 10);
+              break;
+            case 'week':
+              const d = new Date(date);
+              d.setDate(d.getDate() - d.getDay());
+              periodKey = d.toISOString().slice(0, 10);
+              break;
+            case 'month':
+              periodKey = date.toISOString().slice(0, 7);
+              break;
+          }
+
+          if (!grouped[periodKey]) {
+            grouped[periodKey] = { total: 0, byType: {}, bySources: {} };
+          }
+
+          grouped[periodKey].total++;
+          grouped[periodKey].byType[type] = (grouped[periodKey].byType[type] || 0) + 1;
+
+          const source = event.utmSource || 'Direct';
+          grouped[periodKey].bySources[source] =
+            (grouped[periodKey].bySources[source] || 0) + 1;
+        });
+
+        // Convert to array and sort by date
+        const trends = Object.entries(grouped)
+          .map(([periodKey, data]) => ({
+            period: periodKey,
+            total: data.total,
+            applications: data.byType['APPLICATION_SUBMITTED'] || 0,
+            bookings: data.byType['BOOKING_COMPLETED'] || 0,
+            payments: data.byType['PAYMENT_MADE'] || 0,
+            topSources: Object.entries(data.bySources)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .map(([name, count]) => ({ name, count })),
+          }))
+          .sort((a, b) => a.period.localeCompare(b.period));
+
+        return {
+          period,
+          conversionType,
+          trends,
+          totalConversions: events.length,
+        };
+      }),
+
+    /**
+     * Get top converting sources and campaigns
+     */
+    getTopConverters: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            limit: z.number().min(1).max(50).default(10),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const eventWhere = {
+          eventType: 'CONVERSION' as AnalyticsEventType,
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all conversion events
+        const events = await ctx.db.analyticsEvent.findMany({
+          where: eventWhere,
+          select: {
+            utmSource: true,
+            utmMedium: true,
+            utmCampaign: true,
+            properties: true,
+          },
+        });
+
+        // Group by source
+        const sourceStats: Record<string, { conversions: number; types: Record<string, number> }> =
+          {};
+        const campaignStats: Record<
+          string,
+          { conversions: number; types: Record<string, number> }
+        > = {};
+
+        events.forEach((event) => {
+          const props = event.properties as { type?: string } | null;
+          const type = props?.type || 'UNKNOWN';
+          const source = event.utmSource || 'Direct';
+          const campaign = event.utmCampaign || 'None';
+
+          // Track sources
+          if (!sourceStats[source]) {
+            sourceStats[source] = { conversions: 0, types: {} };
+          }
+          sourceStats[source].conversions++;
+          sourceStats[source].types[type] = (sourceStats[source].types[type] || 0) + 1;
+
+          // Track campaigns (only if there's a campaign)
+          if (event.utmCampaign) {
+            if (!campaignStats[campaign]) {
+              campaignStats[campaign] = { conversions: 0, types: {} };
+            }
+            campaignStats[campaign].conversions++;
+            campaignStats[campaign].types[type] =
+              (campaignStats[campaign].types[type] || 0) + 1;
+          }
+        });
+
+        // Get session counts for conversion rate calculation
+        const sessionsBySource = await ctx.db.analyticsSession.groupBy({
+          by: ['utmSource'],
+          where: {
+            ...(input?.startDate && { startedAt: { gte: input.startDate } }),
+            ...(input?.endDate && { startedAt: { lte: input.endDate } }),
+          },
+          _count: { id: true },
+        });
+
+        const sessionsBySourceMap = new Map(
+          sessionsBySource.map((s) => [s.utmSource || 'Direct', s._count.id])
+        );
+
+        // Format top sources
+        const topSources = Object.entries(sourceStats)
+          .map(([name, data]) => {
+            const totalSessions = sessionsBySourceMap.get(name) || data.conversions;
+            return {
+              name,
+              conversions: data.conversions,
+              totalSessions,
+              conversionRate:
+                totalSessions > 0
+                  ? ((data.conversions / totalSessions) * 100).toFixed(2)
+                  : '0.00',
+              breakdown: data.types,
+            };
+          })
+          .sort((a, b) => b.conversions - a.conversions)
+          .slice(0, input?.limit || 10);
+
+        // Format top campaigns
+        const topCampaigns = Object.entries(campaignStats)
+          .map(([name, data]) => ({
+            name,
+            conversions: data.conversions,
+            breakdown: data.types,
+          }))
+          .sort((a, b) => b.conversions - a.conversions)
+          .slice(0, input?.limit || 10);
+
+        return {
+          topSources,
+          topCampaigns,
+          totalConversions: events.length,
+        };
+      }),
+
+    /**
+     * Get A/B test variant performance (optional feature)
+     */
+    getVariantPerformance: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            experimentId: z.string().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const eventWhere = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        // Get all events with variant information
+        const events = await ctx.db.analyticsEvent.findMany({
+          where: eventWhere,
+          select: {
+            eventType: true,
+            properties: true,
+            sessionId: true,
+          },
+        });
+
+        // Track variants from events with experiment data
+        const variantStats: Record<
+          string,
+          {
+            experimentId: string;
+            variant: string;
+            sessions: Set<string>;
+            conversions: number;
+          }
+        > = {};
+
+        events.forEach((event) => {
+          const props = event.properties as {
+            experimentId?: string;
+            variant?: string;
+            type?: string;
+          } | null;
+
+          if (props?.experimentId && props?.variant) {
+            // Filter by experimentId if specified
+            if (input?.experimentId && props.experimentId !== input.experimentId) {
+              return;
+            }
+
+            const key = `${props.experimentId}:${props.variant}`;
+
+            if (!variantStats[key]) {
+              variantStats[key] = {
+                experimentId: props.experimentId,
+                variant: props.variant,
+                sessions: new Set(),
+                conversions: 0,
+              };
+            }
+
+            variantStats[key].sessions.add(event.sessionId);
+
+            if (event.eventType === 'CONVERSION') {
+              variantStats[key].conversions++;
+            }
+          }
+        });
+
+        // Group by experiment
+        const experiments: Record<
+          string,
+          Array<{
+            variant: string;
+            sessions: number;
+            conversions: number;
+            conversionRate: string;
+          }>
+        > = {};
+
+        Object.values(variantStats).forEach((stat) => {
+          if (!experiments[stat.experimentId]) {
+            experiments[stat.experimentId] = [];
+          }
+
+          const sessionCount = stat.sessions.size;
+          experiments[stat.experimentId].push({
+            variant: stat.variant,
+            sessions: sessionCount,
+            conversions: stat.conversions,
+            conversionRate:
+              sessionCount > 0
+                ? ((stat.conversions / sessionCount) * 100).toFixed(2)
+                : '0.00',
+          });
+        });
+
+        // Sort variants by conversion rate within each experiment
+        Object.keys(experiments).forEach((expId) => {
+          experiments[expId].sort(
+            (a, b) => parseFloat(b.conversionRate) - parseFloat(a.conversionRate)
+          );
+        });
+
+        return {
+          experiments,
+          hasData: Object.keys(experiments).length > 0,
+        };
+      }),
+  }),
+
+  // ============================================================================
   // BOOKING CONVERSION METRICS
   // ============================================================================
 

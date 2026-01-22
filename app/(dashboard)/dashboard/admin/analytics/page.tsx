@@ -39,6 +39,10 @@ import {
   FileCheck,
   CreditCard,
   CheckCircle,
+  Target,
+  Globe,
+  Megaphone,
+  FlaskConical,
 } from 'lucide-react';
 import {
   XAxis,
@@ -223,13 +227,18 @@ const FUNNEL_STAGE_COLORS = [
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
-type AnalyticsTab = 'overview' | 'booking-funnel';
+type AnalyticsTab = 'overview' | 'booking-funnel' | 'conversion-tracking';
 
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
   const [activeTab, setActiveTab] = useState<AnalyticsTab>('overview');
   const [funnelPackageFilter, setFunnelPackageFilter] = useState<string>('');
   const [funnelUtmSourceFilter, setFunnelUtmSourceFilter] = useState<string>('');
+
+  // Conversion Tracking filters (E13-S3)
+  const [conversionGroupBy, setConversionGroupBy] = useState<'source' | 'medium' | 'campaign'>('source');
+  const [conversionTrendPeriod, setConversionTrendPeriod] = useState<'day' | 'week' | 'month'>('day');
+  const [conversionTypeFilter, setConversionTypeFilter] = useState<'APPLICATION_SUBMITTED' | 'BOOKING_COMPLETED' | 'PAYMENT_MADE' | 'ALL'>('ALL');
 
   // Fetch analytics data
   const { data: conversionFunnel, isLoading: loadingConversion } =
@@ -291,6 +300,32 @@ export default function AnalyticsDashboardPage() {
 
   const { data: filterOptions } =
     trpc.analytics.bookingFunnel.getFilterOptions.useQuery();
+
+  // Conversion Tracking Analytics (E13-S3)
+  const { data: conversionsByType, isLoading: loadingConversionsByType } =
+    trpc.analytics.conversionTracking.getConversionsByType.useQuery(dateRange);
+
+  const { data: conversionsBySource, isLoading: loadingConversionsBySource } =
+    trpc.analytics.conversionTracking.getByTrafficSource.useQuery({
+      ...dateRange,
+      groupBy: conversionGroupBy,
+    });
+
+  const { data: conversionTrends, isLoading: loadingConversionTrends } =
+    trpc.analytics.conversionTracking.getConversionTrends.useQuery({
+      period: conversionTrendPeriod,
+      ...dateRange,
+      conversionType: conversionTypeFilter,
+    });
+
+  const { data: topConverters, isLoading: loadingTopConverters } =
+    trpc.analytics.conversionTracking.getTopConverters.useQuery({
+      ...dateRange,
+      limit: 10,
+    });
+
+  const { data: variantPerformance, isLoading: loadingVariants } =
+    trpc.analytics.conversionTracking.getVariantPerformance.useQuery(dateRange);
 
   // CSV Export handler
   const handleExport = async (
@@ -360,6 +395,16 @@ export default function AnalyticsDashboardPage() {
             }`}
           >
             Booking Funnel
+          </button>
+          <button
+            onClick={() => setActiveTab('conversion-tracking')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'conversion-tracking'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Conversion Tracking
           </button>
         </nav>
       </div>
@@ -659,6 +704,385 @@ export default function AnalyticsDashboardPage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* CONVERSION TRACKING TAB (E13-S3) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'conversion-tracking' && (
+        <div className="space-y-6">
+          {/* Conversion Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <StatCard
+              title="Total Conversions"
+              value={conversionsByType?.totalConversionEvents ?? 0}
+              icon={Target}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Applications"
+              value={conversionsByType?.databaseBased.applications ?? 0}
+              icon={FileCheck}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Confirmed Bookings"
+              value={conversionsByType?.databaseBased.confirmedBookings ?? 0}
+              icon={CheckCircle}
+              loading={loadingConversionsByType}
+            />
+            <StatCard
+              title="Successful Payments"
+              value={conversionsByType?.databaseBased.successfulPayments ?? 0}
+              icon={CreditCard}
+              loading={loadingConversionsByType}
+            />
+          </div>
+
+          {/* Conversion by Traffic Source */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Conversion Rates by Traffic Source
+              </h3>
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Group by:</label>
+                <select
+                  value={conversionGroupBy}
+                  onChange={(e) =>
+                    setConversionGroupBy(e.target.value as 'source' | 'medium' | 'campaign')
+                  }
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="source">UTM Source</option>
+                  <option value="medium">UTM Medium</option>
+                  <option value="campaign">UTM Campaign</option>
+                </select>
+              </div>
+            </div>
+
+            {loadingConversionsBySource ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : conversionsBySource?.results && conversionsBySource.results.length > 0 ? (
+              <div className="space-y-3">
+                {conversionsBySource.results.slice(0, 10).map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Globe className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">{item.name}</div>
+                        <div className="text-sm text-gray-600">
+                          {item.totalSessions.toLocaleString()} sessions
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-gray-900">
+                        {item.conversionRate}%
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {item.conversions.toLocaleString()} conversions
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                <Globe className="h-12 w-12 mb-4 text-gray-300" />
+                <p>No traffic source data available.</p>
+                <p className="text-sm mt-2">
+                  UTM parameters are tracked automatically from URLs.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Conversion Trends */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Conversion Trends</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Period:</label>
+                  <select
+                    value={conversionTrendPeriod}
+                    onChange={(e) =>
+                      setConversionTrendPeriod(e.target.value as 'day' | 'week' | 'month')
+                    }
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="day">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-600">Type:</label>
+                  <select
+                    value={conversionTypeFilter}
+                    onChange={(e) =>
+                      setConversionTypeFilter(
+                        e.target.value as
+                          | 'APPLICATION_SUBMITTED'
+                          | 'BOOKING_COMPLETED'
+                          | 'PAYMENT_MADE'
+                          | 'ALL'
+                      )
+                    }
+                    className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="ALL">All Conversions</option>
+                    <option value="APPLICATION_SUBMITTED">Applications</option>
+                    <option value="BOOKING_COMPLETED">Bookings</option>
+                    <option value="PAYMENT_MADE">Payments</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {loadingConversionTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : conversionTrends?.trends && conversionTrends.trends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={conversionTrends.trends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    labelFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      });
+                    }}
+                  />
+                  <Legend />
+                  {conversionTypeFilter === 'ALL' ? (
+                    <>
+                      <Line
+                        type="monotone"
+                        dataKey="applications"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        name="Applications"
+                        dot={{ r: 3 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="bookings"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        name="Bookings"
+                        dot={{ r: 3 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="payments"
+                        stroke="#8b5cf6"
+                        strokeWidth={2}
+                        name="Payments"
+                        dot={{ r: 3 }}
+                      />
+                    </>
+                  ) : (
+                    <Line
+                      type="monotone"
+                      dataKey="total"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      name={conversionTypeFilter.replace('_', ' ').toLowerCase()}
+                      dot={{ r: 3 }}
+                    />
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-gray-500">
+                <div className="text-center">
+                  <BarChartIcon className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No conversion trend data available for the selected period.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Top Converting Sources & Campaigns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Top Sources */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Top Converting Sources
+              </h3>
+
+              {loadingTopConverters ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : topConverters?.topSources && topConverters.topSources.length > 0 ? (
+                <div className="space-y-3">
+                  {topConverters.topSources.map((source, index) => (
+                    <div
+                      key={source.name}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-green-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{source.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {source.totalSessions.toLocaleString()} sessions
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-green-600">{source.conversionRate}%</div>
+                        <div className="text-xs text-gray-500">
+                          {source.conversions} conversions
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Globe className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No source data available.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Top Campaigns */}
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Top Converting Campaigns
+              </h3>
+
+              {loadingTopConverters ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : topConverters?.topCampaigns && topConverters.topCampaigns.length > 0 ? (
+                <div className="space-y-3">
+                  {topConverters.topCampaigns.map((campaign, index) => (
+                    <div
+                      key={campaign.name}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-purple-600">#{index + 1}</span>
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{campaign.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {campaign.breakdown && Object.entries(campaign.breakdown)
+                              .map(([type, count]) => `${type.split('_')[0]}: ${count}`)
+                              .join(', ')}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-purple-600">
+                          {campaign.conversions} conversions
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
+                  <Megaphone className="h-8 w-8 mb-2 text-gray-300" />
+                  <p>No campaign data available.</p>
+                  <p className="text-xs mt-1">Use utm_campaign parameter in URLs</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* A/B Test Variant Performance (Optional) */}
+          {variantPerformance?.hasData && (
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <FlaskConical className="h-6 w-6 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  A/B Test Variant Performance
+                </h3>
+              </div>
+
+              {loadingVariants ? (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(variantPerformance.experiments).map(([experimentId, variants]) => (
+                    <div key={experimentId} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Experiment: {experimentId}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {variants.map((variant, index) => (
+                          <div
+                            key={variant.variant}
+                            className={`p-3 rounded-lg ${
+                              index === 0 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-medium text-gray-900">
+                                {variant.variant}
+                              </span>
+                              {index === 0 && (
+                                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                                  Winner
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-2xl font-bold text-gray-900">
+                              {variant.conversionRate}%
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {variant.conversions} / {variant.sessions} sessions
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
