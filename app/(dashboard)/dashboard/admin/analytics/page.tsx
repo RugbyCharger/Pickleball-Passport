@@ -15,11 +15,13 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { trpc } from '@/lib/trpc/client';
 import { exportToCSV, generateFilename } from '@/lib/utils/csv-export';
 import { toast } from 'sonner';
 import {
   BarChart as BarChartIcon,
+  FileSpreadsheet,
   TrendingUp,
   Users,
   DollarSign,
@@ -62,7 +64,7 @@ import {
   Mail,
   Send,
   MousePointer,
-  Link,
+  Link as LinkIcon,
   UserMinus,
   Trophy,
   FlaskRound,
@@ -495,11 +497,20 @@ export default function AnalyticsDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-        <p className="mt-2 text-gray-600">
-          Comprehensive business intelligence and reporting
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
+          <p className="mt-2 text-gray-600">
+            Comprehensive business intelligence and reporting
+          </p>
+        </div>
+        <Link
+          href="/dashboard/admin/analytics/reports"
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
+          <FileSpreadsheet className="h-4 w-4" />
+          Custom Report Builder
+        </Link>
       </div>
 
       {/* Tab Navigation */}
@@ -3832,7 +3843,7 @@ function EmailCampaignsTab({ dateRange }: { dateRange: DateRangeFilter }) {
         {/* Link Click Breakdown */}
         <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Link className="h-5 w-5 text-blue-600" />
+            <LinkIcon className="h-5 w-5 text-blue-600" />
             <h3 className="text-lg font-semibold text-gray-900">Link Click Breakdown</h3>
           </div>
 

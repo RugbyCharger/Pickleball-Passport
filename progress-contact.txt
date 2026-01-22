@@ -213,3 +213,89 @@ Iteration: 7
   - Use `partner.clubName` for partner display names
   - Recharts Tooltip formatter's `name` parameter type is `string | undefined`, not `string`
 ---
+
+## 2026-01-22 - E13-S8
+Iteration: 8
+- What was implemented:
+  - Added EmailCampaign, EmailSend, and EmailLinkClick models to Prisma schema for email tracking
+  - Added emailCampaigns sub-router to analytics tRPC router with 8 endpoints:
+    - getOverview: Send volume, open rates, click rates, bounce rates, unsubscribe rates
+    - getCampaigns: Campaign list with performance metrics (opens, clicks, bounces)
+    - getAbTestComparison: A/B test campaign comparison with winner detection
+    - getTopTemplates: Best performing email templates sorted by open/click rate or sends
+    - getEngagementTrends: Email engagement trends over time (daily/weekly/monthly)
+    - getUnsubscribeMetrics: Unsubscribe tracking and trends by campaign
+    - getLinkClickBreakdown: Link click heatmap/breakdown by position and CTA text
+    - getTemplateAnalyticsSummary: Template analytics from existing EmailTemplateAnalytics model
+  - Added Email Campaigns tab to analytics dashboard with:
+    - Overview metrics (7 stat cards: total sends, open rate, click rate, delivery rate, bounce rate, unsubscribe rate, campaigns)
+    - Recent campaigns table with performance metrics
+    - A/B test results comparison with variant winner indication
+    - Best performing templates table with sort options
+    - Engagement trends line chart using Recharts
+    - Unsubscribe tracking section with campaign breakdown
+    - Link click breakdown showing position heatmap and top CTAs
+
+- Files changed:
+  - prisma/schema.prisma (added EmailCampaignStatus, EmailSendStatus enums; EmailCampaign, EmailSend, EmailLinkClick models; relation to EmailTemplate)
+  - lib/trpc/server/routers/analytics.ts (added emailCampaigns sub-router with 8 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Email Campaigns tab with UI components)
+  - prd.json (marked E13-S8 as passes: true)
+
+- **Learnings for future iterations:**
+  - When API returns union types based on input, use type guards in UI: `'property' in object && object.property`
+  - Recharts Tooltip formatter value parameter type should be `number | undefined` not just `number`
+  - EmailTemplateAnalytics model already exists for aggregate template metrics (last 30 days)
+  - For A/B tests, EmailCampaign has abTestParentId to link variants to parent campaign
+---
+
+## 2026-01-22 - E13-S10
+Iteration: 9
+- What was implemented:
+  - Added CustomReport model to Prisma schema for saving custom report configurations
+  - Added customReports sub-router to analytics tRPC router with 7 endpoints:
+    - getAvailableMetrics: Returns all available metrics organized by category
+    - runReport: Executes custom report with selected metrics, grouping, and date range
+    - save: Save a custom report configuration
+    - list: List all saved reports
+    - getById: Get a specific saved report
+    - update: Update a saved report
+    - delete: Delete a saved report
+    - exportCSV: Export report data as CSV format
+  - Created /dashboard/admin/analytics/reports page with:
+    - Left panel: Metric selection, visualization type, date range, group by, saved reports
+    - Right panel: Results display with table, bar chart, line chart, or pie chart
+    - Recharts integration for all chart types
+    - Save/load custom reports functionality
+    - CSV export functionality
+
+- Files changed:
+  - prisma/schema.prisma (added ReportVisualizationType enum, CustomReport model)
+  - lib/trpc/server/routers/analytics.ts (added customReports sub-router with 7 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/reports/page.tsx (new file - Custom Report Builder UI)
+  - prd.json (marked E13-S10 as passes: true)
+
+- **Learnings for future iterations:**
+  - React Hooks must be called before any conditional returns (rules of hooks)
+  - Pie chart label function receives optional `percent` - must handle undefined
+  - tRPC queries return inferred types that may need casting when component expects stricter types
+  - When building grouped data for charts, combine all metric arrays into single array of objects with period/name key
+---
+
+## 2026-01-22 - E13-S11
+Iteration: 10
+- What was implemented:
+  - Added "Custom Report Builder" link to analytics dashboard header
+  - Fixed Link icon naming conflict (Link from next/link vs Link from lucide-react)
+  - Ran final TypeScript and lint checks - all new code passes
+  - Verified navigation from admin dashboard to analytics to custom reports
+  - All 10 user stories in Epic 13 now pass
+
+- Files changed:
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Link import, FileSpreadsheet icon, navigation button, fixed LinkIcon)
+  - prd.json (marked E13-S11 as passes: true)
+
+- **Learnings for future iterations:**
+  - When importing Link from next/link, check if lucide-react Link icon is also used - rename one to avoid conflict
+  - Admin dashboard already has quick access links to major features - just add analytics link there
+---
