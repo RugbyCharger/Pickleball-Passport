@@ -1,27 +1,62 @@
 # Ralph Progress Log
-Started: Thu Jan 22 09:30:00 +07 2026
+Started: Thu Jan 22 09:01:56 +07 2026
 ---
 
 ## Codebase Patterns
-- Admin pages are at app/(dashboard)/dashboard/admin/[feature]/page.tsx
-- tRPC routers in lib/trpc/server/routers/
-- Use adminProcedure for admin-only endpoints
-- Use Recharts for charts and data visualization
-- shadcn/ui components (Card, Button, Table, Dialog, Tabs, etc.)
-- Use toast from 'sonner' for notifications
-- Prisma for database models
-- Date filtering patterns exist in admin dashboard
+- Admin analytics page already exists at `app/(dashboard)/dashboard/admin/analytics/page.tsx` with existing conversion, revenue, demographics sections
+- Analytics tRPC router already exists at `lib/trpc/server/routers/analytics.ts` with conversion, revenue, demographics, addOns, tripUtilization, partnerReferrals, and export sub-routers
+- Use `z.any()` for JSON fields in tRPC input schemas (not `z.record(z.unknown())`)
+- App providers are at `app/providers.tsx` - wrap new providers with Suspense if they use hooks like `useSearchParams`
+- Use `adminProcedure` for admin-only endpoints, `publicProcedure` for public endpoints
 
 ---
 
-## Previous Epic Learnings
-- E12 CMS: Most features were pre-implemented; focus on TypeScript fixes
-- E12: Use `as const` for literal union types in return objects
-- E12: Cast Prisma JsonValue through `unknown` when converting to typed interfaces
-- E12: For readonly arrays, use `(arr as readonly string[]).includes()`
-- E12: Use `!== undefined` instead of truthy check for conditional object spreads
-- E4-S14: Use `logStripeError(error, message, context)` for Stripe errors
-- E4-S14: No npm run typecheck script - use `npx tsc --noEmit` directly
+## 2026-01-22 - E13-S1
+Iteration: 1
+- What was implemented:
+  - Added AnalyticsEvent and AnalyticsSession models to Prisma schema
+  - Added events and sessions sub-routers to analytics tRPC router with track, getSummary, getRecent, getByTimePeriod endpoints
+  - Created client-side analytics tracking utility at lib/utils/analytics.ts with session management and event tracking
+  - Created AnalyticsProvider component for automatic page view tracking
+  - Updated admin analytics dashboard with Event Tracking section showing total events, unique users, total sessions, session conversion rate
 
+- Files changed:
+  - prisma/schema.prisma (added AnalyticsEventType enum, AnalyticsEvent model, AnalyticsSession model)
+  - lib/trpc/server/routers/analytics.ts (added events and sessions sub-routers)
+  - lib/utils/analytics.ts (new file - client-side tracking utility)
+  - components/analytics-provider.tsx (new file - React provider for auto page view tracking)
+  - app/providers.tsx (added AnalyticsProvider)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Event Tracking section)
+
+- **Learnings for future iterations:**
+  - The analytics router already had comprehensive conversion, revenue, demographics, add-ons, trip utilization, and partner referrals functionality
+  - The analytics dashboard page already has extensive UI - just needed to add the event tracking section
+  - Remember to run `npx prisma generate` after modifying the schema
 ---
 
+## 2026-01-22 - E13-S2
+Iteration: 2
+- What was implemented:
+  - Added bookingFunnel sub-router to analytics tRPC router with:
+    - getFunnelData: Complete funnel data with drop-off rates for each stage
+    - getTimeAtStages: Average time spent at each funnel stage
+    - getFunnelTrends: Daily/weekly/monthly trend analysis
+    - getFilterOptions: Available packages and UTM sources for filtering
+  - Funnel stages: Homepage → Package View → Configurator → Review → Payment → Confirmation
+  - Updated analytics dashboard with:
+    - Tab navigation (Overview / Booking Funnel)
+    - Funnel filters (date range, package, traffic source)
+    - Visual funnel with drop-off and conversion rates at each stage
+    - Time spent at each stage visualization
+    - Daily conversion trends chart using Recharts
+
+- Files changed:
+  - lib/trpc/server/routers/analytics.ts (added bookingFunnel sub-router with 4 endpoints)
+  - app/(dashboard)/dashboard/admin/analytics/page.tsx (added Booking Funnel tab with visualization)
+
+- **Learnings for future iterations:**
+  - Recharts is already imported and used in the partner analytics page - follow same patterns
+  - The funnel visualization uses styled divs rather than a FunnelChart component for better customization
+  - Use FUNNEL_STEP event type with step property for tracking user progress through booking flow
+  - PAGE_VIEW events with path detection handle HOMEPAGE and PACKAGE_VIEW stages automatically
+---

@@ -37,7 +37,7 @@
       "id": "E13-S1",
       "title": "Analytics Integration Setup",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "description": "Set up analytics infrastructure with tracking events and data models",
       "acceptanceCriteria": [
         "Create AnalyticsEvent model in Prisma: id, eventType, userId, sessionId, properties (JSON), createdAt",
@@ -53,7 +53,7 @@
       "id": "E13-S2",
       "title": "Booking Funnel Analytics",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "description": "Track and visualize the complete booking funnel from visit to confirmation",
       "acceptanceCriteria": [
         "Track funnel stages: Homepage → Package View → Configurator → Review → Payment → Confirmation",

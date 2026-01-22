@@ -19,7 +19,7 @@ import { trpc } from '@/lib/trpc/client';
 import { exportToCSV, generateFilename } from '@/lib/utils/csv-export';
 import { toast } from 'sonner';
 import {
-  BarChart,
+  BarChart as BarChartIcon,
   TrendingUp,
   Users,
   DollarSign,
@@ -31,7 +31,25 @@ import {
   Filter,
   Activity,
   Monitor,
+  ChevronDown,
+  Clock,
+  Home,
+  Eye,
+  Settings,
+  FileCheck,
+  CreditCard,
+  CheckCircle,
 } from 'lucide-react';
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Legend,
+} from 'recharts';
 
 // ============================================================================
 // TYPES
@@ -180,11 +198,38 @@ function DateRangeFilter({
 }
 
 // ============================================================================
+// FUNNEL STAGE ICONS
+// ============================================================================
+
+const FUNNEL_STAGE_ICONS: Record<string, React.ElementType> = {
+  HOMEPAGE: Home,
+  PACKAGE_VIEW: Eye,
+  CONFIGURATOR: Settings,
+  REVIEW: FileCheck,
+  PAYMENT: CreditCard,
+  CONFIRMATION: CheckCircle,
+};
+
+const FUNNEL_STAGE_COLORS = [
+  '#3b82f6', // blue
+  '#8b5cf6', // purple
+  '#ec4899', // pink
+  '#f97316', // orange
+  '#eab308', // yellow
+  '#22c55e', // green
+];
+
+// ============================================================================
 // MAIN ANALYTICS DASHBOARD
 // ============================================================================
 
+type AnalyticsTab = 'overview' | 'booking-funnel';
+
 export default function AnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
+  const [activeTab, setActiveTab] = useState<AnalyticsTab>('overview');
+  const [funnelPackageFilter, setFunnelPackageFilter] = useState<string>('');
+  const [funnelUtmSourceFilter, setFunnelUtmSourceFilter] = useState<string>('');
 
   // Fetch analytics data
   const { data: conversionFunnel, isLoading: loadingConversion } =
@@ -223,6 +268,29 @@ export default function AnalyticsDashboardPage() {
 
   const { data: sessionSummary, isLoading: loadingSessionSummary } =
     trpc.analytics.sessions.getSummary.useQuery(dateRange);
+
+  // Booking Funnel Analytics (E13-S2)
+  const { data: funnelData, isLoading: loadingFunnel } =
+    trpc.analytics.bookingFunnel.getFunnelData.useQuery({
+      ...dateRange,
+      packageId: funnelPackageFilter || undefined,
+      utmSource: funnelUtmSourceFilter || undefined,
+    });
+
+  const { data: funnelTimeData, isLoading: loadingFunnelTime } =
+    trpc.analytics.bookingFunnel.getTimeAtStages.useQuery({
+      ...dateRange,
+      packageId: funnelPackageFilter || undefined,
+    });
+
+  const { data: funnelTrends, isLoading: loadingFunnelTrends } =
+    trpc.analytics.bookingFunnel.getFunnelTrends.useQuery({
+      period: 'day',
+      ...dateRange,
+    });
+
+  const { data: filterOptions } =
+    trpc.analytics.bookingFunnel.getFilterOptions.useQuery();
 
   // CSV Export handler
   const handleExport = async (
@@ -270,9 +338,336 @@ export default function AnalyticsDashboardPage() {
         </p>
       </div>
 
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-8">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'overview'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('booking-funnel')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'booking-funnel'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Booking Funnel
+          </button>
+        </nav>
+      </div>
+
       {/* Date Range Filter */}
       <DateRangeFilter onChange={setDateRange} />
 
+      {/* ================================================================ */}
+      {/* BOOKING FUNNEL TAB (E13-S2) */}
+      {/* ================================================================ */}
+
+      {activeTab === 'booking-funnel' && (
+        <div className="space-y-6">
+          {/* Funnel Filters */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center gap-6 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Filters:</span>
+              </div>
+
+              {/* Package Filter */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Package:</label>
+                <select
+                  value={funnelPackageFilter}
+                  onChange={(e) => setFunnelPackageFilter(e.target.value)}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">All Packages</option>
+                  {filterOptions?.packages.map((pkg) => (
+                    <option key={pkg.id} value={pkg.id}>
+                      {pkg.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* UTM Source Filter */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600">Traffic Source:</label>
+                <select
+                  value={funnelUtmSourceFilter}
+                  onChange={(e) => setFunnelUtmSourceFilter(e.target.value)}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">All Sources</option>
+                  {filterOptions?.utmSources.map((source) => (
+                    <option key={source} value={source}>
+                      {source}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Funnel Summary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StatCard
+              title="Total Sessions"
+              value={funnelData?.totalSessions ?? 0}
+              icon={Users}
+              loading={loadingFunnel}
+            />
+            <StatCard
+              title="Completed Bookings"
+              value={funnelData?.finalConversions ?? 0}
+              icon={CheckCircle}
+              loading={loadingFunnel}
+            />
+            <StatCard
+              title="Overall Conversion Rate"
+              value={`${funnelData?.overallConversionRate ?? '0.00'}%`}
+              icon={TrendingUp}
+              trend={Number(funnelData?.overallConversionRate ?? 0) > 0 ? 'up' : undefined}
+              loading={loadingFunnel}
+            />
+          </div>
+
+          {/* Funnel Visualization */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Booking Funnel
+            </h3>
+
+            {loadingFunnel ? (
+              <div className="flex items-center justify-center h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelData?.funnelData && funnelData.funnelData.length > 0 ? (
+              <div className="space-y-4">
+                {funnelData.funnelData.map((stage, index) => {
+                  const Icon = FUNNEL_STAGE_ICONS[stage.stage] || Activity;
+                  const widthPercent = funnelData.totalSessions > 0
+                    ? Math.max(10, (stage.count / funnelData.totalSessions) * 100)
+                    : 100;
+                  const color = FUNNEL_STAGE_COLORS[index];
+
+                  return (
+                    <div key={stage.stage} className="relative">
+                      {/* Stage Row */}
+                      <div
+                        className="flex items-center justify-between p-4 rounded-lg transition-all"
+                        style={{
+                          backgroundColor: `${color}15`,
+                          width: `${widthPercent}%`,
+                          minWidth: '300px',
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="h-10 w-10 rounded-lg flex items-center justify-center"
+                            style={{ backgroundColor: `${color}30` }}
+                          >
+                            <Icon className="h-5 w-5" style={{ color }} />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-900">
+                              {stage.stageLabel}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {index > 0 && (
+                                <>
+                                  <span className="text-green-600">{stage.conversionRate}%</span>
+                                  {' from previous • '}
+                                  <span className="text-red-500">{stage.dropOffRate}% drop-off</span>
+                                </>
+                              )}
+                              {index === 0 && 'Starting point'}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-gray-900">
+                            {stage.count.toLocaleString()}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {stage.overallConversionRate}% of total
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Arrow between stages */}
+                      {index < funnelData.funnelData.length - 1 && (
+                        <div className="flex justify-center my-2">
+                          <ChevronDown className="h-5 w-5 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[300px] text-gray-500">
+                <Activity className="h-12 w-12 mb-4 text-gray-300" />
+                <p>No funnel data available for the selected filters.</p>
+                <p className="text-sm mt-2">
+                  Funnel events are tracked automatically as users navigate the booking flow.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Time at Each Stage */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Average Time at Each Stage
+            </h3>
+
+            {loadingFunnelTime ? (
+              <div className="flex items-center justify-center h-[200px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelTimeData && funnelTimeData.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {funnelTimeData.map((stage, index) => {
+                  const Icon = FUNNEL_STAGE_ICONS[stage.stage] || Activity;
+                  const color = FUNNEL_STAGE_COLORS[index];
+
+                  return (
+                    <div
+                      key={stage.stage}
+                      className="text-center p-4 rounded-lg"
+                      style={{ backgroundColor: `${color}10` }}
+                    >
+                      <div
+                        className="h-10 w-10 rounded-lg flex items-center justify-center mx-auto mb-2"
+                        style={{ backgroundColor: `${color}20` }}
+                      >
+                        <Icon className="h-5 w-5" style={{ color }} />
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">
+                        {stage.averageTimeFormatted || '—'}
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {stage.stageLabel}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {stage.sampleCount} samples
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[150px] text-gray-500">
+                <div className="text-center">
+                  <Clock className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No timing data available yet.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Funnel Trends Chart */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Daily Conversion Trends
+            </h3>
+
+            {loadingFunnelTrends ? (
+              <div className="flex items-center justify-center h-[300px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : funnelTrends && funnelTrends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={funnelTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="period"
+                    stroke="#6b7280"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }}
+                  />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                    }}
+                    labelFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      });
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="homepage"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    name="Homepage"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="packageView"
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    name="Package View"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="configurator"
+                    stroke="#ec4899"
+                    strokeWidth={2}
+                    name="Configurator"
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="confirmation"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    name="Confirmation"
+                    dot={{ r: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-gray-500">
+                <div className="text-center">
+                  <BarChartIcon className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p>No trend data available for the selected period.</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================ */}
+      {/* OVERVIEW TAB */}
+      {/* ================================================================ */}
+
+      {activeTab === 'overview' && (
+        <>
       {/* ================================================================ */}
       {/* EVENT TRACKING SUMMARY (E13-S1) */}
       {/* ================================================================ */}
@@ -417,7 +812,7 @@ export default function AnalyticsDashboardPage() {
           <StatCard
             title="Confirmed Bookings"
             value={conversionFunnel?.confirmedBookings ?? 0}
-            icon={BarChart}
+            icon={BarChartIcon}
             loading={loadingConversion}
           />
           <StatCard
@@ -752,6 +1147,8 @@ export default function AnalyticsDashboardPage() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

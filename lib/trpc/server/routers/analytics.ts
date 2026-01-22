@@ -17,13 +17,40 @@ import { TRPCError } from '@trpc/server';
 import type { BookingStatus, PaymentStatus, AnalyticsEventType } from '@prisma/client';
 
 // ============================================================================
-// TYPES
+// BOOKING FUNNEL STAGE DEFINITIONS (E13-S2)
 // ============================================================================
 
-interface DateRange {
-  startDate?: Date;
-  endDate?: Date;
+const FUNNEL_STAGES = [
+  'HOMEPAGE',
+  'PACKAGE_VIEW',
+  'CONFIGURATOR',
+  'REVIEW',
+  'PAYMENT',
+  'CONFIRMATION',
+] as const;
+
+type FunnelStage = (typeof FUNNEL_STAGES)[number];
+
+/**
+ * Format duration in seconds to human-readable string
+ */
+function formatDuration(seconds: number): string {
+  if (seconds < 60) {
+    return `${Math.round(seconds)}s`;
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.round(seconds % 60);
+  if (minutes < 60) {
+    return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}h ${remainingMinutes}m`;
 }
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 // ============================================================================
 // ANALYTICS ROUTER
@@ -379,6 +406,455 @@ export const analyticsRouter = router({
 
         return sessions;
       }),
+  }),
+
+  // ============================================================================
+  // BOOKING FUNNEL ANALYTICS (E13-S2)
+  // ============================================================================
+
+  bookingFunnel: router({
+    /**
+     * Get complete booking funnel data with drop-off rates
+     * Tracks: Homepage → Package View → Configurator → Review → Payment → Confirmation
+     */
+    getFunnelData: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            packageId: z.string().optional(),
+            utmSource: z.string().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Build date filter for analytics events
+        const eventWhere = {
+          eventType: 'FUNNEL_STEP' as AnalyticsEventType,
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          ...(input?.utmSource && { utmSource: input.utmSource }),
+        };
+
+        // Get all funnel step events
+        const funnelEvents = await ctx.db.analyticsEvent.findMany({
+          where: eventWhere,
+          select: {
+            id: true,
+            sessionId: true,
+            properties: true,
+            createdAt: true,
+            utmSource: true,
+          },
+        });
+
+        // Also count page views to homepage and package pages
+        const pageViewEvents = await ctx.db.analyticsEvent.findMany({
+          where: {
+            eventType: 'PAGE_VIEW' as AnalyticsEventType,
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            ...(input?.utmSource && { utmSource: input.utmSource }),
+          },
+          select: {
+            id: true,
+            sessionId: true,
+            properties: true,
+            createdAt: true,
+            pageUrl: true,
+          },
+        });
+
+        // Count sessions at each funnel stage
+        const stageCounts: Record<FunnelStage, Set<string>> = {
+          HOMEPAGE: new Set(),
+          PACKAGE_VIEW: new Set(),
+          CONFIGURATOR: new Set(),
+          REVIEW: new Set(),
+          PAYMENT: new Set(),
+          CONFIRMATION: new Set(),
+        };
+
+        // Process page views for HOMEPAGE and PACKAGE_VIEW stages
+        pageViewEvents.forEach((event) => {
+          const props = event.properties as { path?: string } | null;
+          const url = event.pageUrl || props?.path || '';
+
+          // Homepage
+          if (url === '/' || url.includes('/home') || url === '') {
+            stageCounts.HOMEPAGE.add(event.sessionId);
+          }
+
+          // Package view (when viewing specific package pages)
+          if (url.includes('/packages/') && !url.includes('/configurator')) {
+            const packageFromUrl = url.match(/\/packages\/([^/]+)/)?.[1];
+            if (!input?.packageId || packageFromUrl === input.packageId) {
+              stageCounts.PACKAGE_VIEW.add(event.sessionId);
+            }
+          }
+        });
+
+        // Process funnel step events for remaining stages
+        funnelEvents.forEach((event) => {
+          const props = event.properties as { step?: string; packageId?: string } | null;
+          const step = props?.step?.toUpperCase();
+          const eventPackageId = props?.packageId;
+
+          // Filter by package if specified
+          if (input?.packageId && eventPackageId && eventPackageId !== input.packageId) {
+            return;
+          }
+
+          if (step && step in stageCounts) {
+            stageCounts[step as FunnelStage].add(event.sessionId);
+          }
+        });
+
+        // Also count conversions as CONFIRMATION stage
+        const conversionEvents = await ctx.db.analyticsEvent.findMany({
+          where: {
+            eventType: 'CONVERSION' as AnalyticsEventType,
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+            ...(input?.utmSource && { utmSource: input.utmSource }),
+          },
+          select: {
+            sessionId: true,
+            properties: true,
+          },
+        });
+
+        conversionEvents.forEach((event) => {
+          const props = event.properties as { type?: string; packageId?: string } | null;
+          if (
+            props?.type === 'BOOKING_COMPLETED' ||
+            props?.type === 'PAYMENT_COMPLETED'
+          ) {
+            if (!input?.packageId || props?.packageId === input.packageId) {
+              stageCounts.CONFIRMATION.add(event.sessionId);
+            }
+          }
+        });
+
+        // Calculate funnel data with conversion rates
+        const funnelData = FUNNEL_STAGES.map((stage, index) => {
+          const count = stageCounts[stage].size;
+          const previousStageCount =
+            index > 0 ? stageCounts[FUNNEL_STAGES[index - 1]].size : count;
+          const dropOffRate =
+            previousStageCount > 0
+              ? (((previousStageCount - count) / previousStageCount) * 100).toFixed(1)
+              : '0.0';
+          const conversionRate =
+            previousStageCount > 0
+              ? ((count / previousStageCount) * 100).toFixed(1)
+              : '100.0';
+          const overallConversionRate =
+            stageCounts.HOMEPAGE.size > 0
+              ? ((count / stageCounts.HOMEPAGE.size) * 100).toFixed(1)
+              : '0.0';
+
+          return {
+            stage,
+            stageLabel: stage.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+            count,
+            dropOffRate,
+            conversionRate,
+            overallConversionRate,
+          };
+        });
+
+        return {
+          funnelData,
+          totalSessions: stageCounts.HOMEPAGE.size,
+          finalConversions: stageCounts.CONFIRMATION.size,
+          overallConversionRate:
+            stageCounts.HOMEPAGE.size > 0
+              ? (
+                  (stageCounts.CONFIRMATION.size / stageCounts.HOMEPAGE.size) *
+                  100
+                ).toFixed(2)
+              : '0.00',
+        };
+      }),
+
+    /**
+     * Get average time spent at each funnel stage
+     */
+    getTimeAtStages: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+            packageId: z.string().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        // Get funnel events with timestamps
+        const funnelEvents = await ctx.db.analyticsEvent.findMany({
+          where: {
+            eventType: 'FUNNEL_STEP' as AnalyticsEventType,
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          },
+          select: {
+            sessionId: true,
+            properties: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Also get page views for homepage and package view times
+        const pageViewEvents = await ctx.db.analyticsEvent.findMany({
+          where: {
+            eventType: 'PAGE_VIEW' as AnalyticsEventType,
+            ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+            ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+          },
+          select: {
+            sessionId: true,
+            pageUrl: true,
+            properties: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Group events by session
+        const sessionEvents: Record<
+          string,
+          Array<{ stage: FunnelStage; timestamp: Date }>
+        > = {};
+
+        // Process page views
+        pageViewEvents.forEach((event) => {
+          const props = event.properties as { path?: string } | null;
+          const url = event.pageUrl || props?.path || '';
+
+          if (!sessionEvents[event.sessionId]) {
+            sessionEvents[event.sessionId] = [];
+          }
+
+          if (url === '/' || url.includes('/home')) {
+            sessionEvents[event.sessionId].push({
+              stage: 'HOMEPAGE',
+              timestamp: event.createdAt,
+            });
+          } else if (url.includes('/packages/') && !url.includes('/configurator')) {
+            sessionEvents[event.sessionId].push({
+              stage: 'PACKAGE_VIEW',
+              timestamp: event.createdAt,
+            });
+          }
+        });
+
+        // Process funnel events
+        funnelEvents.forEach((event) => {
+          const props = event.properties as { step?: string; packageId?: string } | null;
+          const step = props?.step?.toUpperCase() as FunnelStage;
+
+          if (!sessionEvents[event.sessionId]) {
+            sessionEvents[event.sessionId] = [];
+          }
+
+          if (step && FUNNEL_STAGES.includes(step)) {
+            if (!input?.packageId || props?.packageId === input.packageId) {
+              sessionEvents[event.sessionId].push({
+                stage: step,
+                timestamp: event.createdAt,
+              });
+            }
+          }
+        });
+
+        // Calculate average time at each stage
+        const stageTimes: Record<FunnelStage, number[]> = {
+          HOMEPAGE: [],
+          PACKAGE_VIEW: [],
+          CONFIGURATOR: [],
+          REVIEW: [],
+          PAYMENT: [],
+          CONFIRMATION: [],
+        };
+
+        Object.values(sessionEvents).forEach((events) => {
+          // Sort events by timestamp
+          events.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+          // Calculate time between consecutive stages
+          for (let i = 0; i < events.length - 1; i++) {
+            const currentStage = events[i].stage;
+            const timeDiff =
+              (events[i + 1].timestamp.getTime() - events[i].timestamp.getTime()) /
+              1000; // seconds
+
+            // Only count reasonable times (less than 1 hour)
+            if (timeDiff > 0 && timeDiff < 3600) {
+              stageTimes[currentStage].push(timeDiff);
+            }
+          }
+        });
+
+        // Calculate averages
+        return FUNNEL_STAGES.map((stage) => {
+          const times = stageTimes[stage];
+          const avgSeconds =
+            times.length > 0
+              ? times.reduce((sum, t) => sum + t, 0) / times.length
+              : 0;
+
+          return {
+            stage,
+            stageLabel: stage.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+            averageTimeSeconds: Math.round(avgSeconds),
+            averageTimeFormatted: formatDuration(avgSeconds),
+            sampleCount: times.length,
+          };
+        });
+      }),
+
+    /**
+     * Get funnel data grouped by time period for trend analysis
+     */
+    getFunnelTrends: adminProcedure
+      .input(
+        z.object({
+          period: z.enum(['day', 'week', 'month']),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const { period, startDate, endDate } = input;
+
+        // Get all relevant events
+        const events = await ctx.db.analyticsEvent.findMany({
+          where: {
+            eventType: { in: ['FUNNEL_STEP', 'PAGE_VIEW', 'CONVERSION'] },
+            ...(startDate && { createdAt: { gte: startDate } }),
+            ...(endDate && { createdAt: { lte: endDate } }),
+          },
+          select: {
+            eventType: true,
+            sessionId: true,
+            properties: true,
+            pageUrl: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Group events by time period
+        const groupedData: Record<
+          string,
+          Record<FunnelStage, Set<string>>
+        > = {};
+
+        events.forEach((event) => {
+          let periodKey: string;
+          const date = event.createdAt;
+
+          switch (period) {
+            case 'day':
+              periodKey = date.toISOString().slice(0, 10);
+              break;
+            case 'week':
+              const d = new Date(date);
+              d.setDate(d.getDate() - d.getDay());
+              periodKey = d.toISOString().slice(0, 10);
+              break;
+            case 'month':
+              periodKey = date.toISOString().slice(0, 7);
+              break;
+          }
+
+          if (!groupedData[periodKey]) {
+            groupedData[periodKey] = {
+              HOMEPAGE: new Set(),
+              PACKAGE_VIEW: new Set(),
+              CONFIGURATOR: new Set(),
+              REVIEW: new Set(),
+              PAYMENT: new Set(),
+              CONFIRMATION: new Set(),
+            };
+          }
+
+          const props = event.properties as {
+            step?: string;
+            path?: string;
+            type?: string;
+          } | null;
+
+          if (event.eventType === 'PAGE_VIEW') {
+            const url = event.pageUrl || props?.path || '';
+            if (url === '/' || url.includes('/home')) {
+              groupedData[periodKey].HOMEPAGE.add(event.sessionId);
+            } else if (url.includes('/packages/') && !url.includes('/configurator')) {
+              groupedData[periodKey].PACKAGE_VIEW.add(event.sessionId);
+            }
+          } else if (event.eventType === 'FUNNEL_STEP') {
+            const step = props?.step?.toUpperCase() as FunnelStage;
+            if (step && FUNNEL_STAGES.includes(step)) {
+              groupedData[periodKey][step].add(event.sessionId);
+            }
+          } else if (event.eventType === 'CONVERSION') {
+            if (
+              props?.type === 'BOOKING_COMPLETED' ||
+              props?.type === 'PAYMENT_COMPLETED'
+            ) {
+              groupedData[periodKey].CONFIRMATION.add(event.sessionId);
+            }
+          }
+        });
+
+        // Convert to array format
+        return Object.entries(groupedData)
+          .map(([periodKey, stages]) => ({
+            period: periodKey,
+            homepage: stages.HOMEPAGE.size,
+            packageView: stages.PACKAGE_VIEW.size,
+            configurator: stages.CONFIGURATOR.size,
+            review: stages.REVIEW.size,
+            payment: stages.PAYMENT.size,
+            confirmation: stages.CONFIRMATION.size,
+            overallConversionRate:
+              stages.HOMEPAGE.size > 0
+                ? ((stages.CONFIRMATION.size / stages.HOMEPAGE.size) * 100).toFixed(1)
+                : '0.0',
+          }))
+          .sort((a, b) => a.period.localeCompare(b.period));
+      }),
+
+    /**
+     * Get available filter options (packages, utm sources)
+     */
+    getFilterOptions: adminProcedure.query(async ({ ctx }) => {
+      // Get all packages
+      const packages = await ctx.db.package.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true },
+        orderBy: { name: 'asc' },
+      });
+
+      // Get unique UTM sources from events
+      const utmSources = await ctx.db.analyticsEvent.groupBy({
+        by: ['utmSource'],
+        where: {
+          utmSource: { not: null },
+        },
+      });
+
+      return {
+        packages: packages.map((p) => ({ id: p.id, name: p.name })),
+        utmSources: utmSources
+          .filter((s) => s.utmSource)
+          .map((s) => s.utmSource as string),
+      };
+    }),
   }),
 
   // ============================================================================
