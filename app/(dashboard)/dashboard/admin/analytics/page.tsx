@@ -24,12 +24,13 @@ import {
   Users,
   DollarSign,
   Package,
-  Calendar,
   Download,
   Loader2,
   ArrowUpRight,
   ArrowDownRight,
   Filter,
+  Activity,
+  Monitor,
 } from 'lucide-react';
 
 // ============================================================================
@@ -189,42 +190,39 @@ export default function AnalyticsDashboardPage() {
   const { data: conversionFunnel, isLoading: loadingConversion } =
     trpc.analytics.conversion.getFunnel.useQuery(dateRange);
 
-  const { data: statusBreakdown, isLoading: loadingStatus } =
+  const { data: statusBreakdown } =
     trpc.analytics.conversion.getStatusBreakdown.useQuery(dateRange);
 
   const { data: revenueOverview, isLoading: loadingRevenue } =
     trpc.analytics.revenue.getOverview.useQuery(dateRange);
 
-  const { data: revenueByPackage, isLoading: loadingPackageRevenue } =
+  const { data: revenueByPackage } =
     trpc.analytics.revenue.getByPackage.useQuery(dateRange);
 
-  const { data: demographics, isLoading: loadingDemographics } =
+  const { data: demographics } =
     trpc.analytics.demographics.getByRole.useQuery();
 
-  const { data: accommodationTiers, isLoading: loadingAccommodation } =
+  const { data: accommodationTiers } =
     trpc.analytics.demographics.getAccommodationTiers.useQuery(dateRange);
 
-  const { data: topAddOns, isLoading: loadingAddOns } =
+  const { data: topAddOns } =
     trpc.analytics.addOns.getTopAddOns.useQuery({ limit: 10 });
 
-  const { data: tripUtilization, isLoading: loadingTrips } =
+  const { data: tripUtilization } =
     trpc.analytics.tripUtilization.getAll.useQuery({ isActive: true, limit: 10 });
 
-  const { data: partnerStats, isLoading: loadingPartners } =
+  const { data: partnerStats } =
     trpc.analytics.partnerReferrals.getByPartner.useQuery({ limit: 10 });
 
   const { data: bookingPatterns } =
     trpc.analytics.demographics.getBookingPatterns.useQuery(dateRange);
 
-  // CSV Export mutation
-  const exportMutation = trpc.analytics.export.generateCSV.useQuery(
-    {
-      reportType: 'bookings',
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
-    },
-    { enabled: false }
-  );
+  // Event tracking metrics (E13-S1)
+  const { data: eventSummary, isLoading: loadingEventSummary } =
+    trpc.analytics.events.getSummary.useQuery(dateRange);
+
+  const { data: sessionSummary, isLoading: loadingSessionSummary } =
+    trpc.analytics.sessions.getSummary.useQuery(dateRange);
 
   // CSV Export handler
   const handleExport = async (
@@ -274,6 +272,118 @@ export default function AnalyticsDashboardPage() {
 
       {/* Date Range Filter */}
       <DateRangeFilter onChange={setDateRange} />
+
+      {/* ================================================================ */}
+      {/* EVENT TRACKING SUMMARY (E13-S1) */}
+      {/* ================================================================ */}
+
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Event Tracking</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Events"
+            value={eventSummary?.totalEvents ?? 0}
+            icon={Activity}
+            loading={loadingEventSummary}
+          />
+          <StatCard
+            title="Unique Users"
+            value={eventSummary?.uniqueUsers ?? 0}
+            icon={Users}
+            loading={loadingEventSummary}
+          />
+          <StatCard
+            title="Total Sessions"
+            value={sessionSummary?.totalSessions ?? 0}
+            icon={Monitor}
+            loading={loadingSessionSummary}
+          />
+          <StatCard
+            title="Session Conversion"
+            value={`${sessionSummary?.conversionRate ?? '0.00'}%`}
+            icon={TrendingUp}
+            trend={Number(sessionSummary?.conversionRate ?? 0) > 0 ? 'up' : undefined}
+            trendLabel={`${sessionSummary?.convertedSessions ?? 0} converted`}
+            loading={loadingSessionSummary}
+          />
+        </div>
+
+        {/* Events by Type */}
+        {eventSummary?.eventsByType && eventSummary.eventsByType.length > 0 && (
+          <div className="mt-6 bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Events by Type
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {eventSummary.eventsByType.map((item) => (
+                <div key={item.eventType} className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-gray-900">{item.count}</div>
+                  <div className="text-sm text-gray-600 capitalize">
+                    {item.eventType.toLowerCase().replace('_', ' ')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Session Metrics */}
+        {sessionSummary && (
+          <div className="mt-6 bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Session Metrics
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.averagePageViews}
+                </div>
+                <div className="text-sm text-gray-600">Avg. Page Views</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.averageEventCount}
+                </div>
+                <div className="text-sm text-gray-600">Avg. Events/Session</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.convertedSessions}
+                </div>
+                <div className="text-sm text-gray-600">Converted Sessions</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">
+                  {sessionSummary.conversionRate}%
+                </div>
+                <div className="text-sm text-gray-600">Conversion Rate</div>
+              </div>
+            </div>
+
+            {/* Device Breakdown */}
+            {sessionSummary.sessionsByDevice && sessionSummary.sessionsByDevice.length > 0 && (
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <h4 className="text-md font-medium text-gray-700 mb-3">Sessions by Device</h4>
+                <div className="flex gap-4 flex-wrap">
+                  {sessionSummary.sessionsByDevice.map((device) => (
+                    <div
+                      key={device.deviceType}
+                      className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg"
+                    >
+                      <Monitor className="h-4 w-4 text-gray-600" />
+                      <span className="text-sm text-gray-700 capitalize">
+                        {device.deviceType}:
+                      </span>
+                      <span className="text-sm font-bold text-gray-900">{device.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* ================================================================ */}
       {/* CONVERSION METRICS */}

@@ -2182,3 +2182,93 @@ model MediaAsset {
   @@index([uploadedAt])
   @@index([createdBy])
 }
+
+// ============================================================================
+// ANALYTICS EVENT TRACKING (Epic 13)
+// ============================================================================
+
+// Analytics event types for tracking user actions
+enum AnalyticsEventType {
+  PAGE_VIEW           // User views a page
+  BUTTON_CLICK        // User clicks a button/CTA
+  FUNNEL_STEP         // User progresses through booking funnel
+  FORM_SUBMIT         // User submits a form
+  CONVERSION          // User completes a conversion (booking, payment, etc.)
+  SEARCH              // User performs a search
+  FILTER              // User applies filters
+  ERROR               // Error occurred during user action
+}
+
+// Analytics events for tracking user behavior
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  eventType   AnalyticsEventType
+  userId      String?            // Clerk user ID (null for anonymous)
+  sessionId   String             // Browser session ID for tracking anonymous users
+
+  // Event details stored as JSON
+  properties  Json               // Flexible JSON for event-specific data
+  // Example properties:
+  // PAGE_VIEW: { path: "/packages/pure-play", referrer: "google.com" }
+  // BUTTON_CLICK: { buttonId: "book-now", location: "hero-section" }
+  // FUNNEL_STEP: { step: "CONFIGURATOR", packageId: "xxx" }
+  // CONVERSION: { type: "BOOKING_COMPLETED", bookingId: "xxx", value: 150000 }
+
+  // Context
+  pageUrl     String?            // Full URL where event occurred
+  userAgent   String?            // Browser user agent
+  ipAddress   String?            // IP address (for geo-location)
+
+  // UTM tracking
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  createdAt   DateTime           @default(now())
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([utmSource])
+  @@index([pageUrl])
+}
+
+// Analytics session tracking for user journey analysis
+model AnalyticsSession {
+  id              String    @id @default(cuid())
+  sessionId       String    @unique // Browser session ID
+  userId          String?   // Clerk user ID (null for anonymous until login)
+
+  // Session timing
+  startedAt       DateTime  @default(now())
+  lastActivityAt  DateTime  @default(now())
+
+  // Session metadata
+  deviceType      String?   // desktop, mobile, tablet
+  browser         String?   // chrome, firefox, safari, etc.
+  os              String?   // windows, macos, ios, android
+  screenResolution String?  // e.g., "1920x1080"
+
+  // Traffic source
+  landingPage     String?   // First page visited
+  referrer        String?   // Referral source
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+
+  // Session metrics (updated on each activity)
+  pageViews       Int       @default(0)
+  eventCount      Int       @default(0)
+
+  // Conversion tracking
+  hasConverted    Boolean   @default(false) // Did this session result in a conversion?
+  conversionType  String?   // Type of conversion (e.g., "BOOKING", "APPLICATION")
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([startedAt])
+  @@index([lastActivityAt])
+  @@index([hasConverted])
+  @@index([utmSource])
+}

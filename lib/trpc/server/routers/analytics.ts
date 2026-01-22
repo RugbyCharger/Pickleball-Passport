@@ -2,6 +2,7 @@
  * Analytics Router
  *
  * tRPC procedures for admin analytics dashboard:
+ * - Event tracking and analytics (E13-S1)
  * - Booking conversion metrics
  * - Revenue analytics
  * - Guest demographics
@@ -11,9 +12,9 @@
  */
 
 import { z } from 'zod';
-import { router, adminProcedure } from '../trpc';
+import { router, adminProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import type { BookingStatus, PaymentStatus } from '@prisma/client';
+import type { BookingStatus, PaymentStatus, AnalyticsEventType } from '@prisma/client';
 
 // ============================================================================
 // TYPES
@@ -29,6 +30,357 @@ interface DateRange {
 // ============================================================================
 
 export const analyticsRouter = router({
+  // ============================================================================
+  // EVENT TRACKING (E13-S1)
+  // ============================================================================
+
+  events: router({
+    /**
+     * Track an analytics event (public - can be called from client)
+     */
+    track: publicProcedure
+      .input(
+        z.object({
+          eventType: z.enum([
+            'PAGE_VIEW',
+            'BUTTON_CLICK',
+            'FUNNEL_STEP',
+            'FORM_SUBMIT',
+            'CONVERSION',
+            'SEARCH',
+            'FILTER',
+            'ERROR',
+          ]),
+          sessionId: z.string(),
+          properties: z.any().optional().default({}),
+          pageUrl: z.string().optional(),
+          userAgent: z.string().optional(),
+          utmSource: z.string().optional(),
+          utmMedium: z.string().optional(),
+          utmCampaign: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const userId = ctx.user?.id || null;
+
+        // Create the analytics event
+        const event = await ctx.db.analyticsEvent.create({
+          data: {
+            eventType: input.eventType as AnalyticsEventType,
+            userId,
+            sessionId: input.sessionId,
+            properties: input.properties,
+            pageUrl: input.pageUrl,
+            userAgent: input.userAgent,
+            utmSource: input.utmSource,
+            utmMedium: input.utmMedium,
+            utmCampaign: input.utmCampaign,
+          },
+        });
+
+        // Update session metrics if session exists
+        await ctx.db.analyticsSession.updateMany({
+          where: { sessionId: input.sessionId },
+          data: {
+            lastActivityAt: new Date(),
+            eventCount: { increment: 1 },
+            ...(input.eventType === 'PAGE_VIEW' && { pageViews: { increment: 1 } }),
+            ...(input.eventType === 'CONVERSION' && {
+              hasConverted: true,
+              conversionType: (input.properties as { type?: string })?.type || 'UNKNOWN',
+            }),
+          },
+        });
+
+        return { success: true, eventId: event.id };
+      }),
+
+    /**
+     * Get summary metrics (admin only)
+     */
+    getSummary: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input?.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const [totalEvents, uniqueUsers, eventsByType] = await Promise.all([
+          // Total events
+          ctx.db.analyticsEvent.count({ where }),
+
+          // Unique users (non-null userId)
+          ctx.db.analyticsEvent.groupBy({
+            by: ['userId'],
+            where: {
+              ...where,
+              userId: { not: null },
+            },
+          }),
+
+          // Events by type
+          ctx.db.analyticsEvent.groupBy({
+            by: ['eventType'],
+            where,
+            _count: { id: true },
+          }),
+        ]);
+
+        // Get unique sessions count
+        const uniqueSessions = await ctx.db.analyticsEvent.groupBy({
+          by: ['sessionId'],
+          where,
+        });
+
+        return {
+          totalEvents,
+          uniqueUsers: uniqueUsers.length,
+          uniqueSessions: uniqueSessions.length,
+          eventsByType: eventsByType.map((e) => ({
+            eventType: e.eventType,
+            count: e._count.id,
+          })),
+        };
+      }),
+
+    /**
+     * Get recent events (admin only)
+     */
+    getRecent: adminProcedure
+      .input(
+        z
+          .object({
+            limit: z.number().min(1).max(100).default(50),
+            eventType: z
+              .enum([
+                'PAGE_VIEW',
+                'BUTTON_CLICK',
+                'FUNNEL_STEP',
+                'FORM_SUBMIT',
+                'CONVERSION',
+                'SEARCH',
+                'FILTER',
+                'ERROR',
+              ])
+              .optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const events = await ctx.db.analyticsEvent.findMany({
+          where: {
+            ...(input?.eventType && { eventType: input.eventType }),
+          },
+          orderBy: { createdAt: 'desc' },
+          take: input?.limit || 50,
+        });
+
+        return events;
+      }),
+
+    /**
+     * Get events by time period (admin only)
+     */
+    getByTimePeriod: adminProcedure
+      .input(
+        z.object({
+          period: z.enum(['hour', 'day', 'week', 'month']),
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input.startDate && { createdAt: { gte: input.startDate } }),
+          ...(input.endDate && { createdAt: { lte: input.endDate } }),
+        };
+
+        const events = await ctx.db.analyticsEvent.findMany({
+          where,
+          select: { createdAt: true, eventType: true },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Group events by time period
+        const grouped = events.reduce(
+          (acc, event) => {
+            let key: string;
+            const date = event.createdAt;
+
+            switch (input.period) {
+              case 'hour':
+                key = `${date.toISOString().slice(0, 13)}:00`;
+                break;
+              case 'day':
+                key = date.toISOString().slice(0, 10);
+                break;
+              case 'week':
+                // Get the Monday of the week
+                const d = new Date(date);
+                d.setDate(d.getDate() - d.getDay() + 1);
+                key = d.toISOString().slice(0, 10);
+                break;
+              case 'month':
+                key = date.toISOString().slice(0, 7);
+                break;
+            }
+
+            if (!acc[key]) {
+              acc[key] = { total: 0, byType: {} as Record<string, number> };
+            }
+            acc[key].total++;
+            acc[key].byType[event.eventType] = (acc[key].byType[event.eventType] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, { total: number; byType: Record<string, number> }>
+        );
+
+        return Object.entries(grouped).map(([period, data]) => ({
+          period,
+          total: data.total,
+          byType: data.byType,
+        }));
+      }),
+  }),
+
+  // ============================================================================
+  // SESSION TRACKING (E13-S1)
+  // ============================================================================
+
+  sessions: router({
+    /**
+     * Start or update a session (public - called from client)
+     */
+    upsert: publicProcedure
+      .input(
+        z.object({
+          sessionId: z.string(),
+          deviceType: z.string().optional(),
+          browser: z.string().optional(),
+          os: z.string().optional(),
+          screenResolution: z.string().optional(),
+          landingPage: z.string().optional(),
+          referrer: z.string().optional(),
+          utmSource: z.string().optional(),
+          utmMedium: z.string().optional(),
+          utmCampaign: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const userId = ctx.user?.id || null;
+
+        // Upsert session - create if doesn't exist, update if it does
+        const session = await ctx.db.analyticsSession.upsert({
+          where: { sessionId: input.sessionId },
+          create: {
+            sessionId: input.sessionId,
+            userId,
+            deviceType: input.deviceType,
+            browser: input.browser,
+            os: input.os,
+            screenResolution: input.screenResolution,
+            landingPage: input.landingPage,
+            referrer: input.referrer,
+            utmSource: input.utmSource,
+            utmMedium: input.utmMedium,
+            utmCampaign: input.utmCampaign,
+          },
+          update: {
+            lastActivityAt: new Date(),
+            // Update userId if user logged in during session
+            ...(userId && { userId }),
+          },
+        });
+
+        return { success: true, sessionId: session.sessionId };
+      }),
+
+    /**
+     * Get session summary (admin only)
+     */
+    getSummary: adminProcedure
+      .input(
+        z
+          .object({
+            startDate: z.date().optional(),
+            endDate: z.date().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          ...(input?.startDate && { startedAt: { gte: input.startDate } }),
+          ...(input?.endDate && { startedAt: { lte: input.endDate } }),
+        };
+
+        const [totalSessions, convertedSessions, avgPageViews, avgEventCount, sessionsByDevice] =
+          await Promise.all([
+            ctx.db.analyticsSession.count({ where }),
+            ctx.db.analyticsSession.count({ where: { ...where, hasConverted: true } }),
+            ctx.db.analyticsSession.aggregate({
+              where,
+              _avg: { pageViews: true },
+            }),
+            ctx.db.analyticsSession.aggregate({
+              where,
+              _avg: { eventCount: true },
+            }),
+            ctx.db.analyticsSession.groupBy({
+              by: ['deviceType'],
+              where,
+              _count: { id: true },
+            }),
+          ]);
+
+        const conversionRate =
+          totalSessions > 0 ? ((convertedSessions / totalSessions) * 100).toFixed(2) : '0.00';
+
+        return {
+          totalSessions,
+          convertedSessions,
+          conversionRate,
+          averagePageViews: avgPageViews._avg.pageViews?.toFixed(1) || '0.0',
+          averageEventCount: avgEventCount._avg.eventCount?.toFixed(1) || '0.0',
+          sessionsByDevice: sessionsByDevice.map((d) => ({
+            deviceType: d.deviceType || 'unknown',
+            count: d._count.id,
+          })),
+        };
+      }),
+
+    /**
+     * Get recent sessions (admin only)
+     */
+    getRecent: adminProcedure
+      .input(
+        z
+          .object({
+            limit: z.number().min(1).max(100).default(50),
+            hasConverted: z.boolean().optional(),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const sessions = await ctx.db.analyticsSession.findMany({
+          where: {
+            ...(input?.hasConverted !== undefined && { hasConverted: input.hasConverted }),
+          },
+          orderBy: { lastActivityAt: 'desc' },
+          take: input?.limit || 50,
+        });
+
+        return sessions;
+      }),
+  }),
+
   // ============================================================================
   // BOOKING CONVERSION METRICS
   // ============================================================================
