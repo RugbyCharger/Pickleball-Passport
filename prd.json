@@ -1,164 +1,196 @@
 {
-  "projectName": "Epic 12: Content Management System",
-  "branchName": "ralph/epic-12-content-management",
-  "description": "Complete the Content Management System for Pickleball Passport. CMS setup (12-1) is already done. Implement remaining 7 stories: package content editing, blog posts, FAQ management, testimonial moderation, media library, itinerary templates, and email template editor.",
+  "projectName": "Epic 13: Analytics & Reporting",
+  "branchName": "ralph/epic-13-analytics-reporting",
+  "description": "Implement comprehensive analytics and reporting system for Pickleball Passport. Track booking funnels, conversions, revenue, guest demographics, package performance, partner performance, email campaigns, and build custom report capabilities.",
   "context": {
     "completedWork": [
-      "12-1: CMS Setup - Data models, tRPC router, admin dashboard, rich text editor (completed 2026-01-21)"
+      "Epic 12: Content Management System (completed 2026-01-22)",
+      "Epic 11: Communication System (completed 2026-01-21)",
+      "Epic 10: Guest Referral System (completed 2026-01-21)",
+      "Epic 5: Admin Dashboard with basic analytics (completed earlier)"
     ],
     "codebasePatterns": [
       "Admin pages at app/(dashboard)/dashboard/admin/[feature]/page.tsx",
       "tRPC routers in lib/trpc/server/routers/",
       "Use adminProcedure for admin-only endpoints",
       "Use shadcn/ui components (Card, Button, Table, Dialog, etc.)",
+      "Use Recharts for charts and data visualization",
       "Use toast from 'sonner' for notifications",
-      "Rich text editor: TipTap or similar already in use",
-      "File uploads: S3 presigned URLs pattern exists",
-      "Prisma for database models"
+      "Prisma for database models",
+      "Date filtering patterns exist in admin dashboard"
     ],
     "keyFiles": {
-      "cmsRouter": "lib/trpc/server/routers/cms.ts (if exists, or admin.ts)",
-      "adminDashboard": "app/(dashboard)/dashboard/admin/",
-      "prismaSchema": "prisma/schema.prisma"
-    }
+      "adminDashboard": "app/(dashboard)/dashboard/admin/page.tsx",
+      "analyticsRouter": "lib/trpc/server/routers/analytics.ts (create if needed)",
+      "prismaSchema": "prisma/schema.prisma",
+      "existingCharts": "Check for Recharts usage in admin pages"
+    },
+    "notes": [
+      "Skip 13-9 (Mobile App Analytics) - mobile apps not in scope",
+      "Build on existing admin dashboard analytics patterns",
+      "Use Recharts consistently for all visualizations",
+      "Consider caching for expensive queries"
+    ]
   },
   "userStories": [
     {
-      "id": "E12-S2",
-      "title": "Package Content Editing",
+      "id": "E13-S1",
+      "title": "Analytics Integration Setup",
       "priority": 1,
-      "passes": true,
-      "description": "Allow admins to edit package descriptions, images, and details through the CMS",
+      "passes": false,
+      "description": "Set up analytics infrastructure with tracking events and data models",
       "acceptanceCriteria": [
-        "Create admin page at /dashboard/admin/packages for managing package content",
-        "List all packages with edit buttons",
-        "Edit form includes: name, description (rich text), hero image, gallery images, highlights, inclusions, exclusions",
-        "Add tRPC endpoints: admin.getPackages, admin.updatePackage",
-        "Support image upload for package hero and gallery (use existing S3 pattern)",
-        "Preview changes before publishing",
+        "Create AnalyticsEvent model in Prisma: id, eventType, userId, sessionId, properties (JSON), createdAt",
+        "Create analytics tRPC router with adminProcedure endpoints",
+        "Implement client-side tracking utility for key events (page views, button clicks, funnel steps)",
+        "Add analytics middleware to track user sessions",
+        "Create admin analytics page at /dashboard/admin/analytics",
+        "Dashboard shows summary metrics: total events, unique users, sessions",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S3",
-      "title": "Blog Posts System",
+      "id": "E13-S2",
+      "title": "Booking Funnel Analytics",
       "priority": 2,
-      "passes": true,
-      "description": "Create a blog system for content marketing with rich text editing",
+      "passes": false,
+      "description": "Track and visualize the complete booking funnel from visit to confirmation",
       "acceptanceCriteria": [
-        "Add BlogPost model to Prisma: id, title, slug, content, excerpt, featuredImage, author, status (DRAFT/PUBLISHED), publishedAt, tags, createdAt, updatedAt",
-        "Create admin page at /dashboard/admin/blog for managing posts",
-        "Create/Edit post form with rich text editor (TipTap)",
-        "Support featured image upload",
-        "Tag management (create, assign tags)",
-        "Add tRPC endpoints: admin.createBlogPost, admin.updateBlogPost, admin.deleteBlogPost, admin.getBlogPosts",
-        "Create public blog page at /blog with post listing",
-        "Create individual post page at /blog/[slug]",
-        "SEO meta tags for blog posts",
+        "Track funnel stages: Homepage → Package View → Configurator → Review → Payment → Confirmation",
+        "Create funnel visualization chart showing drop-off at each stage",
+        "Calculate conversion rates between stages",
+        "Filter by date range, package type, traffic source",
+        "Show average time spent at each stage",
+        "Add to analytics dashboard with dedicated Booking Funnel tab/section",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S4",
-      "title": "FAQ Management System",
+      "id": "E13-S3",
+      "title": "Conversion Tracking",
       "priority": 3,
-      "passes": true,
-      "description": "Admin interface to manage FAQs displayed on the website",
+      "passes": false,
+      "description": "Track conversion events and attribute them to sources",
       "acceptanceCriteria": [
-        "Add FAQ model to Prisma: id, question, answer (rich text), category, order, isPublished, createdAt, updatedAt",
-        "Create admin page at /dashboard/admin/faqs",
-        "CRUD operations for FAQs with drag-and-drop reordering",
-        "Category management (General, Booking, Medical, Travel, etc.)",
-        "Add tRPC endpoints: admin.createFaq, admin.updateFaq, admin.deleteFaq, admin.getFaqs, admin.reorderFaqs",
-        "Update public FAQ page to fetch from database instead of static content",
-        "Search/filter FAQs in admin",
+        "Track key conversions: Application Submitted, Booking Completed, Payment Made",
+        "Attribute conversions to traffic sources (utm_source, utm_medium, utm_campaign)",
+        "Calculate conversion rates by source",
+        "Create conversion trends chart (daily/weekly/monthly)",
+        "Show top converting sources and campaigns",
+        "A/B test support with variant tracking (optional)",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S5",
-      "title": "Testimonial Moderation System",
+      "id": "E13-S4",
+      "title": "Revenue Reports",
       "priority": 4,
-      "passes": true,
-      "description": "Review, approve, and manage guest testimonials",
+      "passes": false,
+      "description": "Comprehensive revenue tracking and reporting",
       "acceptanceCriteria": [
-        "Add Testimonial model if not exists: id, guestId, type (VIDEO/WRITTEN/PHOTO), content, mediaUrl, status (PENDING/APPROVED/PUBLISHED/REJECTED), rating, tripId, createdAt",
-        "Create admin page at /dashboard/admin/testimonials",
-        "List testimonials with status filters (Pending, Approved, Published, Rejected)",
-        "Preview testimonial content (video player for videos, image viewer for photos)",
-        "Actions: Approve, Publish, Reject with reason, Request edits",
-        "Add tRPC endpoints: admin.getTestimonials, admin.approveTestimonial, admin.publishTestimonial, admin.rejectTestimonial",
-        "Featured testimonial toggle for homepage display",
+        "Dashboard showing total revenue, MRR, average booking value",
+        "Revenue breakdown by package type, add-ons, time period",
+        "Revenue trends chart (daily/weekly/monthly/yearly)",
+        "Compare revenue across time periods (this month vs last month)",
+        "Export revenue data to CSV",
+        "Show projected revenue based on current bookings",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S6",
-      "title": "Media Library System",
+      "id": "E13-S5",
+      "title": "Guest Demographics",
       "priority": 5,
       "passes": false,
-      "description": "Centralized media management for all uploaded images and videos",
+      "description": "Analyze guest demographics and preferences",
       "acceptanceCriteria": [
-        "Add MediaAsset model: id, filename, url, thumbnailUrl, type (IMAGE/VIDEO/DOCUMENT), size, mimeType, altText, tags, uploadedBy, createdAt",
-        "Create admin page at /dashboard/admin/media-library",
-        "Grid view of all media assets with thumbnails",
-        "Upload new media (drag-and-drop, multi-file)",
-        "Edit media metadata (alt text, tags)",
-        "Delete media (with usage check)",
-        "Search and filter by type, tags, date",
-        "Add tRPC endpoints: admin.uploadMedia, admin.getMediaLibrary, admin.updateMedia, admin.deleteMedia",
-        "Media picker component for use in other admin forms (packages, blog, etc.)",
+        "Dashboard showing guest age distribution, location, gender",
+        "Chart showing most popular packages by demographic",
+        "Repeat guest rate and loyalty metrics",
+        "Guest acquisition source breakdown",
+        "Medical procedures popularity by demographic",
+        "Filter by date range and guest attributes",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S7",
-      "title": "Itinerary Templates System",
+      "id": "E13-S6",
+      "title": "Package Performance",
       "priority": 6,
       "passes": false,
-      "description": "Create and manage reusable itinerary templates for trips",
+      "description": "Analyze performance of packages and add-ons",
       "acceptanceCriteria": [
-        "Add ItineraryTemplate model: id, name, description, packageId, days (JSON array of day activities), isActive, createdAt, updatedAt",
-        "Add ItineraryDay structure: dayNumber, title, activities (array with time, title, description, location, type)",
-        "Create admin page at /dashboard/admin/itineraries",
-        "Visual day-by-day itinerary builder",
-        "Clone existing templates",
-        "Assign templates to packages",
-        "Add tRPC endpoints: admin.createItinerary, admin.updateItinerary, admin.getItineraries, admin.cloneItinerary",
-        "Preview itinerary as guest would see it",
+        "Dashboard showing bookings per package, revenue per package",
+        "Most popular add-ons and their attach rates",
+        "Package comparison chart (bookings, revenue, satisfaction)",
+        "Seasonal trends for each package",
+        "Average rating per package from testimonials",
+        "Identify underperforming packages",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S8",
-      "title": "Visual Email Template Editor",
+      "id": "E13-S7",
+      "title": "Partner Performance",
       "priority": 7,
       "passes": false,
-      "description": "WYSIWYG editor for creating and editing email templates",
+      "description": "Track and analyze partner referral performance",
       "acceptanceCriteria": [
-        "Check if EmailTemplate model exists, extend if needed: id, name, slug, subject, htmlContent, textContent, variables (JSON), category, isActive",
-        "Create admin page at /dashboard/admin/email-templates",
-        "Visual drag-and-drop email builder (or rich text with preview)",
-        "Support template variables ({{guestName}}, {{bookingId}}, etc.)",
-        "Preview email as it would appear",
-        "Send test email to admin",
-        "Add tRPC endpoints: admin.getEmailTemplates, admin.updateEmailTemplate, admin.sendTestEmail",
-        "Version history for templates (optional)",
+        "Dashboard showing top partners by referrals, conversions, revenue",
+        "Partner tier distribution chart",
+        "Referral-to-booking conversion rates by partner",
+        "Partner growth trends over time",
+        "Commission payouts summary",
+        "Identify high-potential partners for outreach",
         "TypeScript compiles without errors"
       ]
     },
     {
-      "id": "E12-S9",
-      "title": "Final Integration and Testing",
+      "id": "E13-S8",
+      "title": "Email Campaign Analytics",
       "priority": 8,
       "passes": false,
-      "description": "Ensure all CMS components work together and pass quality checks",
+      "description": "Track email campaign performance and engagement",
+      "acceptanceCriteria": [
+        "Dashboard showing email send volume, open rates, click rates",
+        "Campaign comparison chart (A/B test results)",
+        "Best performing email templates",
+        "Email engagement trends over time",
+        "Unsubscribe rate tracking",
+        "Link click heatmap or breakdown by CTA",
+        "TypeScript compiles without errors"
+      ]
+    },
+    {
+      "id": "E13-S10",
+      "title": "Custom Report Builder",
+      "priority": 9,
+      "passes": false,
+      "description": "Allow admins to build custom reports with selected metrics",
+      "acceptanceCriteria": [
+        "Create custom report builder UI at /dashboard/admin/analytics/reports",
+        "Select metrics from available data points (bookings, revenue, conversions, etc.)",
+        "Choose visualization type (table, bar chart, line chart, pie chart)",
+        "Apply filters and date ranges",
+        "Save and name custom reports for reuse",
+        "Schedule reports to be emailed (optional)",
+        "Export reports to CSV/PDF",
+        "TypeScript compiles without errors"
+      ]
+    },
+    {
+      "id": "E13-S11",
+      "title": "Final Integration and Testing",
+      "priority": 10,
+      "passes": false,
+      "description": "Ensure all analytics components work together and pass quality checks",
       "acceptanceCriteria": [
         "Run npx tsc --noEmit - all TypeScript compiles without errors",
         "Run npm run lint - verify no new lint errors",
-        "Verify all admin CMS pages are accessible and functional",
-        "Navigation links added to admin sidebar for all new CMS pages",
-        "Commit all changes with message: feat(E12): Content Management System",
+        "Verify all analytics pages are accessible and functional",
+        "Navigation links added to admin sidebar for analytics",
+        "Performance check: expensive queries are optimized or cached",
+        "Commit all changes with message: feat(E13): Analytics & Reporting",
         "Create PR with summary of all features implemented"
       ]
     }
