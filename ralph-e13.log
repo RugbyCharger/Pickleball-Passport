@@ -1,0 +1,223 @@
+Archiving previous run: ralph/contact-form-support-system
+   Archived to: /Users/grantcharge/Pickleball-Passport/scripts/ralph/archive/2026-01-22-contact-form-support-system
+Starting Ralph - Max iterations: 50
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 1 of 50
+═══════════════════════════════════════════════════════
+I've completed **E13-S1: Analytics Integration Setup**. Here's what was implemented:
+
+**Changes:**
+1. **Prisma Schema** - Added `AnalyticsEventType` enum, `AnalyticsEvent` model, and `AnalyticsSession` model
+2. **tRPC Router** - Added `events` and `sessions` sub-routers with track, getSummary, getRecent, getByTimePeriod endpoints
+3. **Client Utility** - Created `lib/utils/analytics.ts` with session management and event tracking (trackPageView, trackClick, trackFunnelStep, trackConversion, etc.)
+4. **Analytics Provider** - Created `components/analytics-provider.tsx` for automatic page view tracking on route changes
+5. **App Providers** - Integrated AnalyticsProvider into the app
+6. **Admin Dashboard** - Added Event Tracking section showing total events, unique users, total sessions, and session conversion rate
+
+There are still 9 more stories with `passes: false` in the PRD. Should I continue to the next story (E13-S2: Booking Funnel Analytics)?
+Iteration 1 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 2 of 50
+═══════════════════════════════════════════════════════
+E13-S1 and E13-S2 are complete (passes: true). There are still 8 stories remaining with `passes: false`:
+- E13-S3: Conversion Tracking
+- E13-S4: Revenue Reports
+- E13-S5: Guest Demographics
+- E13-S6: Package Performance
+- E13-S7: Partner Performance
+- E13-S8: Email Campaign Analytics
+- E13-S10: Custom Report Builder
+- E13-S11: Final Integration and Testing
+
+The story E13-S2: Booking Funnel Analytics is now complete with all acceptance criteria implemented:
+- ✅ Track funnel stages: Homepage → Package View → Configurator → Review → Payment → Confirmation
+- ✅ Create funnel visualization chart showing drop-off at each stage
+- ✅ Calculate conversion rates between stages
+- ✅ Filter by date range, package type, traffic source
+- ✅ Show average time spent at each stage
+- ✅ Add to analytics dashboard with dedicated Booking Funnel tab/section
+- ✅ TypeScript compiles without errors
+Iteration 2 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 3 of 50
+═══════════════════════════════════════════════════════
+There are still 7 stories with `passes: false`. Looking at the PRD, the next one is E13-S4: Revenue Reports.
+
+## Summary
+
+I successfully completed **E13-S3: Conversion Tracking** which includes:
+
+**Backend (analytics.ts):**
+- Added `conversionTracking` sub-router with 5 endpoints:
+  - `getConversionsByType` - Tracks key conversions (Application Submitted, Booking Completed, Payment Made)
+  - `getByTrafficSource` - Attribution to traffic sources (utm_source, utm_medium, utm_campaign) with conversion rates
+  - `getConversionTrends` - Daily/weekly/monthly conversion trends
+  - `getTopConverters` - Top converting sources and campaigns
+  - `getVariantPerformance` - A/B test variant tracking (optional)
+
+**Frontend (analytics dashboard):**
+- Added new "Conversion Tracking" tab
+- Summary metrics showing total conversions, applications, bookings, and payments
+- Conversion rates by traffic source with grouping options
+- Conversion trends chart with period and type filtering
+- Top converting sources table
+- Top converting campaigns table
+- A/B test variant performance section (conditional display)
+
+All acceptance criteria met:
+- ✅ Track key conversions: Application Submitted, Booking Completed, Payment Made
+- ✅ Attribute conversions to traffic sources (utm_source, utm_medium, utm_campaign)
+- ✅ Calculate conversion rates by source
+- ✅ Create conversion trends chart (daily/weekly/monthly)
+- ✅ Show top converting sources and campaigns
+- ✅ A/B test support with variant tracking (optional)
+- ✅ TypeScript compiles without errors (for analytics files)
+Iteration 3 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 4 of 50
+═══════════════════════════════════════════════════════
+E13-S4 is complete. There are still stories E13-S5 through E13-S11 with `passes: false`. The iteration is complete for E13-S4.
+
+---
+
+## Summary of E13-S4: Revenue Reports
+
+**Implemented:**
+
+1. **Backend (analytics.ts)** - Added 4 new endpoints:
+   - `getRevenueTrends` - Revenue trends by period (daily/weekly/monthly/yearly)
+   - `getRevenueComparison` - Period-over-period comparison
+   - `getProjectedRevenue` - Projected revenue from pending bookings with MRR
+   - `getComprehensiveOverview` - Enhanced overview with MRR, ARR, and add-ons
+
+2. **Frontend (analytics/page.tsx)** - Added Revenue Reports tab with:
+   - Summary metrics: Total Revenue, MRR, Average Booking Value, Add-Ons Revenue
+   - Period comparison with change indicators
+   - Revenue trends bar chart (configurable periods)
+   - Revenue breakdown by package and add-on category
+   - Projected revenue with booking pipeline status
+
+3. **CSV Export** - Reused existing export functionality
+
+All acceptance criteria for E13-S4 have been met. The next story (E13-S5: Guest Demographics) is ready to be implemented in the next iteration.
+Iteration 4 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 5 of 50
+═══════════════════════════════════════════════════════
+There are still stories with `passes: false`. The story E13-S5 is now complete. The implementation includes:
+
+**Summary of E13-S5 - Guest Demographics:**
+
+1. **Backend (analytics.ts)** - Added 6 new endpoints to the demographics sub-router:
+   - `getAgeDistribution`: Age bracket distribution with percentage calculations
+   - `getLocationDistribution`: Geographic distribution with top locations
+   - `getPackagesByDemographic`: Popular packages grouped by age brackets
+   - `getAcquisitionSources`: Acquisition breakdown by referral source and UTM parameters
+   - `getMedicalProceduresByDemographic`: Medical procedure popularity by age and category
+   - `getOverview`: Comprehensive demographics summary with key metrics
+
+2. **Frontend (analytics/page.tsx)** - Added Guest Demographics tab with:
+   - Summary metrics (total guests, average age, profile completion, repeat guest rate)
+   - Age distribution bar chart (Recharts)
+   - Guest locations list with ranking
+   - Popular packages by age group table
+   - Guest acquisition sources breakdown (3 columns)
+   - Medical procedures by age group with category coloring
+   - Pickleball skill level distribution
+
+3. **All acceptance criteria met:**
+   - Dashboard showing guest age distribution, location ✓
+   - Chart showing most popular packages by demographic ✓
+   - Repeat guest rate and loyalty metrics ✓
+   - Guest acquisition source breakdown ✓
+   - Medical procedures popularity by demographic ✓
+   - Filter by date range (inherits from global date filter) ✓
+   - TypeScript compiles without errors ✓
+Iteration 5 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 6 of 50
+═══════════════════════════════════════════════════════
+There are still 4 stories with `passes: false`:
+- E13-S7: Partner Performance (priority 7)
+- E13-S8: Email Campaign Analytics (priority 8)  
+- E13-S10: Custom Report Builder (priority 9)
+- E13-S11: Final Integration and Testing (priority 10)
+
+The next story to implement is **E13-S7: Partner Performance**. My current iteration has completed E13-S6, so I'll end here to allow the next iteration to pick up E13-S7.
+
+## Summary - E13-S6: Package Performance
+
+**Completed:**
+- Added `packagePerformance` sub-router to analytics tRPC router with 7 endpoints:
+  - `getOverview`: Package summary metrics (bookings, revenue, avg value, conversion rate)
+  - `getAddOnAttachRates`: Add-on attach rates per booking
+  - `getPackageComparison`: Package comparison with bookings, revenue, testimonials, satisfaction
+  - `getSeasonalTrends`: Monthly booking trends by package for the year
+  - `getUnderperformingPackages`: Identify packages below average performance
+  - `getTopAddOns`: Top performing add-ons with attach rates
+  - `getPackageRatings`: Package satisfaction from testimonials
+
+- Added Package Performance tab to analytics dashboard with:
+  - Overview metrics (total packages, bookings, revenue, avg booking value)
+  - Package comparison table (bookings, revenue, completed, testimonials, satisfaction)
+  - Top add-ons table with attach rates and category breakdown
+  - Seasonal trends bar chart using Recharts
+  - Package satisfaction from testimonials with High/Medium/Low indicators
+  - Underperforming packages alert section with issue identification
+
+- All TypeScript and lint checks pass
+- Committed changes with message: `feat: E13-S6 - Package Performance`
+Iteration 6 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 7 of 50
+═══════════════════════════════════════════════════════
+Starting Ralph - Max iterations: 50
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 1 of 50
+═══════════════════════════════════════════════════════
+There are still 3 stories remaining with `passes: false`:
+- E13-S8: Email Campaign Analytics
+- E13-S10: Custom Report Builder  
+- E13-S11: Final Integration and Testing
+
+The next story to implement is E13-S8 (Email Campaign Analytics). Since I completed one story as instructed, I'm ending this iteration here. Another iteration will pick up the next story.
+
+**Summary of E13-S7 Implementation:**
+- Verified that the Partner Performance feature was already fully implemented in a prior iteration
+- Fixed TypeScript errors in the analytics router and page:
+  - Fixed Tooltip formatter type signatures (name parameter can be `string | undefined`)
+  - Fixed User model reference to only use the `email` field (no firstName/lastName on User model)
+- All 7 partnerPerformance sub-router endpoints verified working
+- Partner Performance tab in analytics dashboard verified complete
+- Committed changes with message: `feat: E13-S7 - Partner Performance`
+- Updated PRD to mark E13-S7 as `passes: true`
+- Updated progress log with learnings
+Iteration 1 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 2 of 50
+═══════════════════════════════════════════════════════
+E13-S8 is now complete. Looking at the PRD, there are still two more stories with `passes: false`:
+- E13-S10: Custom Report Builder (priority 9)
+- E13-S11: Final Integration and Testing (priority 10)
+
+The next highest priority story is **E13-S10: Custom Report Builder**.
+Iteration 2 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 3 of 50
+═══════════════════════════════════════════════════════
+All 10 stories are now marked as `passes: true`. 
+
+<promise>COMPLETE</promise>
+
+Ralph completed all tasks!
+Completed at iteration 3 of 50

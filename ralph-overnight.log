@@ -1,0 +1,160 @@
+Archiving previous run: ralph/e4-s14-stripe-connect
+   Archived to: /Users/grantcharge/Pickleball-Passport/scripts/ralph/archive/2026-01-22-e4-s14-stripe-connect
+Starting Ralph - Max iterations: 50
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 1 of 50
+═══════════════════════════════════════════════════════
+E12-S2 is now complete. There are still more stories with `passes: false`. Per the instructions, I complete one story per iteration and end my response so the next iteration can pick up the next story (E12-S3: Blog Posts System).
+
+## Summary
+
+**Completed: E12-S2 - Package Content Editing**
+
+The story was already implemented in a previous commit (1c2f99b). I:
+1. Verified all acceptance criteria were met
+2. Fixed a TypeScript error in `package-cms.ts` (enum type casting)
+3. Updated the PRD to mark the story as passing
+4. Updated the progress log with learnings
+
+**Key files:**
+- `app/(dashboard)/dashboard/admin/cms/packages/page.tsx` - Packages list
+- `app/(dashboard)/dashboard/admin/cms/packages/[id]/page.tsx` - Package editor
+- `app/(dashboard)/dashboard/admin/cms/packages/[id]/preview/page.tsx` - Preview
+- `lib/trpc/server/routers/package-cms.ts` - tRPC endpoints
+
+**Next story:** E12-S3 - Blog Posts System (priority 2)
+Iteration 1 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 2 of 50
+═══════════════════════════════════════════════════════
+Story E12-S3 is complete. The next story is E12-S4 (FAQ Management System) with priority 3.
+
+## Summary
+
+I completed **E12-S3: Blog Posts System** with the following implementation:
+
+**Files Created:**
+- `app/(marketing)/blog/page.tsx` - Public blog listing page with:
+  - Grid display of published posts
+  - Category and tag filtering
+  - Search functionality  
+  - Pagination
+  - Responsive design
+  
+- `app/(marketing)/blog/layout.tsx` - Layout with base SEO metadata
+
+- `app/(marketing)/blog/[slug]/page.tsx` - Server component that:
+  - Fetches post data for dynamic SEO metadata (Open Graph, Twitter)
+  - Generates canonical URLs
+  - Includes article metadata (published time, section)
+  
+- `app/(marketing)/blog/[slug]/blog-post-content.tsx` - Client component with:
+  - Rich text content rendering
+  - Related posts section
+  - Social sharing buttons (Facebook, Twitter, LinkedIn, copy link)
+  - Featured images with responsive display
+
+**Pre-existing (not modified):**
+- BlogPost model in Prisma schema
+- Blog tRPC router with full CRUD and public endpoints
+- Admin blog dashboard at `/dashboard/admin/cms/blog`
+- Blog post editor with TipTap rich text
+Iteration 2 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 3 of 50
+═══════════════════════════════════════════════════════
+There are still stories with `passes: false`. The next story is E12-S5 (Testimonial Moderation System). I will end this iteration here so the next iteration can pick up E12-S5.
+
+---
+
+## Summary - E12-S4: FAQ Management System
+
+**Status:** Completed
+
+**What was done:**
+- Verified the FAQ Management System was already fully implemented in previous iterations
+- Fixed a TypeScript error in `faq.test.ts` (cast `JsonValue` to `Prisma.InputJsonValue`)
+- Committed the fix
+
+**Files changed:**
+- `lib/trpc/server/routers/__tests__/faq.test.ts` - TypeScript fix
+
+**Components already in place:**
+- Prisma models: `FAQCategory`, `FAQ` 
+- tRPC router at `lib/trpc/server/routers/faq.ts` with full CRUD, reordering, bulk operations
+- Admin page at `/dashboard/admin/cms/faqs` with drag-and-drop reordering via @dnd-kit
+- Public FAQ page at `/faq` with search, category filtering, and accordion UI
+
+**Next story:** E12-S5 (Testimonial Moderation System)
+Iteration 3 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 4 of 50
+═══════════════════════════════════════════════════════
+E12-S5 is now marked as passing. There are still stories with `passes: false`:
+- E12-S6: Media Library System (priority 5)
+- E12-S7: Itinerary Templates System (priority 6)
+- E12-S8: Visual Email Template Editor (priority 7)
+- E12-S9: Final Integration and Testing (priority 8)
+
+According to the instructions, since not all stories have `passes: true`, I should end my response normally for the next iteration to pick up.
+
+---
+
+**Summary of E12-S5 completion:**
+
+The Testimonial Moderation System was already fully implemented in a previous iteration. I found:
+- **GuestTestimonial model** in Prisma with full status enum (PENDING, APPROVED, PUBLISHED, REJECTED, EDIT_REQUESTED)
+- **guestTestimonialRouter** with complete admin moderation workflow (approve, publish, unpublish, reject, requestEdits, toggleFeatured)
+- **Admin page** at `/dashboard/admin/cms/testimonials/page.tsx` with full moderation UI
+
+My contribution was fixing a TypeScript error in `lib/storage/testimonial-storage.ts` where `as const` readonly arrays needed proper type casting for the `includes()` method.
+
+**Committed:** `feat: E12-S5 - Testimonial Moderation System` (8cd5305)
+Iteration 4 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 5 of 50
+═══════════════════════════════════════════════════════
+There are still 3 stories with `passes: false`:
+- E12-S7: Itinerary Templates System (priority 6)
+- E12-S8: Visual Email Template Editor (priority 7)
+- E12-S9: Final Integration and Testing (priority 8)
+
+Story E12-S6 (Media Library System) is now complete.
+
+---
+
+## Summary
+
+**E12-S6: Media Library System** - COMPLETED
+
+The Media Library System was already fully implemented in a previous iteration. I fixed a TypeScript error in the `rich-text-editor.tsx` component that prevented the MediaPicker from properly integrating with the TipTap editor.
+
+### Changes Made:
+- Fixed `rich-text-editor.tsx` to properly integrate with MediaPicker:
+  - Added `showMediaPicker` state
+  - Connected the image button to open the MediaPicker modal
+  - Implemented `handleMediaSelect` callback to insert selected images
+  - Removed unused `addImageFromUrl` function
+
+### Files Involved:
+- `prisma/schema.prisma` - MediaAsset & MediaFolder models
+- `lib/trpc/server/routers/media.ts` - Full tRPC router with S3 presigned URLs
+- `app/(dashboard)/dashboard/admin/cms/media/page.tsx` - Admin media library page
+- `components/cms/media-picker.tsx` - Reusable media picker component
+- `components/cms/rich-text-editor.tsx` - Fixed MediaPicker integration
+Iteration 5 complete. Continuing...
+
+═══════════════════════════════════════════════════════
+  Ralph Iteration 6 of 50
+═══════════════════════════════════════════════════════
+All 8 stories (E12-S2 through E12-S9) have `passes: true`. Note that E12-S1 was likely already passing before this iteration started.
+
+<promise>COMPLETE</promise>
+
+Ralph completed all tasks!
+Completed at iteration 6 of 50

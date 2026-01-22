@@ -58,3 +58,4 @@ progress-contact.txt
 
 # Git worktrees
 .worktrees/
+.env*.local
