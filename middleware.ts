@@ -1,18 +1,15 @@
 /**
- * Clerk Authentication Middleware
+ * Next.js Middleware
  *
- * This middleware protects routes and enforces authentication.
- * - Public routes: accessible without authentication
- * - Protected routes: require authentication, redirect to sign-in if not authenticated
+ * Handles UTM parameter tracking for marketing attribution.
+ * Authentication is handled at the page/API level via Clerk components and tRPC middleware.
  *
- * Role-based access control is handled at the page/API level via tRPC's enforceRole middleware.
- *
- * Also handles UTM parameter tracking (Epic 10 - US-007):
- * - Captures UTM params from URL and stores them in cookies
- * - Uses first-touch attribution (doesn't overwrite existing UTM cookies)
+ * Note: clerkMiddleware is not used here due to Edge Runtime compatibility issues
+ * with Vercel deployments. Auth protection is enforced via:
+ * - Clerk's <SignedIn>/<SignedOut> components for pages
+ * - tRPC's enforceRole middleware for API routes
  */
 
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -27,32 +24,14 @@ const UTM_COOKIE_CONFIG = {
 
 const UTM_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign'] as const
 
-// Define public routes that don't require authentication
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-  '/forgot-password(.*)',
-  '/onboarding(.*)',
-  '/redirect(.*)',
-  '/packages(.*)',
-  '/testimonials(.*)',
-  '/api/webhooks(.*)',
-  '/flyers(.*)',
-])
-
-/**
- * Helper function to capture UTM parameters from URL and set cookies
- * Uses first-touch attribution (doesn't overwrite existing UTM cookies)
- */
-function handleUtmTracking(request: NextRequest, response: NextResponse): NextResponse {
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
   const url = new URL(request.url)
 
-  // Check for UTM parameters in URL
+  // Capture UTM parameters (first-touch attribution)
   for (const param of UTM_PARAMS) {
     const value = url.searchParams.get(param)
     if (value) {
-      // First-touch attribution: don't overwrite existing cookie
       const existingCookie = request.cookies.get(param)
       if (!existingCookie) {
         response.cookies.set(param, value, UTM_COOKIE_CONFIG)
@@ -63,26 +42,14 @@ function handleUtmTracking(request: NextRequest, response: NextResponse): NextRe
   return response
 }
 
-export default clerkMiddleware(async (auth, request) => {
-  // Allow public routes
-  if (isPublicRoute(request)) {
-    const response = NextResponse.next()
-    // Still capture UTM params on public routes
-    return handleUtmTracking(request as unknown as NextRequest, response)
-  }
-
-  // Protect all non-public routes - require authentication
-  await auth.protect()
-
-  const response = NextResponse.next()
-  return handleUtmTracking(request as unknown as NextRequest, response)
-})
-
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    // Only run on marketing pages where UTM tracking matters
+    '/',
+    '/packages/:path*',
+    '/testimonials/:path*',
+    '/partners/:path*',
+    '/p/:path*',
+    '/r/:path*',
   ],
 }
