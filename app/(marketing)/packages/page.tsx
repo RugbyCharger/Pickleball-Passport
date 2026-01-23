@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
   ArrowRight,
   CheckCircle,
@@ -11,6 +10,13 @@ import {
   MapPin,
   Heart,
   Sparkles,
+  Sun,
+  Palmtree,
+  Waves,
+  Shield,
+  Users,
+  Utensils,
+  Phone,
 } from 'lucide-react';
 
 const packages = [
@@ -26,6 +32,7 @@ const packages = [
       '5-star dining experiences',
     ],
     featured: true,
+    icon: '😁',
   },
   {
     name: 'Total Wellness',
@@ -39,6 +46,7 @@ const packages = [
       'Nutritional guidance',
     ],
     featured: false,
+    icon: '✨',
   },
   {
     name: 'Recovery Retreat',
@@ -52,163 +60,273 @@ const packages = [
       'Cultural excursions',
     ],
     featured: false,
+    icon: '🌿',
+  },
+];
+
+const includedItems = [
+  {
+    icon: Shield,
+    title: 'Medical Care',
+    description: 'JCI-accredited facilities with internationally trained specialists',
+  },
+  {
+    icon: Star,
+    title: 'Accommodation',
+    description: '4-5 star hotels or luxury resorts with recovery amenities',
+  },
+  {
+    icon: Users,
+    title: 'Pickleball',
+    description: 'Daily sessions with certified instructors at premium courts',
+  },
+  {
+    icon: Phone,
+    title: 'Concierge',
+    description: '24/7 personal concierge for all your needs throughout the trip',
   },
 ];
 
 export default function PackagesPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 sm:py-28">
+        {/* Decorative elements */}
+        <div className="absolute top-10 left-10 opacity-10">
+          <Palmtree className="w-32 h-32" />
+        </div>
+        <div className="absolute bottom-10 right-10 opacity-10">
+          <Waves className="w-40 h-40" />
+        </div>
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              All-Inclusive Experiences
+            </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
               Transformation Packages
             </h1>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
               Discover our curated wellness experiences that combine world-class medical care,
               pickleball training, and luxury hospitality in beautiful Thailand.
             </p>
-            <div className="flex flex-wrap justify-center gap-8 text-sm">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Star className="h-5 w-5 text-[#D4AF37]" />
-                <span>JCI Accredited Facilities</span>
+                <span className="text-sm">JCI Accredited</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Heart className="h-5 w-5 text-[#D4AF37]" />
-                <span>60-70% Cost Savings</span>
+                <span className="text-sm">60-70% Savings</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-[#D4AF37]" />
-                <span>All-Inclusive Experience</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                <Sun className="h-5 w-5 text-[#D4AF37]" />
+                <span className="text-sm">All-Inclusive</span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 43.3C840 46.7 960 53.3 1080 56.7C1200 60 1320 60 1380 60L1440 60V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="#FDF8F3"/>
+          </svg>
+        </div>
       </section>
 
       {/* Packages Grid */}
-      <section className="py-16 sm:py-20 bg-slate-50">
+      <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-6 text-center">
-            Choose Your Journey
-          </h2>
-          <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            Each package is fully customizable to match your specific needs and goals.
-          </p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+              Choose Your Journey
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#003D5C]/70 max-w-2xl mx-auto">
+              Each package is fully customizable to match your specific needs and goals.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {packages.map((pkg) => (
-              <Card
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {packages.map((pkg, index) => (
+              <div
                 key={pkg.slug}
-                className={`hover:shadow-xl transition-shadow duration-300 ${
-                  pkg.featured ? 'border-2 border-[#D4AF37] relative' : ''
-                }`}
+                className={`relative group ${index === 0 ? 'lg:-mt-4' : ''}`}
               >
                 {pkg.featured && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D4AF37] text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Most Popular
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                    <div className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] text-[#003D5C] px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-[#D4AF37]/30 flex items-center gap-2">
+                      <Star className="w-4 h-4" />
+                      Most Popular
+                    </div>
                   </div>
                 )}
-                <CardHeader className="pt-8">
-                  <CardTitle className="text-2xl font-serif text-center text-gray-900">
-                    {pkg.name}
-                  </CardTitle>
-                  <div className="flex items-center justify-center gap-4 mt-2 text-sm text-gray-600">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {pkg.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      Thailand
-                    </span>
+                <div
+                  className={`bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 h-full flex flex-col ${
+                    pkg.featured ? 'border-2 border-[#D4AF37] ring-4 ring-[#D4AF37]/10' : 'border border-[#D4AF37]/10'
+                  }`}
+                >
+                  {/* Card Header */}
+                  <div className={`p-8 text-center ${pkg.featured ? 'bg-gradient-to-br from-[#F5E6D3]/50 to-white' : ''}`}>
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center text-3xl shadow-lg">
+                      {pkg.icon}
+                    </div>
+                    <h3 className="text-2xl font-serif font-bold text-[#003D5C] mb-2">
+                      {pkg.name}
+                    </h3>
+                    <div className="flex items-center justify-center gap-4 text-sm text-[#003D5C]/60">
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-4 w-4 text-[#D4AF37]" />
+                        {pkg.duration}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4 text-[#D4AF37]" />
+                        Thailand
+                      </span>
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 text-center mb-6">{pkg.description}</p>
-                  <ul className="space-y-3 mb-6">
-                    {pkg.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href={`/packages/${pkg.slug}`}>
-                    <Button
-                      className={`w-full ${
-                        pkg.featured
-                          ? 'bg-[#D4AF37] hover:bg-[#C19A2E] text-gray-900'
-                          : 'bg-[#003D5C] hover:bg-[#002B42]'
-                      }`}
-                    >
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+
+                  {/* Card Content */}
+                  <div className="p-8 pt-4 flex-1 flex flex-col">
+                    <p className="text-[#003D5C]/70 text-center mb-6">{pkg.description}</p>
+                    <ul className="space-y-4 mb-8 flex-1">
+                      {pkg.highlights.map((highlight, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-[#2D5A3D]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <CheckCircle className="h-4 w-4 text-[#2D5A3D]" />
+                          </div>
+                          <span className="text-[#003D5C]/80">{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href={`/packages/${pkg.slug}`} className="block">
+                      <Button
+                        className={`w-full h-14 rounded-xl font-semibold text-base transition-all ${
+                          pkg.featured
+                            ? 'bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl'
+                            : 'bg-[#003D5C] hover:bg-[#002B42] text-white'
+                        }`}
+                      >
+                        Learn More
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Custom Package CTA */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-6">
-            Need Something Custom?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Every transformation journey is unique. Work with our team to create a
-            personalized package that perfectly matches your goals, timeline, and preferences.
-          </p>
-          <Link href="/apply">
-            <Button
-              size="lg"
-              className="bg-[#003D5C] hover:bg-[#002B42] px-8 py-6 text-lg"
-            >
-              Start Your Application
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <div className="bg-white rounded-3xl shadow-xl shadow-[#003D5C]/10 p-10 md:p-14 border border-[#D4AF37]/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/10 rounded-full blur-3xl" />
+            <div className="relative z-10">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center shadow-lg">
+                <Utensils className="w-8 h-8 text-[#003D5C]" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+                Need Something Custom?
+              </h2>
+              <p className="text-lg text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+                Every transformation journey is unique. Work with our team to create a
+                personalized package that perfectly matches your goals, timeline, and preferences.
+              </p>
+              <Link href="/apply">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Start Your Application
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* What's Included Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#003D5C] to-[#005580] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-12 text-center">
-            What's Included in Every Package
-          </h2>
+      <section className="py-16 sm:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10">
+            <Palmtree className="w-24 h-24 text-white" />
+          </div>
+          <div className="absolute bottom-10 right-10">
+            <Sun className="w-20 h-20 text-[#D4AF37]" />
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
+              What&apos;s Included in Every Package
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              Every journey includes these premium features to ensure your transformation is seamless.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                title: 'Medical Care',
-                description: 'JCI-accredited facilities with internationally trained specialists',
-              },
-              {
-                title: 'Accommodation',
-                description: '4-5 star hotels or luxury resorts with recovery amenities',
-              },
-              {
-                title: 'Pickleball',
-                description: 'Daily sessions with certified instructors at premium courts',
-              },
-              {
-                title: 'Concierge',
-                description: '24/7 personal concierge for all your needs throughout the trip',
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="text-center">
-                <div className="h-16 w-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-8 w-8 text-[#D4AF37]" />
+            {includedItems.map((item, idx) => (
+              <div key={idx} className="text-center group">
+                <div className="relative inline-block mb-6">
+                  <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mx-auto border border-white/20 group-hover:bg-[#D4AF37]/20 transition-colors">
+                    <item.icon className="h-10 w-10 text-[#D4AF37]" />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#D4AF37] flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-[#003D5C]" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-blue-100">{item.description}</p>
+                <h3 className="text-xl font-serif font-bold text-white mb-3">{item.title}</h3>
+                <p className="text-white/70 leading-relaxed">{item.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-16 sm:py-20 bg-[#FDF8F3]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Sun className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" />
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            Ready to Begin Your Journey?
+          </h2>
+          <p className="text-lg text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+            Take the first step toward your transformation. Our team is ready to help you plan your perfect trip.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/apply">
+              <Button
+                size="lg"
+                className="bg-[#003D5C] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
+              >
+                Apply Now
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
+              >
+                Contact Us
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

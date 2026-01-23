@@ -2,49 +2,82 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, PlayCircle } from 'lucide-react';
+import { ArrowRight, PlayCircle, Sparkles, Sun, Star, Shield, Palmtree } from 'lucide-react';
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-blue-50">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+    <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
+      {/* Background Layers */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+
+      {/* Decorative tropical pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="palm-leaves" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M50 0C50 0 60 25 50 50C40 25 50 0 50 0Z" fill="white" fillOpacity="0.5"/>
+              <path d="M0 50C0 50 25 60 50 50C25 40 0 50 0 50Z" fill="white" fillOpacity="0.3"/>
+              <path d="M100 50C100 50 75 60 50 50C75 40 100 50 100 50Z" fill="white" fillOpacity="0.3"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#palm-leaves)"/>
+        </svg>
+      </div>
+
+      {/* Gradient orbs for depth */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4AF37]/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-[#4AA4B5]/30 rounded-full blur-3xl animate-float animation-delay-2000" />
+      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/10 rounded-full blur-2xl animate-float animation-delay-4000" />
+
+      {/* Decorative palm icon */}
+      <div className="absolute top-20 left-10 opacity-10 hidden lg:block">
+        <Palmtree className="w-32 h-32 text-white" />
+      </div>
+      <div className="absolute bottom-20 right-10 opacity-10 hidden lg:block">
+        <Sun className="w-24 h-24 text-[#D4AF37]" />
+      </div>
 
       {/* Hero Content */}
-      <div className="container px-4 py-16 md:py-24 lg:py-32">
+      <div className="container px-4 py-20 md:py-28 lg:py-36 relative z-10">
         <div className="flex flex-col items-center text-center space-y-8 max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-sm font-medium text-emerald-700">
-            <span className="mr-2">🏝️</span>
+          <div className="inline-flex items-center rounded-full border border-[#D4AF37]/40 bg-white/10 backdrop-blur-sm px-5 py-2 text-sm font-medium text-white/90 shadow-lg">
+            <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" />
             Medical Tourism + Pickleball Paradise
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-white">
             Transform Your{' '}
-            <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-              Smile & Game
+            <span className="relative inline-block">
+              <span className="text-tropical-gradient bg-gradient-to-r from-[#D4AF37] via-[#E5C969] to-[#D4AF37] bg-clip-text text-transparent">
+                Smile & Game
+              </span>
+              <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
+                <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#D4AF37" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
             </span>
             <br />
-            in Paradise
+            <span className="text-[#F5E6D3]">in Thailand</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg text-slate-600 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
+          <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
             Experience world-class dental care, cosmetic procedures, and pickleball training
             in Thailand—at{' '}
-            <span className="font-semibold text-emerald-600">60-70% savings</span> compared to
+            <span className="font-bold text-[#D4AF37]">60-70% savings</span> compared to
             the US.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 mt-10">
             <Button
               asChild
               size="lg"
-              className="text-lg px-8 py-6 bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl"
+              className="text-lg px-10 py-7 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold shadow-xl shadow-[#D4AF37]/30 transition-all hover:shadow-2xl hover:shadow-[#D4AF37]/40 hover:scale-105 rounded-xl"
             >
               <Link href="/packages">
+                <Sparkles className="mr-2 h-5 w-5" />
                 Explore Packages
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -54,7 +87,7 @@ export function HeroSection() {
               asChild
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-6 border-2 border-slate-300 hover:border-emerald-600 hover:text-emerald-600 transition-all"
+              className="text-lg px-10 py-7 border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:border-white/50 transition-all rounded-xl"
             >
               <Link href="/apply">
                 <PlayCircle className="mr-2 h-5 w-5" />
@@ -64,34 +97,52 @@ export function HeroSection() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-8 mt-12 pt-12 border-t border-slate-200">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-slate-900">60-70%</div>
-              <div className="text-sm text-slate-600">Cost Savings</div>
-            </div>
-            <div className="hidden sm:block w-px h-12 bg-slate-200" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-slate-900">500+</div>
-              <div className="text-sm text-slate-600">Happy Guests</div>
-            </div>
-            <div className="hidden sm:block w-px h-12 bg-slate-200" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-slate-900">4.9★</div>
-              <div className="text-sm text-slate-600">Average Rating</div>
-            </div>
-            <div className="hidden sm:block w-px h-12 bg-slate-200" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-slate-900">JCI</div>
-              <div className="text-sm text-slate-600">Accredited</div>
+          <div className="w-full max-w-4xl mt-16">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
+                    <span className="text-2xl font-bold text-[#D4AF37]">%</span>
+                  </div>
+                  <div className="text-3xl font-bold text-white">60-70%</div>
+                  <div className="text-sm text-white/60 mt-1">Cost Savings</div>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
+                    <span className="text-2xl">🏓</span>
+                  </div>
+                  <div className="text-3xl font-bold text-white">500+</div>
+                  <div className="text-sm text-white/60 mt-1">Happy Guests</div>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
+                    <Star className="w-6 h-6 text-[#D4AF37]" />
+                  </div>
+                  <div className="text-3xl font-bold text-white">4.9</div>
+                  <div className="text-sm text-white/60 mt-1">Average Rating</div>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
+                    <Shield className="w-6 h-6 text-[#D4AF37]" />
+                  </div>
+                  <div className="text-3xl font-bold text-white">JCI</div>
+                  <div className="text-sm text-white/60 mt-1">Accredited</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-      <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-      <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+      {/* Bottom wave decoration */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#FDF8F3"/>
+        </svg>
+      </div>
     </section>
   );
 }

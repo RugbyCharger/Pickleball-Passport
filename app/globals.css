@@ -45,6 +45,21 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Tropical Resort Brand Colors */
+  --color-ocean: #003D5C;
+  --color-ocean-light: #005580;
+  --color-ocean-dark: #002B42;
+  --color-sunset: #D4AF37;
+  --color-sunset-light: #E5C969;
+  --color-sunset-dark: #B8962E;
+  --color-sand: #F5E6D3;
+  --color-sand-light: #FDF8F3;
+  --color-sand-dark: #E8D4BD;
+  --color-palm: #2D5A3D;
+  --color-palm-light: #3D7A52;
+  --color-coral: #E07A5F;
+  --color-lagoon: #4AA4B5;
 }
 
 :root {
@@ -156,4 +171,179 @@
       transform: translate(0px, 0px) scale(1);
     }
   }
+
+  /* Tropical Resort Backgrounds */
+  .bg-tropical-gradient {
+    background: linear-gradient(135deg, #003D5C 0%, #005580 50%, #4AA4B5 100%);
+  }
+
+  .bg-sunset-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #E07A5F 50%, #F5E6D3 100%);
+  }
+
+  .bg-golden-hour {
+    background: linear-gradient(180deg, #FDF8F3 0%, #F5E6D3 30%, #E5C969 100%);
+  }
+
+  .bg-ocean-depth {
+    background: linear-gradient(180deg, #4AA4B5 0%, #005580 50%, #003D5C 100%);
+  }
+
+  .bg-sand-texture {
+    background-color: #FDF8F3;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  .bg-palm-pattern {
+    background-color: #003D5C;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0C40 0 50 20 40 40C30 20 40 0 40 0Z' fill='%23005580' fill-opacity='0.15'/%3E%3Cpath d='M0 40C0 40 20 50 40 40C20 30 0 40 0 40Z' fill='%23005580' fill-opacity='0.1'/%3E%3Cpath d='M80 40C80 40 60 50 40 40C60 30 80 40 80 40Z' fill='%23005580' fill-opacity='0.1'/%3E%3Cpath d='M40 80C40 80 50 60 40 40C30 60 40 80 40 80Z' fill='%23005580' fill-opacity='0.15'/%3E%3C/svg%3E");
+  }
+
+  /* Tropical Animations */
+  .animate-wave {
+    animation: wave 8s ease-in-out infinite;
+  }
+
+  .animate-sway {
+    animation: sway 6s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0%, 100% {
+      transform: translateX(0) translateY(0);
+    }
+    25% {
+      transform: translateX(10px) translateY(-5px);
+    }
+    50% {
+      transform: translateX(0) translateY(-10px);
+    }
+    75% {
+      transform: translateX(-10px) translateY(-5px);
+    }
+  }
+
+  @keyframes sway {
+    0%, 100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes shimmer {
+    0%, 100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+    }
+  }
+
+  /* Tropical Card Styles */
+  .card-tropical {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(245,230,211,0.5) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 61, 92, 0.1),
+      0 2px 4px -1px rgba(0, 61, 92, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .card-tropical:hover {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 61, 92, 0.15),
+      0 10px 10px -5px rgba(0, 61, 92, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+  }
+
+  .card-ocean {
+    background: linear-gradient(135deg, #003D5C 0%, #005580 100%);
+    border: 1px solid rgba(74, 164, 181, 0.3);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 61, 92, 0.3),
+      inset 0 1px 0 rgba(74, 164, 181, 0.2);
+  }
+
+  /* Golden Accent Border */
+  .border-golden {
+    border-image: linear-gradient(135deg, #D4AF37 0%, #E5C969 50%, #D4AF37 100%) 1;
+  }
+
+  /* Text Gradients */
+  .text-tropical-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #E07A5F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-ocean-gradient {
+    background: linear-gradient(135deg, #003D5C 0%, #4AA4B5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Decorative Elements */
+  .tropical-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+  }
+
+  .tropical-corner {
+    position: relative;
+  }
+
+  .tropical-corner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, transparent 50%);
+    border-radius: 0 0 100% 0;
+  }
+
+  /* Staggered animations for lists */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
 }

@@ -29,6 +29,11 @@ import {
   HelpCircle,
   MessageCircle,
   FolderOpen,
+  Sparkles,
+  Sun,
+  Palmtree,
+  Waves,
+  ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -80,31 +85,45 @@ export default function FAQPage() {
   const showNoResults = !isLoading && searchQuery && !hasResults;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#003D5C] to-[#005A82] text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 sm:py-28">
+        {/* Decorative elements */}
+        <div className="absolute top-10 left-10 opacity-10">
+          <Palmtree className="w-32 h-32" />
+        </div>
+        <div className="absolute bottom-10 right-10 opacity-10">
+          <Waves className="w-40 h-40" />
+        </div>
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
+            <HelpCircle className="w-4 h-4 text-[#D4AF37]" />
+            Help Center
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
             Frequently Asked Questions
           </h1>
-          <p className="text-xl md:text-2xl text-blue-100 mb-6">
+          <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
             Find answers to common questions about Pickleball Passport
           </p>
 
           {/* Search Bar */}
           <div className="max-w-xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#003D5C]/50" />
               <Input
                 placeholder="Search FAQs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-12 py-6 text-lg bg-white text-slate-900 border-0 rounded-full shadow-lg"
+                className="pl-14 pr-14 py-7 text-lg bg-white text-[#003D5C] border-0 rounded-2xl shadow-xl focus:ring-2 focus:ring-[#D4AF37] placeholder:text-[#003D5C]/40"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-[#003D5C]/40 hover:text-[#003D5C]/60 transition-colors"
                   aria-label="Clear search"
                 >
                   <X className="h-5 w-5" />
@@ -113,20 +132,32 @@ export default function FAQPage() {
             </div>
           </div>
         </div>
+
+        {/* Bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 43.3C840 46.7 960 53.3 1080 56.7C1200 60 1320 60 1380 60L1440 60V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="#FDF8F3"/>
+          </svg>
+        </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-12 px-4">
+      <section className="py-12 sm:py-16 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Category Filter */}
           {categories && categories.length > 0 && (
-            <div className="mb-8">
-              <div className="flex flex-wrap gap-2 justify-center">
+            <div className="mb-10">
+              <div className="flex flex-wrap gap-3 justify-center">
                 <Button
                   variant={selectedCategoryId === null ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedCategoryId(null)}
-                  className="rounded-full"
+                  className={cn(
+                    'rounded-full px-6 py-2 font-medium transition-all',
+                    selectedCategoryId === null
+                      ? 'bg-gradient-to-r from-[#003D5C] to-[#005580] text-white shadow-lg'
+                      : 'border-[#003D5C]/20 text-[#003D5C] hover:bg-[#003D5C] hover:text-white'
+                  )}
                 >
                   All Categories
                 </Button>
@@ -136,10 +167,15 @@ export default function FAQPage() {
                     variant={selectedCategoryId === category.id ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSelectedCategoryId(category.id)}
-                    className="rounded-full"
+                    className={cn(
+                      'rounded-full px-6 py-2 font-medium transition-all',
+                      selectedCategoryId === category.id
+                        ? 'bg-gradient-to-r from-[#D4AF37] to-[#E5C969] text-[#003D5C] shadow-lg'
+                        : 'border-[#003D5C]/20 text-[#003D5C] hover:bg-[#D4AF37] hover:text-[#003D5C] hover:border-[#D4AF37]'
+                    )}
                   >
                     {category.name}
-                    <span className="ml-1 text-xs opacity-70">
+                    <span className="ml-2 text-xs opacity-70">
                       ({category._count?.faqs || 0})
                     </span>
                   </Button>
@@ -150,22 +186,31 @@ export default function FAQPage() {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[#003D5C]" />
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center mb-4">
+                <Loader2 className="h-8 w-8 animate-spin text-white" />
+              </div>
+              <p className="text-[#003D5C]/60">Loading FAQs...</p>
             </div>
           )}
 
           {/* No Results State */}
           {showNoResults && (
-            <div className="text-center py-12">
-              <HelpCircle className="h-16 w-16 mx-auto mb-4 text-slate-300" />
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <div className="text-center py-16">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#F5E6D3] flex items-center justify-center">
+                <HelpCircle className="h-10 w-10 text-[#D4AF37]" />
+              </div>
+              <h2 className="text-2xl font-serif font-bold text-[#003D5C] mb-3">
                 No results found
               </h2>
-              <p className="text-slate-600 mb-6">
+              <p className="text-[#003D5C]/60 mb-6">
                 We couldn&apos;t find any FAQs matching &quot;{searchQuery}&quot;
               </p>
-              <Button onClick={clearSearch} variant="outline">
+              <Button
+                onClick={clearSearch}
+                variant="outline"
+                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white rounded-xl px-6"
+              >
                 Clear search
               </Button>
             </div>
@@ -173,38 +218,43 @@ export default function FAQPage() {
 
           {/* FAQs by Category */}
           {!isLoading && hasResults && (
-            <div className="space-y-8">
+            <div className="space-y-10">
               {Object.entries(groupedFAQs).map(([categoryId, { name, faqs: categoryFaqs }]) => (
                 <div key={categoryId}>
                   {/* Category Header */}
                   {(selectedCategoryId === null || searchQuery) && (
-                    <div className="flex items-center gap-2 mb-4">
-                      <FolderOpen className="h-5 w-5 text-[#003D5C]" />
-                      <h2 className="text-xl font-bold text-slate-900">{name}</h2>
-                      <span className="text-sm text-slate-500">
-                        ({categoryFaqs.length} questions)
-                      </span>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center">
+                        <FolderOpen className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-serif font-bold text-[#003D5C]">{name}</h2>
+                        <span className="text-sm text-[#003D5C]/60">
+                          {categoryFaqs.length} {categoryFaqs.length === 1 ? 'question' : 'questions'}
+                        </span>
+                      </div>
                     </div>
                   )}
 
                   {/* FAQ Accordion */}
-                  <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                  <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
                     <Accordion type="single" collapsible className="w-full">
                       {categoryFaqs.map((faq, index) => (
                         <AccordionItem
                           key={faq.id}
                           value={faq.id}
                           className={cn(
+                            'border-b border-[#D4AF37]/10',
                             index === categoryFaqs.length - 1 && 'border-b-0'
                           )}
                         >
-                          <AccordionTrigger className="px-6 py-4 text-left hover:bg-slate-50 [&[data-state=open]]:bg-slate-50">
-                            <span className="text-base font-medium text-slate-900 pr-4">
+                          <AccordionTrigger className="px-6 py-5 text-left hover:bg-[#FDF8F3] [&[data-state=open]]:bg-[#FDF8F3] transition-colors">
+                            <span className="text-base font-medium text-[#003D5C] pr-4">
                               {faq.question}
                             </span>
                           </AccordionTrigger>
-                          <AccordionContent className="px-6 pb-4">
-                            <div className="prose prose-sm max-w-none text-slate-600">
+                          <AccordionContent className="px-6 pb-6">
+                            <div className="prose prose-sm max-w-none text-[#003D5C]/70 leading-relaxed">
                               <RichTextContent content={faq.answer} />
                             </div>
                           </AccordionContent>
@@ -219,12 +269,14 @@ export default function FAQPage() {
 
           {/* Empty State (no FAQs at all) */}
           {!isLoading && !searchQuery && (!faqs || faqs.length === 0) && (
-            <div className="text-center py-12">
-              <HelpCircle className="h-16 w-16 mx-auto mb-4 text-slate-300" />
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <div className="text-center py-16">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#F5E6D3] flex items-center justify-center">
+                <HelpCircle className="h-10 w-10 text-[#D4AF37]" />
+              </div>
+              <h2 className="text-2xl font-serif font-bold text-[#003D5C] mb-3">
                 No FAQs yet
               </h2>
-              <p className="text-slate-600 mb-6">
+              <p className="text-[#003D5C]/60 mb-6">
                 Check back soon for frequently asked questions.
               </p>
             </div>
@@ -233,21 +285,68 @@ export default function FAQPage() {
       </section>
 
       {/* Still Have Questions CTA */}
-      <section className="py-12 px-4 bg-slate-100">
-        <div className="max-w-4xl mx-auto text-center">
-          <MessageCircle className="h-12 w-12 mx-auto mb-4 text-[#003D5C]" />
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">
-            Still have questions?
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-3xl shadow-xl shadow-[#003D5C]/10 p-10 md:p-14 border border-[#D4AF37]/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#003D5C]/5 rounded-full blur-2xl" />
+
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center shadow-lg">
+                <MessageCircle className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#003D5C] mb-4">
+                Still have questions?
+              </h2>
+              <p className="text-[#003D5C]/70 mb-8 max-w-xl mx-auto">
+                Can&apos;t find what you&apos;re looking for? Our team is here to help.
+                Reach out and we&apos;ll get back to you within 24 hours.
+              </p>
+              <Link href="/contact">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Contact Us
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Links */}
+      <section className="py-16 sm:py-20 bg-[#FDF8F3]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Sun className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" />
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#003D5C] mb-4">
+            Explore More
           </h2>
-          <p className="text-slate-600 mb-6 max-w-xl mx-auto">
-            Can&apos;t find what you&apos;re looking for? Our team is here to help.
-            Reach out and we&apos;ll get back to you within 24 hours.
+          <p className="text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+            Learn more about our transformation packages and how we can help you.
           </p>
-          <Link href="/contact">
-            <Button size="lg" className="bg-[#003D5C] hover:bg-[#002B42]">
-              Contact Us
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/how-it-works">
+              <Button
+                size="lg"
+                className="bg-[#003D5C] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
+              >
+                How It Works
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/packages">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
+              >
+                View Packages
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
