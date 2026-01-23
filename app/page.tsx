@@ -48,7 +48,7 @@ export default function Home() {
       <PackageSection />
 
       {/* Medical Tourism Cost Calculator */}
-      <section className="py-16 px-4 bg-gradient-to-b from-slate-50 to-white">
+      <section className="py-20 px-4 bg-gradient-to-b from-[#FDF8F3] to-white">
         <div className="max-w-4xl mx-auto">
           <MedicalCostCalculator />
         </div>
