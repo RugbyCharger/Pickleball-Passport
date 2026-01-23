@@ -5,20 +5,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  },
-  // Ignore missing env vars during build
-  env: {
-    SKIP_ENV_VALIDATION: 'true',
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
 }
 
