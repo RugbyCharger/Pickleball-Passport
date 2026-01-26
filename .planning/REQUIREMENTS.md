@@ -20,10 +20,10 @@
 
 ### Payment (PAY)
 
-- [ ] **PAY-01**: Guest receives email notification when initial checkout payment fails
-- [ ] **PAY-02**: Guest can update payment method from dashboard when installment payment fails
-- [ ] **PAY-03**: Payment method update modal integrates with Stripe for secure card replacement
-- [ ] **PAY-04**: Failed payment email includes direct link to update payment method
+- [x] **PAY-01**: Guest receives email notification when initial checkout payment fails
+- [x] **PAY-02**: Guest can update payment method from dashboard when installment payment fails
+- [x] **PAY-03**: Payment method update modal integrates with Stripe for secure card replacement
+- [x] **PAY-04**: Failed payment email includes direct link to update payment method
 
 ### Partner Portal (PTR)
 
@@ -39,9 +39,9 @@
 
 ### Data Integrity (DAT)
 
-- [ ] **DAT-01**: Trip capacity is checked atomically during payment confirmation
-- [ ] **DAT-02**: Overbooking is prevented by rejecting payment confirmation when capacity exceeded
-- [ ] **DAT-03**: Admin receives alert when overbooking would have occurred (logged + notification)
+- [x] **DAT-01**: Trip capacity is checked atomically during payment confirmation
+- [x] **DAT-02**: Overbooking is prevented by rejecting payment confirmation when capacity exceeded
+- [x] **DAT-03**: Admin receives alert when overbooking would have occurred (logged + notification)
 
 ---
 
@@ -103,19 +103,19 @@
 | SEC-04 | 1 | 01-02 | Complete |
 | SEC-05 | 1 | 01-03 | Complete |
 | SEC-06 | 1 | 01-03 | Complete |
-| PAY-01 | 2 | 02-01 | Pending |
-| PAY-02 | 2 | 02-02 | Pending |
-| PAY-03 | 2 | 02-02 | Pending |
-| PAY-04 | 2 | 02-01 | Pending |
+| PAY-01 | 2 | 02-01 | Complete |
+| PAY-02 | 2 | 02-02 | Complete |
+| PAY-03 | 2 | 02-02 | Complete |
+| PAY-04 | 2 | 02-01 | Complete |
 | PTR-01 | 3 | 03-01 | Pending |
 | PTR-02 | 3 | 03-01 | Pending |
 | PTR-03 | 3 | 03-02 | Pending |
 | PTR-04 | 3 | 03-02 | Pending |
 | EML-01 | 4 | 04-01 | Pending |
 | EML-02 | 4 | 04-01 | Pending |
-| DAT-01 | 2 | 02-03 | Pending |
-| DAT-02 | 2 | 02-03 | Pending |
-| DAT-03 | 2 | 02-03 | Pending |
+| DAT-01 | 2 | 02-03 | Complete |
+| DAT-02 | 2 | 02-03 | Complete |
+| DAT-03 | 2 | 02-03 | Complete |
 
 ---
 

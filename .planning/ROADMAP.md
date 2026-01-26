@@ -11,7 +11,7 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
 - Decimal phases (e.g., 2.1): Urgent insertions if needed (marked with INSERTED)
 
 - [x] **Phase 1: Security Hardening** - Protect admin routes, verify webhooks, secure sensitive data
-- [ ] **Phase 2: Payment Recovery & Data Integrity** - Failed payment flows and atomic capacity checks
+- [x] **Phase 2: Payment Recovery & Data Integrity** - Failed payment flows and atomic capacity checks
 - [ ] **Phase 3: Partner Portal** - Real-time dashboards and referral link functionality
 - [ ] **Phase 4: Email System** - Booking cancellation email wiring
 
@@ -49,9 +49,9 @@ Plans:
 **Plans**: 3 plans (all Wave 1 - parallel execution)
 
 Plans:
-- [ ] 02-01-PLAN.md — Payment failure email flow with direct link (PAY-01, PAY-04)
-- [ ] 02-02-PLAN.md — Verify existing payment method update UI (PAY-02, PAY-03)
-- [ ] 02-03-PLAN.md — Overbooking admin alert and wiring (DAT-01, DAT-02, DAT-03)
+- [x] 02-01-PLAN.md — Payment failure email flow with direct link (PAY-01, PAY-04)
+- [x] 02-02-PLAN.md — Verify existing payment method update UI (PAY-02, PAY-03)
+- [x] 02-03-PLAN.md — Overbooking admin alert and wiring (DAT-01, DAT-02, DAT-03)
 
 **Note**: Research found 80-90% of infrastructure already exists. PAY-02/PAY-03 are already implemented (UpdatePaymentMethodModal). DAT-01/DAT-02 atomic capacity checks already exist. Work focuses on wiring existing components and adding admin alerts.
 
@@ -90,7 +90,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Security Hardening | 3/3 | Complete | 2026-01-26 |
-| 2. Payment Recovery & Data Integrity | 0/3 | Planned | - |
+| 2. Payment Recovery & Data Integrity | 3/3 | Complete | 2026-01-26 |
 | 3. Partner Portal | 0/2 | Not started | - |
 | 4. Email System | 0/1 | Not started | - |
 
