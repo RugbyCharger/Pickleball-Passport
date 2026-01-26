@@ -165,6 +165,27 @@ export async function sendHighValueBookingAlert(
 }
 
 /**
+ * Overbooking alert data for admin notification
+ */
+export interface OverbookingAlertData {
+  guestName: string;
+  guestEmail: string;
+  bookingReference: string;
+  bookingId: string;
+  packageName: string;
+  tripName: string;
+  tripId: string;
+  tripStartDate: string;
+  tripCapacity: number;
+  currentBookings: number;
+  paymentAmount: number;
+  paymentStatus: string;
+  bookingStatus: string;
+  bookingAdminUrl: string;
+  tripAdminUrl: string;
+}
+
+/**
  * System error data for admin alerts
  */
 export interface SystemErrorAlertData {
@@ -194,6 +215,31 @@ export async function sendSystemErrorAlert(
     logError(emailLogger, error, 'Failed to send system error alert', {
       errorType: data.errorType,
       severity: data.severity,
+    });
+  }
+}
+
+/**
+ * Send overbooking prevention admin alert
+ * Triggered when atomic capacity check prevents overbooking during payment confirmation
+ */
+export async function sendOverbookingAlert(
+  data: OverbookingAlertData
+): Promise<void> {
+  try {
+    const { generateOverbookingAlertEmail } = await import('./templates/overbooking-alert-admin');
+    const { html, text, subject } = generateOverbookingAlertEmail(data);
+
+    await sendAdminAlert({ subject, html, text });
+
+    emailLogger.warn(
+      { tripId: data.tripId, bookingId: data.bookingId, capacity: data.tripCapacity, current: data.currentBookings },
+      'Overbooking alert sent to admin'
+    );
+  } catch (error) {
+    logError(emailLogger, error, 'Failed to send overbooking alert', {
+      tripId: data.tripId,
+      bookingReference: data.bookingReference,
     });
   }
 }
