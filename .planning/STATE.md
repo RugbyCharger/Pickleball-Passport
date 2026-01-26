@@ -10,31 +10,31 @@ See: .planning/PROJECT.md (updated 2026-01-26)
 ## Current Position
 
 Phase: 1 of 4 (Security Hardening)
-Plan: 0 of 3 in current phase
-Status: Ready to execute
-Last activity: 2026-01-26 — Phase 1 plans created (3 plans in 1 wave, all parallel)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-01-26 — Completed 01-01-PLAN.md (Admin route middleware)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 11%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 3 min
+- Total execution time: 3 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Security Hardening | 0/3 | - | - |
+| 1. Security Hardening | 1/3 | 3 min | 3 min |
 | 2. Payment Recovery | 0/3 | - | - |
 | 3. Partner Portal | 0/2 | - | - |
 | 4. Email System | 0/1 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: none
-- Trend: N/A
+- Last 5 plans: 01-01 (3 min)
+- Trend: N/A (first plan)
 
 *Updated after each plan completion*
 
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - [Scoping]: Partner Portal = Phase 1 MVP - key distribution channel
 - [Scoping]: Gift system deprioritized - not critical for go-to-market
 - [Scoping]: Bank account fields removed in favor of Stripe Connect exclusive (SEC-06)
+- [01-01]: Use sessionClaims.metadata.role for ADMIN check (requires Clerk session customization)
+- [01-01]: Redirect non-admin users to /dashboard instead of 403 (better UX)
+- [01-01]: Allow /api/webhooks/* through without middleware auth (webhooks self-verify)
 
 ### Pending Todos
 
@@ -56,12 +59,12 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- [01-01]: Clerk session customization may be required for role in sessionClaims.metadata - verify Clerk Dashboard configuration
 
 ## Session Continuity
 
-Last session: 2026-01-26
-Stopped at: Phase 1 planning complete
+Last session: 2026-01-26T10:05:06Z
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None
 
 ## Planning Notes
@@ -76,7 +79,7 @@ Resume file: None
 - PartnerPayoutMethod should be removed - Stripe Connect is already integrated
 
 **Plans created:**
-1. **01-01** - Admin route middleware (clerkMiddleware with role checking)
+1. **01-01** - Admin route middleware (clerkMiddleware with role checking) - COMPLETE
 2. **01-02** - SendGrid webhook SDK (replace custom crypto with official SDK)
 3. **01-03** - Bank data removal (remove PartnerPayoutMethod, update UI)
 
