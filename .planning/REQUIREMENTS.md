@@ -34,8 +34,8 @@
 
 ### Email System (EML)
 
-- [ ] **EML-01**: Guest receives email notification when booking is cancelled
-- [ ] **EML-02**: Booking cancellation email uses existing template with booking details
+- [x] **EML-01**: Guest receives email notification when booking is cancelled
+- [x] **EML-02**: Booking cancellation email uses existing template with booking details
 
 ### Data Integrity (DAT)
 
@@ -111,8 +111,8 @@
 | PTR-02 | 3 | 03-01 | Complete |
 | PTR-03 | 3 | 03-02 | Complete |
 | PTR-04 | 3 | 03-02 | Complete |
-| EML-01 | 4 | 04-01 | Pending |
-| EML-02 | 4 | 04-01 | Pending |
+| EML-01 | 4 | 04-01 | Complete |
+| EML-02 | 4 | 04-01 | Complete |
 | DAT-01 | 2 | 02-03 | Complete |
 | DAT-02 | 2 | 02-03 | Complete |
 | DAT-03 | 2 | 02-03 | Complete |

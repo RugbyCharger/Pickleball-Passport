@@ -13,7 +13,7 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
 - [x] **Phase 1: Security Hardening** - Protect admin routes, verify webhooks, secure sensitive data
 - [x] **Phase 2: Payment Recovery & Data Integrity** - Failed payment flows and atomic capacity checks
 - [x] **Phase 3: Partner Portal** - Real-time dashboards and referral link functionality
-- [ ] **Phase 4: Email System** - Booking cancellation email wiring
+- [x] **Phase 4: Email System** - Booking cancellation email wiring
 
 ## Phase Details
 
@@ -82,7 +82,7 @@ Plans:
 **Plans**: 1 plan (Wave 1)
 
 Plans:
-- [ ] 04-01-PLAN.md — Guest cancellation email template and wiring (EML-01, EML-02)
+- [x] 04-01-PLAN.md — Guest cancellation email template and wiring (EML-01, EML-02)
 
 **Note**: Research found 90% of infrastructure exists. Admin cancellation email template already implemented (booking-cancellation-admin.ts). Work creates guest template following same pattern and wires to both booking.cancel mutation and admin.updateStatus.
 
@@ -96,7 +96,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Security Hardening | 3/3 | Complete | 2026-01-26 |
 | 2. Payment Recovery & Data Integrity | 3/3 | Complete | 2026-01-26 |
 | 3. Partner Portal | 2/2 | Complete | 2026-01-26 |
-| 4. Email System | 0/1 | Not started | - |
+| 4. Email System | 1/1 | Complete | 2026-01-26 |
 
 ---
 *Roadmap created: 2026-01-26*
