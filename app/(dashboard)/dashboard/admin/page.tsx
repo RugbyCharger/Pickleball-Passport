@@ -1,8 +1,10 @@
 /**
- * Admin Dashboard Placeholder
- * E6-S3: Admin status update interface placeholder
+ * Admin Dashboard
+ * E6-S3: Admin status update interface
  *
- * Future admin features:
+ * SECURITY: Requires ADMIN role to access.
+ *
+ * Admin features:
  * - Update booking status
  * - Review and approve documents
  * - Manage trip assignments
@@ -13,6 +15,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Settings, Users, FileCheck, Calendar, Bell, BarChart, FileText } from 'lucide-react';
+import { prisma } from '@/lib/db';
 
 export default async function AdminDashboardPage() {
   const user = await currentUser();
@@ -21,8 +24,16 @@ export default async function AdminDashboardPage() {
     redirect('/sign-in');
   }
 
-  // TODO: Check if user has admin role
-  // For now, this is a placeholder accessible to all authenticated users
+  // SECURITY: Verify user has ADMIN role
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
+
+  if (!dbUser || dbUser.role !== 'ADMIN') {
+    // Non-admin users are redirected to their dashboard
+    redirect('/dashboard');
+  }
 
   const adminFeatures = [
     {

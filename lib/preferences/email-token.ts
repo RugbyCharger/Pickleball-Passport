@@ -3,15 +3,38 @@ import crypto from 'crypto';
 
 const TOKEN_EXPIRY_DAYS = 90;
 
-// Use environment variable for HMAC secret
-const EMAIL_TOKEN_SECRET =
-  process.env.EMAIL_TOKEN_SECRET || 'CHANGE_ME_IN_PRODUCTION';
+/**
+ * Get the email token secret, with strict validation in production.
+ * SECURITY: In production, missing secret throws an error to prevent
+ * token forgery attacks. In development, generates a random secret
+ * per process (tokens won't persist across restarts).
+ */
+function getEmailTokenSecret(): string {
+  const secret = process.env.EMAIL_TOKEN_SECRET;
 
-if (EMAIL_TOKEN_SECRET === 'CHANGE_ME_IN_PRODUCTION') {
+  if (secret && secret.length >= 32) {
+    return secret;
+  }
+
+  // In production, require a properly configured secret
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'SECURITY ERROR: EMAIL_TOKEN_SECRET must be set in production. ' +
+        'Generate a secure 32+ character secret and add it to your environment variables.'
+    );
+  }
+
+  // In development, generate a random secret and warn
+  const devSecret = crypto.randomBytes(32).toString('hex');
   console.warn(
-    'WARNING: Using default EMAIL_TOKEN_SECRET. Set EMAIL_TOKEN_SECRET env var in production.'
+    '[DEV ONLY] EMAIL_TOKEN_SECRET not configured. Using random secret. ' +
+      'Email tokens will not persist across server restarts.'
   );
+  return devSecret;
 }
+
+// Initialize secret at module load (fails fast in production if misconfigured)
+const EMAIL_TOKEN_SECRET = getEmailTokenSecret();
 
 /**
  * Generate a secure email token for preference management

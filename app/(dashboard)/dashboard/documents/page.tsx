@@ -15,6 +15,7 @@
 
 import { useState } from 'react';
 import type { ComponentType } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { trpc } from '@/lib/trpc/client';
 import { uploadFile, validateFile, FILE_VALIDATION } from '@/lib/storage/supabase';
 import {
@@ -69,6 +70,7 @@ const STATUS_CONFIG: Record<
 };
 
 export default function DocumentsPage() {
+  const { user, isLoaded } = useUser();
   const [selectedType, setSelectedType] = useState<DocumentType>('PASSPORT');
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -136,11 +138,17 @@ export default function DocumentsPage() {
       return;
     }
 
+    // SECURITY: Ensure user is authenticated before uploading
+    if (!isLoaded || !user?.id) {
+      alert('Please sign in to upload documents');
+      return;
+    }
+
     setUploading(true);
 
     try {
-      // Get user ID from Clerk (available in client components)
-      const userId = 'user_test'; // TODO: Get from Clerk useUser()
+      // Get authenticated user ID from Clerk
+      const userId = user.id;
 
       // Upload to Supabase Storage
       const { url } = await uploadFile(file, userId, selectedType);
