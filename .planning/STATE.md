@@ -60,6 +60,8 @@ Recent decisions affecting current work:
 - [02-01]: Use amber/warning styling for payment failure emails (not red) to avoid panic
 - [02-01]: Wrap email sending in try/catch - webhook should never fail on email error
 - [02-03]: Use RED/urgent styling for overbooking alerts (requires immediate admin attention)
+- [03-01]: Available commission = booking.status === 'COMPLETED' (trip completed)
+- [03-01]: Pending commission = all other booking statuses (awaiting trip completion)
 - [03-02]: Standard UTM params (utm_source=partner, utm_medium=referral, utm_campaign={code})
 - [03-02]: Copy Link button placed before Copy Code (full URL is primary action)
 
@@ -73,8 +75,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-26T10:58:21Z
-Stopped at: Completed 03-02-PLAN.md (UTM referral link copy)
+Last session: 2026-01-26T11:00:00Z
+Stopped at: Completed 03-01-PLAN.md (pending vs available commission)
 Resume file: None
 
 ## Planning Notes
@@ -144,7 +146,11 @@ Resume file: None
 
 ### Phase 3 Completion Summary (2026-01-26)
 
-**03-01 (Stripe Connect Integration):** Assumed complete (executed in prior session)
+**03-01 (Pending vs Available Commission):** COMPLETE
+- pendingCommission and availableCommission fields added to getDashboardStats
+- Business rule: Available = booking.status === 'COMPLETED', Pending = all other statuses
+- Dashboard UI cards for pending (amber) and available (emerald) commission
+- SUMMARY: .planning/phases/03-partner-portal/03-01-SUMMARY.md
 
 **03-02 (UTM Referral Link Copy):** COMPLETE
 - Copy Link button added to main partner dashboard with UTM params
@@ -155,6 +161,8 @@ Resume file: None
 - SUMMARY: .planning/phases/03-partner-portal/03-02-SUMMARY.md
 
 **All partner portal items addressed:**
+- PTR-01: Real-time referral count (already working)
+- PTR-02: Pending vs available commission breakdown
 - PTR-03: One-click referral link copy with UTM parameters
 - PTR-04: UTM parameters in all referral links
 
