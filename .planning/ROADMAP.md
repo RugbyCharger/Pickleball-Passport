@@ -64,11 +64,13 @@ Plans:
   2. Partner dashboard displays separate "pending" and "available" commission amounts
   3. Partner can click copy button next to referral link and paste working URL
   4. Copied referral link includes utm_source, utm_medium, utm_campaign parameters
-**Plans**: TBD
+**Plans**: 2 plans (all Wave 1 - parallel execution)
 
 Plans:
-- [ ] 03-01: Partner dashboard data (PTR-01, PTR-02)
-- [ ] 03-02: Referral link functionality (PTR-03, PTR-04)
+- [ ] 03-01-PLAN.md — Pending/available commission display (PTR-01 verify, PTR-02)
+- [ ] 03-02-PLAN.md — Referral link copy with UTM params (PTR-03, PTR-04)
+
+**Note**: Research found extensive infrastructure already exists. PTR-01 (referral count) is already implemented via getDashboardStats. Work focuses on adding pending/available commission split and UTM parameters to link copy functionality.
 
 ### Phase 4: Email System
 **Goal**: Guests receive cancellation notifications via email
@@ -91,7 +93,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Security Hardening | 3/3 | Complete | 2026-01-26 |
 | 2. Payment Recovery & Data Integrity | 3/3 | Complete | 2026-01-26 |
-| 3. Partner Portal | 0/2 | Not started | - |
+| 3. Partner Portal | 0/2 | Planned | - |
 | 4. Email System | 0/1 | Not started | - |
 
 ---
