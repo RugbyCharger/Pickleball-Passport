@@ -58,6 +58,7 @@ const TIER_RING_COLORS = {
 export default function PartnerDashboardPage() {
   const router = useRouter();
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [dismissedBanner, setDismissedBanner] = useState(false);
 
   // Fetch partner profile and stats
@@ -99,6 +100,22 @@ export default function PartnerDashboardPage() {
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
     }
+  };
+
+  const handleCopyLink = async () => {
+    if (!profile?.referralCode) return;
+
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const params = new URLSearchParams({
+      utm_source: 'partner',
+      utm_medium: 'referral',
+      utm_campaign: profile.referralCode,
+    });
+    const fullLink = `${baseUrl}/r/${profile.referralCode}?${params.toString()}`;
+
+    await navigator.clipboard.writeText(fullLink);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   const isLoading = profileLoading || statsLoading || tierLoading;
@@ -213,6 +230,23 @@ export default function PartnerDashboardPage() {
                 <code className="rounded-lg bg-white px-4 py-3 text-2xl font-bold tracking-wide text-emerald-600">
                   {profile.referralCode}
                 </code>
+                <Button
+                  onClick={handleCopyLink}
+                  variant="outline"
+                  className="gap-2"
+                >
+                  {copiedLink ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Copied Link!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      Copy Link
+                    </>
+                  )}
+                </Button>
                 <Button
                   onClick={handleCopyCode}
                   variant="outline"
