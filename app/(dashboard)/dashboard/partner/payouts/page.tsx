@@ -4,8 +4,7 @@
  * E4-S14: Stripe Connect Integration
  *
  * Features:
- * - Bank account settings
- * - Request payout
+ * - Request payout (requires Stripe Connect)
  * - Payout history
  * - Eligibility checks
  * - Stripe Connect onboarding and management
@@ -20,12 +19,10 @@ import { trpc } from '@/lib/trpc/client';
 import {
   DollarSign,
   Loader2,
-  CreditCard,
   CheckCircle,
   Clock,
   XCircle,
   AlertCircle,
-  Save,
   ExternalLink,
   Zap,
 } from 'lucide-react';
@@ -37,14 +34,6 @@ import { z } from 'zod';
 
 const PAYOUT_RATE = 0.80; // $0.80 per point
 const MIN_POINTS = 5000;
-
-const payoutSettingsSchema = z.object({
-  bankName: z.string().min(1, 'Bank name is required'),
-  accountNumber: z.string().min(4, 'Account number must be at least 4 digits'),
-  routingNumber: z.string().min(9, 'Routing number must be 9 digits'),
-});
-
-type PayoutSettingsForm = z.infer<typeof payoutSettingsSchema>;
 
 const payoutRequestSchema = z.object({
   pointsToRedeem: z.number().min(MIN_POINTS, `Minimum ${MIN_POINTS.toLocaleString()} points required`),
@@ -326,7 +315,6 @@ function StripeConnectCard({
 }
 
 export default function PartnerPayoutsPage() {
-  const [showSettingsForm, setShowSettingsForm] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -356,17 +344,9 @@ export default function PartnerPayoutsPage() {
   }, [searchParams, router]);
 
   const { data: profile, isLoading: profileLoading } = trpc.partner.getMyProfile.useQuery();
-  const { data: payoutSettings, isLoading: settingsLoading } = trpc.partner.getPayoutSettings.useQuery();
+  const { data: stripeStatus, isLoading: stripeStatusLoading } = trpc.partner.getStripeConnectStatus.useQuery();
   const { data: payoutHistory, isLoading: historyLoading } = trpc.partner.getPayoutHistory.useQuery();
   const utils = trpc.useUtils();
-
-  const updateSettingsMutation = trpc.partner.updatePayoutSettings.useMutation({
-    onSuccess: () => {
-      utils.partner.getPayoutSettings.invalidate();
-      setShowSettingsForm(false);
-      settingsForm.reset();
-    },
-  });
 
   const requestPayoutMutation = trpc.partner.requestPayout.useMutation({
     onSuccess: () => {
@@ -378,15 +358,6 @@ export default function PartnerPayoutsPage() {
     },
   });
 
-  const settingsForm = useForm<PayoutSettingsForm>({
-    resolver: zodResolver(payoutSettingsSchema),
-    defaultValues: {
-      bankName: payoutSettings?.bankName || '',
-      accountNumber: '',
-      routingNumber: payoutSettings?.routingNumber || '',
-    },
-  });
-
   const requestForm = useForm<PayoutRequestForm>({
     resolver: zodResolver(payoutRequestSchema),
     defaultValues: {
@@ -395,7 +366,8 @@ export default function PartnerPayoutsPage() {
   });
 
   const pointsBalance = profile?.passportPoints || 0;
-  const canRequestPayout = pointsBalance >= MIN_POINTS && !!payoutSettings;
+  const isPayoutsEnabled = stripeStatus?.payoutsEnabled ?? false;
+  const canRequestPayout = pointsBalance >= MIN_POINTS && isPayoutsEnabled;
   const payoutAmount = requestForm.watch('pointsToRedeem')
     ? Math.round(requestForm.watch('pointsToRedeem') * PAYOUT_RATE * 100)
     : 0;
@@ -414,9 +386,9 @@ export default function PartnerPayoutsPage() {
     }
   };
 
-  const isLoading = profileLoading || settingsLoading || historyLoading;
+  const isLoading = profileLoading || stripeStatusLoading || historyLoading;
 
-  if (isLoading && !profile && !payoutSettings && !payoutHistory) {
+  if (isLoading && !profile && !stripeStatus && !payoutHistory) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
@@ -501,140 +473,6 @@ export default function PartnerPayoutsPage() {
           </div>
         </div>
 
-        {/* Payout Settings */}
-        <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900">Bank Account Settings</h2>
-              <p className="mt-1 text-sm text-slate-600">
-                Add or update your bank account for payouts
-              </p>
-            </div>
-            {!payoutSettings && (
-              <Button
-                onClick={() => setShowSettingsForm(true)}
-                variant="outline"
-                className="gap-2"
-              >
-                <CreditCard className="h-4 w-4" />
-                Add Bank Account
-              </Button>
-            )}
-          </div>
-
-          {payoutSettings ? (
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-slate-900">{payoutSettings.bankName}</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Account ending in ••••{payoutSettings.accountLast4}
-                  </p>
-                </div>
-                <Button
-                  onClick={() => {
-                    settingsForm.setValue('bankName', payoutSettings.bankName);
-                    setShowSettingsForm(true);
-                  }}
-                  variant="outline"
-                  size="sm"
-                >
-                  Update
-                </Button>
-              </div>
-            </div>
-          ) : showSettingsForm ? (
-            <form
-              onSubmit={settingsForm.handleSubmit((data) => updateSettingsMutation.mutateAsync(data))}
-              className="space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4"
-            >
-              <div>
-                <label htmlFor="bankName" className="block text-sm font-medium text-slate-700">
-                  Bank Name
-                </label>
-                <input
-                  {...settingsForm.register('bankName')}
-                  type="text"
-                  id="bankName"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  placeholder="Chase Bank"
-                />
-                {settingsForm.formState.errors.bankName && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {settingsForm.formState.errors.bankName.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="routingNumber" className="block text-sm font-medium text-slate-700">
-                  Routing Number
-                </label>
-                <input
-                  {...settingsForm.register('routingNumber')}
-                  type="text"
-                  id="routingNumber"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  placeholder="123456789"
-                />
-                {settingsForm.formState.errors.routingNumber && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {settingsForm.formState.errors.routingNumber.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="accountNumber" className="block text-sm font-medium text-slate-700">
-                  Account Number
-                </label>
-                <input
-                  {...settingsForm.register('accountNumber')}
-                  type="text"
-                  id="accountNumber"
-                  className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  placeholder="Enter account number"
-                />
-                {settingsForm.formState.errors.accountNumber && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {settingsForm.formState.errors.accountNumber.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  type="submit"
-                  disabled={updateSettingsMutation.isPending}
-                  className="gap-2"
-                >
-                  {updateSettingsMutation.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4" />
-                      Save Bank Account
-                    </>
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowSettingsForm(false);
-                    settingsForm.reset();
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          ) : null}
-        </div>
-
         {/* Request Payout */}
         <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
@@ -658,21 +496,21 @@ export default function PartnerPayoutsPage() {
             )}
           </div>
 
-          {!payoutSettings && (
+          {!isPayoutsEnabled && (
             <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-amber-900">Bank Account Required</p>
+                  <p className="font-medium text-amber-900">Stripe Connect Required</p>
                   <p className="mt-1 text-sm text-amber-800">
-                    You must add a bank account before requesting a payout.
+                    Connect your Stripe account above to receive payouts. Stripe handles all bank account details securely.
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {payoutSettings && pointsBalance < MIN_POINTS && (
+          {isPayoutsEnabled && pointsBalance < MIN_POINTS && (
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-slate-600 mt-0.5" />
@@ -687,7 +525,7 @@ export default function PartnerPayoutsPage() {
             </div>
           )}
 
-          {showRequestForm && payoutSettings && canRequestPayout && (
+          {showRequestForm && isPayoutsEnabled && canRequestPayout && (
             <form
               onSubmit={requestForm.handleSubmit(handleRequestPayout)}
               className="space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4"
@@ -728,7 +566,7 @@ export default function PartnerPayoutsPage() {
                   </span>
                 </div>
                 <p className="mt-2 text-xs text-emerald-700">
-                  Processing time: 3-5 business days
+                  Processing time: 1-2 business days via Stripe
                 </p>
               </div>
 
@@ -777,7 +615,7 @@ export default function PartnerPayoutsPage() {
                     <th className="px-4 py-3">Points Redeemed</th>
                     <th className="px-4 py-3">Amount</th>
                     <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Account</th>
+                    <th className="px-4 py-3">Method</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
@@ -797,7 +635,16 @@ export default function PartnerPayoutsPage() {
                       </td>
                       <td className="px-4 py-4">{getStatusBadge(payout.status)}</td>
                       <td className="px-4 py-4 text-sm text-slate-600">
-                        {payout.bankAccountLast4 ? `••••${payout.bankAccountLast4}` : 'N/A'}
+                        {payout.payoutMethod === 'stripe_connect' ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Zap className="h-3 w-3 text-purple-500" />
+                            Stripe
+                          </span>
+                        ) : payout.bankAccountLast4 ? (
+                          `Bank ****${payout.bankAccountLast4}`
+                        ) : (
+                          'Manual'
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -809,7 +656,7 @@ export default function PartnerPayoutsPage() {
               <DollarSign className="mx-auto h-12 w-12 text-slate-400" />
               <h3 className="mt-4 text-lg font-medium text-slate-900">No payout history</h3>
               <p className="mt-2 text-sm text-slate-600">
-                Request your first payout when you're ready
+                Request your first payout when you are ready
               </p>
             </div>
           )}
