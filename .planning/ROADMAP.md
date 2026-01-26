@@ -10,7 +10,7 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
 - Integer phases (1, 2, 3, 4): Planned milestone work
 - Decimal phases (e.g., 2.1): Urgent insertions if needed (marked with INSERTED)
 
-- [ ] **Phase 1: Security Hardening** - Protect admin routes, verify webhooks, secure sensitive data
+- [x] **Phase 1: Security Hardening** - Protect admin routes, verify webhooks, secure sensitive data
 - [ ] **Phase 2: Payment Recovery & Data Integrity** - Failed payment flows and atomic capacity checks
 - [ ] **Phase 3: Partner Portal** - Real-time dashboards and referral link functionality
 - [ ] **Phase 4: Email System** - Booking cancellation email wiring
@@ -30,9 +30,9 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
 **Plans**: 3 plans (all Wave 1 - parallel execution)
 
 Plans:
-- [ ] 01-01-PLAN.md — Admin route middleware protection (SEC-01, SEC-02)
-- [ ] 01-02-PLAN.md — SendGrid webhook SDK verification (SEC-03)
-- [ ] 01-03-PLAN.md — Bank data removal for Stripe Connect exclusive (SEC-06)
+- [x] 01-01-PLAN.md — Admin route middleware protection (SEC-01, SEC-02)
+- [x] 01-02-PLAN.md — SendGrid webhook SDK verification (SEC-03)
+- [x] 01-03-PLAN.md — Bank data removal for Stripe Connect exclusive (SEC-06)
 
 **Note**: SEC-04 and SEC-05 were verified as already satisfied during research phase. See 01-RESEARCH.md for details.
 
@@ -87,7 +87,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Security Hardening | 0/3 | Planned | - |
+| 1. Security Hardening | 3/3 | Complete | 2026-01-26 |
 | 2. Payment Recovery & Data Integrity | 0/3 | Not started | - |
 | 3. Partner Portal | 0/2 | Not started | - |
 | 4. Email System | 0/1 | Not started | - |

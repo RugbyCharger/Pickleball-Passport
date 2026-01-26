@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** Phase 1 - Security Hardening
+**Current focus:** Phase 2 - Payment Recovery & Data Integrity
 
 ## Current Position
 
-Phase: 1 of 4 (Security Hardening)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-01-26 — Completed 01-03-PLAN.md (Bank data removal)
+Phase: 2 of 4 (Payment Recovery & Data Integrity)
+Plan: 0 of 3 in current phase
+Status: Ready to plan
+Last activity: 2026-01-26 — Phase 1 verified and complete (6/6 must-haves passed)
 
-Progress: [███░░░░░░░] 33%
+Progress: [██░░░░░░░░] 25%
 
 ## Performance Metrics
 
@@ -90,8 +90,12 @@ Resume file: None
 
 ### Phase 1 Completion Summary
 
+**Verification:** PASSED (6/6 must-haves verified)
+**Report:** .planning/phases/01-security-hardening/01-VERIFICATION.md
+
 **All security hardening items addressed:**
 - SEC-01: Admin routes now protected with clerkMiddleware and role checking
+- SEC-02: Non-admin users redirected to /dashboard (not 403)
 - SEC-03: SendGrid webhook now uses official SDK signature verification
 - SEC-06: PartnerPayoutMethod removed, Stripe Connect exclusive for payouts
 
@@ -99,4 +103,4 @@ Resume file: None
 - SEC-04: Email token secret already enforced 32+ chars in production
 - SEC-05: Documents already use authenticated user.id from Clerk
 
-**Ready for Phase 2:** Payment Recovery
+**Ready for Phase 2:** Payment Recovery & Data Integrity

@@ -11,12 +11,12 @@
 
 ### Security (SEC)
 
-- [ ] **SEC-01**: Admin can only access admin routes when authenticated with ADMIN role via Clerk middleware
-- [ ] **SEC-02**: Non-admin users are redirected to dashboard when attempting to access admin routes
-- [ ] **SEC-03**: SendGrid webhook endpoint verifies signatures using official @sendgrid/eventwebhook SDK
-- [ ] **SEC-04**: Email token HMAC uses required environment secret with no fallback in production
-- [ ] **SEC-05**: Document upload page uses authenticated user ID instead of hardcoded test ID
-- [ ] **SEC-06**: Partner bank account data fields removed from database in favor of Stripe Connect exclusive
+- [x] **SEC-01**: Admin can only access admin routes when authenticated with ADMIN role via Clerk middleware
+- [x] **SEC-02**: Non-admin users are redirected to dashboard when attempting to access admin routes
+- [x] **SEC-03**: SendGrid webhook endpoint verifies signatures using official @sendgrid/eventwebhook SDK
+- [x] **SEC-04**: Email token HMAC uses required environment secret with no fallback in production
+- [x] **SEC-05**: Document upload page uses authenticated user ID instead of hardcoded test ID
+- [x] **SEC-06**: Partner bank account data fields removed from database in favor of Stripe Connect exclusive
 
 ### Payment (PAY)
 
@@ -97,12 +97,12 @@
 
 | REQ-ID | Phase | Plan | Status |
 |--------|-------|------|--------|
-| SEC-01 | 1 | 01-01 | Pending |
-| SEC-02 | 1 | 01-01 | Pending |
-| SEC-03 | 1 | 01-02 | Pending |
-| SEC-04 | 1 | 01-02 | Pending |
-| SEC-05 | 1 | 01-03 | Pending |
-| SEC-06 | 1 | 01-03 | Pending |
+| SEC-01 | 1 | 01-01 | Complete |
+| SEC-02 | 1 | 01-01 | Complete |
+| SEC-03 | 1 | 01-02 | Complete |
+| SEC-04 | 1 | 01-02 | Complete |
+| SEC-05 | 1 | 01-03 | Complete |
+| SEC-06 | 1 | 01-03 | Complete |
 | PAY-01 | 2 | 02-01 | Pending |
 | PAY-02 | 2 | 02-02 | Pending |
 | PAY-03 | 2 | 02-02 | Pending |
