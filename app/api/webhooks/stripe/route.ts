@@ -16,7 +16,7 @@ import { verifyWebhookSignature } from '@/lib/stripe/stripe-service';
 import { prisma } from '@/lib/db';
 import { sendBookingConfirmation, sendEmail } from '@/lib/email/sendgrid';
 import { generatePaymentFailureEmail } from '@/lib/email/templates/payment-failure-guest';
-import { sendPaymentFailureAlert } from '@/lib/email/admin-alerts';
+import { sendPaymentFailureAlert, sendOverbookingAlert, isAdminAlertsConfigured } from '@/lib/email/admin-alerts';
 import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
 import { whatsappLogger, stripeLogger, emailLogger } from '@/lib/logger';
 import { parseAccountUpdatedEvent, parseTransferEvent } from '@/lib/stripe/stripe-connect';
@@ -246,16 +246,43 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
           if (incrementResult === 0) {
             // Trip is at capacity - this is a rare edge case
             // Mark booking as needing attention rather than failing silently
-            console.error(`CRITICAL: Trip ${booking.tripId} at capacity during payment confirmation for booking ${booking.bookingReference}`);
+            stripeLogger.error(
+              {
+                tripId: booking.tripId,
+                bookingId: booking.id,
+                bookingReference: booking.bookingReference,
+              },
+              `Overbooking prevention triggered: Trip ${booking.tripId} at capacity during payment confirmation`
+            );
             await tx.booking.update({
               where: { id: bookingId },
               data: {
                 status: 'CONFIRMED',
-                // Store a note for admin attention - the booking is paid but trip may be overbooked
+                // Booking is paid but trip capacity was not incremented - admin must resolve
               },
             });
-            // Continue processing - admin will need to handle manually
-            // TODO: Send alert to admin about potential overbooking
+
+            // Send admin alert (non-blocking - don't await inside transaction)
+            if (isAdminAlertsConfigured()) {
+              sendOverbookingAlert({
+                guestName: booking.user.email.split('@')[0],
+                guestEmail: booking.user.email,
+                bookingReference: booking.bookingReference || bookingId.slice(-8).toUpperCase(),
+                bookingId: booking.id,
+                packageName: booking.package.name,
+                tripName: booking.trip?.name || 'Unknown Trip',
+                tripId: booking.tripId!,
+                tripStartDate: booking.trip?.startDate?.toISOString() || '',
+                tripCapacity: booking.trip?.capacity || 0,
+                currentBookings: booking.trip?.currentBookings || 0,
+                paymentAmount: payment.amount,
+                paymentStatus: 'SUCCEEDED',
+                bookingStatus: 'CONFIRMED',
+                bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`,
+                tripAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/trips/${booking.tripId}`,
+              }).catch(err => stripeLogger.error({ err }, 'Failed to send overbooking alert'));
+            }
+
             return;
           }
         }
