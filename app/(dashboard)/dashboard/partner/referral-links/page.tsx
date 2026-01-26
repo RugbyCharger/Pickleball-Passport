@@ -57,7 +57,7 @@ export default function PartnerReferralLinksPage() {
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const defaultLink = profile?.referralCode
-    ? `${baseUrl}/r/${profile.referralCode}`
+    ? `${baseUrl}/r/${profile.referralCode}?utm_source=partner&utm_medium=referral&utm_campaign=${encodeURIComponent(profile.referralCode)}`
     : '';
 
   const qrSizes = {
@@ -83,10 +83,16 @@ export default function PartnerReferralLinksPage() {
   const handleCreateCustomLink = () => {
     if (!campaignName.trim() || !profile?.referralCode) return;
 
+    const params = new URLSearchParams({
+      utm_source: 'partner',
+      utm_medium: 'referral',
+      utm_campaign: `${profile.referralCode}-${campaignName.trim().toLowerCase().replace(/\s+/g, '-')}`,
+    });
+
     const customLink: CustomLink = {
       id: Date.now().toString(),
       campaignName: campaignName.trim(),
-      url: `${baseUrl}/r/${profile.referralCode}?campaign=${encodeURIComponent(campaignName.trim())}`,
+      url: `${baseUrl}/r/${profile.referralCode}?${params.toString()}`,
       clicks: 0,
       conversions: 0,
     };
