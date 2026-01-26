@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-01-26)
 
 Phase: 1 of 4 (Security Hardening)
 Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-01-26 — Roadmap created with 4 phases, 9 plans, 19 requirements
+Status: Ready to execute
+Last activity: 2026-01-26 — Phase 1 plans created (3 plans in 1 wave, all parallel)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -61,5 +61,23 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-26
-Stopped at: Roadmap creation complete
+Stopped at: Phase 1 planning complete
 Resume file: None
+
+## Planning Notes
+
+### Phase 1 Planning Summary (2026-01-26)
+
+**Research findings that affected planning:**
+- SEC-04 (email token) is ALREADY SATISFIED - code enforces 32+ char secret in production
+- SEC-05 (documents user ID) is ALREADY SATISFIED - uses authenticated user.id from Clerk
+- Middleware is a complete no-op - needs full clerkMiddleware implementation
+- SendGrid uses custom crypto - needs @sendgrid/eventwebhook SDK
+- PartnerPayoutMethod should be removed - Stripe Connect is already integrated
+
+**Plans created:**
+1. **01-01** - Admin route middleware (clerkMiddleware with role checking)
+2. **01-02** - SendGrid webhook SDK (replace custom crypto with official SDK)
+3. **01-03** - Bank data removal (remove PartnerPayoutMethod, update UI)
+
+**Wave structure:** All 3 plans in Wave 1 (parallel, no dependencies between them)
