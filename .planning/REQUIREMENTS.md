@@ -97,28 +97,29 @@
 
 | REQ-ID | Phase | Plan | Status |
 |--------|-------|------|--------|
-| SEC-01 | TBD | TBD | Pending |
-| SEC-02 | TBD | TBD | Pending |
-| SEC-03 | TBD | TBD | Pending |
-| SEC-04 | TBD | TBD | Pending |
-| SEC-05 | TBD | TBD | Pending |
-| SEC-06 | TBD | TBD | Pending |
-| PAY-01 | TBD | TBD | Pending |
-| PAY-02 | TBD | TBD | Pending |
-| PAY-03 | TBD | TBD | Pending |
-| PAY-04 | TBD | TBD | Pending |
-| PTR-01 | TBD | TBD | Pending |
-| PTR-02 | TBD | TBD | Pending |
-| PTR-03 | TBD | TBD | Pending |
-| PTR-04 | TBD | TBD | Pending |
-| EML-01 | TBD | TBD | Pending |
-| EML-02 | TBD | TBD | Pending |
-| DAT-01 | TBD | TBD | Pending |
-| DAT-02 | TBD | TBD | Pending |
-| DAT-03 | TBD | TBD | Pending |
+| SEC-01 | 1 | 01-01 | Pending |
+| SEC-02 | 1 | 01-01 | Pending |
+| SEC-03 | 1 | 01-02 | Pending |
+| SEC-04 | 1 | 01-02 | Pending |
+| SEC-05 | 1 | 01-03 | Pending |
+| SEC-06 | 1 | 01-03 | Pending |
+| PAY-01 | 2 | 02-01 | Pending |
+| PAY-02 | 2 | 02-02 | Pending |
+| PAY-03 | 2 | 02-02 | Pending |
+| PAY-04 | 2 | 02-01 | Pending |
+| PTR-01 | 3 | 03-01 | Pending |
+| PTR-02 | 3 | 03-01 | Pending |
+| PTR-03 | 3 | 03-02 | Pending |
+| PTR-04 | 3 | 03-02 | Pending |
+| EML-01 | 4 | 04-01 | Pending |
+| EML-02 | 4 | 04-01 | Pending |
+| DAT-01 | 2 | 02-03 | Pending |
+| DAT-02 | 2 | 02-03 | Pending |
+| DAT-03 | 2 | 02-03 | Pending |
 
 ---
 
 *Requirements defined: 2026-01-26*
 *Total v1 requirements: 19*
 *Categories: Security (6), Payment (4), Partner (4), Email (2), Data Integrity (3)*
+*Coverage: 19/19 requirements mapped to phases*
