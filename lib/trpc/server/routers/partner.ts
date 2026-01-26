@@ -157,6 +157,17 @@ export const partnerRouter = router({
       .filter((r) => r.booking.status === 'CONFIRMED')
       .reduce((sum, r) => sum + r.booking.totalPrice, 0)
 
+    // Calculate commission breakdown by booking completion status
+    // Business rule: Available = booking.status === 'COMPLETED' (trip completed)
+    //                Pending = all other statuses (awaiting trip completion)
+    const availableCommission = referrals
+      .filter((r) => r.booking.status === 'COMPLETED')
+      .reduce((sum, r) => sum + r.pointsEarned, 0)
+
+    const pendingCommission = referrals
+      .filter((r) => r.booking.status !== 'COMPLETED')
+      .reduce((sum, r) => sum + r.pointsEarned, 0)
+
     // Tier progress
     const currentTier = profile.tier
     const currentPoints = profile.passportPoints
@@ -184,6 +195,8 @@ export const partnerRouter = router({
       nextTier,
       pointsToNextTier,
       tierProgress,
+      pendingCommission,
+      availableCommission,
     }
   }),
 
