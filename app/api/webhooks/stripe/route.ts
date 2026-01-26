@@ -14,9 +14,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { verifyWebhookSignature } from '@/lib/stripe/stripe-service';
 import { prisma } from '@/lib/db';
-import { sendBookingConfirmation } from '@/lib/email/sendgrid';
+import { sendBookingConfirmation, sendEmail } from '@/lib/email/sendgrid';
+import { generatePaymentFailureEmail } from '@/lib/email/templates/payment-failure-guest';
+import { sendPaymentFailureAlert } from '@/lib/email/admin-alerts';
 import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
-import { whatsappLogger, stripeLogger } from '@/lib/logger';
+import { whatsappLogger, stripeLogger, emailLogger } from '@/lib/logger';
 import { parseAccountUpdatedEvent, parseTransferEvent } from '@/lib/stripe/stripe-connect';
 import Stripe from 'stripe';
 
@@ -455,7 +457,8 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
 /**
  * Handle Failed Payment
  *
- * Updates payment status and optionally sends failure notification.
+ * Updates payment status and sends failure notification email to guest.
+ * For installment failures, also sends admin alert.
  */
 async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
   try {
@@ -489,10 +492,93 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
         },
       });
       console.log(`PaymentRecord marked as FAILED: ${paymentRecord.id} (installment ${paymentRecord.installmentNumber})`);
-      // TODO E4-S6 Phase 6: Create admin notification for failed installment
     }
 
-    // TODO: Send payment failure email with retry link
+    // Fetch booking details for email
+    const booking = await prisma.booking.findUnique({
+      where: { id: payment.bookingId },
+      include: {
+        user: { select: { email: true } },
+        package: { select: { name: true } },
+        trip: { select: { startDate: true, name: true } },
+      },
+    });
+
+    if (booking) {
+      const guestFirstName = booking.user.email.split('@')[0];
+      const isInstallment = !!paymentRecord;
+
+      // Send guest email (wrapped in try/catch to prevent webhook failure)
+      try {
+        const { html, text, subject } = generatePaymentFailureEmail({
+          firstName: guestFirstName,
+          email: booking.user.email,
+          bookingReference: booking.bookingReference || payment.bookingId.slice(-8).toUpperCase(),
+          packageName: booking.package.name,
+          tripStartDate: booking.trip?.startDate?.toISOString(),
+          failedAmount: payment.amount,
+          failureReason: paymentIntent.last_payment_error?.code,
+          isInstallment,
+          installmentNumber: paymentRecord?.installmentNumber ?? undefined,
+          updatePaymentUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
+        });
+
+        await sendEmail({
+          to: booking.user.email,
+          subject,
+          html,
+          text,
+        });
+
+        emailLogger.info(
+          { bookingId: booking.id, paymentId: payment.id, isInstallment },
+          'Payment failure email sent to guest'
+        );
+      } catch (emailError) {
+        emailLogger.error(
+          { bookingId: booking.id, paymentId: payment.id, error: emailError instanceof Error ? emailError.message : String(emailError) },
+          'Failed to send payment failure email to guest'
+        );
+        // Don't throw - email failure shouldn't fail the webhook
+      }
+
+      // Send admin alert for installment failures
+      if (paymentRecord) {
+        try {
+          await sendPaymentFailureAlert({
+            customerName: guestFirstName,
+            customerEmail: booking.user.email,
+            bookingReference: booking.bookingReference || payment.bookingId.slice(-8).toUpperCase(),
+            bookingId: booking.id,
+            packageName: booking.package.name,
+            tripName: booking.trip?.name || 'N/A',
+            tripStartDate: booking.trip?.startDate?.toISOString() || '',
+            installmentNumber: paymentRecord.installmentNumber || 0,
+            installmentAmount: payment.amount,
+            originalDueDate: paymentRecord.dueDate?.toISOString() || new Date().toISOString(),
+            attempts: [{
+              attemptNumber: paymentRecord.retryCount || 1,
+              attemptDate: new Date().toISOString(),
+              errorCode: paymentIntent.last_payment_error?.code || 'unknown',
+              errorMessage: paymentIntent.last_payment_error?.message || 'Unknown error',
+            }],
+            bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/admin/bookings/${booking.id}`,
+            customerDashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/bookings/${booking.id}`,
+          });
+
+          emailLogger.info(
+            { bookingId: booking.id, installmentNumber: paymentRecord.installmentNumber },
+            'Payment failure admin alert sent'
+          );
+        } catch (alertError) {
+          emailLogger.error(
+            { bookingId: booking.id, error: alertError instanceof Error ? alertError.message : String(alertError) },
+            'Failed to send payment failure admin alert'
+          );
+          // Don't throw - alert failure shouldn't fail the webhook
+        }
+      }
+    }
 
     console.log(`Payment failed for intent: ${paymentIntent.id}`);
   } catch (error) {
