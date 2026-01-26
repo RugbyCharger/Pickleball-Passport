@@ -685,3 +685,25 @@ Pickleball Passport Partner Program
     text,
   });
 }
+
+// ============================================================================
+// EML-01 & EML-02: Guest Booking Cancellation Email
+// ============================================================================
+
+/**
+ * Send booking cancellation email to guest
+ */
+export async function sendBookingCancellationGuest(
+  to: string,
+  data: import('./templates/booking-cancellation-guest').BookingCancellationGuestData
+): Promise<void> {
+  const { generateBookingCancellationGuestEmail } = await import('./templates/booking-cancellation-guest');
+  const { html, text, subject } = generateBookingCancellationGuestEmail(data);
+
+  await sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
