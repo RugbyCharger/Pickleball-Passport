@@ -1739,9 +1739,37 @@ export const bookingRouter = router({
         return updated
       })
 
-      // 7. Send cancellation email (non-blocking)
-      // TODO: Implement email sending in Task 4
-      // sendCancellationEmail(booking, refundAmount).catch(err => logError(emailLogger, err, 'Failed to send cancellation email'))
+      // 7. Send cancellation email to guest (non-blocking)
+      const guestEmail = user.emailAddresses?.[0]?.emailAddress
+      if (guestEmail) {
+        const { sendBookingCancellationGuest } = await import('@/lib/email/sendgrid')
+        sendBookingCancellationGuest(guestEmail, {
+          firstName: user.firstName || 'Guest',
+          email: guestEmail,
+          bookingReference: booking.bookingReference,
+          packageName: booking.package.name,
+          tripName: booking.trip?.name || 'Your Trip',
+          cancellationDate: new Date().toISOString(),
+          refundAmount: refundAmount > 0 ? refundAmount : undefined,
+          refundPercentage: refundPercentage > 0 ? refundPercentage : undefined,
+          supportUrl: `${process.env.NEXT_PUBLIC_APP_URL}/contact`,
+        }).catch(err => logError(emailLogger, err, 'Failed to send cancellation email to guest'))
+      }
+
+      // Send cancellation email to companion guest if cancelBothBookings=true
+      if (companionBooking && companionBooking.guestEmail) {
+        const { sendBookingCancellationGuest } = await import('@/lib/email/sendgrid')
+        sendBookingCancellationGuest(companionBooking.guestEmail, {
+          firstName: companionBooking.guestFirstName || 'Guest',
+          email: companionBooking.guestEmail,
+          bookingReference: companionBooking.bookingReference,
+          packageName: companionBooking.package.name,
+          tripName: companionBooking.trip?.name || 'Your Trip',
+          cancellationDate: new Date().toISOString(),
+          refundAmount: undefined, // Refund goes to primary booking payment
+          supportUrl: `${process.env.NEXT_PUBLIC_APP_URL}/contact`,
+        }).catch(err => logError(emailLogger, err, 'Failed to send cancellation email to companion guest'))
+      }
 
       // Story 11-8: Send admin cancellation alert (non-blocking)
       const { sendBookingCancellationAlert, isAdminAlertsConfigured } = await import('@/lib/email/admin-alerts')

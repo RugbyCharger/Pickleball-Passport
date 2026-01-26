@@ -668,7 +668,7 @@ export const adminRouter = router({
       .mutation(async ({ ctx, input }) => {
         const { bookingId, status, notes } = input;
 
-        // Get booking with user info
+        // Get booking with user info and trip
         const booking = await ctx.db.booking.findUnique({
           where: { id: bookingId },
           include: {
@@ -685,6 +685,11 @@ export const adminRouter = router({
               },
             },
             package: {
+              select: {
+                name: true,
+              },
+            },
+            trip: {
               select: {
                 name: true,
               },
@@ -758,15 +763,32 @@ export const adminRouter = router({
           });
 
           // Send email notification
-          try {
-            await sendEmail({
-              to: booking.user.email,
-              subject: `${message.title} - Pickleball Passport`,
-              text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nPickleball Passport Team`,
-              html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
-            });
-          } catch (error) {
-            logError(emailLogger, error, 'Failed to send booking status update email');
+          if (status === 'CANCELLED') {
+            // Use proper guest cancellation template for CANCELLED status
+            const { sendBookingCancellationGuest } = await import('@/lib/email/sendgrid');
+            const guestProfile = booking.user.guestProfile;
+            sendBookingCancellationGuest(booking.user.email, {
+              firstName: guestProfile?.firstName || 'Guest',
+              email: booking.user.email,
+              bookingReference: booking.bookingReference,
+              packageName: booking.package.name,
+              tripName: booking.trip?.name || 'Your Trip',
+              cancellationDate: new Date().toISOString(),
+              refundAmount: undefined, // Admin cancellation - refund handled separately
+              supportUrl: `${process.env.NEXT_PUBLIC_APP_URL}/contact`,
+            }).catch(err => logError(emailLogger, err, 'Failed to send cancellation email to guest'));
+          } else {
+            // Use generic email for CONFIRMED and COMPLETED statuses
+            try {
+              await sendEmail({
+                to: booking.user.email,
+                subject: `${message.title} - Pickleball Passport`,
+                text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nPickleball Passport Team`,
+                html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+              });
+            } catch (error) {
+              logError(emailLogger, error, 'Failed to send booking status update email');
+            }
           }
         }
 
