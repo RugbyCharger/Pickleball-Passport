@@ -34,6 +34,8 @@ import {
   AlertTriangle,
   Medal,
   Settings,
+  Clock,
+  CheckCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -275,7 +277,7 @@ export default function PartnerDashboardPage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {/* Total Referrals */}
           <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -346,6 +348,42 @@ export default function PartnerDashboardPage() {
               </div>
               <div className="rounded-full bg-green-100 p-3">
                 <DollarSign className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          {/* Pending Commission */}
+          <div className="rounded-lg border border-amber-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600">Pending Commission</p>
+                <p className="mt-2 text-3xl font-bold text-amber-600">
+                  {stats.pendingCommission.toLocaleString()}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Awaiting trip completion
+                </p>
+              </div>
+              <div className="rounded-full bg-amber-100 p-3">
+                <Clock className="h-6 w-6 text-amber-600" />
+              </div>
+            </div>
+          </div>
+
+          {/* Available Commission */}
+          <div className="rounded-lg border border-emerald-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600">Available Commission</p>
+                <p className="mt-2 text-3xl font-bold text-emerald-600">
+                  {stats.availableCommission.toLocaleString()}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Ready for payout
+                </p>
+              </div>
+              <div className="rounded-full bg-emerald-100 p-3">
+                <CheckCircle className="h-6 w-6 text-emerald-600" />
               </div>
             </div>
           </div>
