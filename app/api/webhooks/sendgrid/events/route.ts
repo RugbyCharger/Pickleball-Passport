@@ -12,13 +12,18 @@
  * Webhook URL: https://pickleballpassport.com/api/webhooks/sendgrid/events
  *
  * Configure in SendGrid Dashboard:
- * Settings → Mail Settings → Event Webhook
+ * Settings -> Mail Settings -> Event Webhook
  * Enable events: unsubscribe, spamreport, group_unsubscribe
+ * Enable "Signed Event Webhook Requests" and copy the Verification Key
+ *
+ * SECURITY: Signature verification is REQUIRED in production.
+ * Set SENDGRID_WEBHOOK_VERIFICATION_KEY environment variable.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { emailLogger } from '@/lib/logger';
+import { EventWebhook, EventWebhookHeader } from '@sendgrid/eventwebhook';
 
 interface SendGridEvent {
   email: string;
@@ -30,11 +35,10 @@ interface SendGridEvent {
 }
 
 /**
- * Verify SendGrid webhook signature (optional security)
+ * Verify SendGrid webhook signature using the official SDK
  *
- * SendGrid uses elliptic curve signatures for webhook verification.
- * For MVP, we rely on HTTPS + secret URL path.
- * In production, implement proper signature verification using SendGrid's public key.
+ * SendGrid uses elliptic curve (ECDSA) signatures for webhook verification.
+ * The official SDK handles the key conversion and signature verification correctly.
  *
  * @see https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features
  */
@@ -43,8 +47,52 @@ function verifyWebhookSignature(
   signature: string | null,
   timestamp: string | null
 ): boolean {
-  // TODO: Implement SendGrid signature verification for production
-  // For now, accept all requests (secured by secret URL and HTTPS)
+  const publicKey = process.env.SENDGRID_WEBHOOK_VERIFICATION_KEY;
+
+  // In production, verification is required
+  if (process.env.NODE_ENV === 'production') {
+    if (!publicKey) {
+      emailLogger.error(
+        'SECURITY ERROR: SENDGRID_WEBHOOK_VERIFICATION_KEY not configured. ' +
+          'Webhook requests will be rejected until configured.'
+      );
+      return false;
+    }
+
+    if (!signature || !timestamp) {
+      emailLogger.warn('Missing signature or timestamp headers');
+      return false;
+    }
+
+    try {
+      const eventWebhook = new EventWebhook();
+      const ecPublicKey = eventWebhook.convertPublicKeyToECDSA(publicKey);
+      const isValid = eventWebhook.verifySignature(
+        ecPublicKey,
+        payload,
+        signature,
+        timestamp
+      );
+
+      if (!isValid) {
+        emailLogger.warn('Invalid webhook signature');
+      }
+
+      return isValid;
+    } catch (error) {
+      emailLogger.error({ error }, 'Signature verification failed');
+      return false;
+    }
+  }
+
+  // In development, allow requests but warn if verification key is missing
+  if (!publicKey) {
+    emailLogger.warn(
+      '[DEV] SENDGRID_WEBHOOK_VERIFICATION_KEY not configured. ' +
+        'Signature verification skipped in development.'
+    );
+  }
+
   return true;
 }
 
@@ -53,17 +101,19 @@ function verifyWebhookSignature(
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify webhook signature (optional security layer)
-    const signature = request.headers.get('X-Twilio-Email-Event-Webhook-Signature');
-    const timestamp = request.headers.get('X-Twilio-Email-Event-Webhook-Timestamp');
+    // Get raw body for signature verification (must be done before parsing JSON)
+    const rawBody = await request.text();
 
-    // In production, enable signature verification
-    // if (!verifyWebhookSignature(await request.text(), signature, timestamp)) {
-    //   emailLogger.warn('Invalid webhook signature');
-    //   return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-    // }
+    // Verify webhook signature - REQUIRED in production
+    const signature = request.headers.get(EventWebhookHeader.SIGNATURE());
+    const timestamp = request.headers.get(EventWebhookHeader.TIMESTAMP());
 
-    const events: SendGridEvent[] = await request.json();
+    if (!verifyWebhookSignature(rawBody, signature, timestamp)) {
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+    }
+
+    // Parse the verified payload
+    const events: SendGridEvent[] = JSON.parse(rawBody);
 
     for (const event of events) {
       emailLogger.info(
