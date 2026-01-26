@@ -79,10 +79,12 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Guest receives email when their booking is cancelled (by admin or self)
   2. Cancellation email includes booking reference, trip name, and cancellation date
-**Plans**: TBD
+**Plans**: 1 plan (Wave 1)
 
 Plans:
-- [ ] 04-01: Cancellation email wiring (EML-01, EML-02)
+- [ ] 04-01-PLAN.md — Guest cancellation email template and wiring (EML-01, EML-02)
+
+**Note**: Research found 90% of infrastructure exists. Admin cancellation email template already implemented (booking-cancellation-admin.ts). Work creates guest template following same pattern and wires to both booking.cancel mutation and admin.updateStatus.
 
 ## Progress
 
