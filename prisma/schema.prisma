@@ -334,7 +334,6 @@ model PartnerProfile {
   referrals          PartnerReferral[]
   landingPages       PartnerLandingPage[]
   payouts            PartnerPayout[]
-  payoutMethod       PartnerPayoutMethod?
   forumThreads       ForumThread[]
   forumReplies       ForumReply[]
   forumLikes         ForumLike[]
@@ -887,23 +886,6 @@ model PartnerPayout {
   @@index([partnerId])
   @@index([status])
   @@index([stripeTransferId])
-}
-
-model PartnerPayoutMethod {
-  id        String         @id @default(cuid())
-  partnerId String         @unique
-  partner   PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
-
-  // Bank Account (encrypted storage in production)
-  bankName      String
-  accountNumber String // TODO: Encrypt in production
-  routingNumber String // TODO: Encrypt in production
-
-  // Display
-  accountLast4 String // Last 4 digits for display
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 // E9-S13: Directors Circle (Community Forum)
