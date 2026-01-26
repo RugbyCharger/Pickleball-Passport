@@ -1761,82 +1761,6 @@ export const partnerRouter = router({
   // ============================================================================
 
   /**
-   * Get payout settings (bank account info)
-   */
-  getPayoutSettings: partnerProcedure.query(async ({ ctx }) => {
-    const profile = await ctx.db.partnerProfile.findUnique({
-      where: {
-        userId: ctx.user!.id,
-      },
-    })
-
-    if (!profile) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Partner profile not found',
-      })
-    }
-
-    const payoutMethod = await ctx.db.partnerPayoutMethod.findUnique({
-      where: {
-        partnerId: profile.id,
-      },
-    })
-
-    return payoutMethod
-  }),
-
-  /**
-   * Save/update payout settings (bank account)
-   */
-  updatePayoutSettings: partnerProcedure
-    .input(
-      z.object({
-        bankName: z.string().min(1),
-        accountNumber: z.string().min(4),
-        routingNumber: z.string().min(9),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const profile = await ctx.db.partnerProfile.findUnique({
-        where: {
-          userId: ctx.user!.id,
-        },
-      })
-
-      if (!profile) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Partner profile not found',
-        })
-      }
-
-      // Extract last 4 digits for display
-      const accountLast4 = input.accountNumber.slice(-4)
-
-      const payoutMethod = await ctx.db.partnerPayoutMethod.upsert({
-        where: {
-          partnerId: profile.id,
-        },
-        create: {
-          partnerId: profile.id,
-          bankName: input.bankName,
-          accountNumber: input.accountNumber, // TODO: Encrypt in production
-          routingNumber: input.routingNumber, // TODO: Encrypt in production
-          accountLast4,
-        },
-        update: {
-          bankName: input.bankName,
-          accountNumber: input.accountNumber, // TODO: Encrypt in production
-          routingNumber: input.routingNumber, // TODO: Encrypt in production
-          accountLast4,
-        },
-      })
-
-      return payoutMethod
-    }),
-
-  /**
    * Get payout history
    */
   getPayoutHistory: partnerProcedure.query(async ({ ctx }) => {
@@ -1904,17 +1828,11 @@ export const partnerRouter = router({
         })
       }
 
-      // Check if bank account is set up
-      const payoutMethod = await ctx.db.partnerPayoutMethod.findUnique({
-        where: {
-          partnerId: profile.id,
-        },
-      })
-
-      if (!payoutMethod) {
+      // Check if Stripe Connect is set up and payouts are enabled
+      if (!profile.stripeConnectAccountId || !profile.stripeConnectPayoutsEnabled) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Bank account must be set up before requesting payout',
+          message: 'Stripe Connect must be set up and payouts enabled before requesting payout',
         })
       }
 
@@ -1930,7 +1848,7 @@ export const partnerRouter = router({
             pointsRedeemed: input.pointsToRedeem,
             amountInCents,
             status: 'PENDING',
-            bankAccountLast4: payoutMethod.accountLast4,
+            payoutMethod: 'stripe_connect',
           },
         })
 
