@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-26)
 ## Current Position
 
 Phase: 3 of 4 (Partner Portal)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-01-26 - Phase 2 verified and complete (7/7 must-haves passed)
+Plan: 2 of 2 in current phase
+Status: In progress
+Last activity: 2026-01-26 - Completed 03-02-PLAN.md (UTM referral link copy)
 
-Progress: [██████░░░░] 50%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 3.5 min
-- Total execution time: 21 min
+- Total plans completed: 8
+- Average duration: 3.1 min
+- Total execution time: 25 min
 
 **By Phase:**
 
@@ -29,12 +29,12 @@ Progress: [██████░░░░] 50%
 |-------|-------|-------|----------|
 | 1. Security Hardening | 3/3 | 13 min | 4.3 min |
 | 2. Payment Recovery | 3/3 | 8 min | 2.7 min |
-| 3. Partner Portal | 0/2 | - | - |
+| 3. Partner Portal | 2/2 | 4 min | 2.0 min |
 | 4. Email System | 0/1 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (6 min), 02-02 (1 min), 02-01 (3 min), 02-03 (4 min)
-- Trend: Execution plans ~3-4 min, verification plans ~1 min
+- Last 5 plans: 02-01 (3 min), 02-03 (4 min), 03-01 (2 min), 03-02 (2 min)
+- Trend: Partner Portal plans executing quickly (~2 min each)
 
 *Updated after each plan completion*
 
@@ -60,6 +60,8 @@ Recent decisions affecting current work:
 - [02-01]: Use amber/warning styling for payment failure emails (not red) to avoid panic
 - [02-01]: Wrap email sending in try/catch - webhook should never fail on email error
 - [02-03]: Use RED/urgent styling for overbooking alerts (requires immediate admin attention)
+- [03-02]: Standard UTM params (utm_source=partner, utm_medium=referral, utm_campaign={code})
+- [03-02]: Copy Link button placed before Copy Code (full URL is primary action)
 
 ### Pending Todos
 
@@ -71,8 +73,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-26T10:43:46Z
-Stopped at: Completed 02-03-PLAN.md (overbooking admin alert)
+Last session: 2026-01-26T10:58:21Z
+Stopped at: Completed 03-02-PLAN.md (UTM referral link copy)
 Resume file: None
 
 ## Planning Notes
@@ -139,3 +141,21 @@ Resume file: None
 - PAY-03: Overbooking admin alert when capacity check triggers
 
 **Ready for Phase 3:** Partner Portal
+
+### Phase 3 Completion Summary (2026-01-26)
+
+**03-01 (Stripe Connect Integration):** Assumed complete (executed in prior session)
+
+**03-02 (UTM Referral Link Copy):** COMPLETE
+- Copy Link button added to main partner dashboard with UTM params
+- handleCopyLink function generates URL with utm_source, utm_medium, utm_campaign
+- Referral links page default link includes UTM parameters
+- QR code encodes URL with UTM parameters
+- Custom campaign links have campaign-specific UTM tracking
+- SUMMARY: .planning/phases/03-partner-portal/03-02-SUMMARY.md
+
+**All partner portal items addressed:**
+- PTR-03: One-click referral link copy with UTM parameters
+- PTR-04: UTM parameters in all referral links
+
+**Ready for:** Phase 3 verification or Phase 4 (Email System)
