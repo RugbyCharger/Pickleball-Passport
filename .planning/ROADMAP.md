@@ -12,7 +12,7 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
 
 - [x] **Phase 1: Security Hardening** - Protect admin routes, verify webhooks, secure sensitive data
 - [x] **Phase 2: Payment Recovery & Data Integrity** - Failed payment flows and atomic capacity checks
-- [ ] **Phase 3: Partner Portal** - Real-time dashboards and referral link functionality
+- [x] **Phase 3: Partner Portal** - Real-time dashboards and referral link functionality
 - [ ] **Phase 4: Email System** - Booking cancellation email wiring
 
 ## Phase Details
@@ -67,8 +67,8 @@ Plans:
 **Plans**: 2 plans (all Wave 1 - parallel execution)
 
 Plans:
-- [ ] 03-01-PLAN.md — Pending/available commission display (PTR-01 verify, PTR-02)
-- [ ] 03-02-PLAN.md — Referral link copy with UTM params (PTR-03, PTR-04)
+- [x] 03-01-PLAN.md — Pending/available commission display (PTR-01 verify, PTR-02)
+- [x] 03-02-PLAN.md — Referral link copy with UTM params (PTR-03, PTR-04)
 
 **Note**: Research found extensive infrastructure already exists. PTR-01 (referral count) is already implemented via getDashboardStats. Work focuses on adding pending/available commission split and UTM parameters to link copy functionality.
 
@@ -93,7 +93,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Security Hardening | 3/3 | Complete | 2026-01-26 |
 | 2. Payment Recovery & Data Integrity | 3/3 | Complete | 2026-01-26 |
-| 3. Partner Portal | 0/2 | Planned | - |
+| 3. Partner Portal | 2/2 | Complete | 2026-01-26 |
 | 4. Email System | 0/1 | Not started | - |
 
 ---

@@ -27,10 +27,10 @@
 
 ### Partner Portal (PTR)
 
-- [ ] **PTR-01**: Partner dashboard displays real-time referral count and conversion data
-- [ ] **PTR-02**: Partner dashboard shows pending vs available commission balance
-- [ ] **PTR-03**: Partner can copy their referral link with one-click copy button
-- [ ] **PTR-04**: Referral link includes UTM parameters for tracking
+- [x] **PTR-01**: Partner dashboard displays real-time referral count and conversion data
+- [x] **PTR-02**: Partner dashboard shows pending vs available commission balance
+- [x] **PTR-03**: Partner can copy their referral link with one-click copy button
+- [x] **PTR-04**: Referral link includes UTM parameters for tracking
 
 ### Email System (EML)
 
@@ -107,10 +107,10 @@
 | PAY-02 | 2 | 02-02 | Complete |
 | PAY-03 | 2 | 02-02 | Complete |
 | PAY-04 | 2 | 02-01 | Complete |
-| PTR-01 | 3 | 03-01 | Pending |
-| PTR-02 | 3 | 03-01 | Pending |
-| PTR-03 | 3 | 03-02 | Pending |
-| PTR-04 | 3 | 03-02 | Pending |
+| PTR-01 | 3 | 03-01 | Complete |
+| PTR-02 | 3 | 03-01 | Complete |
+| PTR-03 | 3 | 03-02 | Complete |
+| PTR-04 | 3 | 03-02 | Complete |
 | EML-01 | 4 | 04-01 | Pending |
 | EML-02 | 4 | 04-01 | Pending |
 | DAT-01 | 2 | 02-03 | Complete |
