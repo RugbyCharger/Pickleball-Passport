@@ -25,14 +25,16 @@ This roadmap takes the existing 85%-complete booking platform to go-to-market re
   1. Admin user can access /dashboard/admin/* routes when authenticated with ADMIN role
   2. Non-admin user attempting /dashboard/admin/* is redirected to /dashboard
   3. SendGrid webhook requests without valid signatures are rejected with 401
-  4. Email token verification fails when EMAIL_TOKEN_SECRET env var is missing (no fallback)
-  5. Document upload page displays current authenticated user's documents, not hardcoded test user
-**Plans**: TBD
+  4. Email token verification fails when EMAIL_TOKEN_SECRET env var is missing (no fallback) - ALREADY SATISFIED
+  5. Document upload page displays current authenticated user's documents, not hardcoded test user - ALREADY SATISFIED
+**Plans**: 3 plans (all Wave 1 - parallel execution)
 
 Plans:
-- [ ] 01-01: Admin route protection (SEC-01, SEC-02)
-- [ ] 01-02: Webhook and token security (SEC-03, SEC-04)
-- [ ] 01-03: Data security cleanup (SEC-05, SEC-06)
+- [ ] 01-01-PLAN.md — Admin route middleware protection (SEC-01, SEC-02)
+- [ ] 01-02-PLAN.md — SendGrid webhook SDK verification (SEC-03)
+- [ ] 01-03-PLAN.md — Bank data removal for Stripe Connect exclusive (SEC-06)
+
+**Note**: SEC-04 and SEC-05 were verified as already satisfied during research phase. See 01-RESEARCH.md for details.
 
 ### Phase 2: Payment Recovery & Data Integrity
 **Goal**: Guests can recover from payment failures and overbooking is prevented
@@ -85,7 +87,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Security Hardening | 0/3 | Not started | - |
+| 1. Security Hardening | 0/3 | Planned | - |
 | 2. Payment Recovery & Data Integrity | 0/3 | Not started | - |
 | 3. Partner Portal | 0/2 | Not started | - |
 | 4. Email System | 0/1 | Not started | - |
