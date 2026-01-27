@@ -15,9 +15,11 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, request) => {
-  // Admin routes: require authentication AND ADMIN role
+  // Admin routes: require authentication (role check done in layout)
+  // The admin layout does server-side database role verification,
+  // which is more reliable than depending on Clerk session claims config.
   if (isAdminRoute(request)) {
-    const { userId, sessionClaims } = await auth()
+    const { userId } = await auth()
 
     // Not authenticated -> redirect to sign-in
     if (!userId) {
@@ -26,16 +28,7 @@ export default clerkMiddleware(async (auth, request) => {
       return NextResponse.redirect(signInUrl)
     }
 
-    // Check role from session claims metadata
-    // NOTE: This requires Clerk to be configured to include role in session metadata.
-    // If role is not in claims, this check will safely fail (no role = not admin = redirect)
-    const role = (sessionClaims?.metadata as { role?: string } | undefined)?.role
-    if (role !== 'ADMIN') {
-      // Not admin -> redirect to regular dashboard
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
-
-    // Admin user -> allow access
+    // Authenticated -> allow through (layout handles role check)
     return NextResponse.next()
   }
 
