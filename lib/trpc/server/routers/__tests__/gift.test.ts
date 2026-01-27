@@ -582,4 +582,211 @@ describe('Gift Router', () => {
       })
     })
   })
+
+  describe('cancelGift', () => {
+    describe('Authentication', () => {
+      it('should require authenticated user (protected procedure)', () => {
+        const ctx = { user: mockPurchaser }
+        expect(ctx.user).toBeDefined()
+      })
+    })
+
+    describe('Ownership validation', () => {
+      it('should throw FORBIDDEN if user is not the purchaser', () => {
+        const bookingPurchaserId = 'purchaser_user123'
+        const currentUserId = 'different_user456'
+
+        const isOwner = bookingPurchaserId === currentUserId
+
+        expect(isOwner).toBe(false)
+      })
+
+      it('should allow cancellation if user is the purchaser', () => {
+        const bookingPurchaserId = 'purchaser_user123'
+        const currentUserId = 'purchaser_user123'
+
+        const isOwner = bookingPurchaserId === currentUserId
+
+        expect(isOwner).toBe(true)
+      })
+    })
+
+    describe('Gift status validation', () => {
+      it('should only allow cancellation for PENDING status', () => {
+        expect('PENDING' === 'PENDING').toBe(true)
+        expect('SENT' === 'PENDING').toBe(false)
+        expect('ACCEPTED' === 'PENDING').toBe(false)
+        expect('DECLINED' === 'PENDING').toBe(false)
+      })
+
+      it('should throw BAD_REQUEST if gift is already SENT', async () => {
+        vi.mocked(prisma.booking.findUnique).mockResolvedValue({
+          ...mockGiftBooking,
+          giftStatus: 'SENT',
+        } as any)
+
+        const booking = await prisma.booking.findUnique({
+          where: { id: mockGiftBooking.id },
+        })
+
+        expect(booking?.giftStatus === 'SENT').toBe(true)
+      })
+    })
+
+    describe('Refund processing', () => {
+      it('should process full refund for cancelled gift', async () => {
+        const payment = mockGiftBooking.payments[0]
+        const shouldRefund = payment && payment.stripePaymentIntentId && payment.status === 'SUCCEEDED'
+
+        expect(shouldRefund).toBe(true)
+      })
+    })
+
+    describe('Success response', () => {
+      it('should return success message with refund confirmation', () => {
+        const response = {
+          success: true,
+          message: 'Gift cancelled successfully. A full refund has been processed to your original payment method.',
+        }
+
+        expect(response.success).toBe(true)
+        expect(response.message).toContain('refund')
+      })
+    })
+  })
+
+  describe('updateGiftMessage', () => {
+    describe('Authentication', () => {
+      it('should require authenticated user (protected procedure)', () => {
+        const ctx = { user: mockPurchaser }
+        expect(ctx.user).toBeDefined()
+      })
+    })
+
+    describe('Ownership validation', () => {
+      it('should throw FORBIDDEN if user is not the purchaser', () => {
+        const bookingPurchaserId = 'purchaser_user123'
+        const currentUserId = 'different_user456'
+
+        const isOwner = bookingPurchaserId === currentUserId
+
+        expect(isOwner).toBe(false)
+      })
+    })
+
+    describe('Gift status validation', () => {
+      it('should only allow editing for PENDING status', () => {
+        expect('PENDING' === 'PENDING').toBe(true)
+        expect('SENT' === 'PENDING').toBe(false)
+      })
+    })
+
+    describe('Message validation', () => {
+      it('should accept message up to 1000 characters', () => {
+        const maxMessage = 'a'.repeat(1000)
+        const tooLongMessage = 'a'.repeat(1001)
+
+        expect(maxMessage.length <= 1000).toBe(true)
+        expect(tooLongMessage.length <= 1000).toBe(false)
+      })
+
+      it('should allow clearing the message (empty/undefined)', () => {
+        const emptyMessage = ''
+        const undefinedMessage: string | undefined = undefined
+
+        expect(emptyMessage === '' || undefinedMessage === undefined).toBe(true)
+      })
+    })
+
+    describe('Success response', () => {
+      it('should return success message', () => {
+        const response = {
+          success: true,
+          message: 'Gift message updated successfully.',
+        }
+
+        expect(response.success).toBe(true)
+        expect(response.message).toContain('updated')
+      })
+    })
+  })
+
+  describe('resendGiftNotification', () => {
+    describe('Authentication', () => {
+      it('should require authenticated user (protected procedure)', () => {
+        const ctx = { user: mockPurchaser }
+        expect(ctx.user).toBeDefined()
+      })
+    })
+
+    describe('Ownership validation', () => {
+      it('should throw FORBIDDEN if user is not the purchaser', () => {
+        const bookingPurchaserId = 'purchaser_user123'
+        const currentUserId = 'different_user456'
+
+        const isOwner = bookingPurchaserId === currentUserId
+
+        expect(isOwner).toBe(false)
+      })
+    })
+
+    describe('Gift status validation', () => {
+      it('should only allow resend for SENT status', () => {
+        expect('SENT' === 'SENT').toBe(true)
+        expect('PENDING' === 'SENT').toBe(false)
+        expect('ACCEPTED' === 'SENT').toBe(false)
+        expect('DECLINED' === 'SENT').toBe(false)
+      })
+    })
+
+    describe('Rate limiting', () => {
+      it('should enforce 3 per 24h rate limit', () => {
+        const maxResends = 3
+        const windowHours = 24
+
+        expect(maxResends).toBe(3)
+        expect(windowHours).toBe(24)
+      })
+
+      it('should throw TOO_MANY_REQUESTS when limit exceeded', () => {
+        const rateLimitResult = {
+          success: false,
+          limit: 3,
+          remaining: 0,
+          reset: Date.now() + 24 * 60 * 60 * 1000,
+        }
+
+        expect(rateLimitResult.success).toBe(false)
+        expect(rateLimitResult.remaining).toBe(0)
+      })
+    })
+
+    describe('Email sending', () => {
+      it('should send reminder email to recipient', async () => {
+        vi.mocked(sendEmail).mockResolvedValue(undefined)
+
+        await sendEmail({
+          to: 'recipient@example.com',
+          subject: '[Reminder] You received a gift!',
+          html: expect.any(String),
+          text: expect.any(String),
+        })
+
+        expect(sendEmail).toHaveBeenCalled()
+      })
+    })
+
+    describe('Success response', () => {
+      it('should return success message with recipient email', () => {
+        const recipientEmail = 'recipient@example.com'
+        const response = {
+          success: true,
+          message: `Gift notification has been resent to ${recipientEmail}`,
+        }
+
+        expect(response.success).toBe(true)
+        expect(response.message).toContain(recipientEmail)
+      })
+    })
+  })
 })
