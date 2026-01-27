@@ -114,10 +114,38 @@ None. All v1.1 blockers resolved.
 - Purchaser gifts dashboard (/dashboard/gifts)
 - Admin gifts view with status filtering (/dashboard/admin/gifts)
 
+## Supabase Advisory Status
+
+**Security (24 WARN):**
+- All tables have overly permissive "Dev Access" RLS policies (`USING (true)`)
+- Mitigated: App uses Clerk auth + tRPC protectedProcedure as security layer
+- Recommended: Harden RLS policies for defense-in-depth (v2 candidate)
+
+**Performance (60+ INFO):**
+- Unused indexes (expected for new app, keep for scale)
+- Duplicate policies on Package/Trip tables (minor)
+
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: v1.1 Gift Booking milestone COMPLETE
+Stopped at: v1.1 Gift Booking deployed to production
 Resume file: None
 
-Next: Deploy to production or start v2.0 planning
+## Next Steps (User Decision Required)
+
+**Option A: v1.2 Gift Enhancements**
+- GIFT-F01: Cancel pending gift before delivery
+- GIFT-F02: Edit gift message before delivery
+- GIFT-F03: Resend gift notification
+- Run: `/gsd:new-milestone`
+
+**Option B: v1.2 RLS Security Hardening**
+- Replace "Dev Access" policies with proper role-based policies
+- Add proper RLS for service role only
+- Defense-in-depth security layer
+- Run: `/gsd:new-milestone`
+
+**Option C: Wait for business priorities**
+- v1.0 + v1.1 shipped and working
+- Monitor for real user feedback
+- Address issues as they arise
