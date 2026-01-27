@@ -177,6 +177,7 @@ enum GiftState {
   ACCEPTED  // Recipient accepted gift, booking transferred (terminal)
   DECLINED  // Recipient declined gift, refund processed (terminal)
   EXPIRED   // Gift expired after 30 days without response (terminal)
+  CANCELLED // Purchaser cancelled gift before delivery (terminal)
 }
 
 enum TaskPriority {

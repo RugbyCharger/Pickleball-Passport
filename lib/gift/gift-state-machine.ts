@@ -7,11 +7,12 @@
  * Valid State Transitions:
  * - PENDING → SENT (scheduled gift delivery or immediate send)
  * - PENDING → EXPIRED (gift never sent before expiration)
+ * - PENDING → CANCELLED (purchaser cancels before delivery)
  * - SENT → ACCEPTED (recipient accepts gift)
  * - SENT → DECLINED (recipient declines gift)
  * - SENT → EXPIRED (no response within 30 days)
  *
- * Terminal States: ACCEPTED, DECLINED, EXPIRED
+ * Terminal States: ACCEPTED, DECLINED, EXPIRED, CANCELLED
  */
 
 import { GiftState } from '@prisma/client'
@@ -38,11 +39,12 @@ export interface TransitionValidation {
  * Defines the valid state transitions and their properties
  */
 const STATE_TRANSITIONS: Record<GiftState, GiftState[]> = {
-  [GiftState.PENDING]: [GiftState.SENT, GiftState.EXPIRED],
+  [GiftState.PENDING]: [GiftState.SENT, GiftState.EXPIRED, GiftState.CANCELLED],
   [GiftState.SENT]: [GiftState.ACCEPTED, GiftState.DECLINED, GiftState.EXPIRED],
   [GiftState.ACCEPTED]: [], // Terminal state
   [GiftState.DECLINED]: [], // Terminal state
   [GiftState.EXPIRED]: [], // Terminal state
+  [GiftState.CANCELLED]: [], // Terminal state
 }
 
 /**
@@ -52,6 +54,7 @@ const TERMINAL_STATES: Set<GiftState> = new Set([
   GiftState.ACCEPTED,
   GiftState.DECLINED,
   GiftState.EXPIRED,
+  GiftState.CANCELLED,
 ])
 
 /**
@@ -60,6 +63,7 @@ const TERMINAL_STATES: Set<GiftState> = new Set([
 const TRANSITION_REASONS: Record<string, string> = {
   [`${GiftState.PENDING}_${GiftState.SENT}`]: 'Gift notification sent to recipient',
   [`${GiftState.PENDING}_${GiftState.EXPIRED}`]: 'Gift expired before being sent',
+  [`${GiftState.PENDING}_${GiftState.CANCELLED}`]: 'Gift cancelled by purchaser before delivery',
   [`${GiftState.SENT}_${GiftState.ACCEPTED}`]: 'Recipient accepted the gift',
   [`${GiftState.SENT}_${GiftState.DECLINED}`]: 'Recipient declined the gift',
   [`${GiftState.SENT}_${GiftState.EXPIRED}`]: 'Gift expired after 30 days without response',

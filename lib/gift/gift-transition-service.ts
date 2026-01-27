@@ -34,6 +34,10 @@ import {
   generateGiftExpirationPurchaserEmail,
   GiftExpirationPurchaserData,
 } from '@/lib/email/templates/gift-expiration-purchaser'
+import {
+  generateGiftCancellationPurchaserEmail,
+  GiftCancellationPurchaserData,
+} from '@/lib/email/templates/gift-cancellation-purchaser'
 import { giftLogger, logError, emailLogger, stripeLogger } from '@/lib/logger'
 import { clerkClient } from '@clerk/nextjs/server'
 import { addDays } from 'date-fns'
@@ -85,6 +89,7 @@ function mapStateToStatus(state: GiftState): GiftStatus {
     [GiftState.ACCEPTED]: 'ACCEPTED',
     [GiftState.DECLINED]: 'DECLINED',
     [GiftState.EXPIRED]: 'DECLINED', // EXPIRED maps to DECLINED for backwards compat
+    [GiftState.CANCELLED]: 'DECLINED', // CANCELLED maps to DECLINED for backwards compat
   }
   return mapping[state]
 }
@@ -223,7 +228,7 @@ export async function transitionGiftState(
         updateData.giftAcceptedAt = new Date()
       }
 
-      if (toState === GiftState.DECLINED || toState === GiftState.EXPIRED) {
+      if (toState === GiftState.DECLINED || toState === GiftState.EXPIRED || toState === GiftState.CANCELLED) {
         updateData.status = 'CANCELLED'
       }
 
@@ -234,7 +239,7 @@ export async function transitionGiftState(
 
       // Decrement trip capacity if cancelled
       if (
-        (toState === GiftState.DECLINED || toState === GiftState.EXPIRED) &&
+        (toState === GiftState.DECLINED || toState === GiftState.EXPIRED || toState === GiftState.CANCELLED) &&
         booking.tripId
       ) {
         await tx.trip.update({
@@ -304,6 +309,9 @@ async function executeSideEffects(
       break
     case GiftState.EXPIRED:
       await handleExpiredTransition(booking)
+      break
+    case GiftState.CANCELLED:
+      await handleCancelledTransition(booking)
       break
   }
 }
@@ -571,6 +579,75 @@ async function handleExpiredTransition(
       })
     } catch (error) {
       logError(emailLogger, error, 'Failed to send expiration notification to purchaser')
+    }
+  }
+}
+
+/**
+ * Handle CANCELLED transition - process refund and notify purchaser
+ * Note: No email to recipient since gift was never sent (PENDING state)
+ */
+async function handleCancelledTransition(
+  booking: Prisma.BookingGetPayload<{
+    include: { package: true; trip: true; user: true; payments: true }
+  }>
+): Promise<void> {
+  const purchaserInfo = await getPurchaserInfo(booking.giftPurchaserId!)
+
+  // Process refund
+  const payment = booking.payments?.[0]
+  if (payment && payment.stripePaymentIntentId) {
+    try {
+      const stripe = (await import('stripe')).default
+      const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-12-15.clover',
+      })
+
+      await stripeClient.refunds.create({
+        payment_intent: payment.stripePaymentIntentId,
+        reason: 'requested_by_customer',
+        metadata: {
+          bookingReference: booking.bookingReference,
+          reason: 'Gift cancelled by purchaser before delivery',
+        },
+      })
+
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: { status: 'REFUNDED' },
+      })
+
+      stripeLogger.info({
+        msg: 'Gift cancellation refund processed',
+        bookingReference: booking.bookingReference,
+        paymentIntentId: payment.stripePaymentIntentId,
+      })
+    } catch (error) {
+      logError(stripeLogger, error, 'Failed to process gift cancellation refund')
+    }
+  }
+
+  // Send confirmation email to purchaser (no email to recipient since gift was never sent)
+  if (purchaserInfo?.email) {
+    try {
+      const emailData: GiftCancellationPurchaserData = {
+        purchaserFirstName: purchaserInfo.firstName,
+        purchaserEmail: purchaserInfo.email,
+        recipientName: booking.giftRecipientName || 'the recipient',
+        bookingReference: booking.bookingReference,
+        packageName: booking.package.name,
+        totalRefund: booking.totalPrice,
+      }
+
+      const { subject, html, text } = generateGiftCancellationPurchaserEmail(emailData)
+      await sendEmail({
+        to: purchaserInfo.email,
+        subject,
+        html,
+        text,
+      })
+    } catch (error) {
+      logError(emailLogger, error, 'Failed to send cancellation confirmation to purchaser')
     }
   }
 }
