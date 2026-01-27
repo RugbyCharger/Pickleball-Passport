@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** Between milestones - v1.2 archived
+**Current focus:** v1.3 Gift Enhancements
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-01-27 — Archived v1.2 RLS Security Hardening milestone
+Status: Defining requirements
+Last activity: 2026-01-28 — Milestone v1.3 started
 
-Progress: Ready for v1.3
+Progress: Requirements definition
 
 ## Milestone History
 
@@ -136,15 +136,6 @@ Resume file: None
 - Converted critical webhook console.error to structured stripeLogger
 - All 948 tests pass, build successful
 
-## Next Steps (User Decision Required)
+## Next Steps
 
-**Option A: v1.3 Gift Enhancements**
-- GIFT-F01: Cancel pending gift before delivery
-- GIFT-F02: Edit gift message before delivery
-- GIFT-F03: Resend gift notification
-- Run: `/gsd:new-milestone`
-
-**Option B: Wait for business priorities**
-- v1.0 + v1.1 + v1.2 shipped and working
-- Monitor for real user feedback
-- Address issues as they arise
+v1.3 Gift Enhancements milestone started. Next: define requirements and create roadmap.

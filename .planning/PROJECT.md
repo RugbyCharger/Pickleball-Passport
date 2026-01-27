@@ -6,14 +6,24 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.2 RLS Security Hardening (shipped 2026-01-27)
+**Version:** v1.3 Gift Enhancements (in progress)
 
 The platform is production-ready with hardened database security:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
 - v1.2 RLS Security Hardening shipped 2026-01-27
 
-## Completed Milestone: v1.2 RLS Security Hardening
+## Current Milestone: v1.3 Gift Enhancements
+
+**Goal:** Give purchasers control over pending gifts before delivery — cancel, edit message, or resend notification.
+
+**Target features:**
+- Cancel a pending gift before delivery (full refund)
+- Edit gift message before delivery
+- Resend gift notification email
+
+<details>
+<summary>Completed: v1.2 RLS Security Hardening</summary>
 
 **Goal:** Replace overly permissive "Dev Access" RLS policies with service-role-only access for defense-in-depth security.
 
@@ -22,6 +32,7 @@ The platform is production-ready with hardened database security:
 - ✓ Service role only access pattern implemented
 - ✓ Supabase security advisor: 24 WARN → 0 WARN
 - ✓ App functionality verified
+</details>
 
 <details>
 <summary>Completed: v1.1 Gift Booking</summary>
@@ -82,9 +93,11 @@ The platform is production-ready with hardened database security:
 
 ### Active
 
-<!-- No active milestone — v1.2 shipped -->
+<!-- v1.3 Gift Enhancements -->
 
-None. v1.2 RLS Security Hardening shipped 2026-01-27.
+- [ ] **GIFT-F01**: Purchaser can cancel pending gift before delivery (full refund)
+- [ ] **GIFT-F02**: Purchaser can edit gift message before delivery
+- [ ] **GIFT-F03**: Purchaser can resend gift notification email
 
 ### Out of Scope
 
@@ -136,7 +149,8 @@ None. v1.2 RLS Security Hardening shipped 2026-01-27.
 | Available = COMPLETED bookings | Clear business rule | ✓ Implemented |
 | UTM standard params | Industry standard tracking | ✓ Implemented |
 
-| Gift system = v1.1 | High-value gift market for luxury travel | — Pending |
+| Gift system = v1.1 | High-value gift market for luxury travel | ✓ Shipped v1.1 |
+| Gift enhancements = v1.3 | Purchaser control over pending gifts | — In Progress |
 
 ---
-*Last updated: 2026-01-27 after v1.2 milestone shipped*
+*Last updated: 2026-01-28 after v1.3 milestone started*
