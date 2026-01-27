@@ -63,11 +63,12 @@ Plans:
   2. Expired gifts trigger automatic refund to purchaser with notification email
   3. Purchaser can view gift status (pending/sent/accepted/declined/expired) in their dashboard
   4. Admin can view all gift bookings with status filter in admin dashboard
-**Plans**: TBD
+**Plans**: 3 plans (Wave 1 - all parallel)
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Create templatized gift expiration email (GIFT-19)
+- [ ] 07-02-PLAN.md — Add purchaser gifts dashboard page (GIFT-20, GIFT-21)
+- [ ] 07-03-PLAN.md — Add admin gifts view with status filtering (GIFT-22)
 
 ## Progress
 
@@ -77,7 +78,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 5. Gift Purchase Flow | v1.1 | 0/2 | Planned | - |
 | 6. Gift Recipient Experience | v1.1 | 0/3 | Planned | - |
-| 7. Gift Operations | v1.1 | 0/TBD | Not started | - |
+| 7. Gift Operations | v1.1 | 0/3 | Planned | - |
 
 ---
 *Roadmap created: 2026-01-27*
