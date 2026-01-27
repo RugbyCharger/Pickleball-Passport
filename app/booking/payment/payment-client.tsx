@@ -18,7 +18,7 @@ import { trpc } from '@/lib/trpc/client'
 import { StripeProvider } from '@/components/payments/stripe-provider'
 import { PaymentForm } from '@/components/payments/payment-form'
 import { CurrencySelector } from '@/components/payments/currency-selector'
-import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react'
+import { Loader2, AlertCircle, ArrowLeft, Gift } from 'lucide-react'
 import { getExchangeRates, type SupportedCurrency } from '@/lib/services/currency'
 
 interface PaymentPageClientProps {
@@ -32,6 +32,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     duration,
     accommodationTier,
     selectedAddOns,
+    selectedTripId,
     referralCode,
     paymentPlan,
     currency,
@@ -42,6 +43,13 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     getDiscountedTotal,
     getInstallmentSchedule,
     formatDisplayPrice,
+    // Gift booking fields (E3-S18)
+    isGift,
+    giftRecipient,
+    giftMessage,
+    giftDeliveryOption,
+    giftDeliveryDate,
+    validateGiftBooking,
   } = useBookingStore()
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -50,6 +58,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
   const [paymentCurrency, setPaymentCurrency] = useState<SupportedCurrency>(currency)
 
   const createPaymentIntentMutation = trpc.booking.createPaymentIntent.useMutation()
+  const createGiftMutation = trpc.booking.createGift.useMutation()
 
   // Fetch exchange rates on mount
   useEffect(() => {
@@ -71,6 +80,47 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     // Create payment intent
     const createIntent = async () => {
       try {
+        // Gift booking flow (E3-S18)
+        if (isGift) {
+          // Validate gift data before calling mutation
+          const giftValidation = validateGiftBooking()
+          if (!giftValidation.isValid) {
+            setError(giftValidation.errors.join(', '))
+            return
+          }
+
+          if (!giftRecipient) {
+            setError('Gift recipient information is required')
+            return
+          }
+
+          const result = await createGiftMutation.mutateAsync({
+            packageId: selectedPackage.id,
+            tripId: selectedTripId || undefined,
+            duration,
+            accommodationTier,
+            addOnIds: selectedAddOns.map((a) => a.id),
+            referralCode: referralCode || undefined,
+            giftRecipient: {
+              firstName: giftRecipient.firstName,
+              lastName: giftRecipient.lastName,
+              email: giftRecipient.email,
+              phone: giftRecipient.phone || undefined,
+              dateOfBirth: giftRecipient.dateOfBirth || undefined,
+            },
+            giftMessage: giftMessage || undefined,
+            giftDeliveryDate:
+              giftDeliveryOption === 'scheduled' && giftDeliveryDate
+                ? giftDeliveryDate.toISOString()
+                : undefined,
+          })
+
+          setClientSecret(result.clientSecret)
+          setBookingReference(result.bookingReference)
+          return
+        }
+
+        // Standard booking flow
         const result = await createPaymentIntentMutation.mutateAsync({
           packageId: selectedPackage.id,
           duration,
@@ -91,7 +141,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
     }
 
     createIntent()
-  }, [paymentCurrency]) // Re-run when currency changes
+  }, [paymentCurrency, isGift]) // Re-run when currency or gift mode changes
 
   // Handle currency change
   const handleCurrencyChange = (newCurrency: SupportedCurrency) => {
@@ -104,7 +154,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
   }
 
   // Loading state
-  if (createPaymentIntentMutation.isPending || (!clientSecret && !error)) {
+  if (createPaymentIntentMutation.isPending || createGiftMutation.isPending || (!clientSecret && !error)) {
     return (
       <div className="rounded-xl border border-slate-200 bg-white p-12">
         <div className="flex flex-col items-center justify-center gap-4">
@@ -153,28 +203,57 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
 
   return (
     <div className="grid grid-cols-1 gap-8">
-      {/* Currency Selector - E4-S13 */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900">Payment Currency</h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Select your preferred payment currency
-            </p>
+      {/* Gift Purchase Indicator (E3-S18) */}
+      {isGift && giftRecipient && (
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-6">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-purple-600 text-white">
+              <Gift className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-purple-900">
+                Gift Purchase for {giftRecipient.firstName} {giftRecipient.lastName}
+              </h3>
+              <p className="mt-1 text-xs text-purple-700">
+                This booking will be sent to {giftRecipient.email}
+                {giftDeliveryOption === 'scheduled' && giftDeliveryDate
+                  ? ` on ${giftDeliveryDate.toLocaleDateString()}`
+                  : ' immediately after payment'}
+              </p>
+              {giftMessage && (
+                <p className="mt-2 text-xs italic text-purple-600">
+                  &quot;{giftMessage.length > 100 ? giftMessage.slice(0, 100) + '...' : giftMessage}&quot;
+                </p>
+              )}
+            </div>
           </div>
-          <CurrencySelector
-            value={paymentCurrency}
-            onChange={handleCurrencyChange}
-            showLabel={false}
-            size="md"
-          />
         </div>
-        {paymentCurrency !== 'USD' && (
-          <p className="text-xs text-amber-600 mt-3 bg-amber-50 rounded-lg px-3 py-2">
-            Prices are converted from USD at current exchange rates. Your card will be charged in {paymentCurrency}.
-          </p>
-        )}
-      </div>
+      )}
+
+      {/* Currency Selector - E4-S13 (not available for gift bookings) */}
+      {!isGift && (
+        <div className="rounded-xl border border-slate-200 bg-white p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Payment Currency</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Select your preferred payment currency
+              </p>
+            </div>
+            <CurrencySelector
+              value={paymentCurrency}
+              onChange={handleCurrencyChange}
+              showLabel={false}
+              size="md"
+            />
+          </div>
+          {paymentCurrency !== 'USD' && (
+            <p className="text-xs text-amber-600 mt-3 bg-amber-50 rounded-lg px-3 py-2">
+              Prices are converted from USD at current exchange rates. Your card will be charged in {paymentCurrency}.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Payment Form */}
       <StripeProvider clientSecret={clientSecret}>
