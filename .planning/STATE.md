@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-01-27)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-01-27 — Milestone v1.2 started
+Phase: 8 (complete)
+Plan: 08-02 (complete)
+Status: Phase 8 complete — ready to archive milestone
+Last activity: 2026-01-27 — Phase 8 RLS Policy Hardening complete
 
 ## Milestone History
 
@@ -83,29 +83,11 @@ None.
 
 ## Supabase Advisory Status
 
-**Security (24 WARN → 0 target):**
-Tables requiring RLS hardening:
-1. AddOn
-2. Application
-3. Booking
-4. BookingAddOn
-5. Document
-6. GuestProfile
-7. Itinerary
-8. Message
-9. NewsletterSubscriber
-10. Notification
-11. Package (2 policies)
-12. PartnerProfile
-13. PartnerReferral
-14. Payment
-15. RefundLog
-16. ReminderHistory
-17. SupportTicket
-18. Testimonial
-19. Trip (2 policies)
-20. User
-21. WebhookEvent
+**Security (0 WARN) ✓**
+- All 24 permissive "Dev Access" policies dropped
+- Tables have RLS enabled, no policies = deny by default
+- Service role bypasses RLS automatically
+- 21 INFO advisories ("RLS Enabled No Policy") — expected and correct
 
 **Performance (60+ INFO):**
 - Unchanged from v1.1 (expected for new app)
@@ -113,5 +95,9 @@ Tables requiring RLS hardening:
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: Defining v1.2 requirements
+Stopped at: v1.2 Phase 8 complete, ready to archive milestone
 Resume file: None
+
+## Next Steps
+
+Run `/gsd:complete-milestone v1.2` to archive this milestone.

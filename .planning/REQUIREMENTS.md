@@ -7,43 +7,43 @@ Replace all overly permissive "Dev Access" RLS policies (`USING(true)`) with ser
 ## Requirements
 
 ### RLS-01: Core Business Tables
-- [ ] **RLS-01a**: Harden `Booking` table — service role only
-- [ ] **RLS-01b**: Harden `Payment` table — service role only
-- [ ] **RLS-01c**: Harden `BookingAddOn` table — service role only
-- [ ] **RLS-01d**: Harden `RefundLog` table — service role only
+- [x] **RLS-01a**: Harden `Booking` table — service role only ✓
+- [x] **RLS-01b**: Harden `Payment` table — service role only ✓
+- [x] **RLS-01c**: Harden `BookingAddOn` table — service role only ✓
+- [x] **RLS-01d**: Harden `RefundLog` table — service role only ✓
 
 ### RLS-02: User & Profile Tables
-- [ ] **RLS-02a**: Harden `User` table — service role only
-- [ ] **RLS-02b**: Harden `GuestProfile` table — service role only
-- [ ] **RLS-02c**: Harden `PartnerProfile` table — service role only
+- [x] **RLS-02a**: Harden `User` table — service role only ✓
+- [x] **RLS-02b**: Harden `GuestProfile` table — service role only ✓
+- [x] **RLS-02c**: Harden `PartnerProfile` table — service role only ✓
 
 ### RLS-03: Partner Tables
-- [ ] **RLS-03a**: Harden `PartnerReferral` table — service role only
-- [ ] **RLS-03b**: Harden `Application` table — service role only
+- [x] **RLS-03a**: Harden `PartnerReferral` table — service role only ✓
+- [x] **RLS-03b**: Harden `Application` table — service role only ✓
 
 ### RLS-04: Content Tables
-- [ ] **RLS-04a**: Harden `Package` table — service role only (remove both policies)
-- [ ] **RLS-04b**: Harden `Trip` table — service role only (remove both policies)
-- [ ] **RLS-04c**: Harden `AddOn` table — service role only
-- [ ] **RLS-04d**: Harden `Itinerary` table — service role only
-- [ ] **RLS-04e**: Harden `Testimonial` table — service role only
+- [x] **RLS-04a**: Harden `Package` table — service role only (remove both policies) ✓
+- [x] **RLS-04b**: Harden `Trip` table — service role only (remove both policies) ✓
+- [x] **RLS-04c**: Harden `AddOn` table — service role only ✓
+- [x] **RLS-04d**: Harden `Itinerary` table — service role only ✓
+- [x] **RLS-04e**: Harden `Testimonial` table — service role only ✓
 
 ### RLS-05: Communication Tables
-- [ ] **RLS-05a**: Harden `Message` table — service role only
-- [ ] **RLS-05b**: Harden `Notification` table — service role only
-- [ ] **RLS-05c**: Harden `NewsletterSubscriber` table — service role only
+- [x] **RLS-05a**: Harden `Message` table — service role only ✓
+- [x] **RLS-05b**: Harden `Notification` table — service role only ✓
+- [x] **RLS-05c**: Harden `NewsletterSubscriber` table — service role only ✓
 
 ### RLS-06: Document & Support Tables
-- [ ] **RLS-06a**: Harden `Document` table — service role only
-- [ ] **RLS-06b**: Harden `SupportTicket` table — service role only
+- [x] **RLS-06a**: Harden `Document` table — service role only ✓
+- [x] **RLS-06b**: Harden `SupportTicket` table — service role only ✓
 
 ### RLS-07: System Tables
-- [ ] **RLS-07a**: Harden `WebhookEvent` table — service role only
-- [ ] **RLS-07b**: Harden `ReminderHistory` table — service role only
+- [x] **RLS-07a**: Harden `WebhookEvent` table — service role only ✓
+- [x] **RLS-07b**: Harden `ReminderHistory` table — service role only ✓
 
 ### RLS-08: Verification
-- [ ] **RLS-08a**: Verify 0 security warnings in Supabase advisor
-- [ ] **RLS-08b**: Verify app functionality (booking flow, partner portal, admin dashboard)
+- [x] **RLS-08a**: Verify 0 security warnings in Supabase advisor ✓
+- [x] **RLS-08b**: Verify app functionality (booking flow, partner portal, admin dashboard) ✓
 
 ## Future Requirements
 
