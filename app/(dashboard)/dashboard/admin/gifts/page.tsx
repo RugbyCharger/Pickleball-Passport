@@ -1,13 +1,14 @@
 'use client'
 
 /**
- * Admin Gifts Table Component (GIFT-22)
+ * Admin Gifts Page (GIFT-22)
  *
- * Displays all gift bookings with filtering by status.
- * Shows both booking status and gift status for each row.
+ * Lists all gift bookings with filtering and status counts.
+ * Protected by admin layout - requires ADMIN role.
  */
 
 import { useState } from 'react'
+import { trpc } from '@/lib/trpc/client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,47 +30,10 @@ import {
   Send,
   AlertTriangle,
   Filter,
+  Loader2,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-
-interface GiftBooking {
-  id: string
-  bookingReference: string
-  status: string
-  giftStatus: string
-  packageName: string
-  recipientName: string | null
-  recipientEmail: string | null
-  purchaserEmail: string | null
-  purchaserName: string | null
-  totalPrice: number
-  giftDeliveryDate: string | null
-  giftExpiresAt: string | null
-  tripStartDate: string | null
-  destination: string | null
-  createdAt: string
-  lastTransition: {
-    toState: string
-    reason: string
-    createdAt: string
-  } | null
-}
-
-interface GiftCounts {
-  total: number
-  pending: number
-  sent: number
-  accepted: number
-  declined: number
-  expired: number
-}
-
-interface AdminGiftsTableProps {
-  initialGifts: GiftBooking[]
-  counts: GiftCounts
-  total: number
-}
 
 type GiftStatusFilter = 'ALL' | 'PENDING' | 'SENT' | 'ACCEPTED' | 'DECLINED' | 'EXPIRED'
 
@@ -90,23 +54,6 @@ function getBookingStatusColor(status: string): string {
   }
 }
 
-function getGiftStatusIcon(status: string) {
-  switch (status) {
-    case 'PENDING':
-      return <Clock className="h-4 w-4 text-gray-600" />
-    case 'SENT':
-      return <Send className="h-4 w-4 text-blue-600" />
-    case 'ACCEPTED':
-      return <CheckCircle className="h-4 w-4 text-green-600" />
-    case 'DECLINED':
-      return <XCircle className="h-4 w-4 text-red-600" />
-    case 'EXPIRED':
-      return <AlertTriangle className="h-4 w-4 text-amber-600" />
-    default:
-      return <Gift className="h-4 w-4 text-gray-600" />
-  }
-}
-
 function formatCurrency(cents: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -114,78 +61,94 @@ function formatCurrency(cents: number): string {
   }).format(cents / 100)
 }
 
-export function AdminGiftsTable({ initialGifts, counts, total }: AdminGiftsTableProps) {
+export default function AdminGiftsPage() {
   const [statusFilter, setStatusFilter] = useState<GiftStatusFilter>('ALL')
 
-  // Client-side filtering
-  const filteredGifts = statusFilter === 'ALL'
-    ? initialGifts
-    : initialGifts.filter((g) => g.giftStatus === statusFilter)
+  // Fetch gifts with filters
+  const { data, isLoading } = trpc.admin.gifts.list.useQuery({
+    giftStatus: statusFilter === 'ALL' ? undefined : statusFilter,
+  })
+
+  // Fetch counts
+  const { data: counts } = trpc.admin.gifts.getCounts.useQuery()
+
+  const gifts = data?.bookings || []
+  const total = data?.total || 0
 
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total</p>
-              <p className="text-2xl font-bold text-gray-900">{counts.total}</p>
-            </div>
-            <Gift className="h-8 w-8 text-purple-600" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-gray-600">{counts.pending}</p>
-            </div>
-            <Clock className="h-8 w-8 text-gray-500" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Sent</p>
-              <p className="text-2xl font-bold text-blue-600">{counts.sent}</p>
-            </div>
-            <Send className="h-8 w-8 text-blue-600" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Accepted</p>
-              <p className="text-2xl font-bold text-green-600">{counts.accepted}</p>
-            </div>
-            <CheckCircle className="h-8 w-8 text-green-600" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Declined</p>
-              <p className="text-2xl font-bold text-red-600">{counts.declined}</p>
-            </div>
-            <XCircle className="h-8 w-8 text-red-600" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Expired</p>
-              <p className="text-2xl font-bold text-amber-600">{counts.expired}</p>
-            </div>
-            <AlertTriangle className="h-8 w-8 text-amber-600" />
-          </div>
-        </div>
+      {/* Page Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Gift Bookings</h1>
+        <p className="mt-2 text-gray-600">
+          View and manage all gift bookings across the platform
+        </p>
       </div>
+
+      {/* Stats Cards */}
+      {counts && (
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total</p>
+                <p className="text-2xl font-bold text-gray-900">{counts.total}</p>
+              </div>
+              <Gift className="h-8 w-8 text-purple-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-2xl font-bold text-gray-600">{counts.pending}</p>
+              </div>
+              <Clock className="h-8 w-8 text-gray-500" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Sent</p>
+                <p className="text-2xl font-bold text-blue-600">{counts.sent}</p>
+              </div>
+              <Send className="h-8 w-8 text-blue-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Accepted</p>
+                <p className="text-2xl font-bold text-green-600">{counts.accepted}</p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Declined</p>
+                <p className="text-2xl font-bold text-red-600">{counts.declined}</p>
+              </div>
+              <XCircle className="h-8 w-8 text-red-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Expired</p>
+                <p className="text-2xl font-bold text-amber-600">{counts.expired}</p>
+              </div>
+              <AlertTriangle className="h-8 w-8 text-amber-600" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
@@ -215,7 +178,12 @@ export function AdminGiftsTable({ initialGifts, counts, total }: AdminGiftsTable
 
       {/* Gifts Table */}
       <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-        {filteredGifts.length === 0 ? (
+        {isLoading ? (
+          <div className="p-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-purple-600 mx-auto mb-4" />
+            <p className="text-gray-600">Loading gift bookings...</p>
+          </div>
+        ) : gifts.length === 0 ? (
           <div className="p-12 text-center">
             <Gift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600">No gift bookings found</p>
@@ -262,7 +230,7 @@ export function AdminGiftsTable({ initialGifts, counts, total }: AdminGiftsTable
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredGifts.map((gift) => (
+                {gifts.map((gift) => (
                   <tr key={gift.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div>
@@ -349,9 +317,9 @@ export function AdminGiftsTable({ initialGifts, counts, total }: AdminGiftsTable
       </div>
 
       {/* Pagination Info */}
-      {filteredGifts.length > 0 && (
+      {gifts.length > 0 && (
         <div className="text-center text-sm text-gray-600">
-          Showing {filteredGifts.length} of {total} gift bookings
+          Showing {gifts.length} of {total} gift bookings
           {statusFilter !== 'ALL' && ` (filtered by ${statusFilter.toLowerCase()})`}
         </div>
       )}
