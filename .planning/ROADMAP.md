@@ -31,11 +31,11 @@ v1.1 adds a complete gift booking system to the platform, enabling guests to pur
   3. User can choose immediate delivery or schedule a future delivery date
   4. Completed gift purchase creates a PENDING gift booking with acceptance token
   5. Purchaser receives confirmation email with gift details after payment
-**Plans**: TBD
+**Plans**: 2 plans (Wave 1 - parallel)
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Wire payment flow to call createGift mutation for gift bookings
+- [ ] 05-02-PLAN.md — Add gift validation to review page before payment
 
 ### Phase 6: Gift Recipient Experience
 **Goal**: Recipient can receive, view, accept, or decline a gift
@@ -75,7 +75,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 5. Gift Purchase Flow | v1.1 | 0/TBD | Not started | - |
+| 5. Gift Purchase Flow | v1.1 | 0/2 | Planned | - |
 | 6. Gift Recipient Experience | v1.1 | 0/TBD | Not started | - |
 | 7. Gift Operations | v1.1 | 0/TBD | Not started | - |
 
