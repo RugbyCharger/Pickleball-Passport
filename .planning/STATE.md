@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-27)
 ## Current Position
 
 Phase: 5 of 7 (Gift Purchase Flow)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-01-27 - Roadmap created for v1.1 Gift Booking
+Plan: 2 of TBD in current phase
+Status: In progress
+Last activity: 2026-01-27 - Completed 05-02-PLAN.md (gift validation on review page)
 
-Progress: [░░░░░░░░░░] 0% (v1.1)
+Progress: [██░░░░░░░░] 20% (v1.1 estimate)
 
 ## Milestone Summary
 
@@ -61,6 +61,7 @@ All v1.0 decisions recorded in PROJECT.md Key Decisions table with outcomes mark
 
 v1.1 decisions:
 - Gift system = v1.1: High-value gift market for luxury travel (pending implementation)
+- Split isBaseReady from canProceed: Users with invalid gift data stay on review page to see errors
 
 ### Pending Todos
 
@@ -85,7 +86,7 @@ None. All v1.0 blockers resolved.
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: Roadmap created for v1.1 Gift Booking
+Stopped at: Completed 05-02-PLAN.md (gift validation on review page)
 Resume file: None
 
-Next: `/gsd:plan-phase 5`
+Next: Execute 05-03 (gift payment integration) or 05-04 (confirmation)
