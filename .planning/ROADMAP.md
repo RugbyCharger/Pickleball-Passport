@@ -47,12 +47,12 @@ Plans:
   3. Recipient can view gift details and accept (transferring booking ownership to their account)
   4. Recipient can decline gift via dedicated decline page, triggering refund to purchaser
   5. Both purchaser and recipient receive confirmation emails on accept or decline
-**Plans**: TBD
+**Plans**: 3 plans (Wave 1: verification, Wave 2: decline page + email templates)
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
+- [ ] 06-01-PLAN.md — Verify existing functionality (GIFT-07 through GIFT-13)
+- [ ] 06-02-PLAN.md — Create gift decline page UI (GIFT-14)
+- [ ] 06-03-PLAN.md — Create decline email templates and wire to transition service (GIFT-16)
 
 ### Phase 7: Gift Operations
 **Goal**: Gift lifecycle is fully managed with visibility for purchaser and admin
@@ -76,7 +76,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 5. Gift Purchase Flow | v1.1 | 0/2 | Planned | - |
-| 6. Gift Recipient Experience | v1.1 | 0/TBD | Not started | - |
+| 6. Gift Recipient Experience | v1.1 | 0/3 | Planned | - |
 | 7. Gift Operations | v1.1 | 0/TBD | Not started | - |
 
 ---
