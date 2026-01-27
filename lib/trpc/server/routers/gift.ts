@@ -375,4 +375,67 @@ export const giftRouter = router({
         message: 'Gift declined successfully. The purchaser has been notified and a refund has been processed.',
       }
     }),
+
+  /**
+   * Get Gifts Purchased by Current User (Protected)
+   *
+   * Returns all gift bookings where the current user is the purchaser.
+   * Used on the "Gifts I Purchased" dashboard page.
+   */
+  myPurchasedGifts: protectedProcedure.query(async ({ ctx }) => {
+    const gifts = await ctx.db.booking.findMany({
+      where: {
+        giftPurchaserId: ctx.user.id,
+        isGift: true,
+      },
+      include: {
+        package: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        trip: {
+          select: {
+            startDate: true,
+            endDate: true,
+            destination: true,
+          },
+        },
+        giftStateTransitions: {
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return gifts.map((gift) => ({
+      id: gift.id,
+      bookingReference: gift.bookingReference,
+      packageName: gift.package.name,
+      packageSlug: gift.package.slug,
+      recipientName: gift.giftRecipientName,
+      recipientEmail: gift.giftRecipientEmail,
+      giftMessage: gift.giftMessage,
+      giftStatus: gift.giftStatus,
+      giftDeliveryDate: gift.giftDeliveryDate?.toISOString(),
+      giftExpiresAt: gift.giftExpiresAt?.toISOString(),
+      totalPrice: gift.totalPrice,
+      createdAt: gift.createdAt.toISOString(),
+      trip: gift.trip
+        ? {
+            startDate: gift.trip.startDate?.toISOString(),
+            endDate: gift.trip.endDate?.toISOString(),
+            destination: gift.trip.destination,
+          }
+        : null,
+      stateHistory: gift.giftStateTransitions.map((t) => ({
+        fromState: t.fromState,
+        toState: t.toState,
+        reason: t.reason,
+        createdAt: t.createdAt.toISOString(),
+      })),
+    }))
+  }),
 })
