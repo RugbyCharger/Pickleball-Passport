@@ -73,9 +73,24 @@ None.
 
 ### Blockers/Concerns
 
-- [PENDING]: Clerk webhook not configured — CLERK_WEBHOOK_SECRET needed for user sync
-- [PENDING]: No admin user configured — run setup after Clerk webhook is ready
+- [PENDING]: Clerk webhook not configured — see Step 1 below for setup
+- [RESOLVED]: Admin user configured — grant@aikanga.com has ADMIN role (2026-01-27)
+- [RESOLVED]: Admin layout added — database role check, no Clerk session config needed (2026-01-27)
 - [RESOLVED]: EMAIL_TOKEN_SECRET lazy initialization added to fix Vercel build (2026-01-27)
+
+### Manual Setup Required
+
+**Clerk Webhook (for new user sync):**
+
+1. Go to https://dashboard.clerk.com → Webhooks → Add Endpoint
+2. URL: `https://pickleball-passport.vercel.app/api/webhooks/clerk`
+3. Events: `user.created`, `user.updated`, `user.deleted`
+4. Copy signing secret, then run:
+   ```
+   printf 'YOUR_SECRET' | vercel env add CLERK_WEBHOOK_SECRET production
+   printf 'YOUR_SECRET' | vercel env add CLERK_WEBHOOK_SECRET preview
+   vercel --prod
+   ```
 
 ## Session Continuity
 
