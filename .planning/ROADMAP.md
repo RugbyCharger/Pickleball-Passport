@@ -7,17 +7,17 @@ v1.1 adds a complete gift booking system to the platform, enabling guests to pur
 ## Milestones
 
 - v1.0 MVP - Phases 1-4 (shipped 2026-01-26)
-- v1.1 Gift Booking - Phases 5-7 (in progress)
+- v1.1 Gift Booking - Phases 5-7 (shipped 2026-01-27)
 
 ## Phases
 
-### v1.1 Gift Booking (In Progress)
+### v1.1 Gift Booking (Complete)
 
 **Milestone Goal:** Enable guests to purchase transformation trips as gifts, with full lifecycle management from purchase through acceptance/decline/expiration.
 
-- [ ] **Phase 5: Gift Purchase Flow** - UI/UX for buying a gift during checkout
-- [ ] **Phase 6: Gift Recipient Experience** - Notifications, acceptance, and decline handling
-- [ ] **Phase 7: Gift Operations** - Expiration, dashboard views, and admin visibility
+- [x] **Phase 5: Gift Purchase Flow** - UI/UX for buying a gift during checkout
+- [x] **Phase 6: Gift Recipient Experience** - Notifications, acceptance, and decline handling
+- [x] **Phase 7: Gift Operations** - Expiration, dashboard views, and admin visibility
 
 ## Phase Details
 
@@ -34,8 +34,8 @@ v1.1 adds a complete gift booking system to the platform, enabling guests to pur
 **Plans**: 2 plans (Wave 1 - parallel)
 
 Plans:
-- [ ] 05-01-PLAN.md — Wire payment flow to call createGift mutation for gift bookings
-- [ ] 05-02-PLAN.md — Add gift validation to review page before payment
+- [x] 05-01-PLAN.md — Wire payment flow to call createGift mutation for gift bookings
+- [x] 05-02-PLAN.md — Add gift validation to review page before payment
 
 ### Phase 6: Gift Recipient Experience
 **Goal**: Recipient can receive, view, accept, or decline a gift
@@ -50,9 +50,9 @@ Plans:
 **Plans**: 3 plans (Wave 1: verification, Wave 2: decline page + email templates)
 
 Plans:
-- [ ] 06-01-PLAN.md — Verify existing functionality (GIFT-07 through GIFT-13)
-- [ ] 06-02-PLAN.md — Create gift decline page UI (GIFT-14)
-- [ ] 06-03-PLAN.md — Create decline email templates and wire to transition service (GIFT-16)
+- [x] 06-01-PLAN.md — Verify existing functionality (GIFT-07 through GIFT-13)
+- [x] 06-02-PLAN.md — Create gift decline page UI (GIFT-14)
+- [x] 06-03-PLAN.md — Create decline email templates and wire to transition service (GIFT-16)
 
 ### Phase 7: Gift Operations
 **Goal**: Gift lifecycle is fully managed with visibility for purchaser and admin
@@ -66,9 +66,9 @@ Plans:
 **Plans**: 3 plans (Wave 1 - all parallel)
 
 Plans:
-- [ ] 07-01-PLAN.md — Create templatized gift expiration email (GIFT-19)
-- [ ] 07-02-PLAN.md — Add purchaser gifts dashboard page (GIFT-20, GIFT-21)
-- [ ] 07-03-PLAN.md — Add admin gifts view with status filtering (GIFT-22)
+- [x] 07-01-PLAN.md — Create templatized gift expiration email (GIFT-19)
+- [x] 07-02-PLAN.md — Add purchaser gifts dashboard page (GIFT-20, GIFT-21)
+- [x] 07-03-PLAN.md — Add admin gifts view with status filtering (GIFT-22)
 
 ## Progress
 
@@ -76,10 +76,10 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 5. Gift Purchase Flow | v1.1 | 0/2 | Planned | - |
-| 6. Gift Recipient Experience | v1.1 | 0/3 | Planned | - |
-| 7. Gift Operations | v1.1 | 0/3 | Planned | - |
+| 5. Gift Purchase Flow | v1.1 | 2/2 | Complete | 2026-01-27 |
+| 6. Gift Recipient Experience | v1.1 | 3/3 | Complete | 2026-01-27 |
+| 7. Gift Operations | v1.1 | 3/3 | Complete | 2026-01-27 |
 
 ---
 *Roadmap created: 2026-01-27*
-*Milestone: v1.1 Gift Booking*
+*Milestone: v1.1 Gift Booking - SHIPPED 2026-01-27*

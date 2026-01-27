@@ -14,6 +14,7 @@ import { TRPCError } from '@trpc/server';
 import { sendEmail } from '@/lib/email/send-email';
 import { apiLogger, emailLogger, stripeLogger, logError, logStripeError } from '@/lib/logger';
 import { createTransfer, getPlatformBalance } from '@/lib/stripe/stripe-connect';
+import { Prisma, GiftStatus } from '@prisma/client';
 
 /**
  * Get common issues for document types to help users fix rejections
@@ -1185,10 +1186,21 @@ export const adminRouter = router({
           .optional()
       )
       .query(async ({ ctx, input }) => {
-        const where = {
-          isGift: true,
-          ...(input?.giftStatus && { giftStatus: input.giftStatus }),
-        };
+        // Build where clause - EXPIRED is a virtual status (DECLINED + has giftExpiresAt)
+        let where: Prisma.BookingWhereInput = { isGift: true };
+
+        if (input?.giftStatus === 'EXPIRED') {
+          where = {
+            isGift: true,
+            giftStatus: 'DECLINED',
+            giftExpiresAt: { not: null },
+          };
+        } else if (input?.giftStatus) {
+          where = {
+            isGift: true,
+            giftStatus: input.giftStatus as GiftStatus,
+          };
+        }
 
         const [bookings, total] = await Promise.all([
           ctx.db.booking.findMany({
@@ -1256,7 +1268,15 @@ export const adminRouter = router({
         ctx.db.booking.count({ where: { isGift: true, giftStatus: 'SENT' } }),
         ctx.db.booking.count({ where: { isGift: true, giftStatus: 'ACCEPTED' } }),
         ctx.db.booking.count({ where: { isGift: true, giftStatus: 'DECLINED' } }),
-        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'EXPIRED' } }),
+        // Note: EXPIRED maps to DECLINED in the database schema
+        // Expired gifts are identified by giftStatus=DECLINED and giftExpiresAt < now
+        ctx.db.booking.count({
+          where: {
+            isGift: true,
+            giftStatus: 'DECLINED',
+            giftExpiresAt: { not: null }
+          }
+        }),
       ]);
 
       return { total, pending, sent, accepted, declined, expired };
