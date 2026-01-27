@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-26)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.0 MVP shipped — planning next milestone
+**Current focus:** v1.0 MVP deployed to production — ready for next milestone
 
 ## Current Position
 
 Phase: N/A (milestone complete)
 Plan: N/A
-Status: Ready for next milestone
-Last activity: 2026-01-26 — v1.0 milestone shipped
+Status: Production deployed
+Last activity: 2026-01-27 — v1.0 deployed to Vercel production
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -22,15 +22,17 @@ Progress: [██████████] 100% (v1.0 complete)
 
 - 4 phases, 9 plans, 19 requirements
 - All security, payment, partner, and email requirements met
-- Ready for production deployment
+- Deployed to production 2026-01-27
 
 See: .planning/MILESTONES.md
 
+**Production URL:** https://pickleball-passport.vercel.app
+
 ## Next Steps
 
-1. Deploy to staging
+1. ✓ ~~Deploy to staging~~
 2. Smoke test critical paths (payment failure recovery, admin access, cancellation emails)
-3. Deploy to production
+3. ✓ ~~Deploy to production~~
 4. Run `/gsd:new-milestone` when ready for next milestone
 
 ## Performance Metrics (v1.0)
@@ -62,6 +64,7 @@ None.
 ### Blockers/Concerns
 
 - [01-01]: Clerk session customization may be required for role in sessionClaims.metadata — verify Clerk Dashboard configuration before going live
+- [RESOLVED]: EMAIL_TOKEN_SECRET lazy initialization added to fix Vercel build (2026-01-27)
 
 ## Session Continuity
 
