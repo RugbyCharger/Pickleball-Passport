@@ -1,671 +1,772 @@
-# Pitfalls Research: Launch Blockers
+# Domain Pitfalls: Adding Expo React Native to Next.js/tRPC Platform
 
-**Domain:** Luxury Travel Booking Platform with High-Value Transactions
-**Researched:** 2026-01-26
-**Confidence:** HIGH (multiple authoritative sources, codebase analysis, industry reports)
+**Domain:** React Native Mobile App Integration (Expo + Next.js monorepo)
+**Researched:** 2026-01-28
+**Confidence:** HIGH (verified with official docs and recent 2026 sources)
 
----
+## Critical Pitfalls
 
-## Executive Summary
+Mistakes that cause rewrites, major architectural issues, or complete blocking of features.
 
-This document identifies critical pitfalls that commonly cause failures when launching booking platforms handling high-value transactions ($10K-25K+). Based on analysis of the Pickleball Passport codebase combined with industry research, this identifies specific risks given:
-- 4-payment installment plans requiring off-session charges
-- Partner referral program with commission payouts
-- Luxury price points ($15K-25K packages) that attract fraud and demand premium support
+### Pitfall 1: tRPC Version Incompatibility with React Native (Hermes Engine)
 
----
+**What goes wrong:** tRPC versions 11.4.0+ crash React Native apps on startup with `_unstableCoreDoNotImport.createRecursiveProxy is not a function (it is undefined)` when using the Hermes JavaScript engine (which Expo uses by default).
 
-## Payment Pitfalls
+**Why it happens:** React Native's Hermes engine has different JavaScript runtime characteristics than web browsers, and breaking changes were introduced in tRPC 11.4.0 that are incompatible with Hermes.
 
-### P1: CRITICAL - Installment Payment Failures Without Recovery
+**Consequences:**
+- Mobile app crashes immediately on launch
+- Zero functionality - complete blocker
+- Difficult to diagnose because it works fine on web
 
-**What goes wrong:** Off-session installment charges fail (card expired, insufficient funds, card lost) and the system has no clear recovery path. Guest has made 2 of 4 payments, trip is in 30 days, and card declines.
+**Prevention:**
+- Pin tRPC to version 11.3.1 or earlier in mobile package
+- Use exact versions (not `^11.8.1`) to prevent auto-upgrades
+- Test mobile app startup immediately after any tRPC version change
+- Monitor tRPC GitHub issues for Hermes compatibility before upgrading
 
-**Why it happens:**
-- Cards expire between booking (6 months before trip) and final installments
-- Banks flag unexpected large charges as fraud
-- Customers change cards without updating payment method
-- 42% of businesses lose revenue due to preventable failed payment issues
+**Detection:**
+- App crashes on startup before UI renders
+- Error mentions `createRecursiveProxy` or `_unstableCoreDoNotImport`
+- Web app works fine, only mobile crashes
 
-**Warning signs:**
-- PaymentRecord status stuck at FAILED with no admin notification
-- Multiple guests with partial payment status approaching trip date
-- No retry history or customer communication trail
+**Phase impact:** MOB-SETUP-01 (foundational infrastructure)
 
-**Current codebase state:**
-```
-// From charge-installment.ts - retry logic exists but:
-- Max 4 retries over 11 days (1+3+7 days)
-- Admin alerts send but TODO: no admin UI to view/action them
-- Customer reminder emails exist but updatePaymentUrl points to dashboard with no card update flow
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch (Critical)**
-   - Build card update flow in customer dashboard
-   - Create admin view for failed installments with one-click retry
-   - Implement Stripe Customer Portal integration for self-service card updates
-   - Set up monitoring dashboard for payment health metrics
-
-2. **Phase: Week 1 Operations**
-   - Daily review of FAILED PaymentRecords
-   - Proactive outreach 7 days before each installment due date
-   - Escalation path when 2+ retries fail
-
-**Detection:** Query for `PaymentRecord.status = 'FAILED'` where `booking.trip.startDate < NOW() + 30 days`
+**Sources:**
+- [Discord: react-native crashes with trpc > 11.3.0](https://discord-questions.trpc.io/m/1442530949068882011)
+- [GitHub: Monorepo with React Native + Next.js #775](https://github.com/trpc/trpc/issues/775)
 
 ---
 
-### P2: HIGH - Currency/3DS Authentication Failures on High-Value Charges
+### Pitfall 2: Supabase Realtime WebSocket Module Import Failures
 
-**What goes wrong:** $15,000+ charges trigger additional fraud checks, 3DS challenges, or bank holds. Customer abandons checkout or fails authentication.
+**What goes wrong:** Supabase JS v2.x crashes on React Native/Expo with `Unable to resolve module ws` or `Unable to resolve module stream` errors, **even when Realtime is explicitly disabled and not used**.
 
-**Why it happens:**
-- European banks require 3DS (Strong Customer Authentication) - "highly problematic, basically short-circuits the transaction"
-- US banks may soft-decline large amounts without prior relationship
-- Network tokens would help but require initial setup
+**Why it happens:** The Supabase client imports `@supabase/realtime-js` which depends on the Node.js `ws` WebSocket module. React Native doesn't support Node.js modules, and the dependency exists even when realtime features are disabled in the client config.
 
-**Warning signs:**
-- Checkout abandonment at payment confirmation step
-- Payment intents created but never succeeded
-- Customer complaints about "bank blocked the charge"
+**Consequences:**
+- Cannot use ANY Supabase features in React Native (auth, database, storage)
+- Setting `realtime: false` doesn't prevent the error
+- Blocks all Supabase Realtime chat functionality (MOB-PRETRIP-05, MOB-TRIP-03)
 
-**Current codebase state:**
-```
-// Stripe integration appears standard - no explicit 3DS handling
-// No pre-authorization for installment setup
-// Currency selector exists (E4-S13) but exchange rate issues not handled
-```
+**Prevention:**
+- Use separate Supabase Auth and Database clients that exclude Realtime dependencies
+- For chat, consider alternative: tRPC subscriptions over WebSocket, or third-party like Stream Chat
+- If Realtime is required, wait for Supabase to fix the React Native compatibility issue
+- Test Supabase integration in React Native **immediately** in spike phase
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Save payment method during first successful charge for off-session reuse
-   - Verify Stripe radar rules aren't overly aggressive for $15K+ charges
-   - Test checkout flow with international cards (UK, EU, CA, AU)
+**Detection:**
+- Build errors: "Unable to resolve module ws" or "Unable to resolve module stream"
+- Occurs during Metro bundler compilation, not at runtime
+- Error references `node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js`
 
-2. **Phase: Post-Launch Monitoring**
-   - Track payment_intent.payment_failed by failure reason
-   - Alert on 3DS failure rates exceeding 5%
-   - Build retry flow with manual 3DS trigger option
+**Phase impact:** MOB-PRETRIP-05 (group chat), MOB-TRIP-03 (concierge chat)
 
-**Detection:** `payment_intent.payment_failed` where `last_payment_error.code = 'authentication_required'`
+**Sources:**
+- [GitHub Issue #1434: supabase-js v2.x fails on React Native due to ws module](https://github.com/supabase/supabase-js/issues/1434)
+- [GitHub Issue #1403: Expo SDK 53 + supabase-js ws/stream error](https://github.com/supabase/supabase-js/issues/1403)
+- [Medium: Solving the stream Module Issue in React Native with Supabase](https://medium.com/@josephmuhindo089/solving-the-stream-module-issue-in-react-native-with-supabase-a-clean-lightweight-solution-c8f2789f9a7b)
 
 ---
 
-### P3: HIGH - Overbooking from Race Conditions
+### Pitfall 3: Clerk Prebuilt Components Not Available on React Native
 
-**What goes wrong:** Two guests complete payment for last spot simultaneously. Trip is overbooked.
+**What goes wrong:** Developers assume Clerk's prebuilt UI components (`<SignIn />`, `<SignUp />`, etc.) work on React Native, but Clerk only provides **control components** (hooks and headless logic) for native platforms.
 
-**Why it happens:**
-- Check capacity -> Process payment -> Increment capacity is not atomic
-- Webhook processing delays can allow double-booking
-- Current code has this note: `"CRITICAL: Trip at capacity during payment confirmation"`
+**Why it happens:** Clerk's prebuilt UI components are web-only. The Expo SDK provides only the authentication logic, requiring developers to build custom UI.
 
-**Current codebase state:**
-```typescript
-// From stripe webhook - uses atomic increment but logs error without blocking:
-if (incrementResult === 0) {
-  console.error(`CRITICAL: Trip ${booking.tripId} at capacity...`);
-  // TODO: Send alert to admin about potential overbooking
-  return; // Continues processing - booking marked CONFIRMED
-}
-```
+**Consequences:**
+- Wasted time trying to import web components that don't exist
+- Need to build custom login/signup/profile screens from scratch
+- Cannot reuse web authentication UI patterns directly
+- Significant additional development time for auth flows
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch (Critical)**
-   - Reserve spot when booking created (with timeout)
-   - Implement pessimistic locking: `SELECT FOR UPDATE` on trip
-   - Alert admin immediately on overbooking (not just log)
-   - Add booking soft-block until admin confirms resolution
+**Prevention:**
+- Plan for custom auth UI design and implementation from day one
+- Budget time for building email/password, OAuth, and MFA flows manually
+- Use Clerk's Expo SDK control components and hooks (`useSignIn`, `useSignUp`, `useAuth`)
+- Reference Clerk's React Native examples for UI patterns
+- Consider design system implications - auth screens need mobile-first design
 
-2. **Phase: Operations**
-   - Manual override workflow for overbooking resolution
-   - Compensation policy for displaced guests
+**Detection:**
+- Import errors when trying to use `<SignIn />` or similar components
+- Clerk documentation references "control components only" for React Native
+- No prebuilt UI in `@clerk/clerk-expo` package exports
 
-**Detection:** `Trip.currentBookings > Trip.capacity`
+**Phase impact:** MOB-AUTH-01 (authentication foundation)
+
+**Sources:**
+- [Clerk Expo Quickstart: "Clerk currently only supports control components for Expo native"](https://clerk.com/docs/quickstarts/expo)
+- [Clerk Blog: Using Clerk in a React Native app](https://clerk.com/blog/using-clerk-in-a-react-native-app)
 
 ---
 
-### P4: MEDIUM - Refund/Chargeback Handling for Partial Payments
+### Pitfall 4: Duplicate React/React Native Versions in Monorepo
 
-**What goes wrong:** Guest disputes installment 3 of 4. They've paid $11,250 of $15,000. Cancellation policy unclear for partial payments.
+**What goes wrong:** Having multiple versions of React, React Native, or native modules in a single monorepo causes cryptic runtime errors, crashes, and "Invalid hook call" errors.
 
-**Why it happens:**
-- Traditional refund policies assume single payment
-- Dispute on one payment may not automatically cancel booking
-- Partner commissions may have been paid on early installments
+**Why it happens:** React Native enforces singleton patterns for native modules. Package managers can install duplicate versions due to version mismatches between workspace packages, leading to multiple React contexts and broken native bridges.
 
-**Current codebase state:**
-```
-// Dispute handlers exist but:
-// - handleDisputeLost: Cancels booking, decrements capacity
-// - No handling for partial payment disputes
-// - No clawback of partner points/commissions
-```
+**Consequences:**
+- "Invalid hook call" errors that are difficult to debug
+- Native module crashes with unclear error messages
+- App may work in development but crash in production builds
+- Waste days debugging version conflicts
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Define clear policy: dispute on any installment = full booking cancellation?
-   - Build partial refund workflow
-   - Track which PaymentRecords were disputed
+**Prevention:**
+- Use **exact version pinning** for React and React Native across all workspace packages
+- Add `resolutions` (Yarn) or `overrides` (npm/pnpm) in root package.json to force single versions
+- For pnpm: add `node-linker=hoisted` to `.npmrc` to prevent isolated installations
+- Run `npm ls react` or `yarn why react` regularly to detect duplicates
+- Set up automated checks in CI to fail on duplicate React versions
 
-2. **Phase: Legal/Terms**
-   - Installment plan agreement explicitly covering disputes
-   - Reservation of right to cancel for disputed payments
+**Detection:**
+- Run `npm ls react` or `npm ls react-native` and look for multiple versions
+- "Invalid hook call" errors in development
+- Metro bundler warnings about duplicate modules
+- Native crashes with unclear stack traces
 
-**Detection:** `charge.dispute.created` events where booking has multiple payments
+**Phase impact:** MOB-SETUP-01 (monorepo foundation)
 
----
-
-### P5: MEDIUM - Webhook Reliability and Idempotency Gaps
-
-**What goes wrong:** Webhook fails, retries, and double-processes. Guest receives duplicate emails. Capacity incremented twice.
-
-**Why it happens:**
-- Network issues cause Stripe to retry webhooks up to 72 hours
-- Non-idempotent operations (email sends, capacity updates) repeated
-
-**Current codebase state:**
-```typescript
-// Good: WebhookEvent model with idempotency
-const eventRecord = await prisma.webhookEvent.upsert({
-  where: { stripeEventId: event.id },
-  create: { processed: false },
-  update: {},
-});
-if (eventRecord.processed) return; // Skip if already processed
-
-// But: processed flag set AFTER all operations complete
-// If webhook times out during email send, it will retry and re-process
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Mark event processing BEFORE executing operations
-   - Use database transactions for atomic state changes
-   - Make email sends idempotent (check if already sent for this event)
-
-**Detection:** Duplicate emails to same guest for same booking event
+**Sources:**
+- [Expo Monorepos Docs: "Duplicate React Native versions in a single monorepo are not supported"](https://docs.expo.dev/guides/monorepos/)
+- [Medium: Ditching monorepos for React Native](https://davotisolutions.com/blog/ditching-monorepos-for-react-native)
+- [GitHub Discussion: Monorepo with React Native + Next.js](https://lightrun.com/answers/trpc-trpc-monorepo-with-react-native--nextjs)
 
 ---
 
-## Partner Program Pitfalls
+### Pitfall 5: Hardcoded Native Build Paths Break in Monorepos
 
-### PP1: CRITICAL - Commission Attribution Disputes
+**What goes wrong:** Native build scripts (iOS/Android) use hardcoded paths like `../../node_modules/react-native/react.gradle` which break in monorepos due to dependency hoisting, causing "Script does not exist" build failures.
 
-**What goes wrong:** Partner claims they referred a booking but system didn't track it. Or guest used partner code but booking shows no referral.
+**Why it happens:** Package managers hoist dependencies to the workspace root, changing the relative path structure. React Native's default template assumes a flat structure where `node_modules` is exactly 2 directories up.
 
-**Why it happens:**
-- Cookie expires before guest completes booking (days/weeks later)
-- Guest switches devices (mobile browse, desktop book)
-- Referral code in URL but not captured in booking flow
+**Consequences:**
+- iOS/Android native builds fail with "Script does not exist" errors
+- Works locally but fails on CI/CD with different hoisting behavior
+- Blocks all native functionality until fixed
 
-**Current codebase state:**
-```
-// referredBy field on Booking stores partner code
-// UTM tracking fields exist
-// But: No click-to-conversion attribution trail visible to partners
-// Partner notification exists but no dispute workflow
-```
+**Prevention:**
+- Use Node's `require.resolve()` to dynamically resolve paths instead of hardcoding
+- Example: `require.resolve('react-native/react.gradle')` instead of `../../node_modules/react-native/react.gradle`
+- Test native builds **immediately** after monorepo setup
+- Document all path resolutions for iOS and Android build files
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch (Critical)**
-   - Store referral code in server-side session, not just cookie
-   - Log all referral code clicks with timestamps (ReferralEvent model exists)
-   - Show partners their click-to-booking funnel in dashboard
-   - Build manual attribution override for admin
+**Detection:**
+- Native build errors: "Script does not exist at path"
+- Error references `node_modules/react-native/`
+- Build works in standalone app but fails in monorepo
 
-2. **Phase: Partner Agreement**
-   - Clear attribution window (30 days from click?)
-   - Dispute process documented
+**Phase impact:** MOB-SETUP-01 (native build configuration)
 
-**Detection:** Support tickets from partners about missing commissions
+**Source:**
+- [Expo Monorepos Docs: Hardcoded Native Paths](https://docs.expo.dev/guides/monorepos/)
 
 ---
 
-### PP2: HIGH - Stripe Connect Onboarding Abandonment
+### Pitfall 6: OneSignal Plugin Order Causes "Missing Push Capability" Error
 
-**What goes wrong:** Partner starts Stripe Connect onboarding, abandons midway. They refer bookings but can't receive payouts. Trust erodes.
+**What goes wrong:** If `onesignal-expo-plugin` is not positioned **above all other plugins** that modify notification settings in `app.json`, iOS shows "Missing Push Capability" error on the OneSignal dashboard.
 
-**Why it happens:**
-- Stripe Connect Express requires tax info, ID verification
-- International partners face additional compliance
-- Partners don't realize they need to complete onboarding to get paid
+**Why it happens:** Expo plugins run in order, and if another plugin modifies notification settings before OneSignal, the necessary iOS capabilities may not be properly configured.
 
-**Current codebase state:**
-```prisma
-// PartnerProfile has:
-stripeConnectOnboardingComplete Boolean @default(false)
-stripeConnectPayoutsEnabled Boolean @default(false)
-// account.updated webhook updates these flags
-```
+**Consequences:**
+- Push notifications silently fail on iOS
+- OneSignal dashboard shows capability errors
+- No runtime errors - just notifications never arrive
+- Difficult to debug because configuration looks correct
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Block payout requests until onboarding complete
-   - Email partners with incomplete onboarding (7, 14, 30 days after signup)
-   - Show clear status in partner dashboard: "Complete payout setup to receive $X pending"
+**Prevention:**
+- Place `onesignal-expo-plugin` as the **first plugin** in `app.json` plugins array
+- Review all plugins that might affect notifications (expo-notifications, etc.)
+- Test push notifications on real iOS device immediately after adding OneSignal
+- Check OneSignal dashboard for capability warnings
 
-2. **Phase: Operations**
-   - Monthly review of partners with pending commissions + incomplete onboarding
-   - Admin tool to manually trigger onboarding reminder
+**Detection:**
+- OneSignal dashboard shows "Missing Push Capability" error
+- Push notifications don't arrive on iOS (but may work on Android)
+- No console errors or obvious failures
 
-**Detection:** `PartnerProfile.stripeConnectOnboardingComplete = false` AND `PartnerReferral.count > 0`
+**Phase impact:** Push notification setup (affects all MOB-* features with notifications)
 
----
-
-### PP3: HIGH - Partner Tier Calculation Errors
-
-**What goes wrong:** Partner qualifies for GOLD tier but system shows BRONZE. Or tier downgrades unexpectedly.
-
-**Why it happens:**
-- Tier calculation based on rolling period not clearly defined
-- Cancelled bookings count toward tier, then get reversed
-- No audit trail of tier changes
-
-**Current codebase state:**
-```
-// Tier stored as enum on PartnerProfile
-// No automatic tier upgrade/downgrade logic visible
-// Tier change notification template exists
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Document tier qualification criteria explicitly
-   - Build tier audit log (who, when, why)
-   - Admin override with reason required
-
-2. **Phase: Partner Communication**
-   - Proactive notification when approaching tier upgrade
-   - 30-day grace period before downgrade
-
-**Detection:** Partner support tickets about tier
+**Source:**
+- [GitHub Issue #154: Does not work unless OneSignal is the first plugin to modify notification settings on iOS](https://github.com/OneSignal/onesignal-expo-plugin/issues/154)
 
 ---
 
-### PP4: MEDIUM - Payout Timing and Expectations
+## Moderate Pitfalls
 
-**What goes wrong:** Partner expects immediate payout after booking. Actual payout follows trip completion or booking confirmation.
+Mistakes that cause delays, technical debt, or require significant refactoring.
 
-**Why it happens:**
-- Commission should be held until refund window closes
-- Trip cancellations need commission clawback
-- Partners see "earned" vs "available" confusion
+### Pitfall 7: OneSignal Conflicts with expo-notifications Event Listeners
 
-**Current codebase state:**
-```
-// PartnerPayout model tracks payouts
-// No clear "hold period" before commission becomes available
-// Points awarded immediately on booking confirmation
-```
+**What goes wrong:** When both OneSignal and `expo-notifications` are installed, notification event listeners (`addNotificationResponseReceivedListener`) stop working when the user taps notifications.
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Define payout schedule: "Available 30 days after trip completion"
-   - Show "Pending" vs "Available" clearly in dashboard
-   - Implement hold period before payout eligibility
+**Why it happens:** OneSignal intercepts notification events and doesn't properly propagate them to other listeners, creating a conflict when multiple notification systems are present.
 
-2. **Phase: Partner Terms**
-   - Clear commission terms in partner agreement
-   - Cancellation/clawback policy documented
+**Consequences:**
+- Cannot use both OneSignal and expo-notifications simultaneously
+- Custom notification handling breaks
+- Inconsistent notification behavior between platforms
 
-**Detection:** Payout requests for bookings with upcoming trips
+**Prevention:**
+- Choose ONE notification system: OneSignal OR expo-notifications, not both
+- If using OneSignal, use only OneSignal's event handlers
+- Remove `expo-notifications` if OneSignal is the primary system
+- Document this constraint for future developers
 
----
+**Detection:**
+- Notification listeners execute until OneSignal is configured
+- After OneSignal setup, `addNotificationResponseReceivedListener` never fires
+- Works on Android but not iOS (or vice versa)
 
-## Security Pitfalls
+**Phase impact:** All notification-dependent features
 
-### S1: CRITICAL - Admin Authentication Weakness
-
-**What goes wrong:** Malicious actor gains admin access. Can view all customer data, process refunds, modify bookings.
-
-**Current codebase state:**
-```typescript
-// Admin check is database role lookup:
-const dbUser = await prisma.user.findUnique({
-  where: { id: user.id },
-  select: { role: true },
-});
-if (!dbUser || dbUser.role !== 'ADMIN') {
-  redirect('/dashboard');
-}
-
-// Known issue from project context: "Admin auth missing"
-// No MFA requirement for admin
-// No admin action audit logging
-```
-
-**Warning signs:**
-- Admin role changes without proper workflow
-- No session timeouts for admin users
-- Bulk data exports without logging
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch (CRITICAL)**
-   - Require MFA for all admin accounts
-   - Implement admin action audit log
-   - Session timeout after 30 minutes of inactivity
-   - IP allowlist for admin access (optional)
-
-2. **Phase: Operations**
-   - Weekly review of admin access logs
-   - Quarterly admin access audit
-
-**Detection:** `User.role = 'ADMIN'` count changes unexpectedly
+**Sources:**
+- [GitHub Issue #177: Run OneSignal in parallel with expo-notifications](https://github.com/OneSignal/onesignal-expo-plugin/issues/177)
+- [GitHub Issue #1742: Expo notification listeners stop working when used alongside OneSignal](https://github.com/OneSignal/react-native-onesignal/issues/1742)
 
 ---
 
-### S2: CRITICAL - SendGrid Webhook Verification
+### Pitfall 8: iOS Notification Service Extension Missing Configuration
 
-**What goes wrong:** Attacker spoofs SendGrid webhook, unsubscribes all users from emails.
+**What goes wrong:** Rich push notifications (images, attachments) don't work on iOS because the OneSignal Notification Service Extension requires separate configuration not mentioned in basic setup docs.
 
-**Current codebase state:**
-```typescript
-// From sendgrid webhook - verification key required in production
-if (process.env.NODE_ENV === 'production') {
-  if (!verificationKey) {
-    emailLogger.error('SECURITY ERROR: SENDGRID_WEBHOOK_VERIFICATION_KEY not configured');
-    return false;
-  }
-}
+**Why it happens:** iOS requires a Notification Service Extension to handle rich media in notifications. This extension needs its own App Group configuration and provisioning profile, which is a multi-step process not covered in quick-start guides.
 
-// Known issue: "webhook verification incomplete"
-```
+**Consequences:**
+- Text-only notifications work, but images/media don't display
+- Works on Android but not iOS
+- Users get degraded experience on iOS
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch (CRITICAL)**
-   - Set SENDGRID_WEBHOOK_VERIFICATION_KEY in production environment
-   - Verify webhook signature validation works end-to-end
-   - Test with invalid signatures (should reject)
+**Prevention:**
+- Follow complete OneSignal iOS setup guide (not just quick start)
+- Configure App Groups in Apple Developer Portal
+- Create provisioning profiles for both main app and notification extension
+- Test rich media notifications on real iOS device before considering feature complete
 
-**Detection:** Production logs showing "SECURITY ERROR: SENDGRID_WEBHOOK_VERIFICATION_KEY not configured"
+**Detection:**
+- Text notifications arrive on iOS, but images don't display
+- OneSignal dashboard shows notifications sent but no errors
+- Works perfectly on Android
 
----
+**Phase impact:** Any feature sending rich push notifications with images
 
-### S3: HIGH - PCI DSS 4.0 Compliance
-
-**What goes wrong:** Data breach exposes customer card data. Fines up to $100,000/month. Average breach cost: $4.5 million.
-
-**Why it matters:**
-- PCI DSS 4.0 enforcement began April 2025
-- 51 new requirements including continuous testing
-- High-value travel bookings are prime targets
-
-**Current codebase state:**
-- Stripe handles card data (good - reduces PCI scope)
-- No evidence of card data stored locally (good)
-- Unknown: payment page script inventory, penetration testing schedule
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Complete PCI SAQ (Self-Assessment Questionnaire)
-   - Inventory all scripts on payment pages
-   - Enable CSP headers on checkout
-   - Verify no card data in logs
-
-2. **Phase: Quarterly**
-   - Penetration testing
-   - Script inventory review
-   - Payment page monitoring
-
-**Detection:** Security scan findings, Stripe radar alerts
+**Source:**
+- [Blog: Expo iOS Build Failing with OneSignal - Here's the Fix](https://blog.krum.io/expo-ios-build-failing-with-onesignal-heres-the-fix/)
 
 ---
 
-### S4: HIGH - Document Upload Security
+### Pitfall 9: File Upload URI Format Differences Between iOS and Android
 
-**What goes wrong:** Malicious file uploaded as "passport" executes code or exfiltrates data.
+**What goes wrong:** File uploads work on iOS but fail on Android (or vice versa) because iOS uses `file://` URIs while Android uses `content://` URIs, and backend expects one format.
 
-**Current codebase state:**
-```prisma
-// Document model stores files in Supabase Storage
-// mimeType validated at model level
-// Unknown: content-type validation, file scanning, access controls
-```
+**Why it happens:** Platform differences in how file systems are exposed. Image pickers and file selectors return different URI formats per platform, and backend upload handlers may not handle both.
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Validate file content matches claimed MIME type
-   - Restrict allowed file types (PDF, JPG, PNG only)
-   - Scan uploads for malware
-   - Serve documents through signed URLs with expiration
+**Consequences:**
+- File uploads work on one platform but silently fail on the other
+- Testing on iOS only misses Android issues (or vice versa)
+- User frustration when uploads fail without clear error
 
-**Detection:** Unusual file types in Document table, large file uploads
+**Prevention:**
+- Normalize file URIs before upload using platform-specific handling
+- Remove `file://` prefix on iOS if needed by upload handler
+- Use `expo-file-system` to convert `content://` URIs on Android
+- Test file uploads on **both platforms** immediately
+- Implement cross-platform file upload library or abstraction
 
----
+**Detection:**
+- Uploads work on iOS but fail on Android with "file not found" or "invalid path"
+- Backend logs show malformed file paths
+- Platform-specific error patterns
 
-### S5: MEDIUM - Gift Token Predictability
+**Phase impact:** MOB-PRETRIP-03 (passport upload), MOB-TRIP-07 (photo journal)
 
-**What goes wrong:** Attacker guesses or brute-forces gift acceptance tokens, hijacks gift bookings.
-
-**Current codebase state:**
-```prisma
-// giftAcceptanceToken String? @unique
-// Unknown: token generation method, entropy
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Verify tokens are cryptographically random (UUID v4 or better)
-   - Rate limit gift acceptance endpoint
-   - Expire tokens after 30 days (giftExpiresAt exists)
-
-**Detection:** Multiple failed gift acceptance attempts from same IP
+**Source:**
+- [GitHub Issue #1272: Can't upload file, receiving 'file not present' error](https://github.com/ivpusic/react-native-image-crop-picker/issues/1272)
 
 ---
 
-## Operational Pitfalls
+### Pitfall 10: Missing Apple Sign-In Requirement When Using Google OAuth
 
-### O1: CRITICAL - No Support Escalation for Trip-Critical Issues
+**What goes wrong:** App Store rejects the app during review because it includes "Sign in with Google" but not "Sign in with Apple", violating Apple's App Store Review Guidelines.
 
-**What goes wrong:** Guest contacts support 48 hours before departure with booking problem. Support response takes 72 hours. Guest misses trip.
+**Why it happens:** Apple requires apps that offer third-party social login to also offer Apple Sign-In as an option. This is a policy enforcement, not a technical limitation.
 
-**Why it matters:**
-- Luxury travel = premium expectations
-- $15K-25K customers expect immediate resolution
-- Peak season call volumes spike 300-400% industry-wide
+**Consequences:**
+- App Store rejection after weeks of development
+- Emergency scramble to add Apple Sign-In
+- Delayed launch while implementing additional auth method
 
-**Current codebase state:**
-```
-// SupportTicket model exists with priority levels
-// No SLA enforcement
-// No escalation rules
-// "email stubs" suggests email delivery not fully implemented
-```
+**Prevention:**
+- Add Apple Sign-In support from day one if using any social OAuth (Google, Facebook, etc.)
+- Apple Sign-In requires native build (doesn't work with Expo Go)
+- Budget time for Apple Developer account setup and certificate management
+- Review Apple's guidelines early in development
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch (CRITICAL)**
-   - Define SLA: Urgent = 4 hours, High = 24 hours
-   - Build trip-proximity detection: tickets from guests with trip < 7 days = auto-URGENT
-   - On-call rotation for trip-critical issues
-   - WhatsApp support channel for urgent issues
+**Detection:**
+- App Store rejection notice citing missing Apple Sign-In
+- Only happens during App Store review, not during development
 
-2. **Phase: Operations**
-   - Daily triage of open tickets
-   - Weekly review of SLA breaches
+**Phase impact:** MOB-AUTH-01 (authentication setup)
 
-**Detection:** `SupportTicket` where `resolvedAt - createdAt > SLA` and `booking.trip.startDate < NOW() + 7 days`
+**Sources:**
+- [Clerk Expo Docs: "If you include 'Sign in with Google,' Apple may reject your app unless you also support 'Sign in with Apple'"](https://clerk.com/docs/quickstarts/expo)
+- [WebSearch results: Clerk auth React Native Expo integration pitfalls](https://clerk.com/blog/using-clerk-in-a-react-native-app)
 
 ---
 
-### O2: HIGH - Missing Admin Notification Infrastructure
+### Pitfall 11: Magic Link Authentication Not Supported on Expo
 
-**What goes wrong:** Payment fails, dispute created, webhook errors - but no one knows until customer complains.
+**What goes wrong:** Developers implement email magic link authentication (common on web) but Expo doesn't support email links, causing the feature to silently fail.
 
-**Current codebase state:**
-```
-// Multiple TODOs for admin notifications:
-// "TODO: Send alert to admin about potential overbooking"
-// Admin alerts use lib/email/admin-alerts.ts but emails may be stubs
-// No admin dashboard for real-time alerts
-```
+**Why it happens:** Email magic links rely on deep linking mechanisms that Expo doesn't fully support for email-based universal links.
 
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Implement admin alert email delivery (verify SendGrid integration)
-   - Create admin notification center in dashboard
-   - Set up critical alert SMS/Slack backup channel
+**Consequences:**
+- Magic link emails arrive but clicking them doesn't open the app or authenticate
+- Need to implement alternative authentication method
+- Wasted development time on unsupported feature
 
-2. **Phase: Operations**
-   - Morning check of overnight alerts
-   - Alert acknowledgment tracking
+**Prevention:**
+- Use email/password or OAuth instead of magic links for mobile
+- If passwordless is required, use SMS OTP instead of email magic links
+- Review Clerk's supported auth methods for Expo before implementing
+- Test authentication flow end-to-end on real device immediately
 
-**Detection:** Email send logs for admin-alerts, alert delivery confirmation
+**Detection:**
+- Email arrives with link but clicking it opens browser instead of app
+- Authentication never completes on mobile
+- Works fine on web but not mobile
 
----
+**Phase impact:** MOB-AUTH-01 (authentication setup)
 
-### O3: HIGH - Document Review Backlog
-
-**What goes wrong:** Documents pile up awaiting review. Guest submits passport 2 weeks before trip, still pending at departure.
-
-**Current codebase state:**
-```
-// Document model with PENDING_REVIEW status
-// Admin document review page exists
-// No SLA or queue management
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Define document review SLA (48 hours)
-   - Build queue prioritization by trip date
-   - Auto-reject expired passports
-   - Email guest if documents still pending 14 days before trip
-
-**Detection:** `Document.status = 'PENDING_REVIEW'` where `createdAt < NOW() - 48 hours`
+**Source:**
+- [Clerk Expo Docs: "Expo does not support email links"](https://clerk.com/docs/quickstarts/expo)
 
 ---
 
-### O4: MEDIUM - Trip Capacity Communication Gaps
+### Pitfall 12: Production Builds Cannot Be Installed Directly on Devices
 
-**What goes wrong:** Trip fills up but interested guests don't know. Or trip is undersold but no outreach happens.
+**What goes wrong:** Developers create production builds (`.aab`, `.ipa`) and try to install them directly on devices/emulators, expecting them to work like development builds.
 
-**Current codebase state:**
-```
-// Trip model has capacity and currentBookings
-// No waitlist functionality
-// No "trip filling fast" notifications
-```
+**Why it happens:** Production builds are code-signed for app stores and have different configurations than development builds. They require app store distribution channels.
 
-**Prevention strategy:**
-1. **Phase: Post-MVP**
-   - Build waitlist for full trips
-   - "Only X spots left" messaging
-   - Undersold trip marketing alerts
+**Consequences:**
+- Cannot test production builds locally before submission
+- Discover issues only after App Store/Play Store submission
+- Longer feedback loop for production-specific bugs
 
-**Detection:** Trips at capacity with no waitlist, trips < 50% full at 30 days out
+**Prevention:**
+- Use preview builds (internal distribution) for testing production-like configurations
+- Create separate EAS Build profiles: `development`, `preview`, `production`
+- Use TestFlight (iOS) or internal testing track (Android) for pre-release testing
+- Never expect to install `.aab` or `.ipa` production builds directly
 
----
+**Detection:**
+- Installation fails when trying to sideload production build
+- Error messages about code signing or provisioning profiles
 
-### O5: MEDIUM - Pre-Trip Email Sequence Failures
+**Phase impact:** Final testing and deployment
 
-**What goes wrong:** Pre-trip emails (60, 30, 14, 7, 1 day) fail silently. Guest arrives unprepared.
-
-**Current codebase state:**
-```
-// preTripEmailsSent String[] tracks which emails sent
-// Cron job presumably sends these
-// SendGrid integration may have delivery issues
-```
-
-**Prevention strategy:**
-1. **Phase: Pre-Launch**
-   - Verify cron job running
-   - Monitor email delivery rates
-   - Build fallback: if email bounces, try SMS/WhatsApp
-   - Admin view of pre-trip sequence status per booking
-
-**Detection:** `Booking.preTripEmailsSent` array length < expected for trip proximity
+**Source:**
+- [Expo Build Docs: "Production builds must be installed through their respective app stores"](https://docs.expo.dev/deploy/build-project/)
 
 ---
 
-## Pre-Launch Checklist
+### Pitfall 13: Unnecessary Re-renders Degrading Performance
 
-### Payment Systems
-- [ ] Card update flow in customer dashboard
-- [ ] Admin view for failed installments with retry capability
-- [ ] Stripe Customer Portal integration
-- [ ] Test checkout with $15K+ charges on international cards
-- [ ] Verify atomic capacity increment on payment success
-- [ ] Test webhook idempotency under retry conditions
+**What goes wrong:** Mobile app feels sluggish despite lightweight UI because components re-render unnecessarily, especially list items in long scrollable views.
 
-### Partner Program
-- [ ] Attribution tracking visible to partners
-- [ ] Stripe Connect onboarding reminder flow
-- [ ] Tier criteria documented and audit trail built
-- [ ] Payout hold period implemented
-- [ ] Manual attribution override for admin
+**Why it happens:** React Native re-renders components when state or props change. Common causes:
+- Anonymous functions in render (create new function reference each render)
+- Inline object/array creation in props
+- Missing `React.memo` on expensive components
+- Over-reliance on Context API causing cascading re-renders
 
-### Security
-- [ ] MFA required for admin accounts
-- [ ] Admin action audit logging
-- [ ] SENDGRID_WEBHOOK_VERIFICATION_KEY configured in production
-- [ ] PCI SAQ completed
-- [ ] Document upload validation (MIME type, malware scan)
-- [ ] Gift token entropy verification
+**Consequences:**
+- Laggy scrolling in lists (itinerary, chat messages, photo gallery)
+- Dropped frames (< 60 FPS), especially on lower-end Android devices
+- Poor user experience compared to native apps
+- Battery drain from excessive JavaScript execution
 
-### Operations
-- [ ] Support SLA defined and enforced
-- [ ] Trip-proximity escalation rules
-- [ ] Admin notification delivery verified
-- [ ] Document review queue with SLA
-- [ ] On-call rotation for trip-critical issues
-- [ ] Pre-trip email sequence monitoring
+**Prevention:**
+- Use `React.memo` for list item components
+- Extract callbacks outside render or use `useCallback` hook
+- Avoid inline objects/arrays in JSX props
+- Use `FlatList`/`FlashList` virtualization for long lists
+- Profile performance with React DevTools Profiler early and often
+- Set performance budget: 60 FPS minimum for scrolling
 
-### Known Issues to Address
-- [ ] Admin auth missing (from project context)
-- [ ] Webhook verification incomplete (from project context)
-- [ ] Email stubs (from project context)
-- [ ] No payment failure handling (from project context)
+**Detection:**
+- Scrolling feels janky or drops frames
+- React DevTools Profiler shows excessive re-renders
+- Use `console.log` in render to count unnecessary renders
+
+**Phase impact:** MOB-TRIP-01 (itinerary list), MOB-PRETRIP-05/MOB-TRIP-03 (chat messages), MOB-TRIP-08 (photo gallery)
+
+**Sources:**
+- [Medium: 7 React Native Mistakes Slowing Your App in 2026](https://medium.com/@baheer224/7-react-native-mistakes-slowing-your-app-in-2026-19702572796a)
+- [Bits Kingdom: React Native Optimization - Fixing Slow Apps 2026](https://bitskingdom.com/blog/react-native-performance-optimization-fix-slow-apps/)
 
 ---
 
-## Phase Assignment Summary
+### Pitfall 14: Heavy JavaScript Thread Operations Blocking UI
 
-| Pitfall | Severity | Phase |
-|---------|----------|-------|
-| P1: Installment Recovery | CRITICAL | Pre-Launch |
-| P2: 3DS/Currency Failures | HIGH | Pre-Launch |
-| P3: Overbooking Race | CRITICAL | Pre-Launch |
-| P4: Partial Payment Disputes | MEDIUM | Pre-Launch + Legal |
-| P5: Webhook Idempotency | MEDIUM | Pre-Launch |
-| PP1: Commission Attribution | CRITICAL | Pre-Launch |
-| PP2: Connect Onboarding | HIGH | Pre-Launch |
-| PP3: Tier Calculation | HIGH | Pre-Launch |
-| PP4: Payout Timing | MEDIUM | Pre-Launch + Terms |
-| S1: Admin Auth | CRITICAL | Pre-Launch |
-| S2: Webhook Verification | CRITICAL | Pre-Launch |
-| S3: PCI Compliance | HIGH | Pre-Launch + Quarterly |
-| S4: Document Security | HIGH | Pre-Launch |
-| S5: Gift Token | MEDIUM | Pre-Launch |
-| O1: Support Escalation | CRITICAL | Pre-Launch |
-| O2: Admin Notifications | HIGH | Pre-Launch |
-| O3: Document Backlog | HIGH | Pre-Launch |
-| O4: Capacity Communication | MEDIUM | Post-MVP |
-| O5: Pre-Trip Emails | MEDIUM | Pre-Launch |
+**What goes wrong:** Long-running JavaScript operations (data processing, complex calculations, large JSON parsing) block the main thread, freezing the UI and making the app unresponsive.
+
+**Why it happens:** React Native's JavaScript thread is single-threaded. Heavy operations must complete before the next frame can render, causing dropped frames and UI freezing.
+
+**Consequences:**
+- UI freezes during data loading or processing
+- "Application Not Responding" (ANR) errors on Android
+- Poor user experience, app feels broken
+- Users force-quit the app
+
+**Prevention:**
+- Move heavy operations to background threads using `react-native-reanimated` or Web Workers
+- For large datasets, paginate or lazy-load instead of processing all at once
+- Use `InteractionManager.runAfterInteractions()` to defer non-critical work
+- Profile JavaScript thread usage with React Native Performance Monitor
+- Implement loading states and skeleton screens to mask processing time
+
+**Detection:**
+- UI freezes for > 100ms during operations
+- React Native performance monitor shows dropped frames
+- Yellow box warnings about long-running tasks
+
+**Phase impact:** Any feature with data processing (MOB-PRETRIP-07 offline itinerary, MOB-TRIP-01 itinerary rendering)
+
+**Source:**
+- [React Native Docs: Performance Overview](https://reactnative.dev/docs/performance)
+
+---
+
+### Pitfall 15: Unoptimized Images Causing Memory Issues and Slow Loading
+
+**What goes wrong:** Large, uncompressed images from device camera (4000x3000px, 5MB+) are uploaded or displayed directly, causing memory crashes, slow loading, and poor performance.
+
+**Why it happens:** Developers don't resize or compress images before upload/display. Mobile cameras produce high-resolution images that exceed what's needed for display or reasonable upload sizes.
+
+**Consequences:**
+- App crashes with out-of-memory errors when displaying multiple images
+- Slow upload times over cellular networks
+- Excessive data usage
+- Poor user experience in photo features
+
+**Prevention:**
+- Resize images to reasonable dimensions before upload (max 1920x1080 for display)
+- Compress images to reduce file size (80-90% quality is visually identical)
+- Use `expo-image-manipulator` or `react-native-image-resizer` before upload
+- Implement progressive/lazy loading for image galleries
+- Cache remote images using `expo-image` or `react-native-fast-image`
+- Set maximum file size limits (e.g., 2MB per image after compression)
+
+**Detection:**
+- Out-of-memory crashes when viewing photo gallery
+- Slow image upload times (> 10 seconds per image)
+- Large app bundle size or storage usage
+
+**Phase impact:** MOB-TRIP-07 (photo journal), MOB-TRIP-08 (photo gallery), MOB-PRETRIP-03 (document upload)
+
+**Sources:**
+- [Medium: 7 React Native Mistakes Slowing Your App in 2026](https://medium.com/@baheer224/7-react-native-mistakes-slowing-your-app-in-2026-19702572796a)
+- [F22Labs: 10 Mistakes to Avoid When Developing React Native Apps](https://www.f22labs.com/blogs/10-mistakes-to-avoid-when-developing-react-native-apps/)
+
+---
+
+### Pitfall 16: Offline-First Architecture Complexity Leaking Into Codebase
+
+**What goes wrong:** Implementing offline support without proper architecture causes networking concerns to leak throughout the codebase, making it difficult to maintain and reason about.
+
+**Why it happens:** Offline-first requires:
+- Optimistic updates (show UI changes before server confirms)
+- Temporary client IDs that get replaced with server IDs
+- Retryable request queues
+- Background sync while keeping UI responsive
+- Conflict resolution strategies
+
+Without proper abstraction, these concerns spread across components.
+
+**Consequences:**
+- Business logic tightly coupled with networking state
+- Difficult to test offline scenarios
+- Bugs in sync logic cause data corruption
+- Maintenance nightmare as features grow
+
+**Prevention:**
+- Use dedicated offline library: `@tanstack/react-query` with persistence, or `WatermelonDB` for complex data
+- Centralize sync logic in a dedicated service layer, not components
+- Define clear boundaries: UI layer doesn't know about sync details
+- For trip itinerary (MOB-PRETRIP-07), consider simple JSON caching instead of full offline-first
+- Test offline scenarios early and continuously
+
+**Detection:**
+- Components contain sync logic, retry logic, or conflict resolution
+- Many `useState` hooks tracking network/sync state
+- Duplicated offline logic across components
+
+**Phase impact:** MOB-PRETRIP-07 (offline itinerary), any feature requiring offline support
+
+**Sources:**
+- [Hacker News: How do you design offline-first flows in large React Native apps?](https://news.ycombinator.com/item?id=46360277)
+- [JavaScript Plain English: Building Offline-First React Native Apps 2026](https://javascript.plainenglish.io/building-offline-first-react-native-apps-the-complete-guide-2026-68ff77c7bb06)
+
+---
+
+### Pitfall 17: Deep Linking Breaks with Missing initialRouteName
+
+**What goes wrong:** When testing deep links (e.g., notification taps that open specific screens), there's no back button, stranding users on the deep-linked screen with no navigation.
+
+**Why it happens:** Expo Router needs to know the navigation stack history to show a back button. Without `initialRouteName` configuration, it doesn't know which parent route to navigate back to from a deep link.
+
+**Consequences:**
+- Users tap notification and get stuck on the screen (can't navigate elsewhere)
+- Poor UX, feels like a broken app
+- Only happens with deep links, not normal app navigation
+
+**Prevention:**
+- Set `initialRouteName` in layout files for all nested navigation groups
+- Define the default route for each navigation stack before the deep-linked route
+- Test all deep link scenarios on real devices (can't fully test in simulator)
+- Document deep link paths and their expected back navigation
+
+**Detection:**
+- No back button appears when opening app via deep link
+- Back button works fine when navigating normally through app
+- Only affects deep link entry points
+
+**Phase impact:** All notification-based features (MOB-PRETRIP-05 chat, MOB-TRIP-03 concierge, etc.)
+
+**Source:**
+- [Expo Issue #818: Using unstable_settings breaks deep linking in app when in foreground/background](https://github.com/expo/router/issues/818)
+
+---
+
+## Minor Pitfalls
+
+Mistakes that cause annoyance but are easily fixable.
+
+### Pitfall 18: Expo SDK Auto-Configuration Breaking with Manual Metro Config
+
+**What goes wrong:** Developers manually configure Metro bundler for monorepo (adding `watchFolders`, `nodeModulesPath`, etc.) and then upgrade to Expo SDK 52+, which auto-configures Metro. The manual config conflicts with auto-config, causing build failures.
+
+**Why it happens:** Expo SDK 52+ automatically configures Metro for monorepos when using `expo/metro-config`. Legacy manual configurations conflict with the new auto-configuration.
+
+**Consequences:**
+- Build failures after SDK upgrade
+- Confusing errors about duplicate Metro configurations
+- Metro cache issues
+
+**Prevention:**
+- When upgrading to SDK 52+, **delete** manual Metro config properties:
+  - `watchFolders`
+  - `resolver.nodeModulesPath`
+  - `resolver.extraNodeModules`
+  - `resolver.disableHierarchicalLookup`
+- Run `npx expo start --clear` after removing manual config
+- Let Expo's auto-configuration handle monorepo setup
+
+**Detection:**
+- Build errors after upgrading to Expo SDK 52+
+- Metro bundler errors about configuration conflicts
+- App worked before SDK upgrade, breaks after
+
+**Phase impact:** MOB-SETUP-01 (when upgrading Expo SDK)
+
+**Source:**
+- [Expo Monorepos Docs: SDK 52+ auto-configuration](https://docs.expo.dev/guides/monorepos/)
+
+---
+
+### Pitfall 19: Forgetting to Clear Metro Cache After Configuration Changes
+
+**What goes wrong:** After changing Metro bundler configuration, native build config, or monorepo structure, the app doesn't reflect changes because Metro cache is stale.
+
+**Why it happens:** Metro caches bundler configuration and module resolution for performance. Changes to config files aren't automatically detected.
+
+**Consequences:**
+- Config changes don't take effect
+- Mysterious "module not found" errors that should be resolved
+- Wasted debugging time
+
+**Prevention:**
+- Always run `npx expo start --clear` after:
+  - Changing `metro.config.js`
+  - Modifying monorepo workspace structure
+  - Adding/removing packages
+  - Changing native build configuration
+- Add clear-cache command to development workflow documentation
+
+**Detection:**
+- Changes to config don't take effect
+- Old errors persist after fixes
+- Works after running `--clear` flag
+
+**Phase impact:** All phases (recurring issue)
+
+**Source:**
+- [Expo Monorepos Docs](https://docs.expo.dev/guides/monorepos/)
+
+---
+
+### Pitfall 20: TestFlight Build Not Auto-Promoted to Production
+
+**What goes wrong:** Developers assume a successful TestFlight build automatically goes to the App Store, but it remains in TestFlight until manually submitted for review.
+
+**Why it happens:** TestFlight is a separate pre-release distribution channel. Promotion to App Store production requires manual submission through App Store Connect.
+
+**Consequences:**
+- Delayed production release while waiting for "automatic" promotion
+- Confusion about release status
+- Missing release window if not manually submitted
+
+**Prevention:**
+- Understand TestFlight is for testing, not production distribution
+- After TestFlight testing completes, manually log into App Store Connect
+- Select the build and click "Submit for Review"
+- Allow 24-48 hours for App Review process
+- Document the App Store submission process for future releases
+
+**Detection:**
+- Build appears in TestFlight but not in App Store
+- No automatic promotion after expected timeframe
+
+**Phase impact:** Final deployment to App Store
+
+**Source:**
+- [WebSearch: EAS Build Expo deployment common mistakes](https://levi9-serbia.medium.com/react-native-app-deployment-with-expo-eas-cli-your-complete-guide-to-app-store-publishing-d4674cb00518)
+
+---
+
+### Pitfall 21: Missing Developer Account Memberships Before EAS Submit
+
+**What goes wrong:** Developers attempt to submit app to stores using `eas submit` but the build fails because they haven't enrolled in Apple Developer Program ($99/year) or Google Play Console ($25 one-time).
+
+**Why it happens:** EAS Build can create builds without paid accounts, but submission requires active store memberships.
+
+**Consequences:**
+- Blocked submission when trying to ship
+- Emergency scramble to enroll and wait for account approval
+- Delayed launch
+
+**Prevention:**
+- Enroll in both Apple Developer Program and Google Play Console **before starting mobile development**
+- Budget for annual Apple renewal ($99/year)
+- Complete enrollment early to allow time for approval
+- Store credentials securely for EAS Submit configuration
+
+**Detection:**
+- EAS Submit fails with "No valid membership" or similar error
+- Cannot access App Store Connect or Google Play Console
+
+**Phase impact:** Final deployment
+
+**Source:**
+- [Expo Build Docs: Developer account requirements](https://docs.expo.dev/deploy/build-project/)
+
+---
+
+## Phase-Specific Warnings
+
+Pitfalls mapped to specific milestone phases for proactive prevention.
+
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| **MOB-SETUP-01: Monorepo & Infrastructure** | tRPC version incompatibility (Critical #1) | Pin tRPC to 11.3.1, test mobile startup immediately |
+| | Duplicate React versions (Critical #4) | Exact version pinning, use resolutions/overrides, verify with `npm ls` |
+| | Hardcoded native paths (Critical #5) | Use `require.resolve()` for all native paths |
+| | Metro config conflicts (Minor #18) | Delete manual config when using SDK 52+, clear cache |
+| **MOB-AUTH-01: Authentication** | No prebuilt Clerk components (Critical #3) | Budget time for custom UI, use control components |
+| | Apple Sign-In requirement (Moderate #10) | Add Apple Sign-In from day one if using OAuth |
+| | Magic links unsupported (Moderate #11) | Use email/password or OAuth, not magic links |
+| **MOB-PRETRIP-03: Document Upload** | File URI format differences (Moderate #9) | Normalize URIs, test on both iOS and Android |
+| | Unoptimized images (Moderate #15) | Resize and compress before upload |
+| **MOB-PRETRIP-05: Group Chat** | Supabase Realtime breaks (Critical #2) | Use alternative chat solution or wait for fix |
+| **MOB-PRETRIP-07: Offline Itinerary** | Offline architecture complexity (Moderate #16) | Use simple JSON caching, avoid full offline-first for MVP |
+| **MOB-TRIP-01: Itinerary View** | Unnecessary re-renders (Moderate #13) | Use `React.memo`, `FlatList` virtualization, profile early |
+| | Heavy JS operations (Moderate #14) | Move processing to background, paginate data |
+| **MOB-TRIP-03: Concierge Chat** | Supabase Realtime breaks (Critical #2) | Alternative chat solution required |
+| | Deep link navigation (Moderate #17) | Set `initialRouteName` for all nested routes |
+| **MOB-TRIP-07: Photo Upload** | File URI formats (Moderate #9) | Cross-platform URI handling |
+| | Unoptimized images (Moderate #15) | Resize to 1920x1080, compress to <2MB |
+| **MOB-TRIP-08: Photo Gallery** | Unoptimized images (Moderate #15) | Lazy loading, image caching, progressive loading |
+| | Re-renders (Moderate #13) | `FlatList` with `React.memo` for gallery items |
+| **Push Notifications (All Phases)** | OneSignal plugin order (Critical #6) | Place OneSignal first in plugins array |
+| | OneSignal vs expo-notifications conflict (Moderate #7) | Choose one system, remove the other |
+| | iOS Notification Service Extension (Moderate #8) | Configure App Groups and provisioning profiles |
+| | Deep linking with notifications (Moderate #17) | Set `initialRouteName` for notification routes |
+| **Final Deployment** | Production builds can't install locally (Moderate #12) | Use preview builds and TestFlight for testing |
+| | TestFlight not auto-promoting (Minor #20) | Manual submission through App Store Connect |
+| | Missing developer accounts (Minor #21) | Enroll early in Apple/Google programs |
+
+---
+
+## Cross-Cutting Concerns
+
+Pitfalls that affect multiple phases and require ongoing vigilance.
+
+### Performance
+- **Re-renders** (Moderate #13): Profile continuously, not just at end
+- **Heavy JS operations** (Moderate #14): Performance budget from day one
+- **Image optimization** (Moderate #15): Apply to all image features
+
+### Testing Strategy
+- **Test on BOTH platforms immediately**: iOS and Android behave differently
+  - File uploads (Moderate #9)
+  - Push notifications (Critical #6, Moderate #7-8)
+  - Deep linking (Moderate #17)
+- **Test on real devices, not just simulators**:
+  - Biometric authentication requires physical device
+  - Push notifications don't work in iOS simulator
+  - Performance characteristics differ significantly
+
+### Version Management
+- **Pin exact versions** for critical dependencies:
+  - tRPC 11.3.1 (Critical #1)
+  - React/React Native (Critical #4)
+- **Clear Metro cache** after any config change (Minor #19)
+- **Test after upgrades**: SDK upgrades can break existing config (Minor #18)
+
+### Monorepo-Specific
+- All Critical pitfalls #1-6 are exacerbated by monorepo complexity
+- Verify configuration at both workspace root and package level
+- Use workspace dependency resolution to prevent duplicates
+
+---
+
+## Research Confidence Assessment
+
+| Pitfall Category | Confidence | Source Quality |
+|-----------------|------------|----------------|
+| tRPC/React Native integration | HIGH | Official GitHub issues, Discord, recent 2026 sources |
+| Supabase Realtime issues | HIGH | Official GitHub issues, active open issues from 2025-2026 |
+| Clerk authentication limitations | HIGH | Official Clerk documentation, verified with WebFetch |
+| Monorepo configuration | HIGH | Official Expo documentation, verified with WebFetch |
+| OneSignal integration | MEDIUM | GitHub issues, community blog posts |
+| Performance optimization | MEDIUM | Recent 2026 articles, official React Native docs |
+| File upload issues | MEDIUM | Community GitHub issues, multiple corroborating sources |
+| Offline-first architecture | MEDIUM | Community discussions, multiple architecture guides |
+| Deep linking | MEDIUM | Official Expo docs, GitHub issues |
+| App store deployment | HIGH | Official Expo documentation, verified with WebFetch |
 
 ---
 
 ## Sources
 
-### Payment Industry Research
-- [The Lost Booking Problem: How Payment Friction Kills Travel Conversions](https://thepaymentsassociation.org/article/the-lost-booking-problem-how-payment-friction-kills-travel-conversions/)
-- [Navigating Payment Challenges in Travel: 2025](https://financialit.net/blog/travelpayments-paymentchallenges/navigating-payment-challenges-travel-road-ahead-2025)
-- [Stripe Failed Payments Recovery](https://stripe.com/resources/more/failed-payment-recovery-101)
-- [How to Handle Failed Subscription Payments in Stripe](https://benfoster.io/blog/stripe-failed-payments-how-to/)
-- [Top Fraud Prevention Challenges for Airlines 2025](https://www.iddataweb.com/top-fraud-prevention-challenges-airlines/)
+All findings verified with recent (2025-2026) sources and official documentation where available:
 
-### Partner/Affiliate Research
-- [Travel Affiliate Marketing Guide 2026](https://www.affiversemedia.com/travel-affiliate-marketing-guide-for-2026-strategic-positioning-for-the-deal-savvy-consumer/)
-- [Why Booking.com Cut Thousands of Affiliate Partners](https://skift.com/2025/05/30/why-booking-com-cut-thousands-of-affiliate-partners-and-what-comes-next/)
+**Official Documentation:**
+- [Clerk Expo Quickstart](https://clerk.com/docs/quickstarts/expo)
+- [Expo Monorepos Documentation](https://docs.expo.dev/guides/monorepos/)
+- [Expo Build Documentation](https://docs.expo.dev/deploy/build-project/)
+- [React Native Performance Docs](https://reactnative.dev/docs/performance)
 
-### Security Research
-- [PCI DSS 4.0 & VCC Security in 2026](https://antravia.com/pci-dss-40-and-vcc-security-in-2026-the-compliance-playbook-for-hotels-and-travel-agencies)
-- [The 2025 Travel Boom: Is Your Website Secure?](https://hospitalitytech.com/2025-travel-boom-here-your-website-secure)
-- [How to Avoid Costly PCI Mistakes in Hospitality](https://www.feroot.com/blog/pci-compliance-in-hospitality-and-travel-guide/)
+**Critical Issues:**
+- [tRPC React Native crash > 11.3.0](https://discord-questions.trpc.io/m/1442530949068882011)
+- [Supabase Issue #1434: ws module fails on RN](https://github.com/supabase/supabase-js/issues/1434)
+- [Supabase Issue #1403: Expo SDK 53 stream error](https://github.com/supabase/supabase-js/issues/1403)
 
-### Operations Research
-- [Why Travel Customer Service Fails in Peak Season](https://zealconnect.com/customer-service-failures-travel-peak-season/)
-- [Top 2024 CX Fails in Travel and Hospitality](https://hospitalitytech.com/top-2024-cx-fails-travel-and-hospitality-lessons-future-success)
-- [Common Mistakes When Using Online Booking Systems](https://ezbook.com/mistakes-to-avoid-when-using-online-booking-system/)
+**Community & Guides:**
+- [Medium: 7 React Native Mistakes Slowing Your App in 2026](https://medium.com/@baheer224/7-react-native-mistakes-slowing-your-app-in-2026-19702572796a)
+- [JavaScript Plain English: Building Offline-First RN Apps 2026](https://javascript.plainenglish.io/building-offline-first-react-native-apps-the-complete-guide-2026-68ff77c7bb06)
+- [Blog: Expo iOS Build Failing with OneSignal Fix](https://blog.krum.io/expo-ios-build-failing-with-onesignal-heres-the-fix/)

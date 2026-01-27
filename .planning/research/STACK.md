@@ -1,738 +1,570 @@
-# Stack Research: Security Hardening
+# Technology Stack: Mobile App Additions
 
-**Project:** Pickleball Passport
-**Domain:** Luxury travel booking platform
-**Researched:** 2026-01-26
-**Focus:** Pre-launch security hardening for admin routes, webhooks, data encryption, and token security
+**Project:** Pickleball Passport Mobile App (v2.0)
+**Researched:** 2026-01-28
+**Context:** Subsequent milestone - adding React Native mobile app to existing Next.js web platform
 
 ## Executive Summary
 
-This research covers four critical security dimensions for the Pickleball Passport platform before market launch. The existing codebase has solid foundations (Clerk auth, Stripe webhooks with signature verification, HMAC token generation) but requires hardening in several areas. Key gaps include: (1) middleware not enforcing role-based access, (2) SendGrid webhooks need official SDK verification, (3) bank account data stored in plaintext, and (4) email tokens need production environment enforcement.
+The mobile app requires 12 new dependencies spanning the React Native/Expo ecosystem. All selections prioritize integration with the existing validated web stack (tRPC, Clerk, Supabase, Stripe). The recommended approach uses Expo SDK 54 (stable) with managed workflow for maximum development velocity while maintaining full access to native capabilities.
 
-**Overall Confidence:** HIGH - Patterns verified against Clerk official docs, Next.js 15+ security guidance, and NIST 2025 encryption standards.
+**Key Integration Points:**
+- **tRPC client** - Shared API types and procedures with web app
+- **Clerk Expo SDK** - Unified auth across web and mobile
+- **Supabase client** - Same PostgreSQL database and Realtime channels
+- **Stripe** - Web checkout via deep links (no in-app payments)
 
----
+## Validated Existing Stack (DO NOT CHANGE)
 
-## Admin Route Protection
+The following web platform technologies are already validated and should be reused where possible:
 
-### Current State Analysis
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Next.js | 16.1.1 | Web app framework |
+| tRPC | 11.8.1 | Type-safe API layer |
+| Prisma | 5.22.0 | Database ORM |
+| Clerk | Latest | Authentication |
+| Stripe | Latest | Payments + Connect |
+| SendGrid | Latest | Email delivery |
+| Supabase | Latest | PostgreSQL database |
+| Vercel | Latest | Web deployment |
 
-The existing implementation uses per-page role verification:
-- `app/(dashboard)/dashboard/admin/page.tsx` manually checks role via database query
-- `middleware.ts` is essentially a no-op (just returns `NextResponse.next()`)
-- `lib/auth/permissions.ts` provides helper functions but they're not enforced at middleware level
+## Recommended Mobile Stack Additions
 
-**Risk:** Each admin page must implement its own protection. Missing a check = security hole.
+### Core Framework
 
-### Recommended Pattern: Clerk clerkMiddleware with createRouteMatcher
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **Expo SDK** | 54.0.0 (stable) | React Native framework | Industry standard, managed workflow, 3x/year releases. Uses React Native 0.81 + React 19.1.0. Skip SDK 55 beta (expected Feb 2026). |
+| **React Native** | 0.81 | Native rendering | Bundled with Expo SDK 54, no separate install needed |
+| **Expo Router** | Latest (SDK 54) | File-based navigation | Built on React Navigation, automatic deep linking, type safety from filesystem. Default in new Expo apps. Aligns with Next.js App Router patterns. |
 
-**Confidence:** HIGH (verified against [Clerk official docs](https://clerk.com/docs/reference/nextjs/clerk-middleware))
+**Rationale for Expo SDK 54 (stable) over SDK 55 beta:**
+- SDK 55 beta started Jan 22, 2026, expected stable in Feb 2026
+- SDK 54.0.31 published 12 days ago, battle-tested
+- Avoid beta period instability during initial mobile development
+- Upgrade to SDK 55 stable in future sprint
+
+### Styling
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **NativeWind** | v4 (stable) | Tailwind CSS for React Native | Reuses existing Tailwind patterns from web app. v5 is pre-release (not production-ready). JSX transform approach = no wrapper components. |
+| **react-native-reanimated** | Latest (peer dep) | Animation library | Required peer dependency for NativeWind |
+| **react-native-safe-area-context** | Latest (peer dep) | Safe area handling | Required peer dependency for NativeWind |
+
+**Why NOT v5:**
+- NativeWind v5 is explicitly "pre-release, not intended for production use"
+- v4 is stable and sufficient for Tailwind utility classes
+- Upgrade to v5 stable when released
+
+### Authentication & Security
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **@clerk/clerk-expo** | >=2.2.0 | Authentication | Unified auth with web app. Supports OAuth, magic links, passkeys. Native requires custom UI (no prebuilt components). Tokens stored in expo-secure-store. |
+| **expo-local-authentication** | Latest (SDK 54) | Biometrics (Face ID, Touch ID) | Native biometric auth. Requirement MOB-AUTH-02. Must use Class 3 (Strong) for sensitive data. Requires development build (not Expo Go). |
+| **expo-secure-store** | Latest (SDK 54) | Encrypted token storage | iOS Keychain, Android Keystore. Persists across app reinstalls (iOS only). Clerk uses this automatically. |
+
+**Critical Clerk Limitation:**
+- Native apps must build custom auth UI using Clerk API
+- Prebuilt components only available for web
+- Email magic links NOT supported on native
+- Use OAuth or password flows for mobile
+
+### API & Data
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **@trpc/client** | 11.8.1 (match web) | tRPC client | Shared with web app - reuse API types and procedures |
+| **@trpc/react-query** | 11.8.1 (match web) | React Query integration | tRPC's React hooks layer |
+| **@tanstack/react-query** | Latest compatible | Data fetching & caching | Required by tRPC, handles request caching |
+| **@supabase/supabase-js** | Latest | Supabase client | Realtime chat channels (MOB-PRETRIP-05, MOB-TRIP-03). Same PostgreSQL database as web. |
+| **@react-native-async-storage/async-storage** | Latest | Key-value storage | Required by Supabase for web crypto polyfill. Also used for offline persistence. |
+| **react-native-url-polyfill** | Latest | URL polyfill | Required by Supabase for React Native |
+
+**React Query Offline Persistence (Optional Enhancement):**
+- **@tanstack/query-async-storage-persister** - Persist queries to AsyncStorage
+- **@tanstack/react-query-persist-client** - PersistQueryClientProvider utilities
+- **@react-native-community/netinfo** - Network status monitoring
+
+Not required for MVP but recommended for robust offline experience.
+
+### Push Notifications
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **onesignal-expo-plugin** | Latest | OneSignal Expo integration | Config plugin for OneSignal setup |
+| **react-native-onesignal** | Latest | OneSignal SDK | Push notifications, in-app messaging. Industry standard. Requires Expo SDK 48+, EAS build. Must be first in plugins array. |
+
+**Alternative Considered:**
+- Expo Push Notifications (native) - Requires backend token management
+- OneSignal preferred for full-featured notification platform with dashboard
+
+**Critical Setup:**
+- Must add plugin to front of app.json plugins array
+- Requires EAS build (not Expo Go)
+- iOS requires APNs configuration, app groups entitlement
+- Android requires FCM configuration
+
+### File & Media Handling
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **expo-image-picker** | Latest (SDK 54) | Image & video selection | Camera + gallery access for MOB-PRETRIP-03 (passport docs), MOB-TRIP-07 (photo journal) |
+| **expo-document-picker** | Latest (SDK 54) | Document selection | PDF, DOCX, etc. Alternative to image picker for document uploads. Set `copyToCacheDirectory: true` for expo-file-system access. |
+| **expo-media-library** | Latest (SDK 54) | Photo library access | Read/write device photo library. Android auto-adds READ/WRITE_EXTERNAL_STORAGE. iOS requires Info.plist keys. |
+| **expo-camera** | Latest (SDK 54) | Camera control | Direct camera access if image picker insufficient. Auto-adds CAMERA permission. |
+
+**Permission Requirements:**
+- **iOS:** NSPhotoLibraryUsageDescription, NSPhotoLibraryAddUsageDescription, NSCameraUsageDescription
+- **Android:** Camera, READ/WRITE_EXTERNAL_STORAGE (auto-added), RECORD_AUDIO (for video)
+
+### Location & Maps
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **expo-location** | Latest (SDK 54) | GPS & geolocation | Emergency SOS with GPS (MOB-TRIP-04). Foreground + background location. Polyfills navigator.geolocation for web API compat. |
+
+**Accuracies Available:**
+- BestForNavigation - Most accurate, high battery usage
+- Best - Accurate to 10m
+- Balanced - Accurate to 100m
+- Low - Accurate to 1km
+
+**Permissions:**
+- Foreground only (while app in use)
+- Background (always) - Requires additional justification in app store
+
+### Date & Time UI
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **@react-native-community/datetimepicker** | Latest | Native date/time picker | System UI for dates (court booking, itinerary). Official Expo package. Supports iOS 11+, Android 5+ (API 21+). |
+
+**Alternative Considered:**
+- **react-native-modal-datetime-picker** - Wrapper around datetimepicker with modal presentation
+- **react-native-date-picker** - Requires development build (not Expo Go compatible)
+
+Use official `@react-native-community/datetimepicker` for simplicity unless modal presentation needed.
+
+## Integration Architecture
+
+### tRPC Shared API
+
+**Approach:** Monorepo structure with shared tRPC router types
+
+```
+/packages
+  /api (or /server)
+    - tRPC router definitions
+    - AppRouter type export
+  /mobile (Expo app)
+    - Import AppRouter type
+    - Create tRPC React client
+  /web (Next.js app)
+    - Same tRPC setup as now
+```
+
+**Mobile tRPC Setup:**
+```typescript
+// mobile/utils/trpc.ts
+import { createTRPCReact } from '@trpc/react-query'
+import type { AppRouter } from '@acme/api' // Shared type
+
+export const trpc = createTRPCReact<AppRouter>()
+
+// mobile/App.tsx
+const [queryClient] = useState(() => new QueryClient())
+const [trpcClient] = useState(() =>
+  trpc.createClient({
+    links: [
+      httpBatchLink({
+        url: 'https://your-api.com/api/trpc',
+        headers: () => ({
+          authorization: getAuthToken(), // From Clerk
+        }),
+      }),
+    ],
+  })
+)
+
+<trpc.Provider client={trpcClient} queryClient={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    {/* App */}
+  </QueryClientProvider>
+</trpc.Provider>
+```
+
+### Clerk Authentication Flow
+
+**Web → Mobile Deep Link:**
+- User books on web, gets email with mobile app link
+- Deep link opens app with token
+- Clerk SDK validates token
+- Biometric unlock enabled for returning users
+
+**Mobile Native Auth:**
+- OAuth providers (Google, Apple)
+- Password auth with email verification
+- Custom UI required (no prebuilt components)
+- Store tokens in expo-secure-store (automatic)
+
+### Supabase Realtime Chat
+
+**Channels:**
+- Pre-trip group chat: `trip:{tripId}:group`
+- Concierge chat: `trip:{tripId}:concierge`
+- Photo journal: `trip:{tripId}:photos`
+
+**Client Setup:**
+```typescript
+import { createClient } from '@supabase/supabase-js'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import 'react-native-url-polyfill/auto'
+
+const supabase = createClient(url, anonKey, {
+  auth: {
+    storage: AsyncStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false, // Mobile doesn't use URL auth
+  },
+})
+```
+
+### Stripe Payment Deep Links
+
+**DO NOT implement in-app purchases (Apple/Google tax).**
+
+**Instead:**
+- Mobile displays trip details, calls-to-action
+- "Book Now" opens web checkout in browser
+- Deep link returns to app after purchase
+- App checks booking status via tRPC
 
 ```typescript
-// middleware.ts
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
+// Open web checkout
+Linking.openURL('https://pickleballpassport.com/book/thailand-wellness?utm_source=mobile_app')
 
-// Define route groups
-const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)'])
-const isPartnerRoute = createRouteMatcher(['/dashboard/partner(.*)'])
-const isDashboardRoute = createRouteMatcher(['/dashboard(.*)'])
-const isPublicRoute = createRouteMatcher(['/', '/packages(.*)', '/about(.*)'])
-
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth()
-
-  // Admin routes: require ADMIN role
-  if (isAdminRoute(req)) {
-    if (!userId) {
-      return NextResponse.redirect(new URL('/sign-in', req.url))
-    }
-    // Check role from session claims (requires Clerk custom claims setup)
-    // OR check from database via permissions helper
-    const role = sessionClaims?.metadata?.role
-    if (role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
+// Handle return deep link
+Linking.addEventListener('url', ({ url }) => {
+  if (url.includes('booking-confirmed')) {
+    // Refresh booking status via tRPC
+    trpc.booking.getByUserId.invalidate()
   }
-
-  // Partner routes: require PARTNER or ADMIN role
-  if (isPartnerRoute(req)) {
-    if (!userId) {
-      return NextResponse.redirect(new URL('/sign-in', req.url))
-    }
-    const role = sessionClaims?.metadata?.role
-    if (role !== 'PARTNER' && role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
-  }
-
-  // Dashboard routes: require authentication
-  if (isDashboardRoute(req)) {
-    if (!userId) {
-      return NextResponse.redirect(new URL('/sign-in', req.url))
-    }
-  }
-
-  return NextResponse.next()
 })
+```
 
-export const config = {
-  matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    '/(api|trpc)(.*)',
+## Alternatives Considered
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| **Framework** | Expo managed workflow | Expo bare workflow | Managed = faster dev, auto-upgrades, less native code complexity. Can always eject later if needed. |
+| **Framework** | Expo | React Native CLI | Expo provides better DX, over-the-air updates, and easier setup. RN CLI better for heavy native modules (not needed here). |
+| **Navigation** | Expo Router | React Navigation | Expo Router is built on RN 7, adds file-based routing + types. Default for new Expo apps. Familiarity with Next.js patterns. |
+| **Styling** | NativeWind | React Native StyleSheet | Reuse Tailwind knowledge from web. Faster than inline styles. Alternative: styled-components (more bundle size). |
+| **Styling** | NativeWind | Tamagui | Tamagui is powerful but heavier. NativeWind sufficient for luxury travel app UI needs. |
+| **Push** | OneSignal | Expo Push Notifications | OneSignal = full platform with segmentation, analytics, dashboard. Expo Push = build your own backend. |
+| **Push** | OneSignal | Firebase Cloud Messaging | OneSignal wraps FCM + APNs with better DX. FCM direct = more setup complexity. |
+| **Offline Storage** | AsyncStorage | SQLite (expo-sqlite) | AsyncStorage sufficient for <100 records. SQLite overkill unless heavy offline querying needed. |
+| **Offline Storage** | AsyncStorage | WatermelonDB | WatermelonDB = complex setup for syncing. Not needed unless offline-first with complex relationships. |
+| **Date Picker** | @react-native-community/datetimepicker | react-native-modal-datetime-picker | Official package sufficient. Modal wrapper adds minimal value for our use cases. |
+
+## Installation
+
+### Prerequisites
+```bash
+# Install Expo CLI globally (optional)
+npm install -g eas-cli
+
+# Verify Node.js version
+node --version # Must be 20.19.x or higher for SDK 54
+```
+
+### Create Expo App (if new)
+```bash
+npx create-expo-app@latest pickleball-passport-mobile --template tabs
+cd pickleball-passport-mobile
+```
+
+### Core Dependencies
+```bash
+# Expo SDK 54 (includes React Native 0.81, Expo Router)
+npx expo install expo@^54.0.0
+
+# Styling
+npx expo install nativewind@^4.0.0 tailwindcss react-native-reanimated react-native-safe-area-context
+
+# Authentication & Security
+npx expo install @clerk/clerk-expo expo-local-authentication expo-secure-store
+
+# API & Data
+npm install @trpc/client@^11.8.1 @trpc/react-query@^11.8.1 @tanstack/react-query
+npx expo install @supabase/supabase-js @react-native-async-storage/async-storage react-native-url-polyfill
+
+# Push Notifications
+npm install react-native-onesignal onesignal-expo-plugin
+
+# File & Media
+npx expo install expo-image-picker expo-document-picker expo-media-library expo-camera
+
+# Location
+npx expo install expo-location
+
+# Date/Time Picker
+npx expo install @react-native-community/datetimepicker
+```
+
+### Optional: Offline Persistence
+```bash
+npm install @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
+npx expo install @react-native-community/netinfo
+```
+
+### Dev Dependencies
+```bash
+npm install -D @types/react @types/react-native typescript
+```
+
+## Configuration Files
+
+### app.json (Expo Config)
+```json
+{
+  "expo": {
+    "name": "Pickleball Passport",
+    "slug": "pickleball-passport",
+    "version": "2.0.0",
+    "scheme": "pickleballpassport",
+    "platforms": ["ios", "android"],
+    "plugins": [
+      "onesignal-expo-plugin", // MUST BE FIRST
+      "expo-router",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Pickleball Passport to use Face ID for secure biometric login."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Pickleball Passport to access your photos to upload documents and share trip memories.",
+          "cameraPermission": "Allow Pickleball Passport to use your camera to take photos for your trip journal."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Pickleball Passport to save photos to your library.",
+          "savePhotosPermission": "Allow Pickleball Passport to save trip photos."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Pickleball Passport to access your location for emergency SOS.",
+          "locationAlwaysPermission": "Allow Pickleball Passport to access your location in the background for trip tracking."
+        }
+      ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.pickleballpassport.app",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow Pickleball Passport to use Face ID for secure biometric login."
+      }
+    },
+    "android": {
+      "package": "com.pickleballpassport.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    }
+  }
+}
+```
+
+### tailwind.config.js
+```javascript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './app/**/*.{js,jsx,ts,tsx}',
+    './components/**/*.{js,jsx,ts,tsx}',
   ],
-}
-```
-
-### Defense in Depth: Data Access Layer (DAL)
-
-**CRITICAL:** CVE-2025-29927 demonstrated that middleware alone is insufficient. Next.js 15.2.3+ patches the vulnerability, but the defense-in-depth pattern remains essential.
-
-**Confidence:** HIGH (verified against [Next.js authentication guide](https://github.com/vercel/next.js/blob/canary/docs/01-app/02-guides/authentication.mdx))
-
-```typescript
-// lib/auth/dal.ts (Data Access Layer)
-import { auth } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/db'
-import { cache } from 'react'
-
-/**
- * Verify session and return user with role.
- * Use this in Server Components and Route Handlers.
- * Cached per request to avoid multiple DB calls.
- */
-export const verifySession = cache(async () => {
-  const { userId } = await auth()
-
-  if (!userId) {
-    return null
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true, role: true, email: true },
-  })
-
-  return user
-})
-
-/**
- * Require admin access or throw.
- * Use at the START of admin Route Handlers and Server Actions.
- */
-export async function requireAdmin() {
-  const user = await verifySession()
-
-  if (!user || user.role !== 'ADMIN') {
-    throw new Error('Forbidden: Admin access required')
-  }
-
-  return user
-}
-
-/**
- * Require partner or admin access or throw.
- */
-export async function requirePartnerOrAdmin() {
-  const user = await verifySession()
-
-  if (!user || (user.role !== 'PARTNER' && user.role !== 'ADMIN')) {
-    throw new Error('Forbidden: Partner or admin access required')
-  }
-
-  return user
-}
-```
-
-### Usage Pattern for Route Handlers
-
-```typescript
-// app/api/admin/bookings/route.ts
-import { requireAdmin } from '@/lib/auth/dal'
-
-export async function GET() {
-  // Verify admin access FIRST
-  const admin = await requireAdmin()
-
-  // Now safe to proceed with data access
-  const bookings = await prisma.booking.findMany({
-    // ... query
-  })
-
-  return Response.json(bookings)
-}
-```
-
-### What NOT to Do
-
-1. **DO NOT rely solely on middleware for authorization.** Middleware is optimistic; it can be bypassed in certain scenarios.
-
-2. **DO NOT check roles only in the UI.** Client-side checks are for UX, not security.
-
-3. **DO NOT skip auth checks in tRPC procedures.** Every protected procedure needs explicit verification.
-
-4. **DO NOT store role in client-accessible session without server verification.** Always verify against the database for sensitive operations.
-
-### Quick Win vs Comprehensive
-
-| Approach | Effort | Security | Recommendation |
-|----------|--------|----------|----------------|
-| Update middleware with clerkMiddleware | Low | Medium | Do first |
-| Add DAL layer with requireAdmin() | Medium | High | Do second |
-| Add Clerk custom session claims | Medium | High | Optional optimization |
-| Upgrade to Next.js 15.2.3+ | Low | Critical | Do immediately |
-
----
-
-## Webhook Security
-
-### Stripe Webhooks (Current Implementation)
-
-**Status:** GOOD - Already implements signature verification correctly.
-
-**Confidence:** HIGH (verified against [Stripe webhook docs](https://docs.stripe.com/webhooks))
-
-Current implementation in `app/api/webhooks/stripe/route.ts`:
-- Uses `verifyWebhookSignature()` from `lib/stripe/stripe-service.ts`
-- Uses raw body via `req.text()` (correct)
-- Returns 400 for invalid signatures
-
-**Improvements Needed:**
-
-```typescript
-// Add replay attack prevention (optional but recommended)
-async function POST(req: NextRequest) {
-  const body = await req.text()
-  const signature = req.headers.get('stripe-signature')
-
-  // Existing verification
-  const event = verifyWebhookSignature(body, signature, webhookSecret)
-
-  // NEW: Check timestamp freshness (Stripe includes timestamp in signature)
-  const timestampHeader = req.headers.get('stripe-signature')?.match(/t=(\d+)/)?.[1]
-  if (timestampHeader) {
-    const eventAge = Date.now() / 1000 - parseInt(timestampHeader)
-    const TOLERANCE_SECONDS = 300 // 5 minutes
-    if (eventAge > TOLERANCE_SECONDS) {
-      return NextResponse.json({ error: 'Webhook timestamp too old' }, { status: 400 })
-    }
-  }
-
-  // Continue processing...
-}
-```
-
-### SendGrid Webhooks (Needs Hardening)
-
-**Status:** PARTIAL - Has verification logic but uses raw crypto instead of official SDK.
-
-**Current Issue:** The implementation in `app/api/webhooks/sendgrid/events/route.ts` attempts ECDSA verification manually. This is fragile and may not match SendGrid's exact signature format.
-
-**Recommended Fix:** Use the official `@sendgrid/eventwebhook` package.
-
-**Confidence:** HIGH (verified against [SendGrid webhook security docs](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/getting-started-event-webhook-security-features))
-
-```typescript
-// app/api/webhooks/sendgrid/events/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { EventWebhook, EventWebhookHeader } from '@sendgrid/eventwebhook'
-
-const SENDGRID_VERIFICATION_KEY = process.env.SENDGRID_WEBHOOK_VERIFICATION_KEY
-
-export async function POST(request: NextRequest) {
-  // CRITICAL: Get raw body before any parsing
-  const rawBody = await request.text()
-
-  const signature = request.headers.get(EventWebhookHeader.SIGNATURE())
-  const timestamp = request.headers.get(EventWebhookHeader.TIMESTAMP())
-
-  if (!SENDGRID_VERIFICATION_KEY) {
-    if (process.env.NODE_ENV === 'production') {
-      console.error('SECURITY ERROR: SENDGRID_WEBHOOK_VERIFICATION_KEY not configured')
-      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 })
-    }
-    // Allow in development without verification
-    console.warn('[DEV] Skipping SendGrid signature verification')
-  } else {
-    if (!signature || !timestamp) {
-      return NextResponse.json({ error: 'Missing signature headers' }, { status: 401 })
-    }
-
-    try {
-      const eventWebhook = new EventWebhook()
-      const ecPublicKey = eventWebhook.convertPublicKeyToECDSA(SENDGRID_VERIFICATION_KEY)
-      const isValid = eventWebhook.verifySignature(ecPublicKey, rawBody, signature, timestamp)
-
-      if (!isValid) {
-        console.warn('Invalid SendGrid webhook signature')
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
-      }
-    } catch (error) {
-      console.error('SendGrid signature verification error:', error)
-      return NextResponse.json({ error: 'Signature verification failed' }, { status: 401 })
-    }
-  }
-
-  // Parse verified payload
-  const events = JSON.parse(rawBody)
-  // ... rest of processing
-}
-```
-
-**Installation:**
-```bash
-pnpm add @sendgrid/eventwebhook
-```
-
-### Clerk Webhooks (Already Correct)
-
-**Status:** GOOD - Uses `svix` library correctly for signature verification.
-
-Current implementation in `app/api/webhooks/clerk/route.ts` is correct:
-- Uses `svix` package for verification
-- Checks for required headers
-- Uses raw body for verification
-
-### Webhook Security Checklist
-
-| Webhook | Signature Verified | Raw Body | Idempotency | Timestamp Check | Status |
-|---------|-------------------|----------|-------------|-----------------|--------|
-| Stripe | Yes | Yes | Yes | No (add) | Good |
-| SendGrid | Partial | Yes | No | Yes | Needs SDK |
-| Clerk | Yes | Yes | No | Yes (svix) | Good |
-
-### What NOT to Do
-
-1. **DO NOT use `express.json()` or `req.json()` before signature verification.** Always use raw body.
-
-2. **DO NOT use string comparison (===) for signatures.** Use timing-safe comparison or SDK methods.
-
-3. **DO NOT log webhook secrets.** Redact in all log outputs.
-
-4. **DO NOT skip verification in production.** Fail closed, not open.
-
----
-
-## Data Encryption (Bank Account Numbers)
-
-### Current State
-
-Bank account data is stored in plaintext in the database:
-```prisma
-// prisma/schema.prisma (lines 897-898)
-accountNumber String // TODO: Encrypt in production
-routingNumber String // TODO: Encrypt in production
-```
-
-**Risk:** CRITICAL - Database breach exposes all partner bank details.
-
-### Recommended Pattern: AES-256-GCM Field-Level Encryption
-
-**Confidence:** HIGH (verified against [NIST 2025 encryption standards](https://trainingcamp.com/articles/encryption-best-practices-2025-complete-guide-to-data-protection-standards-and-implementation/) and [Node.js crypto docs](https://nodejs.org/api/crypto.html))
-
-```typescript
-// lib/encryption/field-encryption.ts
-import crypto from 'crypto'
-
-const ALGORITHM = 'aes-256-gcm'
-const IV_LENGTH = 12 // 96 bits for GCM
-const AUTH_TAG_LENGTH = 16 // 128 bits
-
-/**
- * Get encryption key from environment.
- * Key must be 32 bytes (256 bits) for AES-256.
- */
-function getEncryptionKey(): Buffer {
-  const key = process.env.FIELD_ENCRYPTION_KEY
-
-  if (!key) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('FIELD_ENCRYPTION_KEY must be configured in production')
-    }
-    // Development fallback (NOT for production)
-    console.warn('[DEV] Using insecure fallback encryption key')
-    return crypto.scryptSync('dev-fallback-key', 'salt', 32)
-  }
-
-  // Key should be base64-encoded 32-byte key
-  const keyBuffer = Buffer.from(key, 'base64')
-  if (keyBuffer.length !== 32) {
-    throw new Error('FIELD_ENCRYPTION_KEY must be 32 bytes (256 bits)')
-  }
-
-  return keyBuffer
-}
-
-/**
- * Encrypt a plaintext value.
- * Returns: base64(iv + authTag + ciphertext)
- */
-export function encryptField(plaintext: string): string {
-  const key = getEncryptionKey()
-  const iv = crypto.randomBytes(IV_LENGTH)
-
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv)
-
-  let encrypted = cipher.update(plaintext, 'utf8')
-  encrypted = Buffer.concat([encrypted, cipher.final()])
-
-  const authTag = cipher.getAuthTag()
-
-  // Combine: IV (12 bytes) + Auth Tag (16 bytes) + Ciphertext
-  const combined = Buffer.concat([iv, authTag, encrypted])
-
-  return combined.toString('base64')
-}
-
-/**
- * Decrypt an encrypted value.
- */
-export function decryptField(encryptedBase64: string): string {
-  const key = getEncryptionKey()
-  const combined = Buffer.from(encryptedBase64, 'base64')
-
-  // Extract components
-  const iv = combined.subarray(0, IV_LENGTH)
-  const authTag = combined.subarray(IV_LENGTH, IV_LENGTH + AUTH_TAG_LENGTH)
-  const ciphertext = combined.subarray(IV_LENGTH + AUTH_TAG_LENGTH)
-
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv)
-  decipher.setAuthTag(authTag)
-
-  let decrypted = decipher.update(ciphertext)
-  decrypted = Buffer.concat([decrypted, decipher.final()])
-
-  return decrypted.toString('utf8')
-}
-
-/**
- * Generate a new encryption key.
- * Run once and store securely.
- */
-export function generateEncryptionKey(): string {
-  return crypto.randomBytes(32).toString('base64')
-}
-```
-
-### Prisma Middleware for Transparent Encryption
-
-```typescript
-// lib/db/encryption-middleware.ts
-import { Prisma } from '@prisma/client'
-import { encryptField, decryptField } from '@/lib/encryption/field-encryption'
-
-// Fields that should be encrypted
-const ENCRYPTED_FIELDS = {
-  PartnerProfile: ['accountNumber', 'routingNumber'],
-  GuestProfile: ['passportNumber'],
-  Booking: ['medicalNotes'],
-} as const
-
-type ModelName = keyof typeof ENCRYPTED_FIELDS
-
-export function createEncryptionMiddleware(): Prisma.Middleware {
-  return async (params, next) => {
-    const model = params.model as ModelName | undefined
-
-    if (!model || !ENCRYPTED_FIELDS[model]) {
-      return next(params)
-    }
-
-    const fieldsToEncrypt = ENCRYPTED_FIELDS[model]
-
-    // Encrypt on write operations
-    if (params.action === 'create' || params.action === 'update' || params.action === 'upsert') {
-      const data = params.args.data
-      if (data) {
-        for (const field of fieldsToEncrypt) {
-          if (data[field] && typeof data[field] === 'string') {
-            data[field] = encryptField(data[field])
-          }
-        }
-      }
-    }
-
-    // Execute query
-    const result = await next(params)
-
-    // Decrypt on read operations
-    if (result && (params.action === 'findUnique' || params.action === 'findFirst' || params.action === 'findMany')) {
-      const decryptRecord = (record: Record<string, unknown>) => {
-        for (const field of fieldsToEncrypt) {
-          if (record[field] && typeof record[field] === 'string') {
-            try {
-              record[field] = decryptField(record[field] as string)
-            } catch {
-              // Field might not be encrypted (migration in progress)
-              console.warn(`Failed to decrypt ${model}.${field}`)
-            }
-          }
-        }
-        return record
-      }
-
-      if (Array.isArray(result)) {
-        return result.map(decryptRecord)
-      } else if (typeof result === 'object') {
-        return decryptRecord(result as Record<string, unknown>)
-      }
-    }
-
-    return result
-  }
-}
-```
-
-### Alternative: Use Stripe Connect (Recommended for Bank Details)
-
-**Confidence:** HIGH - Industry best practice to avoid PCI-DSS scope.
-
-Instead of encrypting bank details locally, use Stripe Connect to manage partner payouts:
-
-1. Partner provides bank details directly to Stripe during onboarding
-2. Store only `stripeConnectAccountId` in your database
-3. Use Stripe API to initiate payouts
-
-**Benefits:**
-- Eliminates PCI-DSS/financial data compliance burden
-- Bank details never touch your servers
-- Stripe handles all the encryption, validation, and compliance
-
-**Current State:** The codebase already has Stripe Connect integration (`lib/stripe/stripe-connect.ts`) with `stripeConnectAccountId` on `PartnerProfile`. The local bank details may be a legacy fallback.
-
-**Recommendation:** Remove local bank storage entirely and use Stripe Connect exclusively.
-
-### Key Management Best Practices
-
-1. **Generate key securely:**
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
-```
-
-2. **Store in secrets manager:** Use AWS Secrets Manager, HashiCorp Vault, or Vercel Environment Variables (encrypted)
-
-3. **Rotate quarterly:** Implement key rotation strategy with dual-key support during transition
-
-4. **Never commit keys:** Add to `.gitignore` and use `.env.local`
-
-### Data Migration Strategy
-
-```typescript
-// scripts/encrypt-existing-data.ts
-import { prisma } from '@/lib/db'
-import { encryptField } from '@/lib/encryption/field-encryption'
-
-async function migratePartnerBankDetails() {
-  const partners = await prisma.partnerProfile.findMany({
-    where: {
-      accountNumber: { not: null },
+  theme: {
+    extend: {
+      // Reuse web theme colors
+      colors: {
+        primary: '#your-brand-color',
+      },
     },
-  })
+  },
+  plugins: [],
+}
+```
 
-  for (const partner of partners) {
-    // Check if already encrypted (base64 format)
-    if (partner.accountNumber && !partner.accountNumber.includes('==')) {
-      await prisma.partnerProfile.update({
-        where: { id: partner.id },
-        data: {
-          accountNumber: encryptField(partner.accountNumber),
-          routingNumber: partner.routingNumber ? encryptField(partner.routingNumber) : null,
-        },
-      })
-    }
+### babel.config.js
+```javascript
+module.exports = function (api) {
+  api.cache(true)
+  return {
+    presets: ['babel-preset-expo'],
+    plugins: [
+      'nativewind/babel',
+      'react-native-reanimated/plugin', // Must be last
+    ],
   }
 }
 ```
 
-### What NOT to Do
+## Build & Deployment
 
-1. **DO NOT use ECB mode.** It's insecure. Use GCM for authenticated encryption.
+### Development
+```bash
+# Start dev server
+npx expo start
 
-2. **DO NOT reuse IVs.** Generate a new random IV for every encryption.
+# iOS simulator
+npx expo start --ios
 
-3. **DO NOT store the encryption key in the database.** Keep it separate in environment variables or a secrets manager.
+# Android emulator
+npx expo start --android
 
-4. **DO NOT encrypt data you don't need.** Minimize what you store; delete what you don't need.
-
----
-
-## Token Security (Email HMAC)
-
-### Current State
-
-The existing implementation in `lib/preferences/email-token.ts` is well-designed:
-- Uses HMAC-SHA256 for token hashing
-- Uses `crypto.timingSafeEqual()` for comparison (prevents timing attacks)
-- Has production enforcement for secret configuration
-- 90-day expiry on tokens
-
-**Status:** GOOD - Only minor improvements needed.
-
-### Improvements Needed
-
-**Confidence:** HIGH (verified against [Node.js crypto docs](https://nodejs.org/api/crypto.html) and [HMAC best practices](https://www.authgear.com/post/hmac-api-security))
-
-```typescript
-// lib/preferences/email-token.ts - Suggested improvements
-
-// 1. Add minimum secret length validation
-function getEmailTokenSecret(): string {
-  const secret = process.env.EMAIL_TOKEN_SECRET
-
-  if (secret && secret.length >= 32) {
-    return secret
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'SECURITY ERROR: EMAIL_TOKEN_SECRET must be at least 32 characters. ' +
-        'Generate with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"'
-    )
-  }
-
-  // Development warning (current implementation is good)
-  console.warn('[DEV] EMAIL_TOKEN_SECRET not configured...')
-  return crypto.randomBytes(32).toString('hex')
-}
-
-// 2. Add rate limiting to token verification (prevent brute force)
-const verificationAttempts = new Map<string, { count: number; resetAt: number }>()
-
-export async function verifyEmailToken(token: string): Promise<string | null> {
-  // Rate limit by token prefix (first 8 chars)
-  const tokenPrefix = token.slice(0, 8)
-  const now = Date.now()
-  const attempt = verificationAttempts.get(tokenPrefix)
-
-  if (attempt && attempt.resetAt > now && attempt.count >= 5) {
-    console.warn('Rate limit exceeded for token verification')
-    return null
-  }
-
-  // Update attempt counter
-  if (!attempt || attempt.resetAt <= now) {
-    verificationAttempts.set(tokenPrefix, { count: 1, resetAt: now + 60000 })
-  } else {
-    attempt.count++
-  }
-
-  // ... rest of verification logic (existing code is good)
-}
-
-// 3. Add token revocation capability
-export async function revokeEmailToken(userId: string): Promise<void> {
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      preferenceEmailToken: null,
-      preferenceEmailTokenExpiry: null,
-    },
-  })
-}
+# Development build (for biometrics, OneSignal)
+eas build --profile development --platform ios
+eas build --profile development --platform android
 ```
 
-### Token Security Checklist
+### Production
+```bash
+# Build for app stores
+eas build --profile production --platform ios
+eas build --profile production --platform android
 
-| Requirement | Current | Status |
-|-------------|---------|--------|
-| HMAC-SHA256 | Yes | Good |
-| Timing-safe comparison | Yes | Good |
-| Production secret enforcement | Yes | Good |
-| Minimum 32-char secret | Yes | Good |
-| Token expiry | 90 days | Good |
-| Rate limiting | No | Add |
-| Token revocation | No | Add |
-| Single-use tokens | No | Consider |
+# Submit to stores
+eas submit --platform ios
+eas submit --platform android
+```
 
-### What NOT to Do
+### Over-the-Air Updates
+```bash
+# Publish update (JS only, no native changes)
+eas update --branch production --message "Fix chat UI"
+```
 
-1. **DO NOT use string comparison (===) for token validation.** Always use `crypto.timingSafeEqual()`.
+## Environment Variables
 
-2. **DO NOT log tokens.** Redact in all log outputs.
-
-3. **DO NOT send tokens in URLs for sensitive operations.** Use POST with body.
-
-4. **DO NOT store plaintext tokens.** Store only the hash.
-
----
-
-## Prioritized Recommendations
-
-### Immediate (Pre-Launch Critical)
-
-| Priority | Task | Effort | Impact |
-|----------|------|--------|--------|
-| P0 | Upgrade Next.js to 15.2.3+ (CVE-2025-29927) | Low | Critical |
-| P0 | Implement clerkMiddleware for admin routes | Low | High |
-| P1 | Switch SendGrid webhook to official SDK | Low | High |
-| P1 | Add DAL layer with requireAdmin() | Medium | High |
-
-### Short-Term (Post-Launch, Within 2 Weeks)
-
-| Priority | Task | Effort | Impact |
-|----------|------|--------|--------|
-| P1 | Encrypt bank account data OR remove in favor of Stripe Connect | Medium | High |
-| P2 | Add rate limiting to email token verification | Low | Medium |
-| P2 | Add Stripe webhook timestamp validation | Low | Medium |
-
-### Medium-Term (Within 30 Days)
-
-| Priority | Task | Effort | Impact |
-|----------|------|--------|--------|
-| P2 | Implement encryption key rotation strategy | Medium | Medium |
-| P2 | Encrypt passport numbers and medical notes | Medium | High |
-| P3 | Add idempotency to SendGrid webhooks | Low | Low |
-
----
-
-## Environment Variables Required
+Create `.env` in mobile project root:
 
 ```bash
-# Security-critical environment variables
+# API
+EXPO_PUBLIC_API_URL=https://api.pickleballpassport.com/trpc
 
-# Next.js 15+ security headers
-NEXT_SECURITY_HEADERS=true
+# Clerk
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
 
-# Clerk (existing)
-CLERK_SECRET_KEY=sk_...
-CLERK_WEBHOOK_SECRET=whsec_...
+# Supabase
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-# Stripe (existing)
-STRIPE_SECRET_KEY=sk_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+# OneSignal
+ONESIGNAL_APP_ID=your-onesignal-app-id
 
-# SendGrid (add verification key)
-SENDGRID_WEBHOOK_VERIFICATION_KEY=MFkw...  # ECDSA public key from SendGrid dashboard
-
-# Email Token (existing, ensure 32+ chars)
-EMAIL_TOKEN_SECRET=your-32-char-minimum-secret-here
-
-# Field Encryption (new)
-FIELD_ENCRYPTION_KEY=base64-encoded-32-byte-key
+# Deep Linking
+EXPO_PUBLIC_WEB_URL=https://pickleballpassport.com
 ```
 
----
+## Version Pinning Strategy
+
+| Package | Strategy | Why |
+|---------|----------|-----|
+| Expo SDK | Pin major.minor (54.x) | Auto-patch updates safe, major requires migration |
+| tRPC | Match web version exactly | Type safety depends on version alignment |
+| React Query | Pin major (^5.0.0) | Breaking changes between majors |
+| NativeWind | Pin v4.x until v5 stable | v5 pre-release, avoid in production |
+| Clerk | Use latest | Security patches important, rare breaking changes |
+| OneSignal | Use latest | Notification platform updates frequent |
+| Expo modules | Use SDK-compatible | `npx expo install` handles versions |
+
+**Upgrade cadence:**
+- **Monthly:** Patch versions (security fixes)
+- **Quarterly:** Expo SDK minors (new features)
+- **Yearly:** Expo SDK majors (React Native upgrades)
+
+## Confidence Assessment
+
+| Technology | Confidence | Verification Source |
+|------------|-----------|-------------------|
+| Expo SDK 54 | HIGH | Official Expo docs, released stable |
+| NativeWind v4 | HIGH | Official docs, widely used |
+| Clerk Expo SDK | HIGH | Official Clerk docs, last updated Jan 14, 2026 |
+| tRPC React Native | MEDIUM | Community examples, no official guide but straightforward |
+| OneSignal Expo | HIGH | Official integration docs, Expo SDK 48+ required |
+| React Query offline | MEDIUM | Multiple community tutorials, well-documented pattern |
+| Supabase RN | HIGH | Official Supabase docs updated Jan 2026 |
+
+## Open Questions & Future Research
+
+### Requires Phase-Specific Investigation
+
+1. **Map integration** - Not researched yet. Options: react-native-maps, Google Maps SDK, Apple Maps. Depends on MOB-TRIP requirements.
+
+2. **Video chat** - PROJECT.md says "External Zoom links sufficient" but if in-app needed, research Agora, Daily.co, or Twilio.
+
+3. **Payment UX** - Deep link to web vs presenting in-app browser (SafariView/Chrome Custom Tabs) for better UX.
+
+4. **Code signing** - iOS provisioning profiles, Android keystore management in CI/CD.
+
+5. **Analytics** - Web uses Vercel Analytics. Mobile options: Expo Application Services, PostHog, Amplitude.
+
+6. **Error tracking** - Web uses Sentry (likely). Mobile: Sentry React Native, BugSnag.
+
+7. **Monorepo structure** - If sharing tRPC types, consider Turborepo, Nx, or Yarn workspaces.
+
+8. **E2E testing** - Detox, Maestro, or Appium for mobile testing strategy.
+
+### Low Priority (Post-MVP)
+
+- **App icon/splash screen generation** - expo-splash-screen, adaptive icons
+- **App store screenshots** - Fastlane snapshot automation
+- **Localization** - i18next, expo-localization if multi-language needed
+- **Accessibility** - Screen reader testing, dynamic type support
 
 ## Sources
 
 ### High Confidence (Official Documentation)
-- [Clerk Middleware Documentation](https://clerk.com/docs/reference/nextjs/clerk-middleware)
-- [Next.js Authentication Guide](https://github.com/vercel/next.js/blob/canary/docs/01-app/02-guides/authentication.mdx)
-- [Stripe Webhook Signature Verification](https://docs.stripe.com/webhooks/signature)
-- [SendGrid Event Webhook Security](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/getting-started-event-webhook-security-features)
-- [Node.js Crypto Documentation](https://nodejs.org/api/crypto.html)
+- [Expo SDK 54 Documentation](https://docs.expo.dev/versions/latest/)
+- [Expo Router Introduction](https://docs.expo.dev/router/introduction/)
+- [NativeWind v5 Overview](https://www.nativewind.dev/v5)
+- [Clerk Expo SDK Reference](https://clerk.com/docs/reference/expo/overview)
+- [tRPC React Query Setup](https://trpc.io/docs/client/react/setup)
+- [OneSignal Expo SDK Setup](https://documentation.onesignal.com/docs/en/react-native-expo-sdk-setup)
+- [Supabase Expo React Native Guide](https://supabase.com/docs/guides/getting-started/quickstarts/expo-react-native)
+- [Expo Local Authentication](https://docs.expo.dev/versions/latest/sdk/local-authentication/)
+- [Expo Secure Store](https://docs.expo.dev/versions/latest/sdk/securestore/)
+- [Expo Image Picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/)
+- [Expo Document Picker](https://docs.expo.dev/versions/latest/sdk/document-picker/)
+- [Expo Location](https://docs.expo.dev/versions/latest/sdk/location/)
+- [@react-native-community/datetimepicker](https://docs.expo.dev/versions/latest/sdk/date-time-picker/)
 
-### Medium Confidence (Industry Best Practices)
-- [NIST 2025 Encryption Standards](https://trainingcamp.com/articles/encryption-best-practices-2025-complete-guide-to-data-protection-standards-and-implementation/)
-- [HMAC API Security Best Practices](https://www.authgear.com/post/hmac-api-security)
-- [Next.js Middleware Authentication 2025](https://www.hashbuilds.com/articles/next-js-middleware-authentication-protecting-routes-in-2025)
+### Medium Confidence (Community Resources)
+- [React Navigation 7 vs Expo Router Comparison](https://viewlytics.ai/blog/react-navigation-7-vs-expo-router)
+- [tRPC React Native Monorepo Example](https://github.com/johnkueh/react-native-trpc-monorepo-example)
+- [Building Offline-First React Native Apps with React Query](https://www.whitespectre.com/ideas/how-to-build-offline-first-react-native-apps-with-react-query-and-typescript/)
+- [Biometric Authentication in React Native Expo Guide (Jan 2026)](https://sasandasaumya.medium.com/biometric-authentication-in-react-native-expo-a-complete-guide-face-id-fingerprint-732d80e5e423)
 
-### Existing Codebase References
-- `middleware.ts` - Current no-op middleware
-- `lib/auth/permissions.ts` - Existing permission helpers
-- `app/api/webhooks/stripe/route.ts` - Stripe webhook (good example)
-- `app/api/webhooks/sendgrid/events/route.ts` - SendGrid webhook (needs SDK)
-- `app/api/webhooks/clerk/route.ts` - Clerk webhook (good example)
-- `lib/preferences/email-token.ts` - Email token implementation (good)
-- `todos/001-pending-p1-pii-stored-plaintext.md` - Existing security todo
-- `todos/009-pending-p1-todos-security-critical.md` - Security todos tracker
+### Web Search (Current Ecosystem State)
+- [Expo SDK 55 Beta Announcement](https://expo.dev/changelog/sdk-55-beta) (Jan 22, 2026)
+- [What's New in Expo SDK 55 (Medium)](https://medium.com/@onix_react/whats-new-in-expo-sdk-55-6eac1553cee8)
+- [Best React Native Component Libraries 2026](https://dev.to/ninarao/best-react-native-component-libraries-with-tailwind-support-for-fast-ui-development-in-2026-2fe4)
+- [Expo vs OneSignal Push Comparison 2026](https://www.courier.com/integrations/compare/expo-vs-onesignal-push)
+
+---
+
+**Last Updated:** 2026-01-28
+**Researcher:** GSD Project Researcher
+**Next Steps:** Feed this into roadmap creation for phase structure and dependency ordering
