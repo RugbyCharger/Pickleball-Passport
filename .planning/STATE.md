@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-26)
+See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.0 MVP deployed to production — ready for next milestone
+**Current focus:** v1.1 Gift Booking — defining requirements
 
 ## Current Position
 
-Phase: N/A (milestone complete)
-Plan: N/A
-Status: Production deployed
-Last activity: 2026-01-27 — v1.0 deployed to Vercel production
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-01-27 — Milestone v1.1 started
 
-Progress: [██████████] 100% (v1.0 complete)
+Progress: [░░░░░░░░░░] 0% (v1.1 starting)
 
 ## Milestone Summary
 
@@ -73,24 +73,10 @@ None.
 
 ### Blockers/Concerns
 
-- [PENDING]: Clerk webhook not configured — see Step 1 below for setup
+- [RESOLVED]: Clerk webhook configured — endpoint sz5Xzo active (2026-01-27)
 - [RESOLVED]: Admin user configured — grant@aikanga.com has ADMIN role (2026-01-27)
 - [RESOLVED]: Admin layout added — database role check, no Clerk session config needed (2026-01-27)
 - [RESOLVED]: EMAIL_TOKEN_SECRET lazy initialization added to fix Vercel build (2026-01-27)
-
-### Manual Setup Required
-
-**Clerk Webhook (for new user sync):**
-
-1. Go to https://dashboard.clerk.com → Webhooks → Add Endpoint
-2. URL: `https://pickleball-passport.vercel.app/api/webhooks/clerk`
-3. Events: `user.created`, `user.updated`, `user.deleted`
-4. Copy signing secret, then run:
-   ```
-   printf 'YOUR_SECRET' | vercel env add CLERK_WEBHOOK_SECRET production
-   printf 'YOUR_SECRET' | vercel env add CLERK_WEBHOOK_SECRET preview
-   vercel --prod
-   ```
 
 ## Session Continuity
 

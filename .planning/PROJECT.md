@@ -6,13 +6,21 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.0 MVP (shipped 2026-01-26)
+**Version:** v1.1 Gift Booking (in progress)
 
-The platform is go-to-market ready with:
-- Secure admin routes protected via Clerk middleware
-- Payment failure recovery with guest emails and update modal
-- Partner portal with commission tracking and UTM-enabled referral links
-- Complete email system including booking cancellations
+The platform is production-ready (v1.0 shipped 2026-01-26). Now adding:
+- Gift booking system — allow guests to purchase trips as gifts for others
+
+## Current Milestone: v1.1 Gift Booking
+
+**Goal:** Enable guests to purchase transformation trips as gifts, with full lifecycle management from purchase through acceptance/decline/expiration.
+
+**Target features:**
+- Gift purchase flow (buy a trip for someone else)
+- Gift notification emails (to purchaser and recipient)
+- Recipient acceptance/decline UI
+- Gift status tracking in dashboard
+- Refund handling for declined/expired gifts
 
 ## Core Value
 
@@ -51,16 +59,16 @@ The platform is go-to-market ready with:
 
 ### Active
 
-<!-- Next milestone scope — to be defined -->
+<!-- v1.1 Gift Booking scope -->
 
-(No active requirements — run `/gsd:new-milestone` to define next milestone)
+(Requirements being defined — see REQUIREMENTS.md when complete)
 
 ### Out of Scope
 
 <!-- Explicit boundaries -->
 
 - **Mobile app** — Web app sufficient for now, consider for v2
-- **Gift booking system** — Existing implementation dormant
+- ~~**Gift booking system**~~ — Now in scope for v1.1
 - **SMS notifications** — Twilio stubs exist but not required
 - **Dynamic pricing per trip** — Hardcoded pricing acceptable
 - **Court booking system** — Mobile-only feature
@@ -103,5 +111,7 @@ The platform is go-to-market ready with:
 | Available = COMPLETED bookings | Clear business rule | ✓ Implemented |
 | UTM standard params | Industry standard tracking | ✓ Implemented |
 
+| Gift system = v1.1 | High-value gift market for luxury travel | — Pending |
+
 ---
-*Last updated: 2026-01-26 after v1.0 milestone*
+*Last updated: 2026-01-27 after v1.1 milestone start*
