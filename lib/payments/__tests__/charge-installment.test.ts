@@ -13,12 +13,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { chargeInstallment } from '../charge-installment'
 import Stripe from 'stripe'
-import * as stripeModule from '@/lib/stripe/get-stripe'
+import * as stripeServerModule from '@/lib/stripe/server'
 import * as emailModule from '@/lib/email/send-email'
 import * as adminAlertsModule from '@/lib/email/admin-alerts'
 
 // Mock modules
-vi.mock('@/lib/stripe/get-stripe')
+vi.mock('@/lib/stripe/server')
 vi.mock('@/lib/email/send-email')
 vi.mock('@/lib/email/admin-alerts')
 vi.mock('@/lib/db', () => ({
@@ -48,7 +48,7 @@ describe('chargeInstallment', () => {
       paymentIntents: mockPaymentIntents,
     }
 
-    vi.mocked(stripeModule.getStripe).mockReturnValue(mockStripe)
+    vi.mocked(stripeServerModule.getStripeServer).mockReturnValue(mockStripe)
     vi.mocked(emailModule.sendEmail).mockResolvedValue(undefined)
     // Mock admin alerts service
     vi.mocked(adminAlertsModule.sendPaymentFailureAlert).mockResolvedValue(undefined)
@@ -76,11 +76,16 @@ describe('chargeInstallment', () => {
       user: {
         id: 'user_test123',
         clerkId: 'clerk_test123',
+        email: 'test@example.com',
         emailAddresses: [{ emailAddress: 'test@example.com' }],
         firstName: 'John',
         lastName: 'Doe',
         phone: '+1234567890',
       },
+      guestEmail: 'test@example.com',
+      guestFirstName: 'John',
+      guestLastName: 'Doe',
+      guestPhone: '+1234567890',
       trip: {
         id: 'trip_test123',
         name: 'Costa Rica Adventure',

@@ -1,7 +1,25 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { generateEmailToken, verifyEmailToken } from '../email-token';
+import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest';
 import { prisma } from '@/lib/db';
 import crypto from 'crypto';
+
+// Test secret - must be set BEFORE importing email-token module
+const TEST_SECRET = 'test-secret-for-email-tokens-32chars';
+
+// Stub environment variable before any imports that might use it
+vi.stubEnv('EMAIL_TOKEN_SECRET', TEST_SECRET);
+
+// Now import the module (it will use our stubbed secret)
+// Dynamic import to ensure env is set first
+let generateEmailToken: typeof import('../email-token').generateEmailToken;
+let verifyEmailToken: typeof import('../email-token').verifyEmailToken;
+
+beforeAll(async () => {
+  // Reset module cache to ensure fresh import with our stubbed env
+  vi.resetModules();
+  const module = await import('../email-token');
+  generateEmailToken = module.generateEmailToken;
+  verifyEmailToken = module.verifyEmailToken;
+});
 
 vi.mock('@/lib/db', () => ({
   prisma: {
@@ -59,7 +77,7 @@ describe('verifyEmailToken', () => {
   it('should verify valid token and return userId', async () => {
     const token = 'plain_token_123';
     const hash = crypto
-      .createHmac('sha256', process.env.EMAIL_TOKEN_SECRET || 'CHANGE_ME_IN_PRODUCTION')
+      .createHmac('sha256', TEST_SECRET)
       .update(token)
       .digest('hex');
 
