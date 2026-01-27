@@ -13,16 +13,16 @@
   2. Purchaser can edit the gift message for a PENDING gift before delivery
   3. Purchaser can resend notification email for a SENT gift (rate limited to prevent spam)
   4. Gift status and booking state update correctly after each action
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 09-01: TBD
+- [ ] 09-01-PLAN.md — Cancel, edit message, resend notification for purchaser gifts
 
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 9. Gift Management Enhancements | v1.3 | 0/TBD | Not started | - |
+| 9. Gift Management Enhancements | v1.3 | 0/1 | Ready | - |
 
 ## Archived Milestones
 
