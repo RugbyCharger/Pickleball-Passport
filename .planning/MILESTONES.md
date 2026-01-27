@@ -83,6 +83,38 @@ Purchase → PENDING → (scheduled?) → SENT → ACCEPTED/DECLINED/EXPIRED
 - 24 requirements shipped
 - 24 security warnings resolved
 
-**What's next:** v1.3 planning (Gift Enhancements or other features)
+**What's next:** ~~v1.3 planning~~ Done - v1.3 Gift Enhancements shipped
+
+---
+
+## v1.3 Gift Enhancements (Shipped: 2026-01-28)
+
+**Delivered:** Purchaser control over pending gifts — cancel with full refund, edit message, and resend notification.
+
+**Phases completed:** 9 (1 plan total)
+
+**Key accomplishments:**
+
+- CANCELLED gift state with full Stripe refund processing
+- Cancel PENDING gifts before delivery with automatic refund
+- Edit gift message before delivery
+- Resend notification email to recipients (rate limited to 3 per 24h)
+- Purchaser dashboard UI with action buttons and confirmation dialogs
+
+**Stats:**
+
+- 1 phase, 1 plan
+- 3 requirements shipped
+- 13 files modified, 1,452 lines added
+- 19 min autonomous execution
+
+**Gift Management Flow:**
+```
+PENDING → Cancel → CANCELLED (full refund)
+        → Edit Message (update text)
+SENT    → Resend Notification (rate limited)
+```
+
+**What's next:** Wait for user feedback or plan v1.4
 
 ---

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.3 Gift Enhancements - Phase 9 Complete
+**Current focus:** Between milestones. v1.3 shipped 2026-01-28
 
 ## Current Position
 
-Phase: 9 of 9 (Gift Management Enhancements)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-01-27 — Completed 09-01-PLAN.md (Gift Management Actions)
+Phase: —
+Plan: —
+Status: Between milestones
+Last activity: 2026-01-28 — v1.3 Gift Enhancements archived
 
-Progress: [========================================] 100%
+Progress: Ready for next milestone
 
 ## Milestone History
 
@@ -30,9 +30,10 @@ Progress: [========================================] 100%
 - 1 phase, 2 plans, 24 requirements
 - Archived: `.planning/milestones/v1.2-ROADMAP.md`, `.planning/milestones/v1.2-REQUIREMENTS.md`
 
-**v1.3 Gift Enhancements shipped 2026-01-27**
-- 1 phase, 1 plan
+**v1.3 Gift Enhancements shipped 2026-01-28**
+- 1 phase, 1 plan, 3 requirements
 - Features: Gift cancellation, message editing, notification resend
+- Archived: `.planning/milestones/v1.3-ROADMAP.md`, `.planning/milestones/v1.3-REQUIREMENTS.md`
 
 See: .planning/MILESTONES.md
 
@@ -92,4 +93,4 @@ Resume file: None
 
 ## Next Steps
 
-v1.3 Gift Enhancements milestone complete. Ready for next milestone planning.
+v1.3 Gift Enhancements milestone archived. Run `/gsd:new-milestone` to start v1.4 planning.

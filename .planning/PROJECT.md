@@ -6,21 +6,25 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.3 Gift Enhancements (in progress)
+**Version:** v1.3 Gift Enhancements (shipped 2026-01-28)
 
-The platform is production-ready with hardened database security:
+The platform is production-ready with complete gift management:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
 - v1.2 RLS Security Hardening shipped 2026-01-27
+- v1.3 Gift Enhancements shipped 2026-01-28
 
-## Current Milestone: v1.3 Gift Enhancements
+<details>
+<summary>Completed: v1.3 Gift Enhancements</summary>
 
 **Goal:** Give purchasers control over pending gifts before delivery — cancel, edit message, or resend notification.
 
-**Target features:**
-- Cancel a pending gift before delivery (full refund)
-- Edit gift message before delivery
-- Resend gift notification email
+**Delivered features:**
+- ✓ Cancel PENDING gifts with full Stripe refund
+- ✓ Edit gift message before delivery
+- ✓ Resend notification email (rate limited)
+- ✓ Dashboard UI with action buttons and dialogs
+</details>
 
 <details>
 <summary>Completed: v1.2 RLS Security Hardening</summary>
@@ -91,13 +95,16 @@ The platform is production-ready with hardened database security:
 - ✓ **Purchaser dashboard** — View gift status and recipient response — v1.1
 - ✓ **Admin gifts view** — Status filtering and counts — v1.1
 
+**v1.3 Gift Enhancements (shipped 2026-01-28):**
+- ✓ **Gift cancellation** — Purchaser can cancel PENDING gift with full refund — v1.3
+- ✓ **Gift message editing** — Purchaser can edit message before delivery — v1.3
+- ✓ **Notification resend** — Purchaser can resend email to recipient (rate limited) — v1.3
+
 ### Active
 
-<!-- v1.3 Gift Enhancements -->
+<!-- No active milestone -->
 
-- [ ] **GIFT-F01**: Purchaser can cancel pending gift before delivery (full refund)
-- [ ] **GIFT-F02**: Purchaser can edit gift message before delivery
-- [ ] **GIFT-F03**: Purchaser can resend gift notification email
+None. v1.3 Gift Enhancements shipped 2026-01-28.
 
 ### Out of Scope
 
@@ -150,7 +157,9 @@ The platform is production-ready with hardened database security:
 | UTM standard params | Industry standard tracking | ✓ Implemented |
 
 | Gift system = v1.1 | High-value gift market for luxury travel | ✓ Shipped v1.1 |
-| Gift enhancements = v1.3 | Purchaser control over pending gifts | — In Progress |
+| Gift enhancements = v1.3 | Purchaser control over pending gifts | ✓ Shipped v1.3 |
+| CANCELLED as terminal state | Matches ACCEPTED/DECLINED/EXPIRED behavior | ✓ Implemented v1.3 |
+| Rate limit 3/24h per gift | Prevents spam while allowing multiple gifts | ✓ Implemented v1.3 |
 
 ---
-*Last updated: 2026-01-28 after v1.3 milestone started*
+*Last updated: 2026-01-28 after v1.3 milestone complete*
