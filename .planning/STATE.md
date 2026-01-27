@@ -28,12 +28,22 @@ See: .planning/MILESTONES.md
 
 **Production URL:** https://pickleball-passport.vercel.app
 
+**Cron Jobs Configured (UTC):**
+- 7 AM: Pre-trip emails
+- 8 AM: WhatsApp milestones
+- 9 AM: Payment reminders
+- 10 AM: Charge installments
+- 11 AM: Referral completion bonus
+- 12 PM: Expire gifts
+- 4 PM: Send scheduled gifts
+
 ## Next Steps
 
 1. ✓ ~~Deploy to staging~~
-2. Smoke test critical paths (payment failure recovery, admin access, cancellation emails)
+2. ✓ ~~Smoke test critical paths~~ (all endpoints responding)
 3. ✓ ~~Deploy to production~~
-4. Run `/gsd:new-milestone` when ready for next milestone
+4. ✓ ~~Configure Vercel cron jobs~~
+5. Run `/gsd:new-milestone` when ready for next milestone
 
 ## Performance Metrics (v1.0)
 
