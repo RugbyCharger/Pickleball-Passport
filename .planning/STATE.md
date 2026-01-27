@@ -5,30 +5,26 @@
 See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.1 Gift Booking - COMPLETE
+**Current focus:** Between milestones - v1.1 archived
 
 ## Current Position
 
-Phase: 7 of 7 (Gift Operations) - COMPLETE
-Plan: All complete
-Status: v1.1 SHIPPED
-Last activity: 2026-01-27 - Completed v1.1 Gift Booking milestone
+Phase: —
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-01-27 - Archived v1.1 Gift Booking milestone
 
-Progress: [██████████] 100% (v1.1 complete)
+Progress: Ready for v1.2
 
-## Milestone Summary
+## Milestone History
 
 **v1.0 MVP shipped 2026-01-26**
-
 - 4 phases, 9 plans, 19 requirements
-- All security, payment, partner, and email requirements met
-- Deployed to production 2026-01-27
+- Archived: `.planning/milestones/v1.0-ROADMAP.md`
 
 **v1.1 Gift Booking shipped 2026-01-27**
-
 - 3 phases, 8 plans, 22 requirements
-- Full gift lifecycle: purchase, notification, accept, decline, expiration
-- Dashboard views for purchaser and admin
+- Archived: `.planning/milestones/v1.1-ROADMAP.md`, `.planning/milestones/v1.1-REQUIREMENTS.md`
 
 See: .planning/MILESTONES.md
 
@@ -73,14 +69,9 @@ See: .planning/MILESTONES.md
 
 ### Decisions
 
-All v1.0 decisions recorded in PROJECT.md Key Decisions table with outcomes marked.
+All decisions recorded in PROJECT.md Key Decisions table.
 
-v1.1 decisions:
-- Gift system = v1.1: High-value gift market for luxury travel ✅ SHIPPED
-- Split isBaseReady from canProceed: Users with invalid gift data stay on review page to see errors
-- Gift bookings use USD only: Currency selector hidden when isGift is true
-- Gift validation runs client-side before mutation call for immediate feedback
-- Admin gifts page uses client component pattern (matches existing admin pages)
+v1.1 key decisions (archived):
 - EXPIRED is a virtual status in UI (maps to DECLINED + giftExpiresAt in database)
 
 ### Pending Todos
@@ -89,37 +80,14 @@ None.
 
 ### Blockers/Concerns
 
-None. All v1.1 blockers resolved.
-
-### Gift Infrastructure Built
-
-**Phase 5 (Gift Purchase Flow):**
-- Gift toggle in booking configuration
-- Recipient name/email/message fields
-- Delivery date scheduling (immediate or future)
-- Gift confirmation email to purchaser
-- Payment flow calls createGift mutation
-
-**Phase 6 (Gift Recipient Experience):**
-- Gift notification email on SENT transition
-- Scheduled gift delivery via cron
-- Gift acceptance page with auth flow
-- Gift decline page (/gift/decline)
-- Decline email templates (recipient + purchaser)
-- Refund processing on decline
-
-**Phase 7 (Gift Operations):**
-- 30-day automatic expiration
-- Expiration email to purchaser
-- Purchaser gifts dashboard (/dashboard/gifts)
-- Admin gifts view with status filtering (/dashboard/admin/gifts)
+None.
 
 ## Supabase Advisory Status
 
 **Security (24 WARN):**
 - All tables have overly permissive "Dev Access" RLS policies (`USING (true)`)
 - Mitigated: App uses Clerk auth + tRPC protectedProcedure as security layer
-- Recommended: Harden RLS policies for defense-in-depth (v2 candidate)
+- Recommended: Harden RLS policies for defense-in-depth (v1.2 candidate)
 
 **Performance (60+ INFO):**
 - Unused indexes (expected for new app, keep for scale)
@@ -128,7 +96,7 @@ None. All v1.1 blockers resolved.
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: v1.1 Gift Booking deployed to production
+Stopped at: v1.1 milestone archived
 Resume file: None
 
 ## Next Steps (User Decision Required)
