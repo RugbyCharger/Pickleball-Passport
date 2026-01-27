@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** Between milestones. v1.3 shipped 2026-01-28
+**Current focus:** v2.0 Mobile App — Defining requirements
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Between milestones
-Last activity: 2026-01-28 — v1.3 Gift Enhancements archived
+Status: Defining requirements
+Last activity: 2026-01-28 — Milestone v2.0 started
 
-Progress: Ready for next milestone
+Progress: Defining requirements
 
 ## Milestone History
 
@@ -93,4 +93,4 @@ Resume file: None
 
 ## Next Steps
 
-v1.3 Gift Enhancements milestone archived. Run `/gsd:new-milestone` to start v1.4 planning.
+v2.0 Mobile App milestone started. Defining requirements from BMad epics E6, E7, E8.

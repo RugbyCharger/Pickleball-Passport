@@ -4,11 +4,21 @@
 
 A luxury transformation travel platform combining world-class pickleball, medical tourism, and wellness experiences in Thailand. The web application enables affluent US retirees (55+) to discover, configure, and book transformation packages, while a partner portal empowers pickleball club directors to refer members and earn rewards.
 
+## Current Milestone: v2.0 Mobile App
+
+**Goal:** Deliver a React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
+
+**Target features:**
+- Expo React Native app with Clerk authentication and biometrics
+- Pre-trip dashboard (countdown, checklist, document upload, group chat)
+- During-trip experience (itinerary, concierge chat, court booking, photo journal)
+- Alumni engagement (referrals, rebooking, passport stamps gamification)
+
 ## Current State
 
 **Version:** v1.3 Gift Enhancements (shipped 2026-01-28)
 
-The platform is production-ready with complete gift management:
+The web platform is production-ready with complete gift management:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
 - v1.2 RLS Security Hardening shipped 2026-01-27
@@ -102,25 +112,51 @@ The platform is production-ready with complete gift management:
 
 ### Active
 
-<!-- No active milestone -->
+<!-- v2.0 Mobile App milestone -->
 
-None. v1.3 Gift Enhancements shipped 2026-01-28.
+**v2.0 Mobile App:**
+- [ ] **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript
+- [ ] **MOB-AUTH-01**: Guest can log in with email/password via Clerk
+- [ ] **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID)
+- [ ] **MOB-PRETRIP-01**: Guest can view countdown to trip departure
+- [ ] **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items
+- [ ] **MOB-PRETRIP-03**: Guest can upload passport document
+- [ ] **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in)
+- [ ] **MOB-PRETRIP-05**: Guest can chat with trip group before departure
+- [ ] **MOB-PRETRIP-06**: Guest can view and customize packing list
+- [ ] **MOB-PRETRIP-07**: Guest can download offline itinerary
+- [ ] **MOB-TRIP-01**: Guest can view daily itinerary with activities
+- [ ] **MOB-TRIP-02**: Guest can check in to activities
+- [ ] **MOB-TRIP-03**: Guest can chat with concierge 24/7
+- [ ] **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location
+- [ ] **MOB-TRIP-05**: Guest can book pickleball courts
+- [ ] **MOB-TRIP-06**: Guest can find other guests to play with
+- [ ] **MOB-TRIP-07**: Guest can upload photos to trip journal
+- [ ] **MOB-TRIP-08**: Guest can view group photo gallery
+- [ ] **MOB-TRIP-09**: Guest can request transportation
+- [ ] **MOB-ALUMNI-01**: Guest can view transformation journey summary
+- [ ] **MOB-ALUMNI-02**: Guest can browse alumni directory
+- [ ] **MOB-ALUMNI-03**: Guest can refer friends and track referrals
+- [ ] **MOB-ALUMNI-04**: Guest can rebook with alumni discount
+- [ ] **MOB-ALUMNI-05**: Guest can earn passport stamps for achievements
+- [ ] **MOB-ALUMNI-06**: Guest can create and submit testimonial
 
 ### Out of Scope
 
 <!-- Explicit boundaries -->
 
-- **Mobile app** — Web app sufficient for now, consider for v2
-- **SMS notifications** — Twilio stubs exist but not required
+- **SMS notifications** — Twilio stubs exist but not required for v2.0
 - **Dynamic pricing per trip** — Hardcoded pricing acceptable
-- **Court booking system** — Mobile-only feature
 - **Gift card balance system** — Not a gift card, it's a specific booking gift
 - **Multiple gift recipients** — One gift = one booking = one recipient
 - **Partial gift payments** — Keep it simple - fully paid or not
+- **Video calls in app** — External Zoom links sufficient for alumni meetups
+- **In-app payments** — Use existing web checkout, deep link from app
+- **Apple/Google Pay in app** — Web checkout handles payments
 
 ## Context
 
-**Tech Stack:**
+**Tech Stack (Web):**
 - Next.js 16.1.1 with App Router
 - tRPC 11.8.1
 - Prisma 5.22.0
@@ -129,6 +165,15 @@ None. v1.3 Gift Enhancements shipped 2026-01-28.
 - SendGrid email
 - Supabase PostgreSQL
 - Vercel deployment
+
+**Tech Stack (Mobile - v2.0):**
+- Expo (React Native)
+- Expo Router (file-based navigation)
+- NativeWind (Tailwind for React Native)
+- tRPC client (shared API with web)
+- Clerk Expo SDK (authentication)
+- OneSignal (push notifications)
+- Supabase Realtime (chat)
 
 **Business Context:**
 - v1.0 MVP shipped — ready for first bookings
@@ -161,5 +206,10 @@ None. v1.3 Gift Enhancements shipped 2026-01-28.
 | CANCELLED as terminal state | Matches ACCEPTED/DECLINED/EXPIRED behavior | ✓ Implemented v1.3 |
 | Rate limit 3/24h per gift | Prevents spam while allowing multiple gifts | ✓ Implemented v1.3 |
 
+| Mobile app = v2.0 | Major platform expansion | — Pending |
+| Expo + NativeWind | Aligns with existing Tailwind patterns | — Pending |
+| tRPC shared client | Reuse existing API infrastructure | — Pending |
+| OneSignal for push | Industry standard, good Expo support | — Pending |
+
 ---
-*Last updated: 2026-01-28 after v1.3 milestone complete*
+*Last updated: 2026-01-28 after v2.0 milestone started*
