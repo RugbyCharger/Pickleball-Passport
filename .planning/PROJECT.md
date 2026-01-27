@@ -6,13 +6,25 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.1 Gift Booking (shipped 2026-01-27)
+**Version:** v1.2 RLS Security Hardening (in progress)
 
-The platform is production-ready with full gift booking capabilities:
+The platform is production-ready. Now hardening database security:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
+- v1.2 RLS Security Hardening in progress
 
-## Completed Milestone: v1.1 Gift Booking
+## Current Milestone: v1.2 RLS Security Hardening
+
+**Goal:** Replace overly permissive "Dev Access" RLS policies with proper service-role-only policies for defense-in-depth security.
+
+**Target features:**
+- Replace 24 `USING(true)` policies across 20 tables
+- Service role only access (app uses Prisma via service role)
+- Remove duplicate "Allow all for development" policies
+- Verify app functionality after hardening
+
+<details>
+<summary>Completed: v1.1 Gift Booking</summary>
 
 **Goal:** Enable guests to purchase transformation trips as gifts, with full lifecycle management from purchase through acceptance/decline/expiration.
 
@@ -22,6 +34,7 @@ The platform is production-ready with full gift booking capabilities:
 - ✓ Recipient acceptance/decline UI
 - ✓ Gift status tracking in dashboard
 - ✓ Refund handling for declined/expired gifts
+</details>
 
 ## Core Value
 
@@ -69,9 +82,12 @@ The platform is production-ready with full gift booking capabilities:
 
 ### Active
 
-<!-- No active milestone — v1.1 shipped -->
+<!-- v1.2 RLS Security Hardening -->
 
-None. v1.1 Gift Booking shipped 2026-01-27. See REQUIREMENTS.md for v2 candidates.
+**v1.2 RLS Security Hardening (in progress):**
+- Replace overly permissive "Dev Access" RLS policies
+- Service role only access pattern
+- Defense-in-depth security layer
 
 ### Out of Scope
 
@@ -126,4 +142,4 @@ None. v1.1 Gift Booking shipped 2026-01-27. See REQUIREMENTS.md for v2 candidate
 | Gift system = v1.1 | High-value gift market for luxury travel | — Pending |
 
 ---
-*Last updated: 2026-01-27 after v1.1 milestone start*
+*Last updated: 2026-01-27 after v1.2 milestone start*

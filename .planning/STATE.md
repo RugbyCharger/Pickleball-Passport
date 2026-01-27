@@ -5,16 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** Between milestones - v1.1 archived
+**Current focus:** v1.2 RLS Security Hardening
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-01-27 - Archived v1.1 Gift Booking milestone
-
-Progress: Ready for v1.2
+Status: Defining requirements
+Last activity: 2026-01-27 — Milestone v1.2 started
 
 ## Milestone History
 
@@ -71,8 +69,9 @@ See: .planning/MILESTONES.md
 
 All decisions recorded in PROJECT.md Key Decisions table.
 
-v1.1 key decisions (archived):
-- EXPIRED is a virtual status in UI (maps to DECLINED + giftExpiresAt in database)
+v1.2 key decisions:
+- Service role only RLS (app uses Prisma which connects via service role, not anon key)
+- Remove duplicate policies (Package and Trip have both "Dev Access" and "Allow all for development")
 
 ### Pending Todos
 
@@ -84,36 +83,35 @@ None.
 
 ## Supabase Advisory Status
 
-**Security (24 WARN):**
-- All tables have overly permissive "Dev Access" RLS policies (`USING (true)`)
-- Mitigated: App uses Clerk auth + tRPC protectedProcedure as security layer
-- Recommended: Harden RLS policies for defense-in-depth (v1.2 candidate)
+**Security (24 WARN → 0 target):**
+Tables requiring RLS hardening:
+1. AddOn
+2. Application
+3. Booking
+4. BookingAddOn
+5. Document
+6. GuestProfile
+7. Itinerary
+8. Message
+9. NewsletterSubscriber
+10. Notification
+11. Package (2 policies)
+12. PartnerProfile
+13. PartnerReferral
+14. Payment
+15. RefundLog
+16. ReminderHistory
+17. SupportTicket
+18. Testimonial
+19. Trip (2 policies)
+20. User
+21. WebhookEvent
 
 **Performance (60+ INFO):**
-- Unused indexes (expected for new app, keep for scale)
-- Duplicate policies on Package/Trip tables (minor)
+- Unchanged from v1.1 (expected for new app)
 
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: v1.1 milestone archived
+Stopped at: Defining v1.2 requirements
 Resume file: None
-
-## Next Steps (User Decision Required)
-
-**Option A: v1.2 Gift Enhancements**
-- GIFT-F01: Cancel pending gift before delivery
-- GIFT-F02: Edit gift message before delivery
-- GIFT-F03: Resend gift notification
-- Run: `/gsd:new-milestone`
-
-**Option B: v1.2 RLS Security Hardening**
-- Replace "Dev Access" policies with proper role-based policies
-- Add proper RLS for service role only
-- Defense-in-depth security layer
-- Run: `/gsd:new-milestone`
-
-**Option C: Wait for business priorities**
-- v1.0 + v1.1 shipped and working
-- Monitor for real user feedback
-- Address issues as they arise
