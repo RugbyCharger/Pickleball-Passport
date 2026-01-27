@@ -30,6 +30,10 @@ import {
   generateGiftDeclineNotificationPurchaserEmail,
   GiftDeclineNotificationPurchaserData,
 } from '@/lib/email/templates/gift-decline-notification-purchaser'
+import {
+  generateGiftExpirationPurchaserEmail,
+  GiftExpirationPurchaserData,
+} from '@/lib/email/templates/gift-expiration-purchaser'
 import { giftLogger, logError, emailLogger, stripeLogger } from '@/lib/logger'
 import { clerkClient } from '@clerk/nextjs/server'
 import { addDays } from 'date-fns'
@@ -549,20 +553,21 @@ async function handleExpiredTransition(
   // Send email to purchaser
   if (purchaserInfo?.email) {
     try {
+      const emailData: GiftExpirationPurchaserData = {
+        purchaserFirstName: purchaserInfo.firstName,
+        purchaserEmail: purchaserInfo.email,
+        recipientName: booking.giftRecipientName || 'the recipient',
+        bookingReference: booking.bookingReference,
+        packageName: booking.package.name,
+        totalRefund: booking.totalPrice,
+      }
+
+      const { subject, html, text } = generateGiftExpirationPurchaserEmail(emailData)
       await sendEmail({
         to: purchaserInfo.email,
-        subject: `Gift Expired - Refund Processed - ${booking.bookingReference}`,
-        html: `
-          <h1>Gift Expired</h1>
-          <p>Hi ${purchaserInfo.firstName},</p>
-          <p>Unfortunately, your gift to ${booking.giftRecipientName} has expired after 30 days without a response.</p>
-          <p>A full refund of $${(booking.totalPrice / 100).toFixed(2)} has been processed to your original payment method.
-          It may take 5-10 business days for the refund to appear in your account.</p>
-          <p><strong>Booking Reference:</strong> ${booking.bookingReference}</p>
-          <p>If you'd like to send another gift or have any questions, please contact us at support@pickleballpassport.com.</p>
-          <p>The Pickleball Passport Team</p>
-        `,
-        text: `Gift Expired - Refund Processed\n\nHi ${purchaserInfo.firstName},\n\nYour gift has expired after 30 days without a response. A full refund has been processed.\n\nBooking Reference: ${booking.bookingReference}`,
+        subject,
+        html,
+        text,
       })
     } catch (error) {
       logError(emailLogger, error, 'Failed to send expiration notification to purchaser')
