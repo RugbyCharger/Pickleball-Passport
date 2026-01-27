@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-27)
+See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.3 Gift Enhancements
+**Current focus:** v1.3 Gift Enhancements - Phase 9
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-01-28 — Milestone v1.3 started
+Phase: 9 of 9 (Gift Management Enhancements)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-01-28 — Roadmap created for v1.3
 
-Progress: Requirements definition
+Progress: Phase 9 ready to plan
 
 ## Milestone History
 
@@ -34,15 +34,6 @@ See: .planning/MILESTONES.md
 
 **Production URL:** https://pickleball-passport.vercel.app
 
-**Cron Jobs Configured (UTC):**
-- 7 AM: Pre-trip emails
-- 8 AM: WhatsApp milestones
-- 9 AM: Payment reminders
-- 10 AM: Charge installments
-- 11 AM: Referral completion bonus
-- 12 PM: Expire gifts
-- 4 PM: Send scheduled gifts
-
 ## Performance Metrics
 
 ### v1.0 Velocity
@@ -51,32 +42,15 @@ See: .planning/MILESTONES.md
 - Average duration: 3.2 min
 - Total execution time: 29 min
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Security Hardening | 3/3 | 13 min | 4.3 min |
-| 2. Payment Recovery | 3/3 | 8 min | 2.7 min |
-| 3. Partner Portal | 2/2 | 4 min | 2.0 min |
-| 4. Email System | 1/1 | 4 min | 4.0 min |
-
 ### v1.1 Velocity
 
 - Total plans completed: 8
 - Total execution time: Autonomous execution
 
-| Phase | Plans | Status |
-|-------|-------|--------|
-| 5. Gift Purchase Flow | 2/2 | Complete |
-| 6. Gift Recipient Experience | 3/3 | Complete |
-| 7. Gift Operations | 3/3 | Complete |
-
 ### v1.2 Velocity
 
 - Total plans completed: 2
 - Total execution time: Autonomous execution
-
-| Phase | Plans | Status |
-|-------|-------|--------|
-| 8. RLS Policy Hardening | 2/2 | Complete |
 
 ## Accumulated Context
 
@@ -84,58 +58,23 @@ See: .planning/MILESTONES.md
 
 All decisions recorded in PROJECT.md Key Decisions table.
 
-v1.2 key decisions:
-- Service role only RLS (app uses Prisma which connects via service role, not anon key)
-- Remove duplicate policies (Package and Trip had both "Dev Access" and "Allow all for development")
-- INFO advisories expected ("RLS Enabled No Policy" is correct behavior)
-
 ### Pending Todos
 
 **Technical Debt (non-blocking):**
-- ~220 lint warnings remain (build passes, mostly in admin/internal tooling):
-  - 180 unused vars (deferred imports in admin pages)
-  - 66 unescaped entities (apostrophes in JSX)
-  - 16 setState-in-effect (form initialization patterns)
-  - 13 img instead of Image (admin/internal pages)
-- ~170 console.log statements remain (197 identified, ~25 in webhook converted to stripeLogger)
-- Large router files (analytics.ts 6057 lines) could be split
-- Several TODO comments for deferred features (Twilio SMS, dynamic pricing)
-
-**Recently Resolved (2026-01-28):**
-- ~~12 failing tests~~ — Fixed email-token.test.ts (vi.stubEnv + dynamic import) and charge-installment.test.ts (shared lib/stripe/server.ts module for proper mocking)
-- ~~Critical webhook console.error~~ — Replaced with stripeLogger in security-sensitive paths
-
-**Resolved (2026-01-27):**
-- ~~Notification preferences UI mismatch~~ — Removed broken duplicate UI from dashboard, linked to correct settings page
-- ~~ESLintIgnoreWarning~~ — Consolidated .eslintignore into eslint.config.mjs
+- ~220 lint warnings remain (build passes)
+- ~170 console.log statements remain
+- Large router files could be split
 
 ### Blockers/Concerns
 
 None.
 
-## Supabase Advisory Status
-
-**Security (0 WARN) ✓**
-- All 24 permissive "Dev Access" policies dropped
-- Tables have RLS enabled, no policies = deny by default
-- Service role bypasses RLS automatically
-- 21 INFO advisories ("RLS Enabled No Policy") — expected and correct
-
-**Performance (60+ INFO):**
-- Unchanged from v1.1 (expected for new app)
-
 ## Session Continuity
 
 Last session: 2026-01-28
-Stopped at: Technical debt cleanup (autonomous overnight session)
+Stopped at: Roadmap created for v1.3
 Resume file: None
-
-**Overnight Work Completed:**
-- Fixed all 12 failing tests (email-token + charge-installment)
-- Created lib/stripe/server.ts for shared server-side Stripe client
-- Converted critical webhook console.error to structured stripeLogger
-- All 948 tests pass, build successful
 
 ## Next Steps
 
-v1.3 Gift Enhancements milestone started. Next: define requirements and create roadmap.
+Run `/gsd:plan-phase 9` to create execution plan for Gift Management Enhancements.

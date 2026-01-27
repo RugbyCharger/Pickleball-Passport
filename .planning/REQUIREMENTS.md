@@ -41,15 +41,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GIFT-01 | TBD | Pending |
-| GIFT-02 | TBD | Pending |
-| GIFT-03 | TBD | Pending |
+| GIFT-01 | Phase 9 | Pending |
+| GIFT-02 | Phase 9 | Pending |
+| GIFT-03 | Phase 9 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 3 total
-- Mapped to phases: 0
-- Unmapped: 3
+- Mapped to phases: 3
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-01-28*
-*Last updated: 2026-01-28 after initial definition*
+*Last updated: 2026-01-28 after roadmap creation*
