@@ -8,7 +8,7 @@
 'use client'
 
 import { useBookingStore } from '@/lib/stores/booking-store'
-import { ArrowLeft, Check, CreditCard } from 'lucide-react'
+import { AlertCircle, ArrowLeft, Check, CreditCard, Gift } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -23,18 +23,45 @@ function formatPrice(cents: number): string {
 
 export function ReviewPageClient() {
   const router = useRouter()
-  const { isReadyForReview, hasCompanion, calculateTotal, calculateCompanionSubtotal } = useBookingStore()
+  const {
+    isReadyForReview,
+    hasCompanion,
+    calculateTotal,
+    calculateCompanionSubtotal,
+    isGift,
+    giftRecipient,
+    validateGiftBooking,
+  } = useBookingStore()
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [giftValidationErrors, setGiftValidationErrors] = useState<string[]>([])
 
-  // Determine readiness once per render; redirect if not ready
-  const canProceed = useMemo(() => isReadyForReview(), [isReadyForReview])
+  // Validate gift booking data
+  const giftValidation = useMemo(() => {
+    if (!isGift) return { isValid: true, errors: [] }
+    return validateGiftBooking()
+  }, [isGift, validateGiftBooking])
+
+  // Update validation errors when gift validation changes
+  useEffect(() => {
+    setGiftValidationErrors(giftValidation.errors)
+  }, [giftValidation])
+
+  // Determine readiness once per render; redirect if not ready (base validation only)
+  const isBaseReady = useMemo(() => isReadyForReview(), [isReadyForReview])
+
+  // Full proceed check includes gift validation
+  const canProceed = useMemo(() => {
+    if (!isBaseReady) return false
+    if (isGift && !giftValidation.isValid) return false
+    return true
+  }, [isBaseReady, isGift, giftValidation])
 
   useEffect(() => {
-    // Redirect to configure if not ready
-    if (!canProceed) {
+    // Redirect to configure if base requirements not met (but allow gift validation errors)
+    if (!isBaseReady) {
       router.push('/booking/configure')
     }
-  }, [canProceed, router])
+  }, [isBaseReady, router])
 
   const handleBack = () => {
     router.push('/booking/configure/accommodation')
@@ -44,6 +71,15 @@ export function ReviewPageClient() {
     if (!termsAccepted) {
       return
     }
+
+    if (isGift) {
+      const validation = validateGiftBooking()
+      if (!validation.isValid) {
+        setGiftValidationErrors(validation.errors)
+        return
+      }
+    }
+
     router.push('/booking/payment')
   }
 
@@ -55,6 +91,50 @@ export function ReviewPageClient() {
 
   return (
     <div className="space-y-6 w-full">
+      {/* Gift Validation Errors */}
+      {isGift && giftValidationErrors.length > 0 && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-red-900">
+                Please complete gift recipient information
+              </p>
+              <ul className="text-xs text-red-700 mt-2 space-y-1">
+                {giftValidationErrors.map((error, index) => (
+                  <li key={index}>- {error}</li>
+                ))}
+              </ul>
+              <button
+                onClick={() => router.push('/booking/configure/add-ons')}
+                className="mt-3 text-xs font-semibold text-red-700 hover:text-red-800 underline"
+              >
+                Go back to complete gift details
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Gift Booking Confirmation */}
+      {isGift && giftRecipient && giftValidationErrors.length === 0 && (
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-white flex-shrink-0">
+              <Gift className="h-4 w-4" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-purple-900">
+                Gift for {giftRecipient.firstName} {giftRecipient.lastName}
+              </p>
+              <p className="text-xs text-purple-700 mt-1">
+                Will be sent to {giftRecipient.email}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Terms & Conditions */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
         <div className="flex items-start gap-3">
@@ -71,6 +151,8 @@ export function ReviewPageClient() {
             <p className="text-sm font-semibold text-slate-900">
               {hasCompanion
                 ? 'I confirm both bookings and agree to the terms and conditions'
+                : isGift
+                ? 'I confirm this gift purchase and agree to the terms and conditions'
                 : 'I agree to the terms and conditions'}
             </p>
             <p className="text-xs text-slate-500 mt-1">
@@ -78,6 +160,11 @@ export function ReviewPageClient() {
                 <>
                   By proceeding, you are confirming both your booking and your companion&apos;s booking.
                   You will be charged the combined total of {formatPrice(grandTotal)}.
+                </>
+              ) : isGift ? (
+                <>
+                  By proceeding, you are purchasing this trip as a gift. The recipient will receive
+                  an email to accept and complete the booking. You will be charged {formatPrice(primaryTotal)}.
                 </>
               ) : (
                 'By proceeding, you agree to our booking policy, cancellation terms, and payment terms.'
@@ -105,6 +192,8 @@ export function ReviewPageClient() {
           <CreditCard className="h-5 w-5" />
           {hasCompanion
             ? `Pay ${formatPrice(grandTotal)} for ${bookingCount} Bookings`
+            : isGift
+            ? `Purchase Gift - ${formatPrice(primaryTotal)}`
             : 'Proceed to Payment'}
         </button>
       </div>
