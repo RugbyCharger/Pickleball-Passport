@@ -59,6 +59,30 @@ Purchase → PENDING → (scheduled?) → SENT → ACCEPTED/DECLINED/EXPIRED
                                Refund + Email (if declined/expired)
 ```
 
-**What's next:** v2.0 planning or additional feature requests
+**What's next:** v1.2 RLS Security Hardening
+
+---
+
+## v1.2 RLS Security Hardening (Shipped: 2026-01-27)
+
+**Delivered:** Defense-in-depth security by replacing all overly permissive RLS policies with service-role-only access.
+
+**Phases completed:** 8 (2 plans total)
+
+**Key accomplishments:**
+
+- Dropped all 24 "Dev Access" and "Allow all for development" RLS policies
+- Implemented service-role-only pattern (Prisma uses service role, not anon key)
+- Supabase security advisor: 24 WARN → 0 WARN
+- Tables retain RLS enabled, but deny all for anon key by default
+- App functionality verified (booking flow, admin, partner portal, gifts)
+
+**Stats:**
+
+- 1 phase, 2 plans
+- 24 requirements shipped
+- 24 security warnings resolved
+
+**What's next:** v1.3 planning (Gift Enhancements or other features)
 
 ---

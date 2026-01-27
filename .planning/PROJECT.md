@@ -6,22 +6,22 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.2 RLS Security Hardening (in progress)
+**Version:** v1.2 RLS Security Hardening (shipped 2026-01-27)
 
-The platform is production-ready. Now hardening database security:
+The platform is production-ready with hardened database security:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
-- v1.2 RLS Security Hardening in progress
+- v1.2 RLS Security Hardening shipped 2026-01-27
 
-## Current Milestone: v1.2 RLS Security Hardening
+## Completed Milestone: v1.2 RLS Security Hardening
 
-**Goal:** Replace overly permissive "Dev Access" RLS policies with proper service-role-only policies for defense-in-depth security.
+**Goal:** Replace overly permissive "Dev Access" RLS policies with service-role-only access for defense-in-depth security.
 
-**Target features:**
-- Replace 24 `USING(true)` policies across 20 tables
-- Service role only access (app uses Prisma via service role)
-- Remove duplicate "Allow all for development" policies
-- Verify app functionality after hardening
+**Delivered features:**
+- ✓ Dropped all 24 permissive RLS policies
+- ✓ Service role only access pattern implemented
+- ✓ Supabase security advisor: 24 WARN → 0 WARN
+- ✓ App functionality verified
 
 <details>
 <summary>Completed: v1.1 Gift Booking</summary>
@@ -82,12 +82,9 @@ The platform is production-ready. Now hardening database security:
 
 ### Active
 
-<!-- v1.2 RLS Security Hardening -->
+<!-- No active milestone — v1.2 shipped -->
 
-**v1.2 RLS Security Hardening (in progress):**
-- Replace overly permissive "Dev Access" RLS policies
-- Service role only access pattern
-- Defense-in-depth security layer
+None. v1.2 RLS Security Hardening shipped 2026-01-27.
 
 ### Out of Scope
 
@@ -142,4 +139,4 @@ The platform is production-ready. Now hardening database security:
 | Gift system = v1.1 | High-value gift market for luxury travel | — Pending |
 
 ---
-*Last updated: 2026-01-27 after v1.2 milestone start*
+*Last updated: 2026-01-27 after v1.2 milestone shipped*

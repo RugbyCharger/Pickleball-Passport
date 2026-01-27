@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.2 RLS Security Hardening
+**Current focus:** Between milestones - v1.2 archived
 
 ## Current Position
 
-Phase: 8 (complete)
-Plan: 08-02 (complete)
-Status: Phase 8 complete — ready to archive milestone
-Last activity: 2026-01-27 — Phase 8 RLS Policy Hardening complete
+Phase: —
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-01-27 — Archived v1.2 RLS Security Hardening milestone
+
+Progress: Ready for v1.3
 
 ## Milestone History
 
@@ -23,6 +25,10 @@ Last activity: 2026-01-27 — Phase 8 RLS Policy Hardening complete
 **v1.1 Gift Booking shipped 2026-01-27**
 - 3 phases, 8 plans, 22 requirements
 - Archived: `.planning/milestones/v1.1-ROADMAP.md`, `.planning/milestones/v1.1-REQUIREMENTS.md`
+
+**v1.2 RLS Security Hardening shipped 2026-01-27**
+- 1 phase, 2 plans, 24 requirements
+- Archived: `.planning/milestones/v1.2-ROADMAP.md`, `.planning/milestones/v1.2-REQUIREMENTS.md`
 
 See: .planning/MILESTONES.md
 
@@ -63,6 +69,15 @@ See: .planning/MILESTONES.md
 | 6. Gift Recipient Experience | 3/3 | Complete |
 | 7. Gift Operations | 3/3 | Complete |
 
+### v1.2 Velocity
+
+- Total plans completed: 2
+- Total execution time: Autonomous execution
+
+| Phase | Plans | Status |
+|-------|-------|--------|
+| 8. RLS Policy Hardening | 2/2 | Complete |
+
 ## Accumulated Context
 
 ### Decisions
@@ -71,7 +86,8 @@ All decisions recorded in PROJECT.md Key Decisions table.
 
 v1.2 key decisions:
 - Service role only RLS (app uses Prisma which connects via service role, not anon key)
-- Remove duplicate policies (Package and Trip have both "Dev Access" and "Allow all for development")
+- Remove duplicate policies (Package and Trip had both "Dev Access" and "Allow all for development")
+- INFO advisories expected ("RLS Enabled No Policy" is correct behavior)
 
 ### Pending Todos
 
@@ -95,9 +111,18 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: v1.2 Phase 8 complete, ready to archive milestone
+Stopped at: v1.2 milestone archived
 Resume file: None
 
-## Next Steps
+## Next Steps (User Decision Required)
 
-Run `/gsd:complete-milestone v1.2` to archive this milestone.
+**Option A: v1.3 Gift Enhancements**
+- GIFT-F01: Cancel pending gift before delivery
+- GIFT-F02: Edit gift message before delivery
+- GIFT-F03: Resend gift notification
+- Run: `/gsd:new-milestone`
+
+**Option B: Wait for business priorities**
+- v1.0 + v1.1 + v1.2 shipped and working
+- Monitor for real user feedback
+- Address issues as they arise
