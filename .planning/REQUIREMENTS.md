@@ -9,9 +9,9 @@ Requirements for Gift Enhancements milestone. Gives purchasers control over pend
 
 ### Gift Management
 
-- [ ] **GIFT-01**: Purchaser can cancel a PENDING gift before delivery (full refund)
-- [ ] **GIFT-02**: Purchaser can edit the gift message before delivery (PENDING status only)
-- [ ] **GIFT-03**: Purchaser can resend the gift notification email (SENT status, rate limited)
+- [x] **GIFT-01**: Purchaser can cancel a PENDING gift before delivery (full refund) — v1.3
+- [x] **GIFT-02**: Purchaser can edit the gift message before delivery (PENDING status only) — v1.3
+- [x] **GIFT-03**: Purchaser can resend the gift notification email (SENT status, rate limited) — v1.3
 
 ## Future Requirements
 
@@ -41,15 +41,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GIFT-01 | Phase 9 | Pending |
-| GIFT-02 | Phase 9 | Pending |
-| GIFT-03 | Phase 9 | Pending |
+| GIFT-01 | Phase 9 | Complete |
+| GIFT-02 | Phase 9 | Complete |
+| GIFT-03 | Phase 9 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 3 total
 - Mapped to phases: 3
-- Unmapped: 0
+- Completed: 3 ✓
 
 ---
 *Requirements defined: 2026-01-28*
-*Last updated: 2026-01-28 after roadmap creation*
+*Last updated: 2026-01-28 after Phase 9 complete*
