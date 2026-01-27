@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, PlayCircle, Sparkles, Sun, Star, Trophy, Palmtree } from 'lucide-react';
+import { ArrowRight, Sparkles, Sun, Star, Trophy, Palmtree } from 'lucide-react';
 
 export function HeroSection() {
   return (
@@ -88,9 +88,8 @@ export function HeroSection() {
               variant="outline"
               className="text-lg px-10 py-7 border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:border-white/50 transition-all rounded-xl"
             >
-              <Link href="/apply">
-                <PlayCircle className="mr-2 h-5 w-5" />
-                Watch Video
+              <Link href="/how-it-works">
+                Learn More
               </Link>
             </Button>
           </div>

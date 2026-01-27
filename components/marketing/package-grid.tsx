@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Palmtree, Waves, Sun, Sparkles, ArrowRight, Calendar, Clock, MapPin, CheckCircle, Star } from 'lucide-react';
+import { Palmtree, Waves, Sun, Sparkles, ArrowRight, Clock, MapPin, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 

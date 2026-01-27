@@ -118,7 +118,7 @@ export function TestimonialGallery({
               </div>
 
               <blockquote className="text-[#003D5C]/80 italic leading-relaxed min-h-[80px]">
-                "{testimonial.quote}"
+                &ldquo;{testimonial.quote}&rdquo;
               </blockquote>
 
               <div className="pt-4 border-t border-[#D4AF37]/10 flex items-center justify-between">
