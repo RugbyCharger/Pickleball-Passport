@@ -47,13 +47,6 @@ export default function Home() {
       <HeroSection />
       <PackageSection />
 
-      {/* Medical Tourism Cost Calculator */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#FDF8F3] to-white">
-        <div className="max-w-4xl mx-auto">
-          <MedicalCostCalculator />
-        </div>
-      </section>
-
       <TestimonialSection />
 
       {/* Future sections will be added here:

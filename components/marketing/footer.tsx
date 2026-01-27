@@ -15,7 +15,8 @@ import { z } from 'zod';
 
 const navigation = {
   explore: [
-    { name: 'Packages', href: '/packages' },
+    { name: 'Pickleball', href: '/pickleball' },
+    { name: 'Medical Tourism', href: '/medical-tourism' },
     { name: 'How It Works', href: '/how-it-works' },
     { name: 'Testimonials', href: '/testimonials' },
     { name: 'Apply Now', href: '/apply' },
@@ -198,8 +199,7 @@ export function Footer() {
                 </div>
               </Link>
               <p className="text-[#4AA4B5] mb-8 max-w-sm text-base leading-relaxed">
-                Transform your smile and game in paradise. Experience world-class medical care
-                and pickleball training in Thailand at 60-70% savings.
+                The ultimate pickleball getaway. Experience curated court time, luxury accommodations, and optional world-class medical care in Thailand.
               </p>
 
               {/* Contact Info */}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, PlayCircle, Sparkles, Sun, Star, Shield, Palmtree } from 'lucide-react';
+import { ArrowRight, PlayCircle, Sparkles, Sun, Star, Trophy, Palmtree } from 'lucide-react';
 
 export function HeroSection() {
   return (
@@ -43,15 +43,15 @@ export function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center rounded-full border border-[#D4AF37]/40 bg-white/10 backdrop-blur-sm px-5 py-2 text-sm font-medium text-white/90 shadow-lg">
             <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" />
-            Medical Tourism + Pickleball Paradise
+            Premier Pickleball Travel Experiences
           </div>
 
           {/* Main Headline */}
           <h1 className="text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-white">
-            Transform Your{' '}
+            The Ultimate{' '}
             <span className="relative inline-block">
               <span className="text-tropical-gradient bg-gradient-to-r from-[#D4AF37] via-[#E5C969] to-[#D4AF37] bg-clip-text text-transparent">
-                Smile & Game
+                Pickleball Vacation
               </span>
               <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
                 <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#D4AF37" strokeWidth="3" strokeLinecap="round"/>
@@ -63,10 +63,9 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            Experience world-class dental care, cosmetic procedures, and pickleball training
-            in Thailand—at{' '}
-            <span className="font-bold text-[#D4AF37]">60-70% savings</span> compared to
-            the US.
+            We curate unforgettable 8 and 13-day journeys featuring daily pickleball, 
+            boutique accommodations, and full concierge support. 
+            <span className="font-bold text-[#D4AF37]"> Pickleball is the star of the show.</span>
           </p>
 
           {/* CTA Buttons */}
@@ -76,9 +75,9 @@ export function HeroSection() {
               size="lg"
               className="text-lg px-10 py-7 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold shadow-xl shadow-[#D4AF37]/30 transition-all hover:shadow-2xl hover:shadow-[#D4AF37]/40 hover:scale-105 rounded-xl"
             >
-              <Link href="/packages">
+              <Link href="/pickleball">
                 <Sparkles className="mr-2 h-5 w-5" />
-                Explore Packages
+                View Trips
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -102,18 +101,18 @@ export function HeroSection() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <span className="text-2xl font-bold text-[#D4AF37]">%</span>
+                    <span className="text-2xl font-bold text-[#D4AF37]">🏓</span>
                   </div>
-                  <div className="text-3xl font-bold text-white">60-70%</div>
-                  <div className="text-sm text-white/60 mt-1">Cost Savings</div>
+                  <div className="text-3xl font-bold text-white">Daily</div>
+                  <div className="text-sm text-white/60 mt-1">Curated Play</div>
                 </div>
 
                 <div className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <span className="text-2xl">🏓</span>
+                    <span className="text-2xl">🏨</span>
                   </div>
-                  <div className="text-3xl font-bold text-white">500+</div>
-                  <div className="text-sm text-white/60 mt-1">Happy Guests</div>
+                  <div className="text-3xl font-bold text-white">4-5 Star</div>
+                  <div className="text-sm text-white/60 mt-1">Boutique Hotels</div>
                 </div>
 
                 <div className="text-center group">
@@ -126,10 +125,10 @@ export function HeroSection() {
 
                 <div className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <Shield className="w-6 h-6 text-[#D4AF37]" />
+                    <Trophy className="w-6 h-6 text-[#D4AF37]" />
                   </div>
-                  <div className="text-3xl font-bold text-white">JCI</div>
-                  <div className="text-sm text-white/60 mt-1">Accredited</div>
+                  <div className="text-3xl font-bold text-white">#1</div>
+                  <div className="text-sm text-white/60 mt-1">Pickleball Tours</div>
                 </div>
               </div>
             </div>

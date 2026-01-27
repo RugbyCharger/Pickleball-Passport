@@ -1,70 +1,104 @@
 'use client';
 
-import { trpc } from '@/lib/trpc/client';
-import { PackageCard } from './package-card';
 import { motion } from 'framer-motion';
-import { Palmtree, Waves, Sun, Sparkles, ArrowRight } from 'lucide-react';
+import { Palmtree, Waves, Sun, Sparkles, ArrowRight, Calendar, Clock, MapPin, CheckCircle, Star } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
-/**
- * PackageGrid Component
- * Displays the package explorer grid with all active packages
- * Fetches data from tRPC and handles loading/error states
- */
+const pickleballPackages = [
+  {
+    id: '8-day',
+    name: '8-Day Pickleball Paradise',
+    tagline: 'The Essential Experience',
+    duration: '8 Days',
+    basePrice: 2499,
+    highlights: [
+      'Daily curated open play & clinics',
+      'Luxury 4-5 star accommodation',
+      'Airport VIP fast-track & transfers',
+      'Welcome dinner & cultural tour',
+      'Dedicated concierge support'
+    ],
+    heroImageUrl: '/images/pickleball-court.jpg' // Placeholder
+  },
+  {
+    id: '13-day',
+    name: '13-Day Ultimate Tour',
+    tagline: 'The Complete Journey',
+    duration: '13 Days',
+    basePrice: 3999,
+    highlights: [
+      'Extended coast-to-coast play',
+      'Multiple tournament opportunities',
+      'Island excursions & luxury stay',
+      'Full wellness recovery day',
+      'Private pro coaching sessions'
+    ],
+    heroImageUrl: '/images/pickleball-resort.jpg' // Placeholder
+  }
+];
+
 export function PackageGrid() {
-  const { data: packages, isLoading, error } = trpc.package.getAll.useQuery();
-
-  if (error) {
-    return (
-      <div className="rounded-2xl border border-[#E07A5F]/30 bg-gradient-to-br from-[#E07A5F]/10 to-[#F5E6D3] p-8 text-center shadow-lg">
-        <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#E07A5F]/20 flex items-center justify-center">
-          <Sun className="w-6 h-6 text-[#E07A5F]" />
-        </div>
-        <p className="text-[#003D5C] font-medium">
-          Unable to load packages. Please try again later.
-        </p>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            className="h-[400px] animate-pulse rounded-2xl bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3] border border-[#D4AF37]/10 shadow-lg"
-          />
-        ))}
-      </div>
-    );
-  }
-
-  if (!packages || packages.length === 0) {
-    return (
-      <div className="rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#F5E6D3]/50 to-white p-12 text-center shadow-xl shadow-[#003D5C]/5">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center shadow-lg">
-          <Sparkles className="w-8 h-8 text-[#003D5C]" />
-        </div>
-        <p className="text-[#003D5C]/70 text-lg">
-          No packages available at the moment. Check back soon!
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
-      {packages.map((pkg) => (
-        <PackageCard
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
+      {pickleballPackages.map((pkg) => (
+        <div
           key={pkg.id}
-          slug={pkg.slug}
-          name={pkg.name}
-          tagline={pkg.tagline}
-          basePrice={pkg.basePrice}
-          durationOptions={pkg.durationOptions}
-          heroImageUrl={pkg.heroImageUrl}
-        />
+          className="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-xl shadow-[#003D5C]/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-[#D4AF37]/10"
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-br from-[#003D5C] to-[#005580] p-8 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Palmtree className="w-24 h-24" />
+            </div>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-serif font-bold mb-2">{pkg.name}</h3>
+              <p className="text-[#D4AF37] font-medium mb-4">{pkg.tagline}</p>
+              <div className="flex items-center gap-4 text-sm text-white/80">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-[#D4AF37]" />
+                  {pkg.duration}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                  Thailand
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 p-8 flex flex-col">
+             {/* Highlights */}
+             <ul className="space-y-4 mb-8 flex-1">
+              {pkg.highlights.map((highlight, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <CheckCircle className="h-4 w-4 text-[#D4AF37]" />
+                  </div>
+                  <span className="text-[#003D5C]/80 text-sm">{highlight}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Price & CTA */}
+            <div className="mt-auto pt-6 border-t border-[#D4AF37]/10">
+               <div className="flex items-end justify-between mb-6">
+                 <div>
+                   <span className="text-sm text-[#003D5C]/60 block mb-1">Starting from</span>
+                   <span className="text-3xl font-bold text-[#003D5C]">${pkg.basePrice}</span>
+                 </div>
+               </div>
+               
+               <Link href="/pickleball" className="block">
+                 <Button className="w-full bg-[#003D5C] hover:bg-[#002B42] text-white h-12 rounded-xl text-base font-medium">
+                   View Itinerary
+                   <ArrowRight className="ml-2 h-4 w-4" />
+                 </Button>
+               </Link>
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -73,7 +107,6 @@ export function PackageGrid() {
 /**
  * PackageSection Component
  * Full section wrapper for the package explorer
- * Includes heading and description with tropical resort styling
  */
 export function PackageSection() {
   return (
@@ -99,16 +132,15 @@ export function PackageSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#003D5C]/5 text-[#003D5C] text-sm font-medium mb-6">
             <Sun className="w-4 h-4 text-[#D4AF37]" />
-            Curated Experiences
+            Curated Pickleball Tours
           </div>
           <h2 className="mb-4 text-4xl font-serif font-bold text-[#003D5C] sm:text-5xl">
-            Our Transformation Packages
+            Choose Your Adventure
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
           <p className="mx-auto max-w-2xl text-lg text-[#003D5C]/70 leading-relaxed">
-            Choose your journey. Whether you're seeking pure pickleball bliss,
-            a stunning smile makeover, or complete personal transformation,
-            we have a package designed for you.
+            Join a community of enthusiasts for the trip of a lifetime. 
+            Experience daily play, luxury relaxation, and the beauty of Thailand.
           </p>
         </motion.div>
 
@@ -125,14 +157,14 @@ export function PackageSection() {
         >
           <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white rounded-2xl p-8 border border-[#D4AF37]/20 shadow-xl shadow-[#003D5C]/5 max-w-2xl mx-auto">
             <p className="mb-6 text-[#003D5C]/70 text-lg">
-              Not sure which package is right for you?
+              Want to add medical treatments to your trip?
             </p>
             <Link
-              href="/apply"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E5C969] px-8 py-4 font-semibold text-[#003D5C] transition-all hover:shadow-xl hover:shadow-[#D4AF37]/30 hover:-translate-y-0.5 shadow-lg shadow-[#D4AF37]/20"
+              href="/medical-tourism"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-[#003D5C] px-8 py-4 font-semibold text-[#003D5C] transition-all hover:bg-[#003D5C] hover:text-white"
             >
               <Sparkles className="h-5 w-5" />
-              <span>Start Your Application</span>
+              <span>Explore Medical Tourism Options</span>
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

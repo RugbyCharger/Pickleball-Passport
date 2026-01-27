@@ -18,34 +18,36 @@ import {
   Palmtree,
   Waves,
   MapPin,
+  Trophy,
+  Stethoscope,
 } from 'lucide-react';
 
 const steps = [
   {
     number: 1,
-    title: 'Apply & Consult',
-    description: 'Complete our simple application form. Our team will review your goals and schedule a free consultation to understand your needs.',
-    icon: FileText,
+    title: 'Choose Your Experience',
+    description: 'Decide if you want a dedicated pickleball tour, a medical tourism trip, or the full package combining both.',
+    icon: Sparkles,
     gradient: 'from-[#003D5C] to-[#4AA4B5]',
   },
   {
     number: 2,
-    title: 'Personalized Planning',
-    description: 'Work with our medical coordinators to create a customized treatment and activity plan tailored to your specific goals.',
+    title: 'Consult & Plan',
+    description: 'Speak with our team to customize your itinerary, book courts, and coordinate any medical appointments.',
     icon: Calendar,
     gradient: 'from-[#D4AF37] to-[#E5C969]',
   },
   {
     number: 3,
-    title: 'Travel & Transform',
-    description: 'Arrive in Thailand where our concierge team handles everything. Enjoy world-class care and daily pickleball in paradise.',
+    title: 'Travel & Play',
+    description: 'Arrive in Thailand where our concierge team handles everything. Enjoy luxury stays and daily pickleball.',
     icon: Plane,
     gradient: 'from-[#2D5A3D] to-[#3D7A52]',
   },
   {
     number: 4,
     title: 'Return Renewed',
-    description: 'Head home with your transformation complete. Our follow-up care ensures lasting results and continued support.',
+    description: 'Head home with improved skills, a rejuvenated body, and unforgettable memories.',
     icon: Heart,
     gradient: 'from-[#E07A5F] to-[#F09B8A]',
   },
@@ -53,49 +55,49 @@ const steps = [
 
 const benefits = [
   {
-    icon: Shield,
-    title: 'JCI Accredited Facilities',
-    description: 'All our partner hospitals meet rigorous international standards for quality and safety.',
+    icon: Trophy,
+    title: 'World-Class Pickleball',
+    description: 'Access to premium courts, local tournaments, and certified coaching in stunning locations.',
   },
   {
     icon: Star,
-    title: '60-70% Cost Savings',
-    description: 'Same quality care as US facilities at a fraction of the cost, with no compromise on outcomes.',
+    title: 'Luxury for Less',
+    description: 'Enjoy 5-star accommodations and service for a fraction of what you would pay in the West.',
+  },
+  {
+    icon: Shield,
+    title: 'Seamless Logistics',
+    description: 'We handle every transfer, booking, and detail. You just show up and play.',
   },
   {
     icon: MessageCircle,
-    title: 'Dedicated Support',
-    description: '24/7 concierge service throughout your journey, from planning to post-care follow-up.',
-  },
-  {
-    icon: Clock,
-    title: 'Minimal Wait Times',
-    description: 'No months-long wait lists. Get scheduled within weeks, not months.',
+    title: 'Community Focused',
+    description: 'Travel with like-minded enthusiasts and make friends from around the world.',
   },
 ];
 
 const beforeTrip = [
   'Free consultation call',
-  'Medical records review',
-  'Customized treatment plan',
+  'Itinerary customization',
+  'Skill level assessment',
   'Travel & accommodation booking',
   'Pre-trip preparation guide',
 ];
 
 const duringStay = [
-  'Airport pickup & transfers',
+  'Airport VIP pickup & transfers',
   '24/7 concierge support',
-  'Medical procedures & follow-ups',
-  'Daily pickleball sessions',
+  'Daily organized open play',
+  'Medical appointments (if applicable)',
   'Cultural experiences & dining',
 ];
 
 const afterReturn = [
-  'Follow-up care coordination',
-  'Medical records transfer',
+  'Photo & video gallery access',
+  'Medical records transfer (if applicable)',
   'Recovery support team',
-  'Long-term wellness guidance',
-  'Pickleball community access',
+  'Alumni community access',
+  'Future trip priority booking',
 ];
 
 export default function HowItWorksPage() {
@@ -123,23 +125,9 @@ export default function HowItWorksPage() {
               How It Works
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Your transformation journey is simple, seamless, and fully supported every step of the way.
-              Here&apos;s how we make it happen.
+              We&apos;ve made it easy to combine your love for pickleball with a luxury vacation 
+              and optional world-class medical care.
             </p>
-            <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <CheckCircle className="h-5 w-5 text-[#D4AF37]" />
-                <span className="text-sm">Fully Guided</span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Shield className="h-5 w-5 text-[#D4AF37]" />
-                <span className="text-sm">100% Safe</span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Heart className="h-5 w-5 text-[#D4AF37]" />
-                <span className="text-sm">Personalized Care</span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -151,8 +139,88 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* Steps Section */}
+      {/* Choose Your Path Section (Flexibility) */}
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+              Choose Your Path
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#003D5C]/70 max-w-2xl mx-auto">
+              We offer three ways to experience Thailand. Choose what fits your goals.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Pickleball Only */}
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 flex flex-col">
+              <div className="bg-[#003D5C] p-6 text-center">
+                <Trophy className="w-12 h-12 text-[#D4AF37] mx-auto mb-3" />
+                <h3 className="text-xl font-bold text-white">Pickleball Only</h3>
+              </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <p className="text-[#003D5C]/70 mb-6 text-center">
+                  Focus purely on the game. Enjoy daily play, tournaments, and luxury travel without any medical appointments.
+                </p>
+                <div className="mt-auto">
+                  <Link href="/pickleball" className="block text-center text-[#003D5C] font-semibold hover:text-[#D4AF37]">
+                    Learn More &rarr;
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* The Full Passport (Both) */}
+            <div className="bg-white rounded-2xl shadow-2xl shadow-[#003D5C]/20 overflow-hidden border-2 border-[#D4AF37] transform md:-translate-y-4 flex flex-col relative">
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969]" />
+              <div className="absolute top-3 right-3">
+                 <span className="bg-[#D4AF37] text-[#003D5C] text-xs font-bold px-2 py-1 rounded-full">MOST POPULAR</span>
+              </div>
+              <div className="bg-gradient-to-b from-[#003D5C] to-[#005580] p-8 text-center">
+                <div className="flex justify-center gap-2 mb-3">
+                  <Trophy className="w-10 h-10 text-[#D4AF37]" />
+                  <Stethoscope className="w-10 h-10 text-[#4AA4B5]" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">The Full Passport</h3>
+              </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <p className="text-[#003D5C]/70 mb-6 text-center text-lg">
+                  The ultimate experience. Combine a pickleball vacation with dental or medical care for maximum value and transformation.
+                </p>
+                <div className="mt-auto">
+                  <Link href="/apply" className="block text-center">
+                    <Button className="w-full bg-[#D4AF37] hover:bg-[#C19A2E] text-[#003D5C] font-bold">
+                      Start Your Journey
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Medical Only */}
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 flex flex-col">
+              <div className="bg-[#003D5C] p-6 text-center">
+                <Stethoscope className="w-12 h-12 text-[#4AA4B5] mx-auto mb-3" />
+                <h3 className="text-xl font-bold text-white">Medical Only</h3>
+              </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <p className="text-[#003D5C]/70 mb-6 text-center">
+                  Focused on your procedure and recovery. World-class care in a relaxing environment with full concierge support.
+                </p>
+                <div className="mt-auto">
+                  <Link href="/medical-tourism" className="block text-center text-[#003D5C] font-semibold hover:text-[#D4AF37]">
+                    Learn More &rarr;
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Steps Section */}
+      <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
@@ -160,7 +228,7 @@ export default function HowItWorksPage() {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-[#003D5C]/70 max-w-3xl mx-auto">
-              From initial consultation to your return home, we handle every detail so you can focus on your transformation.
+              From initial consultation to your return home, we handle every detail so you can focus on playing and relaxing.
             </p>
           </div>
 
@@ -215,7 +283,7 @@ export default function HowItWorksPage() {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
-              We combine world-class medical tourism with the joy of pickleball for a truly unique experience.
+              We combine the thrill of international pickleball with the luxury of a curated vacation.
             </p>
           </div>
 
@@ -329,10 +397,10 @@ export default function HowItWorksPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Sun className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
-            Ready to Begin Your Transformation?
+            Ready to Begin Your Adventure?
           </h2>
           <p className="text-lg text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
-            Take the first step toward a healthier, happier you. Our team is ready to help you plan your perfect journey.
+            Take the first step toward a trip you&apos;ll never forget.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/apply">
@@ -345,7 +413,7 @@ export default function HowItWorksPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/packages">
+            <Link href="/pickleball">
               <Button
                 size="lg"
                 variant="outline"
