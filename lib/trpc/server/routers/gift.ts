@@ -9,13 +9,19 @@ import { z } from 'zod'
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
 import { clerkClient } from '@clerk/nextjs/server'
-import { giftLogger, logError, authLogger } from '@/lib/logger'
+import { giftLogger, logError, authLogger, emailLogger } from '@/lib/logger'
 import { GiftState } from '@prisma/client'
 import { giftStateMachine } from '@/lib/gift/gift-state-machine'
 import {
   transitionGiftState,
   getGiftStateHistory,
 } from '@/lib/gift/gift-transition-service'
+import { checkRateLimit } from '@/lib/rate-limit'
+import { sendEmail } from '@/lib/email/sendgrid'
+import {
+  generateGiftNotificationRecipientEmail,
+  GiftNotificationRecipientData,
+} from '@/lib/email/templates/gift-notification-recipient'
 
 export const giftRouter = router({
   /**
@@ -438,4 +444,294 @@ export const giftRouter = router({
       })),
     }))
   }),
+
+  /**
+   * Cancel Gift (Protected)
+   *
+   * Allows purchaser to cancel a PENDING gift before it's delivered.
+   * Triggers full refund to purchaser. Cannot cancel SENT or terminal state gifts.
+   */
+  cancelGift: protectedProcedure
+    .input(
+      z.object({
+        giftId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 1. FIND GIFT BOOKING
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.giftId },
+        include: {
+          package: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      })
+
+      if (!booking || !booking.isGift) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Gift booking not found',
+        })
+      }
+
+      // 2. VERIFY OWNERSHIP - only purchaser can cancel
+      if (booking.giftPurchaserId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You can only cancel gifts you purchased',
+        })
+      }
+
+      // 3. VALIDATE STATE - only PENDING can be cancelled
+      const currentState = booking.giftStatus as unknown as GiftState
+      if (currentState !== GiftState.PENDING) {
+        if (currentState === GiftState.SENT) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Cannot cancel a gift that has already been sent to the recipient. The recipient has been notified.',
+          })
+        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot cancel gift in ${currentState} state`,
+        })
+      }
+
+      // 4. EXECUTE STATE TRANSITION (triggers refund)
+      const result = await transitionGiftState(
+        booking.id,
+        GiftState.CANCELLED,
+        'user',
+        {
+          userId: ctx.user.id,
+          customReason: 'Gift cancelled by purchaser before delivery',
+        }
+      )
+
+      if (!result.success) {
+        giftLogger.error({
+          msg: 'Gift cancellation failed',
+          bookingId: booking.id,
+          error: result.error,
+        })
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: result.error || 'Failed to cancel gift. Please try again.',
+        })
+      }
+
+      giftLogger.info({
+        msg: 'Gift cancelled by purchaser',
+        bookingId: booking.id,
+        bookingReference: booking.bookingReference,
+        purchaserId: ctx.user.id,
+        transitionId: result.transitionId,
+      })
+
+      return {
+        success: true,
+        message: 'Gift cancelled successfully. A full refund has been processed to your original payment method.',
+      }
+    }),
+
+  /**
+   * Update Gift Message (Protected)
+   *
+   * Allows purchaser to edit the gift message for a PENDING gift.
+   * Cannot update message after gift has been sent.
+   */
+  updateGiftMessage: protectedProcedure
+    .input(
+      z.object({
+        giftId: z.string().cuid(),
+        message: z.string().max(1000).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 1. FIND GIFT BOOKING
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.giftId },
+      })
+
+      if (!booking || !booking.isGift) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Gift booking not found',
+        })
+      }
+
+      // 2. VERIFY OWNERSHIP - only purchaser can update message
+      if (booking.giftPurchaserId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You can only edit messages for gifts you purchased',
+        })
+      }
+
+      // 3. VALIDATE STATE - only PENDING can be edited
+      const currentState = booking.giftStatus as unknown as GiftState
+      if (currentState !== GiftState.PENDING) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot edit message for a gift that has already been sent or is in a terminal state',
+        })
+      }
+
+      // 4. UPDATE MESSAGE
+      await ctx.db.booking.update({
+        where: { id: input.giftId },
+        data: { giftMessage: input.message || null },
+      })
+
+      giftLogger.info({
+        msg: 'Gift message updated',
+        bookingId: booking.id,
+        bookingReference: booking.bookingReference,
+        purchaserId: ctx.user.id,
+      })
+
+      return {
+        success: true,
+        message: 'Gift message updated successfully.',
+      }
+    }),
+
+  /**
+   * Resend Gift Notification (Protected)
+   *
+   * Allows purchaser to resend the gift notification email for a SENT gift.
+   * Rate limited to 3 resends per 24 hours per gift to prevent spam.
+   */
+  resendGiftNotification: protectedProcedure
+    .input(
+      z.object({
+        giftId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 1. FIND GIFT BOOKING
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.giftId },
+        include: {
+          package: {
+            select: {
+              name: true,
+              tagline: true,
+            },
+          },
+          trip: {
+            select: {
+              startDate: true,
+              endDate: true,
+              destination: true,
+            },
+          },
+        },
+      })
+
+      if (!booking || !booking.isGift) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Gift booking not found',
+        })
+      }
+
+      // 2. VERIFY OWNERSHIP - only purchaser can resend
+      if (booking.giftPurchaserId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You can only resend notifications for gifts you purchased',
+        })
+      }
+
+      // 3. VALIDATE STATE - only SENT can be resent
+      const currentState = booking.giftStatus as unknown as GiftState
+      if (currentState !== GiftState.SENT) {
+        if (currentState === GiftState.PENDING) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Gift has not been sent yet. It will be delivered on the scheduled date.',
+          })
+        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot resend notification for a gift in ${currentState} state`,
+        })
+      }
+
+      // 4. CHECK RATE LIMIT (3 per 24 hours per gift)
+      const rateLimitResult = await checkRateLimit('giftResend', input.giftId)
+      if (rateLimitResult && !rateLimitResult.success) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: `You've reached the limit for resending notifications for this gift. Please try again later. (${rateLimitResult.remaining}/${rateLimitResult.limit} remaining)`,
+        })
+      }
+
+      // 5. GET PURCHASER INFO
+      let purchaserFirstName = 'Someone special'
+      let purchaserLastName = ''
+      try {
+        const clerk = await clerkClient()
+        const purchaserUser = await clerk.users.getUser(ctx.user.id)
+        purchaserFirstName = purchaserUser.firstName || 'Someone special'
+        purchaserLastName = purchaserUser.lastName || ''
+      } catch (error) {
+        logError(authLogger, error, 'Failed to fetch purchaser from Clerk')
+      }
+
+      // 6. SEND NOTIFICATION EMAIL
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+      const acceptanceUrl = `${baseUrl}/gift/accept?token=${booking.giftAcceptanceToken}`
+
+      const emailData: GiftNotificationRecipientData = {
+        recipientFirstName: booking.giftRecipientName?.split(' ')[0] || 'Guest',
+        recipientEmail: booking.giftRecipientEmail!,
+        purchaserFirstName,
+        purchaserLastName,
+        bookingReference: booking.bookingReference,
+        packageName: booking.package.name,
+        packageDescription: booking.package.tagline || undefined,
+        duration: booking.duration,
+        accommodationTier: booking.accommodationTier,
+        tripStartDate: booking.trip?.startDate?.toISOString(),
+        tripEndDate: booking.trip?.endDate?.toISOString(),
+        destination: booking.trip?.destination || 'Chiang Mai, Thailand',
+        totalValue: booking.totalPrice,
+        giftMessage: booking.giftMessage || undefined,
+        acceptanceUrl,
+      }
+
+      try {
+        const { subject, html, text } = generateGiftNotificationRecipientEmail(emailData)
+        await sendEmail({
+          to: booking.giftRecipientEmail!,
+          subject: `[Reminder] ${subject}`,
+          html,
+          text,
+        })
+      } catch (error) {
+        logError(emailLogger, error, 'Failed to resend gift notification email')
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to send notification email. Please try again.',
+        })
+      }
+
+      giftLogger.info({
+        msg: 'Gift notification resent',
+        bookingId: booking.id,
+        bookingReference: booking.bookingReference,
+        recipientEmail: booking.giftRecipientEmail,
+        purchaserId: ctx.user.id,
+      })
+
+      return {
+        success: true,
+        message: `Gift notification has been resent to ${booking.giftRecipientEmail}`,
+      }
+    }),
 })

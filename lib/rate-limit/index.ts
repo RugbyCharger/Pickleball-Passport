@@ -111,6 +111,22 @@ export const rateLimiters = {
       analytics: true,
     });
   },
+
+  /**
+   * Gift notification resend: 3 requests per 24 hours per gift
+   * Prevents spam by limiting how often gift notifications can be resent
+   */
+  giftResend: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(3, '24 h'),
+      prefix: 'ratelimit:gift-resend',
+      analytics: true,
+    });
+  },
 };
 
 /**
