@@ -3,17 +3,29 @@ import crypto from 'crypto';
 
 const TOKEN_EXPIRY_DAYS = 90;
 
+// Cached secret (lazy initialization)
+let _cachedSecret: string | null = null;
+
 /**
  * Get the email token secret, with strict validation in production.
  * SECURITY: In production, missing secret throws an error to prevent
  * token forgery attacks. In development, generates a random secret
  * per process (tokens won't persist across restarts).
+ *
+ * Note: Lazy initialization allows builds to succeed without the secret.
+ * The check only runs when token functions are actually called at runtime.
  */
 function getEmailTokenSecret(): string {
+  // Return cached secret if already initialized
+  if (_cachedSecret) {
+    return _cachedSecret;
+  }
+
   const secret = process.env.EMAIL_TOKEN_SECRET;
 
   if (secret && secret.length >= 32) {
-    return secret;
+    _cachedSecret = secret;
+    return _cachedSecret;
   }
 
   // In production, require a properly configured secret
@@ -25,16 +37,13 @@ function getEmailTokenSecret(): string {
   }
 
   // In development, generate a random secret and warn
-  const devSecret = crypto.randomBytes(32).toString('hex');
+  _cachedSecret = crypto.randomBytes(32).toString('hex');
   console.warn(
     '[DEV ONLY] EMAIL_TOKEN_SECRET not configured. Using random secret. ' +
       'Email tokens will not persist across server restarts.'
   );
-  return devSecret;
+  return _cachedSecret;
 }
-
-// Initialize secret at module load (fails fast in production if misconfigured)
-const EMAIL_TOKEN_SECRET = getEmailTokenSecret();
 
 /**
  * Generate a secure email token for preference management
@@ -43,9 +52,9 @@ export async function generateEmailToken(userId: string): Promise<string> {
   // Generate random 32-byte token
   const token = crypto.randomBytes(32).toString('hex');
 
-  // Hash token with HMAC-SHA256
+  // Hash token with HMAC-SHA256 (lazy secret initialization)
   const hash = crypto
-    .createHmac('sha256', EMAIL_TOKEN_SECRET)
+    .createHmac('sha256', getEmailTokenSecret())
     .update(token)
     .digest('hex');
 
@@ -72,7 +81,7 @@ export async function generateEmailToken(userId: string): Promise<string> {
 export async function verifyEmailToken(token: string): Promise<string | null> {
   // Hash the provided token
   const hash = crypto
-    .createHmac('sha256', EMAIL_TOKEN_SECRET)
+    .createHmac('sha256', getEmailTokenSecret())
     .update(token)
     .digest('hex');
 
