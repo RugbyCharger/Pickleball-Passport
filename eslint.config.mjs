@@ -7,9 +7,10 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
+    // Build outputs
     ".next/**",
     "out/**",
+    "dist/**",
     "build/**",
     "next-env.d.ts",
     // Generated/report files
@@ -18,6 +19,13 @@ const eslintConfig = defineConfig([
     "coverage/**",
     // Dependencies
     "node_modules/**",
+    // Cache
+    ".cache/**",
+    ".turbo/**",
+    // Prisma generated
+    "prisma/generated/**",
+    // Public assets (not code)
+    "public/**",
   ]),
 ]);
 
