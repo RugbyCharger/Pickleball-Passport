@@ -5,17 +5,14 @@
  * E5-S7: Notifications Center (3 pts)
  *
  * Features:
- * - Notification preferences UI
- * - Email notification toggles
- * - SMS opt-in (placeholder)
  * - Notification history display
  * - Mark as read functionality
- * - Persistence via database
+ * - Link to notification preferences in settings
  */
 
-import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
-import { Mail, MessageSquare, Check, Trash2, Calendar, CreditCard, Plane, Info, Bell, MousePointer, FileText, Award, TrendingUp, DollarSign } from 'lucide-react';
+import Link from 'next/link';
+import { Check, Trash2, Calendar, CreditCard, Plane, Info, Bell, MousePointer, FileText, Award, TrendingUp, DollarSign, Settings } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { NotificationType } from '@prisma/client';
 
@@ -78,19 +75,9 @@ const NOTIFICATION_TYPE_CONFIG: Record<
 };
 
 export default function NotificationsPage() {
-  const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
-  const [preferences, setPreferences] = useState({
-    emailBookingConfirmation: true,
-    emailPaymentReceipt: true,
-    emailTripReminder: true,
-    emailGeneral: true,
-    smsBookingConfirmation: false,
-    smsTripReminder: false,
-  });
-
   // tRPC queries
   const { data: notifications = [], refetch } = trpc.notification.list.useQuery({
-    unreadOnly: activeTab === 'unread',
+    unreadOnly: false,
   });
   const { data: counts } = trpc.notification.getCounts.useQuery();
 
@@ -131,14 +118,6 @@ export default function NotificationsPage() {
     }
   };
 
-  const handlePreferenceChange = (key: keyof typeof preferences) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-    // TODO: Save preferences to database
-  };
-
   const formatDate = (date: Date): string => {
     const now = new Date();
     const diff = now.getTime() - new Date(date).getTime();
@@ -160,11 +139,20 @@ export default function NotificationsPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-        <p className="mt-2 text-gray-600">
-          Manage your notifications and preferences
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
+          <p className="mt-2 text-gray-600">
+            View and manage your notification history
+          </p>
+        </div>
+        <Link
+          href="/settings/notifications"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <Settings className="h-4 w-4" />
+          Manage Preferences
+        </Link>
       </div>
 
       {/* Stats */}
@@ -185,107 +173,6 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      {/* Notification Preferences */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Notification Preferences
-        </h2>
-
-        <div className="space-y-6">
-          {/* Email Notifications */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Mail className="h-5 w-5 text-gray-600" />
-              <h3 className="font-medium text-gray-900">Email Notifications</h3>
-            </div>
-            <div className="space-y-3 ml-7">
-              <label className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                <span className="text-sm text-gray-700">
-                  Booking confirmations
-                </span>
-                <input
-                  type="checkbox"
-                  checked={preferences.emailBookingConfirmation}
-                  onChange={() =>
-                    handlePreferenceChange('emailBookingConfirmation')
-                  }
-                  className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-              </label>
-              <label className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                <span className="text-sm text-gray-700">Payment receipts</span>
-                <input
-                  type="checkbox"
-                  checked={preferences.emailPaymentReceipt}
-                  onChange={() => handlePreferenceChange('emailPaymentReceipt')}
-                  className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-              </label>
-              <label className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                <span className="text-sm text-gray-700">Trip reminders</span>
-                <input
-                  type="checkbox"
-                  checked={preferences.emailTripReminder}
-                  onChange={() => handlePreferenceChange('emailTripReminder')}
-                  className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-              </label>
-              <label className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                <span className="text-sm text-gray-700">
-                  General updates and newsletters
-                </span>
-                <input
-                  type="checkbox"
-                  checked={preferences.emailGeneral}
-                  onChange={() => handlePreferenceChange('emailGeneral')}
-                  className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* SMS Notifications (Placeholder) */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <MessageSquare className="h-5 w-5 text-gray-600" />
-              <h3 className="font-medium text-gray-900">SMS Notifications</h3>
-              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
-                Coming Soon
-              </span>
-            </div>
-            <div className="space-y-3 ml-7">
-              <label className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 cursor-not-allowed opacity-60">
-                <span className="text-sm text-gray-700">
-                  Booking confirmations
-                </span>
-                <input
-                  type="checkbox"
-                  checked={preferences.smsBookingConfirmation}
-                  disabled
-                  className="h-4 w-4 text-blue-600 rounded"
-                />
-              </label>
-              <label className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 cursor-not-allowed opacity-60">
-                <span className="text-sm text-gray-700">Trip reminders</span>
-                <input
-                  type="checkbox"
-                  checked={preferences.smsTripReminder}
-                  disabled
-                  className="h-4 w-4 text-blue-600 rounded"
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800">
-            Your notification preferences are saved automatically. You&apos;ll only
-            receive emails for the types of notifications you&apos;ve enabled.
-          </p>
-        </div>
-      </div>
-
       {/* Notification History */}
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b">
@@ -302,40 +189,14 @@ export default function NotificationsPage() {
               </button>
             )}
           </div>
-
-          {/* Tabs */}
-          <div className="flex gap-4 mt-4">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              All ({counts?.total || 0})
-            </button>
-            <button
-              onClick={() => setActiveTab('unread')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'unread'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              Unread ({counts?.unread || 0})
-            </button>
-          </div>
         </div>
 
         {notifications.length === 0 ? (
           <div className="text-center py-12">
             <Bell className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-gray-600">No notifications</p>
+            <p className="text-gray-600">No notifications yet</p>
             <p className="text-sm text-gray-500 mt-1">
-              {activeTab === 'unread'
-                ? 'You&apos;re all caught up!'
-                : 'You haven&apos;t received any notifications yet'}
+              You&apos;ll see booking confirmations, trip reminders, and updates here
             </p>
           </div>
         ) : (

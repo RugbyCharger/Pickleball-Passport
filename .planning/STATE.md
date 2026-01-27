@@ -92,9 +92,11 @@ v1.2 key decisions:
 ### Pending Todos
 
 **Technical Debt:**
-- Notification preferences UI uses different fields than database schema (UI: emailBookingConfirmation etc. vs DB: emailPreTripSequence etc.)
 - ~600 lint warnings remain (mostly unused vars, unescaped entities) - build passes
 - Several TODO comments for deferred features (Twilio SMS, dynamic pricing)
+
+**Recently Resolved:**
+- ~~Notification preferences UI mismatch~~ — Fixed 2026-01-27: Removed broken duplicate UI from dashboard, linked to correct settings page
 
 ### Blockers/Concerns
 
