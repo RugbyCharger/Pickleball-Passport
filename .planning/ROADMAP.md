@@ -6,43 +6,43 @@ The v2.0 Mobile App milestone adds a React Native mobile application to the Pick
 
 ## Milestones
 
-- ✅ **v1.0 MVP** - Phases 1-4 (shipped 2026-01-26)
-- ✅ **v1.1 Gift Booking** - Phases 5-7 (shipped 2026-01-27)
-- ✅ **v1.2 RLS Security Hardening** - Phase 8 (shipped 2026-01-27)
-- ✅ **v1.3 Gift Enhancements** - Phase 9 (shipped 2026-01-28)
-- 🚧 **v2.0 Mobile App** - Phases 10-14 (in progress)
+- v1.0 MVP - Phases 1-4 (shipped 2026-01-26)
+- v1.1 Gift Booking - Phases 5-7 (shipped 2026-01-27)
+- v1.2 RLS Security Hardening - Phase 8 (shipped 2026-01-27)
+- v1.3 Gift Enhancements - Phase 9 (shipped 2026-01-28)
+- v2.0 Mobile App - Phases 10-14 (in progress)
 
 ## Phases
 
 <details>
-<summary>✅ v1.0 MVP (Phases 1-4) - SHIPPED 2026-01-26</summary>
+<summary>v1.0 MVP (Phases 1-4) - SHIPPED 2026-01-26</summary>
 
 See: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.1 Gift Booking (Phases 5-7) - SHIPPED 2026-01-27</summary>
+<summary>v1.1 Gift Booking (Phases 5-7) - SHIPPED 2026-01-27</summary>
 
 See: `.planning/milestones/v1.1-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.2 RLS Security Hardening (Phase 8) - SHIPPED 2026-01-27</summary>
+<summary>v1.2 RLS Security Hardening (Phase 8) - SHIPPED 2026-01-27</summary>
 
 See: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.3 Gift Enhancements (Phase 9) - SHIPPED 2026-01-28</summary>
+<summary>v1.3 Gift Enhancements (Phase 9) - SHIPPED 2026-01-28</summary>
 
 See: `.planning/milestones/v1.3-ROADMAP.md`
 
 </details>
 
-### 🚧 v2.0 Mobile App (In Progress)
+### v2.0 Mobile App (In Progress)
 
 **Milestone Goal:** Deliver React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
 
@@ -74,10 +74,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. Guest can view their bookings from tRPC API on mobile dashboard
 4. Developer can build and run app on iOS and Android simulators
 
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 10-01: TBD during phase planning
+- [ ] 10-01-PLAN.md — Scaffold Expo app with TypeScript, Expo Router, and NativeWind
+- [ ] 10-02-PLAN.md — Implement Clerk auth and tRPC client with Bearer tokens
+- [ ] 10-03-PLAN.md — Add biometrics and build authenticated dashboard with bookings
 
 ### Phase 11: Pre-Trip Experience
 
@@ -169,11 +171,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 10 → 11 → 12 → 13 → 14
+Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 10. Foundation | v2.0 | 0/? | Not started | - |
+| 10. Foundation | v2.0 | 0/3 | Ready to execute | - |
 | 11. Pre-Trip | v2.0 | 0/? | Not started | - |
 | 12. During-Trip | v2.0 | 0/? | Not started | - |
 | 13. Alumni | v2.0 | 0/? | Not started | - |
