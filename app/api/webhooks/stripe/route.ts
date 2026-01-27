@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   try {
     // Check if Stripe is configured
     if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
-      console.error('Stripe not configured');
+      stripeLogger.error('Stripe not configured');
       return NextResponse.json(
         { error: 'Stripe integration not configured' },
         { status: 503 }
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const signature = headersList.get('stripe-signature');
 
     if (!signature) {
-      console.error('Missing Stripe signature header');
+      stripeLogger.error('Missing Stripe signature header');
       return NextResponse.json(
         { error: 'Missing signature' },
         { status: 400 }
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     try {
       event = verifyWebhookSignature(body, signature, webhookSecret);
     } catch (error) {
-      console.error('Webhook signature verification failed:', error);
+      stripeLogger.error({ error }, 'Webhook signature verification failed');
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 400 }
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (eventRecord.processed) {
-      console.log(`Event ${event.id} (${event.type}) already processed, skipping`);
+      stripeLogger.info({ eventId: event.id, eventType: event.type }, 'Event already processed, skipping');
       return NextResponse.json({ received: true, status: 'already_processed' });
     }
 
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        stripeLogger.warn({ eventType: event.type }, 'Unhandled event type');
     }
 
     // Mark event as processed
@@ -131,11 +131,11 @@ export async function POST(req: NextRequest) {
     });
 
     const duration = Date.now() - startTime;
-    console.log(`Event ${event.id} (${event.type}) processed successfully in ${duration}ms`);
+    stripeLogger.info({ eventId: event.id, eventType: event.type, durationMs: duration }, 'Event processed successfully');
 
     return NextResponse.json({ received: true, status: 'processed' });
   } catch (error) {
-    console.error('Webhook handler error:', error);
+    stripeLogger.error({ error }, 'Webhook handler error');
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }
@@ -153,7 +153,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
   const { bookingId } = paymentIntent.metadata;
 
   if (!bookingId) {
-    console.error('Payment intent missing bookingId in metadata');
+    stripeLogger.error({ paymentIntentId: paymentIntent.id }, 'Payment intent missing bookingId in metadata');
     return;
   }
 
@@ -164,7 +164,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for intent: ${paymentIntent.id}`);
+      stripeLogger.error({ paymentIntentId: paymentIntent.id }, 'Payment not found for intent');
       return;
     }
 
@@ -494,7 +494,7 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for intent: ${paymentIntent.id}`);
+      stripeLogger.error({ paymentIntentId: paymentIntent.id }, 'Payment not found for intent');
       return;
     }
 
@@ -625,7 +625,7 @@ async function handlePaymentCanceled(paymentIntent: Stripe.PaymentIntent) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for intent: ${paymentIntent.id}`);
+      stripeLogger.error({ paymentIntentId: paymentIntent.id }, 'Payment not found for intent');
       return;
     }
 
