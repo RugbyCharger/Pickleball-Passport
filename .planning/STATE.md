@@ -97,9 +97,15 @@ v1.2 key decisions:
   - 66 unescaped entities (apostrophes in JSX)
   - 16 setState-in-effect (form initialization patterns)
   - 13 img instead of Image (admin/internal pages)
+- ~170 console.log statements remain (197 identified, ~25 in webhook converted to stripeLogger)
+- Large router files (analytics.ts 6057 lines) could be split
 - Several TODO comments for deferred features (Twilio SMS, dynamic pricing)
 
-**Recently Resolved (2026-01-27):**
+**Recently Resolved (2026-01-28):**
+- ~~12 failing tests~~ — Fixed email-token.test.ts (vi.stubEnv + dynamic import) and charge-installment.test.ts (shared lib/stripe/server.ts module for proper mocking)
+- ~~Critical webhook console.error~~ — Replaced with stripeLogger in security-sensitive paths
+
+**Resolved (2026-01-27):**
 - ~~Notification preferences UI mismatch~~ — Removed broken duplicate UI from dashboard, linked to correct settings page
 - ~~ESLintIgnoreWarning~~ — Consolidated .eslintignore into eslint.config.mjs
 
@@ -120,9 +126,15 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-27
-Stopped at: v1.2 milestone archived
+Last session: 2026-01-28
+Stopped at: Technical debt cleanup (autonomous overnight session)
 Resume file: None
+
+**Overnight Work Completed:**
+- Fixed all 12 failing tests (email-token + charge-installment)
+- Created lib/stripe/server.ts for shared server-side Stripe client
+- Converted critical webhook console.error to structured stripeLogger
+- All 948 tests pass, build successful
 
 ## Next Steps (User Decision Required)
 
