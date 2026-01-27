@@ -14,7 +14,6 @@
 
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { Check } from 'lucide-react'

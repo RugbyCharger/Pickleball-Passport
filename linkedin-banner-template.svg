@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1584" height="396" viewBox="0 0 1584 396" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background placeholder (replace with photo in Canva) -->
+  <rect width="1584" height="396" fill="#003D5C"/>
+
+  <!-- Dark overlay for text readability (30% opacity) -->
+  <rect width="1584" height="396" fill="#000000" opacity="0.35"/>
+
+  <!-- SAFE ZONE INDICATOR - Bottom left (delete this in Canva - shows where your profile pic goes) -->
+  <rect x="0" y="246" width="200" height="150" fill="#FF0000" opacity="0.2"/>
+  <text x="100" y="320" font-family="Arial" font-size="12" fill="#FFFFFF" text-anchor="middle">SAFE ZONE</text>
+  <text x="100" y="335" font-family="Arial" font-size="10" fill="#FFFFFF" text-anchor="middle">(Your profile pic)</text>
+
+  <!-- Main Headline -->
+  <text x="792" y="140" font-family="Montserrat, Arial Black, sans-serif" font-size="52" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+    THE ULTIMATE PICKLEBALL VACATION
+  </text>
+
+  <!-- Thailand Flag Emoji placeholder (add as text in Canva) -->
+  <text x="1180" y="140" font-family="Arial" font-size="40">🇹🇭</text>
+
+  <!-- Sub-headline -->
+  <text x="792" y="200" font-family="Open Sans, Arial, sans-serif" font-size="24" fill="#D4AF37" text-anchor="middle" letter-spacing="1">
+    Curated Courts. Luxury Travel. Medical Wellness.
+  </text>
+
+  <!-- Tagline -->
+  <text x="792" y="240" font-family="Open Sans, Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle" opacity="0.8">
+    Experience Thailand like never before.
+  </text>
+
+  <!-- CTA Button -->
+  <rect x="1280" y="300" width="260" height="50" rx="25" fill="#D4AF37"/>
+  <text x="1410" y="333" font-family="Montserrat, Arial, sans-serif" font-size="16" font-weight="600" fill="#003D5C" text-anchor="middle">
+    pickleball-passport.com
+  </text>
+</svg>

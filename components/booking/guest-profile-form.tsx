@@ -9,13 +9,6 @@ import { useState } from 'react'
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 
-// Enum definition matching Prisma schema
-enum PickleballSkillLevel {
-  RECREATIONAL = 'RECREATIONAL',
-  INTERMEDIATE = 'INTERMEDIATE',
-  ADVANCED = 'ADVANCED',
-}
-
 // Validation schema
 const profileSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),

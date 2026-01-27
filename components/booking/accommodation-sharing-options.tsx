@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Home, Users, Check, AlertCircle } from 'lucide-react'
-import { useBookingStore, type AccommodationTier, type CompanionAccommodation } from '@/lib/stores/booking-store'
+import { useBookingStore, type AccommodationTier } from '@/lib/stores/booking-store'
 import {
   Tooltip,
   TooltipContent,
