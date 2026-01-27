@@ -22,6 +22,14 @@ import {
   generateGiftAcceptanceNotificationPurchaserEmail,
   GiftAcceptanceNotificationPurchaserData,
 } from '@/lib/email/templates/gift-acceptance-notification-purchaser'
+import {
+  generateGiftDeclineConfirmationRecipientEmail,
+  GiftDeclineConfirmationRecipientData,
+} from '@/lib/email/templates/gift-decline-confirmation-recipient'
+import {
+  generateGiftDeclineNotificationPurchaserEmail,
+  GiftDeclineNotificationPurchaserData,
+} from '@/lib/email/templates/gift-decline-notification-purchaser'
 import { giftLogger, logError, emailLogger, stripeLogger } from '@/lib/logger'
 import { clerkClient } from '@clerk/nextjs/server'
 import { addDays } from 'date-fns'
@@ -456,22 +464,21 @@ async function handleDeclinedTransition(
   // Send email to purchaser
   if (purchaserInfo?.email) {
     try {
-      await sendEmail({
-        to: purchaserInfo.email,
-        subject: `Gift Declined - Refund Processed - ${booking.bookingReference}`,
-        html: `
-          <h1>Gift Declined</h1>
-          <p>Hi ${purchaserInfo.firstName},</p>
-          <p>Unfortunately, the recipient of your gift booking (${booking.giftRecipientName}) has declined the gift.</p>
-          ${options.declineReason ? `<p><strong>Reason provided:</strong> ${options.declineReason}</p>` : ''}
-          <p>A full refund of $${(booking.totalPrice / 100).toFixed(2)} has been processed to your original payment method.
-          It may take 5-10 business days for the refund to appear in your account.</p>
-          <p><strong>Booking Reference:</strong> ${booking.bookingReference}</p>
-          <p>If you have any questions, please contact us at support@pickleballpassport.com.</p>
-          <p>The Pickleball Passport Team</p>
-        `,
-        text: `Gift Declined - Refund Processed\n\nHi ${purchaserInfo.firstName},\n\nThe recipient has declined your gift booking. A full refund has been processed.\n\nBooking Reference: ${booking.bookingReference}`,
-      })
+      const purchaserData: GiftDeclineNotificationPurchaserData = {
+        purchaserFirstName: purchaserInfo.firstName,
+        purchaserEmail: purchaserInfo.email,
+        recipientFirstName: booking.giftRecipientName?.split(' ')[0] || 'the recipient',
+        recipientLastName: booking.giftRecipientName?.split(' ').slice(1).join(' ') || '',
+        recipientEmail: booking.giftRecipientEmail!,
+        bookingReference: booking.bookingReference,
+        packageName: booking.package.name,
+        duration: booking.duration,
+        totalRefund: booking.totalPrice,
+        declineReason: options.declineReason,
+      }
+
+      const { subject, html, text } = generateGiftDeclineNotificationPurchaserEmail(purchaserData)
+      await sendEmail({ to: purchaserInfo.email, subject, html, text })
     } catch (error) {
       logError(emailLogger, error, 'Failed to send decline notification to purchaser')
     }
@@ -479,20 +486,18 @@ async function handleDeclinedTransition(
 
   // Send email to recipient
   try {
-    await sendEmail({
-      to: booking.giftRecipientEmail!,
-      subject: `Gift Declined - Confirmation`,
-      html: `
-        <h1>Gift Declined</h1>
-        <p>Hi ${booking.giftRecipientName?.split(' ')[0] || 'Guest'},</p>
-        <p>We've received your request to decline the gift from ${purchaserInfo?.firstName || 'the purchaser'}.</p>
-        <p>The purchaser has been notified and a full refund has been processed.</p>
-        ${options.declineReason ? `<p><strong>Your message:</strong> ${options.declineReason}</p>` : ''}
-        <p>If you have any questions, please contact us at support@pickleballpassport.com.</p>
-        <p>The Pickleball Passport Team</p>
-      `,
-      text: `Gift Declined - Confirmation\n\nYour gift decline request has been processed.`,
-    })
+    const recipientData: GiftDeclineConfirmationRecipientData = {
+      recipientFirstName: booking.giftRecipientName?.split(' ')[0] || 'Guest',
+      recipientEmail: booking.giftRecipientEmail!,
+      purchaserFirstName: purchaserInfo?.firstName || 'the purchaser',
+      purchaserLastName: purchaserInfo?.lastName || '',
+      bookingReference: booking.bookingReference,
+      packageName: booking.package.name,
+      declineReason: options.declineReason,
+    }
+
+    const { subject, html, text } = generateGiftDeclineConfirmationRecipientEmail(recipientData)
+    await sendEmail({ to: booking.giftRecipientEmail!, subject, html, text })
   } catch (error) {
     logError(emailLogger, error, 'Failed to send decline confirmation to recipient')
   }
