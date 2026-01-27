@@ -73,7 +73,8 @@ None.
 
 ### Blockers/Concerns
 
-- [01-01]: Clerk session customization may be required for role in sessionClaims.metadata — verify Clerk Dashboard configuration before going live
+- [PENDING]: Clerk webhook not configured — CLERK_WEBHOOK_SECRET needed for user sync
+- [PENDING]: No admin user configured — run setup after Clerk webhook is ready
 - [RESOLVED]: EMAIL_TOKEN_SECRET lazy initialization added to fix Vercel build (2026-01-27)
 
 ## Session Continuity
