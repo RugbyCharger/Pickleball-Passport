@@ -91,12 +91,17 @@ v1.2 key decisions:
 
 ### Pending Todos
 
-**Technical Debt:**
-- ~600 lint warnings remain (mostly unused vars, unescaped entities) - build passes
+**Technical Debt (non-blocking):**
+- ~220 lint warnings remain (build passes, mostly in admin/internal tooling):
+  - 180 unused vars (deferred imports in admin pages)
+  - 66 unescaped entities (apostrophes in JSX)
+  - 16 setState-in-effect (form initialization patterns)
+  - 13 img instead of Image (admin/internal pages)
 - Several TODO comments for deferred features (Twilio SMS, dynamic pricing)
 
-**Recently Resolved:**
-- ~~Notification preferences UI mismatch~~ — Fixed 2026-01-27: Removed broken duplicate UI from dashboard, linked to correct settings page
+**Recently Resolved (2026-01-27):**
+- ~~Notification preferences UI mismatch~~ — Removed broken duplicate UI from dashboard, linked to correct settings page
+- ~~ESLintIgnoreWarning~~ — Consolidated .eslintignore into eslint.config.mjs
 
 ### Blockers/Concerns
 
