@@ -73,31 +73,31 @@ Based on research findings:
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| MOB-SETUP-01 | 09 | Pending |
-| MOB-AUTH-01 | 09 | Pending |
-| MOB-AUTH-02 | 13 | Pending |
-| MOB-PRETRIP-01 | 10 | Pending |
-| MOB-PRETRIP-02 | 10 | Pending |
-| MOB-PRETRIP-03 | 10 | Pending |
-| MOB-PRETRIP-04 | 10 | Pending |
-| MOB-PRETRIP-05 | 10 | Pending |
-| MOB-PRETRIP-06 | 10 | Pending |
-| MOB-PRETRIP-07 | 10 | Pending |
-| MOB-TRIP-01 | 11 | Pending |
-| MOB-TRIP-02 | 11 | Pending |
-| MOB-TRIP-03 | 11 | Pending |
-| MOB-TRIP-04 | 11 | Pending |
-| MOB-TRIP-05 | 11 | Pending |
-| MOB-TRIP-06 | 11 | Pending |
-| MOB-TRIP-07 | 11 | Pending |
-| MOB-TRIP-08 | 11 | Pending |
-| MOB-TRIP-09 | 11 | Pending |
-| MOB-ALUMNI-01 | 12 | Pending |
-| MOB-ALUMNI-02 | 12 | Pending |
-| MOB-ALUMNI-03 | 12 | Pending |
-| MOB-ALUMNI-04 | 12 | Pending |
-| MOB-ALUMNI-05 | 12 | Pending |
-| MOB-ALUMNI-06 | 12 | Pending |
+| MOB-SETUP-01 | 10 | Pending |
+| MOB-AUTH-01 | 10 | Pending |
+| MOB-AUTH-02 | 10 | Pending |
+| MOB-PRETRIP-01 | 11 | Pending |
+| MOB-PRETRIP-02 | 11 | Pending |
+| MOB-PRETRIP-03 | 11 | Pending |
+| MOB-PRETRIP-04 | 11 | Pending |
+| MOB-PRETRIP-05 | 11 | Pending |
+| MOB-PRETRIP-06 | 11 | Pending |
+| MOB-PRETRIP-07 | 11 | Pending |
+| MOB-TRIP-01 | 12 | Pending |
+| MOB-TRIP-02 | 12 | Pending |
+| MOB-TRIP-03 | 12 | Pending |
+| MOB-TRIP-04 | 12 | Pending |
+| MOB-TRIP-05 | 12 | Pending |
+| MOB-TRIP-06 | 12 | Pending |
+| MOB-TRIP-07 | 12 | Pending |
+| MOB-TRIP-08 | 12 | Pending |
+| MOB-TRIP-09 | 12 | Pending |
+| MOB-ALUMNI-01 | 13 | Pending |
+| MOB-ALUMNI-02 | 13 | Pending |
+| MOB-ALUMNI-03 | 13 | Pending |
+| MOB-ALUMNI-04 | 13 | Pending |
+| MOB-ALUMNI-05 | 13 | Pending |
+| MOB-ALUMNI-06 | 13 | Pending |
 
 ---
 *26 requirements across 4 categories*

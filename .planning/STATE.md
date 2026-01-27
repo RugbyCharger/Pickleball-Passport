@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Defining requirements
+**Current focus:** v2.0 Mobile App — Phase 10 (Foundation)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-01-28 — Milestone v2.0 started
+Phase: 10 of 14 (Foundation - Auth + API Integration)
+Plan: Not planned yet
+Status: Ready to plan
+Last activity: 2026-01-28 — Roadmap created for v2.0 Mobile App milestone
 
-Progress: Defining requirements
+Progress: [░░░░░░░░░░] 0% (0 plans complete in v2.0)
 
 ## Milestone History
 
@@ -62,35 +62,49 @@ See: .planning/MILESTONES.md
 - Total plans completed: 1
 - Duration: 19 min
 
+### v2.0 Velocity
+
+- Total plans completed: 0 (starting milestone)
+
 ## Accumulated Context
 
 ### Decisions
 
-| Decision | Rationale | Phase |
-|----------|-----------|-------|
-| CANCELLED is terminal state | Matches ACCEPTED/DECLINED/EXPIRED behavior | 09-01 |
-| Only PENDING gifts cancellable | SENT gifts already notified recipient | 09-01 |
-| Rate limit 3/24h per gift ID | Prevents spam while allowing multiple gifts | 09-01 |
-
 All decisions recorded in PROJECT.md Key Decisions table.
+
+Recent decisions affecting v2.0:
+- Mobile app stack: Expo + NativeWind + tRPC shared client + OneSignal for push
+- tRPC version: Must pin to v11.3.1 (not 11.4+) for React Native Hermes compatibility
+- Supabase Realtime: May have WebSocket issues on React Native, spike during Phase 11
 
 ### Pending Todos
 
-**Technical Debt (non-blocking):**
+**Technical Debt (non-blocking from web app):**
 - ~220 lint warnings remain (build passes)
 - ~170 console.log statements remain
 - Large router files could be split
 
+None specific to v2.0 yet.
+
 ### Blockers/Concerns
 
-None.
+**Phase 10 (Foundation):**
+- tRPC v11.4+ crashes on React Native Hermes — must pin to exact v11.3.1
+- Clerk has no prebuilt UI components on mobile — custom auth UI required
+- Duplicate React/React Native versions in monorepo can cause crashes — need exact version pinning
+
+**Phase 11 (Pre-Trip):**
+- Supabase Realtime WebSocket module import failures on React Native — may need alternative chat solution (Stream Chat, PubNub, or tRPC subscriptions)
+
+**Phase 14 (Polish):**
+- OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-27T17:21:00Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-01-28
+Stopped at: v2.0 Roadmap created
 Resume file: None
 
 ## Next Steps
 
-v2.0 Mobile App milestone started. Defining requirements from BMad epics E6, E7, E8.
+Ready to plan Phase 10 with `/gsd:plan-phase 10`
