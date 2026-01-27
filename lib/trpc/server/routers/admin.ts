@@ -1165,6 +1165,105 @@ export const adminRouter = router({
   }),
 
   // ============================================================================
+  // GIFT MANAGEMENT (GIFT-22)
+  // ============================================================================
+
+  gifts: router({
+    /**
+     * List all gift bookings with optional status filter
+     */
+    list: adminProcedure
+      .input(
+        z
+          .object({
+            giftStatus: z
+              .enum(['PENDING', 'SENT', 'ACCEPTED', 'DECLINED', 'EXPIRED'])
+              .optional(),
+            limit: z.number().min(1).max(100).default(50),
+            offset: z.number().min(0).default(0),
+          })
+          .optional()
+      )
+      .query(async ({ ctx, input }) => {
+        const where = {
+          isGift: true,
+          ...(input?.giftStatus && { giftStatus: input.giftStatus }),
+        };
+
+        const [bookings, total] = await Promise.all([
+          ctx.db.booking.findMany({
+            where,
+            include: {
+              package: { select: { name: true } },
+              trip: { select: { startDate: true, destination: true } },
+              user: {
+                select: {
+                  email: true,
+                  guestProfile: { select: { firstName: true, lastName: true } },
+                },
+              },
+              giftStateTransitions: {
+                orderBy: { createdAt: 'desc' },
+                take: 1,
+              },
+            },
+            orderBy: { createdAt: 'desc' },
+            take: input?.limit || 50,
+            skip: input?.offset || 0,
+          }),
+          ctx.db.booking.count({ where }),
+        ]);
+
+        return {
+          bookings: bookings.map((b) => ({
+            id: b.id,
+            bookingReference: b.bookingReference,
+            status: b.status,
+            giftStatus: b.giftStatus,
+            packageName: b.package.name,
+            recipientName: b.giftRecipientName,
+            recipientEmail: b.giftRecipientEmail,
+            purchaserEmail: b.user?.email,
+            purchaserName: b.user?.guestProfile
+              ? `${b.user.guestProfile.firstName} ${b.user.guestProfile.lastName}`
+              : null,
+            totalPrice: b.totalPrice,
+            giftDeliveryDate: b.giftDeliveryDate?.toISOString(),
+            giftExpiresAt: b.giftExpiresAt?.toISOString(),
+            tripStartDate: b.trip?.startDate?.toISOString(),
+            destination: b.trip?.destination,
+            createdAt: b.createdAt.toISOString(),
+            lastTransition: b.giftStateTransitions[0]
+              ? {
+                  toState: b.giftStateTransitions[0].toState,
+                  reason: b.giftStateTransitions[0].reason,
+                  createdAt: b.giftStateTransitions[0].createdAt.toISOString(),
+                }
+              : null,
+          })),
+          total,
+          hasMore: total > (input?.offset || 0) + (input?.limit || 50),
+        };
+      }),
+
+    /**
+     * Get gift counts by status for dashboard stats
+     */
+    getCounts: adminProcedure.query(async ({ ctx }) => {
+      const [total, pending, sent, accepted, declined, expired] = await Promise.all([
+        ctx.db.booking.count({ where: { isGift: true } }),
+        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'PENDING' } }),
+        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'SENT' } }),
+        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'ACCEPTED' } }),
+        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'DECLINED' } }),
+        ctx.db.booking.count({ where: { isGift: true, giftStatus: 'EXPIRED' } }),
+      ]);
+
+      return { total, pending, sent, accepted, declined, expired };
+    }),
+  }),
+
+  // ============================================================================
   // REFUND PROCESSING - E4-S9
   // ============================================================================
 
