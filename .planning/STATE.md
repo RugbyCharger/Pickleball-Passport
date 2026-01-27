@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-27)
 ## Current Position
 
 Phase: 5 of 7 (Gift Purchase Flow)
-Plan: 2 of TBD in current phase
+Plan: 2 of TBD in current phase (05-01 and 05-02 complete)
 Status: In progress
-Last activity: 2026-01-27 - Completed 05-02-PLAN.md (gift validation on review page)
+Last activity: 2026-01-27 - Completed 05-01-PLAN.md (wire gift flow in payment)
 
-Progress: [██░░░░░░░░] 20% (v1.1 estimate)
+Progress: [███░░░░░░░] 30% (v1.1 estimate)
 
 ## Milestone Summary
 
@@ -62,6 +62,8 @@ All v1.0 decisions recorded in PROJECT.md Key Decisions table with outcomes mark
 v1.1 decisions:
 - Gift system = v1.1: High-value gift market for luxury travel (pending implementation)
 - Split isBaseReady from canProceed: Users with invalid gift data stay on review page to see errors
+- Gift bookings use USD only: Currency selector hidden when isGift is true
+- Gift validation runs client-side before mutation call for immediate feedback
 
 ### Pending Todos
 
@@ -86,7 +88,7 @@ None. All v1.0 blockers resolved.
 ## Session Continuity
 
 Last session: 2026-01-27
-Stopped at: Completed 05-02-PLAN.md (gift validation on review page)
+Stopped at: Completed 05-01-PLAN.md (wire gift flow in payment)
 Resume file: None
 
-Next: Execute 05-03 (gift payment integration) or 05-04 (confirmation)
+Next: Test gift flow end-to-end or continue Phase 5 plans
