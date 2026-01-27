@@ -6,21 +6,22 @@ A luxury transformation travel platform combining world-class pickleball, medica
 
 ## Current State
 
-**Version:** v1.1 Gift Booking (in progress)
+**Version:** v1.1 Gift Booking (shipped 2026-01-27)
 
-The platform is production-ready (v1.0 shipped 2026-01-26). Now adding:
-- Gift booking system — allow guests to purchase trips as gifts for others
+The platform is production-ready with full gift booking capabilities:
+- v1.0 MVP shipped 2026-01-26
+- v1.1 Gift Booking shipped 2026-01-27
 
-## Current Milestone: v1.1 Gift Booking
+## Completed Milestone: v1.1 Gift Booking
 
 **Goal:** Enable guests to purchase transformation trips as gifts, with full lifecycle management from purchase through acceptance/decline/expiration.
 
-**Target features:**
-- Gift purchase flow (buy a trip for someone else)
-- Gift notification emails (to purchaser and recipient)
-- Recipient acceptance/decline UI
-- Gift status tracking in dashboard
-- Refund handling for declined/expired gifts
+**Delivered features:**
+- ✓ Gift purchase flow (buy a trip for someone else)
+- ✓ Gift notification emails (to purchaser and recipient)
+- ✓ Recipient acceptance/decline UI
+- ✓ Gift status tracking in dashboard
+- ✓ Refund handling for declined/expired gifts
 
 ## Core Value
 
@@ -57,21 +58,32 @@ The platform is production-ready (v1.0 shipped 2026-01-26). Now adding:
 - ✓ **Referral link UTM tracking** — utm_source, utm_medium, utm_campaign — v1.0
 - ✓ **Guest cancellation emails** — Both self and admin-initiated paths — v1.0
 
+**v1.1 Gift Booking (shipped 2026-01-27):**
+- ✓ **Gift purchase flow** — Toggle, recipient fields, delivery scheduling — v1.1
+- ✓ **Gift notification emails** — Recipient notification on SENT, purchaser confirmation — v1.1
+- ✓ **Gift acceptance** — Auth flow, booking ownership transfer, confirmation emails — v1.1
+- ✓ **Gift decline** — Dedicated page, automatic refund, notification emails — v1.1
+- ✓ **Gift expiration** — 30-day auto-expire, refund, notification email — v1.1
+- ✓ **Purchaser dashboard** — View gift status and recipient response — v1.1
+- ✓ **Admin gifts view** — Status filtering and counts — v1.1
+
 ### Active
 
-<!-- v1.1 Gift Booking scope -->
+<!-- No active milestone — v1.1 shipped -->
 
-(Requirements being defined — see REQUIREMENTS.md when complete)
+None. v1.1 Gift Booking shipped 2026-01-27. See REQUIREMENTS.md for v2 candidates.
 
 ### Out of Scope
 
 <!-- Explicit boundaries -->
 
 - **Mobile app** — Web app sufficient for now, consider for v2
-- ~~**Gift booking system**~~ — Now in scope for v1.1
 - **SMS notifications** — Twilio stubs exist but not required
 - **Dynamic pricing per trip** — Hardcoded pricing acceptable
 - **Court booking system** — Mobile-only feature
+- **Gift card balance system** — Not a gift card, it's a specific booking gift
+- **Multiple gift recipients** — One gift = one booking = one recipient
+- **Partial gift payments** — Keep it simple - fully paid or not
 
 ## Context
 
