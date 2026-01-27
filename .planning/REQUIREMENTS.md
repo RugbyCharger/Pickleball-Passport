@@ -65,41 +65,41 @@ Deferred to future release.
 |---------|--------|
 | Gift card balance system | Not a gift card, it's a specific booking gift |
 | Multiple recipients | One gift = one booking = one recipient |
-| Partial gift (recipient pays difference) | Keep it simple — fully paid or not |
+| Partial gift (recipient pays difference) | Keep it simple - fully paid or not |
 | Gift registry | Different product, out of scope |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GIFT-01 | TBD | Pending |
-| GIFT-02 | TBD | Pending |
-| GIFT-03 | TBD | Pending |
-| GIFT-04 | TBD | Pending |
-| GIFT-05 | TBD | Pending |
-| GIFT-06 | TBD | Pending |
-| GIFT-07 | TBD | Pending |
-| GIFT-08 | TBD | Pending |
-| GIFT-09 | TBD | Pending |
-| GIFT-10 | TBD | Pending |
-| GIFT-11 | TBD | Pending |
-| GIFT-12 | TBD | Pending |
-| GIFT-13 | TBD | Pending |
-| GIFT-14 | TBD | Pending |
-| GIFT-15 | TBD | Pending |
-| GIFT-16 | TBD | Pending |
-| GIFT-17 | TBD | Pending |
-| GIFT-18 | TBD | Pending |
-| GIFT-19 | TBD | Pending |
-| GIFT-20 | TBD | Pending |
-| GIFT-21 | TBD | Pending |
-| GIFT-22 | TBD | Pending |
+| GIFT-01 | Phase 5 | Pending |
+| GIFT-02 | Phase 5 | Pending |
+| GIFT-03 | Phase 5 | Pending |
+| GIFT-04 | Phase 5 | Pending |
+| GIFT-05 | Phase 5 | Pending |
+| GIFT-06 | Phase 5 | Pending |
+| GIFT-07 | Phase 6 | Pending |
+| GIFT-08 | Phase 6 | Pending |
+| GIFT-09 | Phase 6 | Pending |
+| GIFT-10 | Phase 6 | Pending |
+| GIFT-11 | Phase 6 | Pending |
+| GIFT-12 | Phase 6 | Pending |
+| GIFT-13 | Phase 6 | Pending |
+| GIFT-14 | Phase 6 | Pending |
+| GIFT-15 | Phase 6 | Pending |
+| GIFT-16 | Phase 6 | Pending |
+| GIFT-17 | Phase 7 | Pending |
+| GIFT-18 | Phase 7 | Pending |
+| GIFT-19 | Phase 7 | Pending |
+| GIFT-20 | Phase 7 | Pending |
+| GIFT-21 | Phase 7 | Pending |
+| GIFT-22 | Phase 7 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22 ⚠️
+- Mapped to phases: 22
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-01-27*
-*Last updated: 2026-01-27 after initial definition*
+*Last updated: 2026-01-27 after roadmap creation*

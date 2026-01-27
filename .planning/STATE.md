@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v1.1 Gift Booking — defining requirements
+**Current focus:** v1.1 Gift Booking - Phase 5: Gift Purchase Flow
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-01-27 — Milestone v1.1 started
+Phase: 5 of 7 (Gift Purchase Flow)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-01-27 - Roadmap created for v1.1 Gift Booking
 
-Progress: [░░░░░░░░░░] 0% (v1.1 starting)
+Progress: [░░░░░░░░░░] 0% (v1.1)
 
 ## Milestone Summary
 
@@ -37,14 +37,6 @@ See: .planning/MILESTONES.md
 - 12 PM: Expire gifts
 - 4 PM: Send scheduled gifts
 
-## Next Steps
-
-1. ✓ ~~Deploy to staging~~
-2. ✓ ~~Smoke test critical paths~~ (all endpoints responding)
-3. ✓ ~~Deploy to production~~
-4. ✓ ~~Configure Vercel cron jobs~~
-5. Run `/gsd:new-milestone` when ready for next milestone
-
 ## Performance Metrics (v1.0)
 
 **Velocity:**
@@ -65,7 +57,10 @@ See: .planning/MILESTONES.md
 
 ### Decisions
 
-All decisions recorded in PROJECT.md Key Decisions table with outcomes marked.
+All v1.0 decisions recorded in PROJECT.md Key Decisions table with outcomes marked.
+
+v1.1 decisions:
+- Gift system = v1.1: High-value gift market for luxury travel (pending implementation)
 
 ### Pending Todos
 
@@ -73,13 +68,24 @@ None.
 
 ### Blockers/Concerns
 
-- [RESOLVED]: Clerk webhook configured — endpoint sz5Xzo active (2026-01-27)
-- [RESOLVED]: Admin user configured — grant@aikanga.com has ADMIN role (2026-01-27)
-- [RESOLVED]: Admin layout added — database role check, no Clerk session config needed (2026-01-27)
-- [RESOLVED]: EMAIL_TOKEN_SECRET lazy initialization added to fix Vercel build (2026-01-27)
+None. All v1.0 blockers resolved.
+
+### Existing Gift Infrastructure
+
+**Already built (verify during Phase 6):**
+- Gift state machine (PENDING -> SENT -> ACCEPTED/DECLINED/EXPIRED)
+- Transition service with audit trail
+- tRPC router: getByToken, acceptGift, declineGift
+- Cron jobs: send-scheduled-gifts, expire-gifts
+- Database schema complete (isGift, giftRecipient*, giftMessage, etc.)
+- Gift acceptance page (/gift/accept)
+- Gift booking summary component
+- Booking store supports gift mode
 
 ## Session Continuity
 
-Last session: 2026-01-26
-Stopped at: v1.0 milestone complete
+Last session: 2026-01-27
+Stopped at: Roadmap created for v1.1 Gift Booking
 Resume file: None
+
+Next: `/gsd:plan-phase 5`
