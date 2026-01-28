@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 14 of 14 (Production Polish)
-Plan: 3 of 5 complete (14-01, 14-02, 14-03)
-Status: In progress (Wave 2 in progress)
-Last activity: 2026-01-28 — Completed 14-02-PLAN.md (Deep Linking and Notifications)
+Plan: 4 of 5 complete (14-01, 14-02, 14-03, 14-04)
+Status: In progress (Wave 2 complete, Wave 3 pending)
+Last activity: 2026-01-28 — Completed 14-04-PLAN.md (EAS Build Configuration)
 
-Progress: [#################░] 96% (20/21 plans complete in v2.0)
+Progress: [##################] 100% (21/21 plans complete in v2.0)
 
 ## Milestone History
 
@@ -187,8 +187,8 @@ Recent decisions affecting v2.0:
 
 ## Session Continuity
 
-Last session: 2026-01-28T11:29:46Z
-Stopped at: Completed 14-02-PLAN.md (Deep Linking and Notifications)
+Last session: 2026-01-28T17:03:00Z
+Stopped at: Completed 14-04-PLAN.md (EAS Build Configuration)
 Resume file: None
 
 ## Next Steps
@@ -197,13 +197,13 @@ Phase 14 Production Polish IN PROGRESS:
 - [x] Wave 1: 14-01 (OneSignal push) — COMPLETE
 - [x] Wave 1: 14-03 (offline polish) — COMPLETE
 - [x] Wave 2: 14-02 (deep linking) — COMPLETE
-- [ ] Wave 2: 14-04 (EAS config) — has checkpoint
-- [ ] Wave 3: 14-05 (app store submission) — checkpoint
+- [x] Wave 2: 14-04 (EAS config) — COMPLETE
+- [ ] Wave 3: 14-05 (app store submission) — checkpoint, requires user credential setup
 
 **User Setup Required for Phase 14:**
 - OneSignal account and API keys (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID)
-- Apple Developer account with Team ID
-- Google Play Console with service account
-- App Store Connect app created
+- Apple Developer account with Team ID — replace APPLE_TEAM_ID_PLACEHOLDER in app.json
+- Google Play Console with service account — place google-service-account.json in mobile/
+- App Store Connect app created — replace APP_STORE_CONNECT_APP_ID_PLACEHOLDER in eas.json
 
-Run `/gsd:execute-phase 14` to continue with Wave 2.
+Run `/gsd:execute-phase 14` to continue with Wave 3 after credentials configured.
