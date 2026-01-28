@@ -271,3 +271,67 @@ export function calculateGuestReferralPoints(totalPrice: number): number {
     ? GUEST_REFERRAL_POINTS_CONFIG.HIGH_VALUE_POINTS
     : GUEST_REFERRAL_POINTS_CONFIG.STANDARD_POINTS
 }
+
+// ============================================================================
+// ALUMNI ENGAGEMENT (Phase 13)
+// ============================================================================
+
+/**
+ * Alumni discount configuration
+ * Applied when alumni guests rebook
+ */
+export const ALUMNI_DISCOUNT_CONFIG = {
+  /** Alumni rebooking discount percentage */
+  DISCOUNT_RATE: 0.10, // 10% discount
+  /** Minimum days between using alumni discount */
+  COOLDOWN_DAYS: 0, // No cooldown
+  /** Alumni discount stacks with partner referral? */
+  STACKS_WITH_PARTNER_DISCOUNT: false,
+} as const
+
+/**
+ * Passport stamps configuration
+ * Defines available stamps and their unlock criteria
+ */
+export const PASSPORT_STAMPS_CONFIG = {
+  STAMPS: {
+    FIRST_TRIP: {
+      code: 'FIRST_TRIP',
+      name: 'First Adventure',
+      description: 'Complete your first Pickleball Passport trip',
+      category: 'TRIPS',
+      criteria: { type: 'TRIPS_COMPLETED', count: 1 },
+    },
+    REPEAT_TRAVELER: {
+      code: 'REPEAT_TRAVELER',
+      name: 'Repeat Traveler',
+      description: 'Complete two Pickleball Passport trips',
+      category: 'TRIPS',
+      criteria: { type: 'TRIPS_COMPLETED', count: 2 },
+    },
+    REFERRAL_CHAMPION: {
+      code: 'REFERRAL_CHAMPION',
+      name: 'Referral Champion',
+      description: 'Refer a friend who completes a trip',
+      category: 'REFERRALS',
+      criteria: { type: 'REFERRALS_COMPLETED', count: 1 },
+    },
+    STORYTELLER: {
+      code: 'STORYTELLER',
+      name: 'Storyteller',
+      description: 'Submit an approved testimonial',
+      category: 'ENGAGEMENT',
+      criteria: { type: 'TESTIMONIAL_APPROVED', count: 1 },
+    },
+    MEMORY_MAKER: {
+      code: 'MEMORY_MAKER',
+      name: 'Memory Maker',
+      description: 'Upload 10+ photos during a trip',
+      category: 'ENGAGEMENT',
+      criteria: { type: 'PHOTOS_UPLOADED', count: 10 },
+    },
+  },
+} as const
+
+export type StampCode = keyof typeof PASSPORT_STAMPS_CONFIG.STAMPS
+export type StampCategory = 'TRIPS' | 'REFERRALS' | 'ENGAGEMENT' | 'ACHIEVEMENTS'
