@@ -442,7 +442,11 @@ model Trip {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookings Booking[]
+  bookings          Booking[]
+  photos            TripPhoto[]
+  courtBookings     CourtBooking[]
+  transportRequests TransportRequest[]
+  sosAlerts         SOSAlert[]
 
   @@index([startDate])
   @@index([isActive])
@@ -559,6 +563,9 @@ model Booking {
   // Phase 11: Pre-Trip Features
   packingItems   GuestPackingItem[]
   checklistItems PreTripChecklistItem[]
+
+  // Phase 12: During-Trip Features
+  activityCheckIns ActivityCheckIn[]
 
   @@index([userId])
   @@index([packageId])
@@ -2534,4 +2541,92 @@ model PreTripChecklistItem {
 
   @@unique([bookingId, itemKey])
   @@index([bookingId])
+}
+
+// ============================================================================
+// DURING-TRIP FEATURES (Phase 12)
+// ============================================================================
+
+// Activity check-in - tracks when guests check in to scheduled activities
+model ActivityCheckIn {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  activityId  String   // References ItineraryActivity.id
+  checkedInAt DateTime @default(now())
+
+  @@unique([bookingId, activityId])
+  @@index([bookingId])
+}
+
+// Trip photos - photos uploaded by guests during trip
+model TripPhoto {
+  id           String   @id @default(cuid())
+  tripId       String
+  trip         Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  uploadedBy   String   // Clerk user ID
+  fileUrl      String   // Supabase Storage URL
+  thumbnailUrl String?  // Optional thumbnail for gallery grid
+  caption      String?
+  uploadedAt   DateTime @default(now())
+
+  @@index([tripId])
+  @@index([uploadedBy])
+}
+
+// Court booking - pickleball court booking requests
+model CourtBooking {
+  id          String   @id @default(cuid())
+  tripId      String
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  requestedBy String   // Clerk user ID
+  date        DateTime
+  startTime   String   // e.g., "09:00"
+  duration    Int      // minutes (60, 90, 120)
+  players     Int      // number of players
+  notes       String?
+  status      String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt   DateTime @default(now())
+
+  @@index([tripId])
+  @@index([requestedBy])
+  @@index([date])
+}
+
+// Transport request - transportation requests during trip
+model TransportRequest {
+  id             String   @id @default(cuid())
+  tripId         String
+  trip           Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  requestedBy    String   // Clerk user ID
+  date           DateTime
+  pickupTime     String
+  pickupLocation String
+  destination    String
+  passengers     Int
+  notes          String?
+  status         String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED
+  createdAt      DateTime @default(now())
+
+  @@index([tripId])
+  @@index([requestedBy])
+}
+
+// SOS Alert - emergency SOS alerts during trip
+model SOSAlert {
+  id         String    @id @default(cuid())
+  tripId     String
+  trip       Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId     String    // Clerk user ID
+  latitude   Float?
+  longitude  Float?
+  message    String?
+  status     String    @default("ACTIVE") // ACTIVE, RESOLVED
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+  resolvedBy String?   // Admin who resolved
+
+  @@index([tripId])
+  @@index([userId])
+  @@index([status])
 }
