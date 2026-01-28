@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider } from '../lib/auth';
 import { ApiProvider } from '../lib/api';
+import { initializeOneSignal } from '../lib/onesignal';
 
 import '../global.css';
 
@@ -39,6 +40,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
+      // Initialize OneSignal before hiding splash
+      initializeOneSignal();
       SplashScreen.hideAsync();
     }
   }, [loaded]);
