@@ -172,11 +172,11 @@ enum ReferralEventType {
 // Gift State Machine (GS-001)
 // New enum for state machine with EXPIRED state
 enum GiftState {
-  PENDING   // Payment complete, waiting to send notification
-  SENT      // Gift notification email sent to recipient
-  ACCEPTED  // Recipient accepted gift, booking transferred (terminal)
-  DECLINED  // Recipient declined gift, refund processed (terminal)
-  EXPIRED   // Gift expired after 30 days without response (terminal)
+  PENDING // Payment complete, waiting to send notification
+  SENT // Gift notification email sent to recipient
+  ACCEPTED // Recipient accepted gift, booking transferred (terminal)
+  DECLINED // Recipient declined gift, refund processed (terminal)
+  EXPIRED // Gift expired after 30 days without response (terminal)
   CANCELLED // Purchaser cancelled gift before delivery (terminal)
 }
 
@@ -228,13 +228,17 @@ model User {
   preferenceEmailTokenExpiry DateTime?
   preferenceUpdatedAt        DateTime?
 
+  // Alumni Directory (Phase 13)
+  showInAlumniDirectory Boolean @default(false) // Opt-in for alumni directory visibility
+  alumniProfileBio      String? @db.Text // Optional bio for alumni directory
+
   // Relationships
-  guestProfile   GuestProfile?
-  partnerProfile PartnerProfile?
-  applications   Application[]
-  bookings       Booking[]
-  notifications  Notification[]
-  testimonials   Testimonial[]
+  guestProfile      GuestProfile?
+  partnerProfile    PartnerProfile?
+  applications      Application[]
+  bookings          Booking[]
+  notifications     Notification[]
+  testimonials      Testimonial[]
   guestTestimonials GuestTestimonial[] @relation("GuestTestimonials")
 
   // Guest Referral Relationships (Epic 10)
@@ -245,6 +249,9 @@ model User {
   supportTickets       SupportTicket[] // Tickets created by this user
   assignedTickets      SupportTicket[]      @relation("AssignedTickets") // Tickets assigned to admin
   supportTicketReplies SupportTicketReply[] // Replies from this user
+
+  // Passport Stamps (Phase 13)
+  passportStamps UserPassportStamp[]
 
   @@index([email])
   @@index([role])
@@ -320,10 +327,10 @@ model PartnerProfile {
   notificationPreferences Json? // {emailReferralClicks, emailApplications, emailBookings, etc.}
 
   // E4-S14: Stripe Connect for Partner Payouts
-  stripeConnectAccountId          String?  // Stripe Connect account ID (acct_xxx)
-  stripeConnectOnboardingComplete Boolean  @default(false) // Has completed Stripe onboarding
-  stripeConnectAccountType        String?  // "express" or "standard"
-  stripeConnectPayoutsEnabled     Boolean  @default(false) // Can receive payouts
+  stripeConnectAccountId          String? // Stripe Connect account ID (acct_xxx)
+  stripeConnectOnboardingComplete Boolean @default(false) // Has completed Stripe onboarding
+  stripeConnectAccountType        String? // "express" or "standard"
+  stripeConnectPayoutsEnabled     Boolean @default(false) // Can receive payouts
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -361,12 +368,12 @@ model Package {
   description String  @db.Text // Markdown content
 
   // CMS Rich Text Content (Epic 12-2)
-  cmsDescription     Json?   // TipTap JSON content for rich description
-  cmsPricingText     String? @db.Text // Custom pricing display text
-  cmsDurationText    String? @db.Text // Custom duration options text
-  cmsHighlights      Json?   // Array of highlight items
-  cmsIncludedItems   Json?   // What's included list
-  cmsNotIncludedItems Json?  // What's not included list
+  cmsDescription      Json? // TipTap JSON content for rich description
+  cmsPricingText      String? @db.Text // Custom pricing display text
+  cmsDurationText     String? @db.Text // Custom duration options text
+  cmsHighlights       Json? // Array of highlight items
+  cmsIncludedItems    Json? // What's included list
+  cmsNotIncludedItems Json? // What's not included list
 
   // Pricing
   basePrice Int // Base price in USD cents (e.g., 1500000 = $15,000)
@@ -387,12 +394,12 @@ model Package {
   updatedAt DateTime @updatedAt
 
   // Relationships
-  bookings            Booking[]
-  itineraries         Itinerary[]
-  contentBlocks       ContentBlock[]    // CMS content blocks linked to this package
-  contentVersions     PackageContentVersion[] // Audit log of content changes
-  itineraryTemplates  ItineraryTemplate[]
-  packingTemplates    PackingListTemplate[] // Phase 11: Pre-Trip packing list templates
+  bookings           Booking[]
+  itineraries        Itinerary[]
+  contentBlocks      ContentBlock[] // CMS content blocks linked to this package
+  contentVersions    PackageContentVersion[] // Audit log of content changes
+  itineraryTemplates ItineraryTemplate[]
+  packingTemplates   PackingListTemplate[] // Phase 11: Pre-Trip packing list templates
 
   @@index([slug])
   @@index([isActive])
@@ -526,8 +533,8 @@ model Booking {
   giftAcceptanceToken String?    @unique // Unique token for secure gift acceptance
 
   // Gift State Machine (GS-001)
-  giftStateChangedAt  DateTime? // Timestamp of last state transition
-  giftExpiresAt       DateTime? // When gift expires (giftDeliveryDate + 30 days or createdAt + 30 days)
+  giftStateChangedAt DateTime? // Timestamp of last state transition
+  giftExpiresAt      DateTime? // When gift expires (giftDeliveryDate + 30 days or createdAt + 30 days)
 
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
@@ -541,8 +548,8 @@ model Booking {
   // Phase 11: Pre-Trip Features
   showInTravelersList Boolean @default(false) // Opt-in to appear in fellow travelers list
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime? // Soft delete - preserves financial audit trail (P1-002)
 
   // Relationships
@@ -1211,17 +1218,17 @@ model RefundLog {
 // ============================================================================
 
 model GiftStateTransition {
-  id        String    @id @default(cuid())
+  id        String  @id @default(cuid())
   bookingId String
-  booking   Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   fromState GiftState // Previous state (PENDING, SENT, etc.)
   toState   GiftState // New state
 
-  reason    String    // Human-readable reason for transition
-  metadata  Json?     // Additional context (triggeredBy, etc.)
+  reason   String // Human-readable reason for transition
+  metadata Json? // Additional context (triggeredBy, etc.)
 
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   @@index([bookingId])
   @@index([createdAt])
@@ -1331,7 +1338,7 @@ model EmailTemplate {
   // Relations
   versions  EmailTemplateVersion[]
   analytics EmailTemplateAnalytics?
-  campaigns EmailCampaign[]        // E13-S8: Campaign analytics
+  campaigns EmailCampaign[] // E13-S8: Campaign analytics
 
   @@index([category])
   @@index([status])
@@ -1608,7 +1615,7 @@ enum GuestTestimonialStatus {
 
 // Guest testimonial submissions for moderation
 model GuestTestimonial {
-  id     String @id @default(cuid())
+  id String @id @default(cuid())
 
   // Guest reference
   guestId String
@@ -1619,8 +1626,8 @@ model GuestTestimonial {
   content String?              @db.Text // Written testimonial text
 
   // Video (S3 or Mux)
-  videoUrl      String? // S3 presigned URL or Mux playback URL
-  videoAssetId  String? // Mux asset ID if using Mux
+  videoUrl       String? // S3 presigned URL or Mux playback URL
+  videoAssetId   String? // Mux asset ID if using Mux
   videoThumbnail String? // Video thumbnail URL
 
   // Before/After Photos (S3)
@@ -1637,9 +1644,9 @@ model GuestTestimonial {
   editRequestNotes String?                @db.Text // Notes for requested edits
 
   // GDPR Consent
-  consentGiven      Boolean   @default(false) // Guest consented to use
-  consentTimestamp  DateTime? // When consent was given
-  consentIpAddress  String? // IP address when consent given
+  consentGiven     Boolean   @default(false) // Guest consented to use
+  consentTimestamp DateTime? // When consent was given
+  consentIpAddress String? // IP address when consent given
 
   // Display info (snapshot from guest profile)
   guestName     String // Display name
@@ -1683,12 +1690,12 @@ enum ItineraryActivityType {
 
 // Itinerary template - defines a reusable day-by-day schedule for packages
 model ItineraryTemplate {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String // e.g., "7-Day Pure Play Itinerary"
   packageId   String?
   package     Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
   duration    Int // Total number of days
-  description String? @db.Text // Rich text description
+  description String?  @db.Text // Rich text description
 
   // Status
   isActive Boolean @default(true)
@@ -1711,7 +1718,7 @@ model ItineraryDay {
   template   ItineraryTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
   dayNumber  Int // 1, 2, 3, etc.
   title      String // e.g., "Arrival & Welcome"
-  activities String? @db.Text // JSON array of activity references (legacy, deprecated)
+  activities String?           @db.Text // JSON array of activity references (legacy, deprecated)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1731,10 +1738,10 @@ model ItineraryActivity {
   day         ItineraryDay          @relation(fields: [dayId], references: [id], onDelete: Cascade)
   time        String? // e.g., "09:00", "14:30"
   title       String // e.g., "Morning Pickleball Session"
-  description String?   @db.Text // Rich text description
+  description String?               @db.Text // Rich text description
   location    String? // e.g., "Main Resort Courts"
   type        ItineraryActivityType // Activity category
-  sortOrder   Int       @default(0) // For drag-and-drop ordering
+  sortOrder   Int                   @default(0) // For drag-and-drop ordering
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1943,7 +1950,7 @@ model PackageContentVersion {
   versionNumber Int
 
   // Snapshot of package content data at this version
-  content       Json // Full package content snapshot (all CMS fields)
+  content        Json // Full package content snapshot (all CMS fields)
   changesSummary String? // Description of what changed
 
   // Audit
@@ -1963,20 +1970,20 @@ model PackageContentVersion {
 
 // Blog post status for draft/scheduled/published workflow
 enum BlogPostStatus {
-  DRAFT       // Post is being edited, not visible publicly
-  SCHEDULED   // Post is scheduled for future publication
-  PUBLISHED   // Post is live and visible
-  ARCHIVED    // Post removed from public view but preserved
+  DRAFT // Post is being edited, not visible publicly
+  SCHEDULED // Post is scheduled for future publication
+  PUBLISHED // Post is live and visible
+  ARCHIVED // Post removed from public view but preserved
 }
 
 // Blog category for organizing posts
 model BlogCategory {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  slug        String @unique // URL-friendly identifier
+  slug        String  @unique // URL-friendly identifier
   description String?
   color       String? // Optional color for UI display (hex code)
-  sortOrder   Int    @default(0) // For custom ordering
+  sortOrder   Int     @default(0) // For custom ordering
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1996,9 +2003,9 @@ model BlogPost {
   status BlogPostStatus @default(DRAFT)
 
   // Content
-  content     Json     @db.Json // Rich text content in TipTap JSON format
-  excerpt     String?  @db.Text // Short summary for listings and SEO
-  plainText   String?  @db.Text // Plain text extraction for search
+  content   Json    @db.Json // Rich text content in TipTap JSON format
+  excerpt   String? @db.Text // Short summary for listings and SEO
+  plainText String? @db.Text // Plain text extraction for search
 
   // Featured image
   featuredImage    String? // URL to featured image
@@ -2030,7 +2037,7 @@ model BlogPost {
 
   // Relationships
   categoryId String?
-  category   BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  category   BlogCategory?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   tags       BlogPostTag[]
   versions   BlogPostVersion[]
 
@@ -2103,11 +2110,11 @@ model BlogPostVersion {
 
 // FAQ Category for organizing FAQs
 model FAQCategory {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  slug        String @unique // URL-friendly identifier
+  slug        String  @unique // URL-friendly identifier
   description String?
-  sortOrder   Int    @default(0) // For custom ordering
+  sortOrder   Int     @default(0) // For custom ordering
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2122,8 +2129,8 @@ model FAQCategory {
 // FAQ items with rich text answers
 model FAQ {
   id          String  @id @default(cuid())
-  question    String  // The FAQ question
-  answer      Json    // Rich text answer in TipTap JSON format
+  question    String // The FAQ question
+  answer      Json // Rich text answer in TipTap JSON format
   answerPlain String? @db.Text // Plain text extraction for search
   sortOrder   Int     @default(0) // For custom ordering within category
   isPublished Boolean @default(false) // Draft/publish status
@@ -2157,23 +2164,23 @@ enum MediaAssetType {
 
 // Media folder for organizing assets
 model MediaFolder {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  slug        String   @unique // URL-friendly identifier
+  slug        String  @unique // URL-friendly identifier
   description String?
 
   // Nested folder support
-  parentId    String?
-  parent      MediaFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children    MediaFolder[] @relation("FolderHierarchy")
+  parentId String?
+  parent   MediaFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children MediaFolder[] @relation("FolderHierarchy")
 
   // Audit
-  createdBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relationships
-  assets      MediaAsset[]
+  assets MediaAsset[]
 
   @@index([parentId])
   @@index([slug])
@@ -2182,39 +2189,39 @@ model MediaFolder {
 
 // Media asset (images, videos, documents)
 model MediaAsset {
-  id          String         @id @default(cuid())
+  id String @id @default(cuid())
 
   // File information
-  filename    String         // Original filename
-  url         String         // S3/Storage URL
-  thumbnailUrl String?       // Generated thumbnail URL (for images/videos)
-  type        MediaAssetType // IMAGE, VIDEO, DOCUMENT
-  mimeType    String         // e.g., image/jpeg, video/mp4
-  size        Int            // File size in bytes
+  filename     String // Original filename
+  url          String // S3/Storage URL
+  thumbnailUrl String? // Generated thumbnail URL (for images/videos)
+  type         MediaAssetType // IMAGE, VIDEO, DOCUMENT
+  mimeType     String // e.g., image/jpeg, video/mp4
+  size         Int // File size in bytes
 
   // Image/Video metadata
-  width       Int?           // Image/video width in pixels
-  height      Int?           // Image/video height in pixels
-  duration    Int?           // Video duration in seconds
+  width    Int? // Image/video width in pixels
+  height   Int? // Image/video height in pixels
+  duration Int? // Video duration in seconds
 
   // Accessibility & SEO
-  alt         String?        // Alt text for images
-  title       String?        // Title attribute
-  caption     String?        // Caption/description
+  alt     String? // Alt text for images
+  title   String? // Title attribute
+  caption String? // Caption/description
 
   // Organization
-  tags        String[]       // Array of tags for filtering
-  folderId    String?
-  folder      MediaFolder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  tags     String[] // Array of tags for filtering
+  folderId String?
+  folder   MediaFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
 
   // S3 metadata
-  s3Key       String?        // S3 object key for deletion
-  s3Bucket    String?        // S3 bucket name
+  s3Key    String? // S3 object key for deletion
+  s3Bucket String? // S3 bucket name
 
   // Audit
-  createdBy   String
-  uploadedAt  DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdBy  String
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([folderId])
   @@index([type])
@@ -2229,25 +2236,25 @@ model MediaAsset {
 
 // Analytics event types for tracking user actions
 enum AnalyticsEventType {
-  PAGE_VIEW           // User views a page
-  BUTTON_CLICK        // User clicks a button/CTA
-  FUNNEL_STEP         // User progresses through booking funnel
-  FORM_SUBMIT         // User submits a form
-  CONVERSION          // User completes a conversion (booking, payment, etc.)
-  SEARCH              // User performs a search
-  FILTER              // User applies filters
-  ERROR               // Error occurred during user action
+  PAGE_VIEW // User views a page
+  BUTTON_CLICK // User clicks a button/CTA
+  FUNNEL_STEP // User progresses through booking funnel
+  FORM_SUBMIT // User submits a form
+  CONVERSION // User completes a conversion (booking, payment, etc.)
+  SEARCH // User performs a search
+  FILTER // User applies filters
+  ERROR // Error occurred during user action
 }
 
 // Analytics events for tracking user behavior
 model AnalyticsEvent {
-  id          String             @id @default(cuid())
-  eventType   AnalyticsEventType
-  userId      String?            // Clerk user ID (null for anonymous)
-  sessionId   String             // Browser session ID for tracking anonymous users
+  id        String             @id @default(cuid())
+  eventType AnalyticsEventType
+  userId    String? // Clerk user ID (null for anonymous)
+  sessionId String // Browser session ID for tracking anonymous users
 
   // Event details stored as JSON
-  properties  Json               // Flexible JSON for event-specific data
+  properties Json // Flexible JSON for event-specific data
   // Example properties:
   // PAGE_VIEW: { path: "/packages/pure-play", referrer: "google.com" }
   // BUTTON_CLICK: { buttonId: "book-now", location: "hero-section" }
@@ -2255,16 +2262,16 @@ model AnalyticsEvent {
   // CONVERSION: { type: "BOOKING_COMPLETED", bookingId: "xxx", value: 150000 }
 
   // Context
-  pageUrl     String?            // Full URL where event occurred
-  userAgent   String?            // Browser user agent
-  ipAddress   String?            // IP address (for geo-location)
+  pageUrl   String? // Full URL where event occurred
+  userAgent String? // Browser user agent
+  ipAddress String? // IP address (for geo-location)
 
   // UTM tracking
   utmSource   String?
   utmMedium   String?
   utmCampaign String?
 
-  createdAt   DateTime           @default(now())
+  createdAt DateTime @default(now())
 
   @@index([eventType])
   @@index([userId])
@@ -2276,34 +2283,34 @@ model AnalyticsEvent {
 
 // Analytics session tracking for user journey analysis
 model AnalyticsSession {
-  id              String    @id @default(cuid())
-  sessionId       String    @unique // Browser session ID
-  userId          String?   // Clerk user ID (null for anonymous until login)
+  id        String  @id @default(cuid())
+  sessionId String  @unique // Browser session ID
+  userId    String? // Clerk user ID (null for anonymous until login)
 
   // Session timing
-  startedAt       DateTime  @default(now())
-  lastActivityAt  DateTime  @default(now())
+  startedAt      DateTime @default(now())
+  lastActivityAt DateTime @default(now())
 
   // Session metadata
-  deviceType      String?   // desktop, mobile, tablet
-  browser         String?   // chrome, firefox, safari, etc.
-  os              String?   // windows, macos, ios, android
-  screenResolution String?  // e.g., "1920x1080"
+  deviceType       String? // desktop, mobile, tablet
+  browser          String? // chrome, firefox, safari, etc.
+  os               String? // windows, macos, ios, android
+  screenResolution String? // e.g., "1920x1080"
 
   // Traffic source
-  landingPage     String?   // First page visited
-  referrer        String?   // Referral source
-  utmSource       String?
-  utmMedium       String?
-  utmCampaign     String?
+  landingPage String? // First page visited
+  referrer    String? // Referral source
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
 
   // Session metrics (updated on each activity)
-  pageViews       Int       @default(0)
-  eventCount      Int       @default(0)
+  pageViews  Int @default(0)
+  eventCount Int @default(0)
 
   // Conversion tracking
-  hasConverted    Boolean   @default(false) // Did this session result in a conversion?
-  conversionType  String?   // Type of conversion (e.g., "BOOKING", "APPLICATION")
+  hasConverted   Boolean @default(false) // Did this session result in a conversion?
+  conversionType String? // Type of conversion (e.g., "BOOKING", "APPLICATION")
 
   @@index([sessionId])
   @@index([userId])
@@ -2338,35 +2345,35 @@ enum EmailSendStatus {
 
 // Email Campaign - Groups sends for analytics (marketing blasts, A/B tests)
 model EmailCampaign {
-  id          String              @id @default(cuid())
-  name        String              // "January Newsletter" or "Welcome Series - Day 1"
-  subject     String              // Email subject line
-  templateId  String?             // Optional link to EmailTemplate
-  template    EmailTemplate?      @relation(fields: [templateId], references: [id])
+  id         String         @id @default(cuid())
+  name       String // "January Newsletter" or "Welcome Series - Day 1"
+  subject    String // Email subject line
+  templateId String? // Optional link to EmailTemplate
+  template   EmailTemplate? @relation(fields: [templateId], references: [id])
 
   // Campaign settings
   status      EmailCampaignStatus @default(DRAFT)
-  scheduledAt DateTime?           // When to send (null = immediate)
-  sentAt      DateTime?           // When actually sent
+  scheduledAt DateTime? // When to send (null = immediate)
+  sentAt      DateTime? // When actually sent
 
   // Targeting
-  recipientCount Int             @default(0) // Total recipients targeted
-  segmentCriteria Json?          // Optional: criteria used to select recipients
+  recipientCount  Int   @default(0) // Total recipients targeted
+  segmentCriteria Json? // Optional: criteria used to select recipients
 
   // A/B Testing
   isAbTest       Boolean         @default(false)
-  abTestVariant  String?         // "A", "B", "C", etc.
-  abTestParentId String?         // Links variants to parent campaign
+  abTestVariant  String? // "A", "B", "C", etc.
+  abTestParentId String? // Links variants to parent campaign
   abTestParent   EmailCampaign?  @relation("AbTestVariants", fields: [abTestParentId], references: [id])
   abTestVariants EmailCampaign[] @relation("AbTestVariants")
 
   // Metadata
-  createdBy   String
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  sends       EmailSend[]
+  sends EmailSend[]
 
   @@index([status])
   @@index([sentAt])
@@ -2376,46 +2383,46 @@ model EmailCampaign {
 
 // Individual email send - tracks each email delivery
 model EmailSend {
-  id          String          @id @default(cuid())
-  campaignId  String?
-  campaign    EmailCampaign?  @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  id         String         @id @default(cuid())
+  campaignId String?
+  campaign   EmailCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
 
   // Recipient
-  recipientEmail String
-  recipientUserId String?     // Optional: Clerk user ID if known
+  recipientEmail  String
+  recipientUserId String? // Optional: Clerk user ID if known
   recipientName   String?
 
   // Email details
-  subject     String
-  templateId  String?         // Template used (slug or ID)
+  subject    String
+  templateId String? // Template used (slug or ID)
 
   // Status tracking
-  status      EmailSendStatus @default(QUEUED)
-  queuedAt    DateTime        @default(now())
-  sentAt      DateTime?
-  deliveredAt DateTime?
-  openedAt    DateTime?       // First open
-  clickedAt   DateTime?       // First click
-  bouncedAt   DateTime?
+  status         EmailSendStatus @default(QUEUED)
+  queuedAt       DateTime        @default(now())
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  openedAt       DateTime? // First open
+  clickedAt      DateTime? // First click
+  bouncedAt      DateTime?
   unsubscribedAt DateTime?
 
   // Engagement metrics
-  openCount   Int             @default(0) // Total opens (includes re-opens)
-  clickCount  Int             @default(0) // Total clicks
+  openCount  Int @default(0) // Total opens (includes re-opens)
+  clickCount Int @default(0) // Total clicks
 
   // Bounce/Error details
-  bounceType  String?         // "hard", "soft"
+  bounceType   String? // "hard", "soft"
   bounceReason String?
 
   // Tracking
   utmSource   String?
-  utmMedium   String?         @default("email")
+  utmMedium   String? @default("email")
   utmCampaign String?
 
-  createdAt   DateTime        @default(now())
+  createdAt DateTime @default(now())
 
   // Relations
-  linkClicks  EmailLinkClick[]
+  linkClicks EmailLinkClick[]
 
   @@index([campaignId])
   @@index([recipientEmail])
@@ -2427,19 +2434,19 @@ model EmailSend {
 
 // Track individual link clicks within emails
 model EmailLinkClick {
-  id          String    @id @default(cuid())
-  sendId      String
-  send        EmailSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
+  id     String    @id @default(cuid())
+  sendId String
+  send   EmailSend @relation(fields: [sendId], references: [id], onDelete: Cascade)
 
   // Link details
-  linkUrl     String    // Original URL
-  linkText    String?   // CTA text (e.g., "Book Now", "View Details")
-  linkPosition String?  // Position in email (e.g., "header", "body", "footer")
+  linkUrl      String // Original URL
+  linkText     String? // CTA text (e.g., "Book Now", "View Details")
+  linkPosition String? // Position in email (e.g., "header", "body", "footer")
 
   // Click tracking
-  clickedAt   DateTime  @default(now())
-  ipAddress   String?
-  userAgent   String?
+  clickedAt DateTime @default(now())
+  ipAddress String?
+  userAgent String?
 
   @@index([sendId])
   @@index([clickedAt])
@@ -2460,28 +2467,28 @@ enum ReportVisualizationType {
 
 // Saved custom reports for admin users
 model CustomReport {
-  id          String                  @id @default(cuid())
-  name        String                  // Report name for display
-  description String?                 // Optional description
+  id          String  @id @default(cuid())
+  name        String // Report name for display
+  description String? // Optional description
 
   // Report configuration stored as JSON
-  metrics     Json                    // Selected metrics: ["bookings", "revenue", "conversions"]
-  filters     Json?                   // Filter configuration
-  dateRange   Json?                   // Date range configuration: { preset: "last30days" } or { startDate, endDate }
+  metrics       Json // Selected metrics: ["bookings", "revenue", "conversions"]
+  filters       Json? // Filter configuration
+  dateRange     Json? // Date range configuration: { preset: "last30days" } or { startDate, endDate }
   visualization ReportVisualizationType @default(TABLE)
-  groupBy     String?                 // Optional grouping (daily, weekly, monthly, by package, etc.)
+  groupBy       String? // Optional grouping (daily, weekly, monthly, by package, etc.)
 
   // Scheduling (optional - for email delivery)
-  isScheduled      Boolean   @default(false)
-  scheduleFrequency String?  // "daily", "weekly", "monthly"
+  isScheduled        Boolean   @default(false)
+  scheduleFrequency  String? // "daily", "weekly", "monthly"
   scheduleRecipients String[] // Email addresses to send to
-  lastRunAt        DateTime?
-  nextRunAt        DateTime?
+  lastRunAt          DateTime?
+  nextRunAt          DateTime?
 
   // Audit
-  createdBy   String                  // Admin user ID who created
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @updatedAt
+  createdBy String // Admin user ID who created
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([createdBy])
   @@index([createdAt])
@@ -2494,17 +2501,17 @@ model CustomReport {
 
 // Packing list templates - admin-managed default items for each package
 model PackingListTemplate {
-  id          String   @id @default(cuid())
-  packageId   String?
-  package     Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
-  category    String   // "Clothing", "Medical", "Electronics", "Documents"
-  item        String   // "Sunscreen", "Passport copy", etc.
-  isDefault   Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  packageId String?
+  package   Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  category  String // "Clothing", "Medical", "Electronics", "Documents"
+  item      String // "Sunscreen", "Passport copy", etc.
+  isDefault Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  guestItems  GuestPackingItem[]
+  guestItems GuestPackingItem[]
 
   @@index([packageId])
   @@index([category])
@@ -2512,17 +2519,17 @@ model PackingListTemplate {
 
 // Guest packing items - user customizations and tracked packing status
 model GuestPackingItem {
-  id          String   @id @default(cuid())
-  bookingId   String
-  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  templateId  String?
-  template    PackingListTemplate? @relation(fields: [templateId], references: [id])
-  item        String
-  category    String
-  isPacked    Boolean  @default(false)
-  isCustom    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String               @id @default(cuid())
+  bookingId  String
+  booking    Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  templateId String?
+  template   PackingListTemplate? @relation(fields: [templateId], references: [id])
+  item       String
+  category   String
+  isPacked   Boolean              @default(false)
+  isCustom   Boolean              @default(false)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
 
   @@index([bookingId])
   @@index([isPacked])
@@ -2530,14 +2537,14 @@ model GuestPackingItem {
 
 // Pre-trip checklist items - persistent completion state for pre-trip tasks
 model PreTripChecklistItem {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   bookingId   String
-  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  itemKey     String   // "passport", "itinerary_reviewed", "packing_complete", etc.
-  isComplete  Boolean  @default(false)
+  booking     Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  itemKey     String // "passport", "itinerary_reviewed", "packing_complete", etc.
+  isComplete  Boolean   @default(false)
   completedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@unique([bookingId, itemKey])
   @@index([bookingId])
@@ -2552,7 +2559,7 @@ model ActivityCheckIn {
   id          String   @id @default(cuid())
   bookingId   String
   booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  activityId  String   // References ItineraryActivity.id
+  activityId  String // References ItineraryActivity.id
   checkedInAt DateTime @default(now())
 
   @@unique([bookingId, activityId])
@@ -2564,9 +2571,9 @@ model TripPhoto {
   id           String   @id @default(cuid())
   tripId       String
   trip         Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  uploadedBy   String   // Clerk user ID
-  fileUrl      String   // Supabase Storage URL
-  thumbnailUrl String?  // Optional thumbnail for gallery grid
+  uploadedBy   String // Clerk user ID
+  fileUrl      String // Supabase Storage URL
+  thumbnailUrl String? // Optional thumbnail for gallery grid
   caption      String?
   uploadedAt   DateTime @default(now())
 
@@ -2579,11 +2586,11 @@ model CourtBooking {
   id          String   @id @default(cuid())
   tripId      String
   trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  requestedBy String   // Clerk user ID
+  requestedBy String // Clerk user ID
   date        DateTime
-  startTime   String   // e.g., "09:00"
-  duration    Int      // minutes (60, 90, 120)
-  players     Int      // number of players
+  startTime   String // e.g., "09:00"
+  duration    Int // minutes (60, 90, 120)
+  players     Int // number of players
   notes       String?
   status      String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
   createdAt   DateTime @default(now())
@@ -2598,7 +2605,7 @@ model TransportRequest {
   id             String   @id @default(cuid())
   tripId         String
   trip           Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  requestedBy    String   // Clerk user ID
+  requestedBy    String // Clerk user ID
   date           DateTime
   pickupTime     String
   pickupLocation String
@@ -2617,16 +2624,59 @@ model SOSAlert {
   id         String    @id @default(cuid())
   tripId     String
   trip       Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  userId     String    // Clerk user ID
+  userId     String // Clerk user ID
   latitude   Float?
   longitude  Float?
   message    String?
   status     String    @default("ACTIVE") // ACTIVE, RESOLVED
   createdAt  DateTime  @default(now())
   resolvedAt DateTime?
-  resolvedBy String?   // Admin who resolved
+  resolvedBy String? // Admin who resolved
 
   @@index([tripId])
   @@index([userId])
   @@index([status])
+}
+
+// ============================================================================
+// PASSPORT STAMPS (Phase 13 - Alumni Engagement)
+// ============================================================================
+
+// Passport stamp definitions - achievements guests can earn
+model PassportStampDefinition {
+  id             String  @id @default(cuid())
+  code           String  @unique // "FIRST_TRIP", "REFERRAL_CHAMPION", etc.
+  name           String // "First Adventure"
+  description    String // "Complete your first Pickleball Passport trip"
+  iconUrl        String? // Stamp image/icon URL
+  category       String // "TRIPS", "REFERRALS", "ENGAGEMENT", "ACHIEVEMENTS"
+  sortOrder      Int     @default(0)
+  isActive       Boolean @default(true)
+  unlockCriteria Json // { type: "TRIPS_COMPLETED", count: 1 }
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  earnedStamps UserPassportStamp[]
+
+  @@index([code])
+  @@index([category])
+  @@index([isActive])
+}
+
+// User passport stamps - stamps earned by guests
+model UserPassportStamp {
+  id      String                  @id @default(cuid())
+  userId  String
+  user    User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stampId String
+  stamp   PassportStampDefinition @relation(fields: [stampId], references: [id])
+
+  earnedAt DateTime @default(now())
+  tripId   String? // Optional: which trip earned this stamp
+
+  @@unique([userId, stampId])
+  @@index([userId])
+  @@index([stampId])
+  @@index([earnedAt])
 }
