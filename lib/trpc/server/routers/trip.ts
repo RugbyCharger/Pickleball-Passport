@@ -101,6 +101,140 @@ export const tripRouter = router({
     }),
 
   /**
+   * Get trip details for pre-trip view
+   * Protected endpoint - requires user to have a booking for this trip
+   * Returns trip with countdown data calculated server-side
+   */
+  getTripDetails: protectedProcedure
+    .input(
+      z.object({
+        tripId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Verify user has a booking for this trip
+      const userBooking = await ctx.db.booking.findFirst({
+        where: {
+          tripId: input.tripId,
+          userId: ctx.user.id,
+          status: { in: ['CONFIRMED', 'COMPLETED'] },
+        },
+        select: { id: true },
+      })
+
+      if (!userBooking) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have a booking for this trip',
+        })
+      }
+
+      // Get trip details
+      const trip = await ctx.db.trip.findUnique({
+        where: { id: input.tripId },
+        select: {
+          id: true,
+          name: true,
+          destination: true,
+          startDate: true,
+          endDate: true,
+          whatsappGroupInviteLink: true,
+        },
+      })
+
+      if (!trip) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Trip not found',
+        })
+      }
+
+      // Calculate countdown
+      const now = new Date()
+      const startDate = new Date(trip.startDate)
+      const diffTime = startDate.getTime() - now.getTime()
+      const daysUntilTrip = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+      return {
+        ...trip,
+        daysUntilTrip: Math.max(0, daysUntilTrip),
+        hasStarted: daysUntilTrip <= 0,
+      }
+    }),
+
+  /**
+   * Get fellow travelers for a trip
+   * Protected endpoint - requires user's booking to have showInTravelersList: true
+   * Returns only users who opted in (showInTravelersList: true)
+   * Only returns: firstName, lastName (no email or other PII)
+   */
+  getFellowTravelers: protectedProcedure
+    .input(
+      z.object({
+        tripId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Verify user has a booking for this trip AND has opted in
+      const userBooking = await ctx.db.booking.findFirst({
+        where: {
+          tripId: input.tripId,
+          userId: ctx.user.id,
+          status: { in: ['CONFIRMED', 'COMPLETED'] },
+        },
+        select: {
+          id: true,
+          showInTravelersList: true,
+        },
+      })
+
+      if (!userBooking) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have a booking for this trip',
+        })
+      }
+
+      // User must opt-in to see fellow travelers
+      if (!userBooking.showInTravelersList) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You must opt-in to the travelers list to see fellow travelers',
+        })
+      }
+
+      // Get all bookings for this trip where showInTravelersList is true
+      const bookings = await ctx.db.booking.findMany({
+        where: {
+          tripId: input.tripId,
+          showInTravelersList: true,
+          status: { in: ['CONFIRMED', 'COMPLETED'] },
+          // Exclude current user
+          userId: { not: ctx.user.id },
+        },
+        include: {
+          user: {
+            include: {
+              guestProfile: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      })
+
+      // Return only safe fields (no email or other PII)
+      return bookings.map((booking) => ({
+        id: booking.id,
+        firstName: booking.user.guestProfile?.firstName || 'Guest',
+        lastName: booking.user.guestProfile?.lastName || '',
+      }))
+    }),
+
+  /**
    * Get available trips for rescheduling
    * Protected endpoint - requires authentication
    * Returns future trips with availability for rescheduling a specific booking

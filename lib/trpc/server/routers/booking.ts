@@ -2832,5 +2832,51 @@ export const bookingRouter = router({
         total: totalPrice,
         giftAcceptanceToken, // For testing purposes
       }
-    })
+    }),
+
+  /**
+   * Update traveler visibility preference
+   *
+   * Allows user to opt-in or opt-out of appearing in fellow travelers list.
+   */
+  updateTravelerVisibility: guestProcedure
+    .input(
+      z.object({
+        bookingId: z.string().cuid(),
+        showInTravelersList: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify user owns booking
+      const booking = await ctx.db.booking.findUnique({
+        where: { id: input.bookingId },
+        select: { userId: true },
+      })
+
+      if (!booking) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Booking not found',
+        })
+      }
+
+      if (booking.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to update this booking',
+        })
+      }
+
+      // Update visibility preference
+      const updatedBooking = await ctx.db.booking.update({
+        where: { id: input.bookingId },
+        data: { showInTravelersList: input.showInTravelersList },
+        select: {
+          id: true,
+          showInTravelersList: true,
+        },
+      })
+
+      return updatedBooking
+    }),
 })

@@ -93,6 +93,7 @@
     "recharts": "^3.6.0",
     "remark-gfm": "^4.0.1",
     "sonner": "^2.0.7",
+    "stream-chat": "^9.30.1",
     "stripe": "^20.1.0",
     "superjson": "^2.2.6",
     "svix": "^1.82.0",

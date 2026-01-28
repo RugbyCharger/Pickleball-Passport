@@ -37,6 +37,9 @@ import { faqRouter } from './routers/faq'
 import { guestTestimonialRouter } from './routers/guest-testimonial'
 import { mediaRouter } from './routers/media'
 import { itineraryRouter } from './routers/itinerary'
+import { packingRouter } from './routers/packing'
+import { chatRouter } from './routers/chat'
+import { checklistRouter } from './routers/checklist'
 
 export const appRouter = router({
   user: userRouter,
@@ -70,6 +73,9 @@ export const appRouter = router({
   guestTestimonial: guestTestimonialRouter,
   media: mediaRouter,
   itinerary: itineraryRouter,
+  packing: packingRouter,
+  chat: chatRouter,
+  checklist: checklistRouter,
 })
 
 // Export type definition for the router
