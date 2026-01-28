@@ -126,10 +126,14 @@ Plans:
 8. Guest can view group photo gallery with all guest photos
 9. Guest can request transportation (car, tuk-tuk, etc.)
 
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 12-01: TBD during phase planning
+- [ ] 12-01-PLAN.md — Backend foundation (Prisma models, tRPC routers)
+- [ ] 12-02-PLAN.md — SOS & Concierge (GPS location, emergency button, concierge chat)
+- [ ] 12-03-PLAN.md — Activity check-in, court booking, find players, transportation
+- [ ] 12-04-PLAN.md — Photo journal & gallery (compression, upload, gallery screens)
+- [ ] 12-05-PLAN.md — Wire up trip overview with navigation + human verification
 
 ### Phase 13: Alumni Engagement
 
@@ -181,6 +185,6 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 |-------|-----------|----------------|--------|-----------|
 | 10. Foundation | v2.0 | 3/3 | Complete | 2026-01-28 |
 | 11. Pre-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
-| 12. During-Trip | v2.0 | 0/? | Not started | - |
+| 12. During-Trip | v2.0 | 0/5 | Planned | - |
 | 13. Alumni | v2.0 | 0/? | Not started | - |
 | 14. Polish | v2.0 | 0/? | Not started | - |
