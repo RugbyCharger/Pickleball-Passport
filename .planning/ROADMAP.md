@@ -98,10 +98,14 @@ Plans:
 6. Guest can view and customize packing list
 7. Guest can download itinerary and view it offline without internet connection
 
-**Plans**: TBD
+**Plans**: 5 plans in 2 waves
 
 Plans:
-- [ ] 11-01: TBD during phase planning
+- [ ] 11-01-PLAN.md — Database schema + tRPC routers (packing, trip, chat)
+- [ ] 11-02-PLAN.md — MMKV storage + Stream Chat + offline infrastructure
+- [ ] 11-03-PLAN.md — Trip overview (countdown, checklist, passport upload)
+- [ ] 11-04-PLAN.md — Fellow travelers + packing list screens
+- [ ] 11-05-PLAN.md — Trip group chat + offline itinerary
 
 ### Phase 12: During-Trip Experience
 
