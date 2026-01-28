@@ -1,17 +1,51 @@
-import React from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, RefreshControl, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MapPin, Calendar } from 'lucide-react-native';
+import {
+  MapPin,
+  Calendar,
+  CalendarDays,
+  MessageSquare,
+  Users,
+  Car,
+  Camera,
+  BookOpen,
+} from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { trpc } from '../../../../lib/api';
 import { useCountdown } from '../../../../hooks/useCountdown';
 import { CountdownTimer } from '../../../../components/trip/CountdownTimer';
 import { ChecklistItem } from '../../../../components/trip/ChecklistItem';
 import { PassportUpload } from '../../../../components/trip/PassportUpload';
+import { SOSButton } from '../../../../components/sos/SOSButton';
+import { SOSModal } from '../../../../components/sos/SOSModal';
+
+// Feature card for during-trip navigation
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+}
+
+function FeatureCard({ icon, title, subtitle, onPress }: FeatureCardProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className="bg-white rounded-lg p-4 shadow-sm w-[48%] mb-3 active:bg-gray-50"
+    >
+      <View className="mb-2">{icon}</View>
+      <Text className="text-gray-800 font-semibold">{title}</Text>
+      <Text className="text-gray-500 text-sm">{subtitle}</Text>
+    </Pressable>
+  );
+}
 
 export default function TripOverviewScreen() {
   const { tripId } = useLocalSearchParams<{ tripId: string }>();
   const utils = trpc.useUtils();
+  const [sosModalVisible, setSOSModalVisible] = useState(false);
 
   // Fetch trip details
   const {
@@ -161,7 +195,7 @@ export default function TripOverviewScreen() {
         </View>
 
         {/* Quick Actions */}
-        <View className="bg-white rounded-xl overflow-hidden shadow-sm">
+        <View className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
           <View className="p-4 border-b border-gray-100">
             <Text className="text-lg font-semibold text-gray-800">Quick Access</Text>
           </View>
@@ -180,22 +214,80 @@ export default function TripOverviewScreen() {
             onPress={() => navigateTo('chat')}
             showChevron
           />
-          <ChecklistItem
-            title="Trip Photos"
-            description="View group photo gallery"
-            isComplete={false}
-            onPress={() => navigateTo('photos')}
-            showChevron
-          />
-          <ChecklistItem
-            title="My Journal"
-            description="Capture your trip memories"
-            isComplete={false}
-            onPress={() => navigateTo('journal')}
-            showChevron
-          />
         </View>
+
+        {/* During Your Trip Features */}
+        <View className="mb-4">
+          <Text className="text-lg font-semibold text-gray-800 mb-3">During Your Trip</Text>
+          <View className="flex-row flex-wrap justify-between">
+            <FeatureCard
+              icon={<CalendarDays size={24} color="#059669" />}
+              title="Itinerary"
+              subtitle="View daily activities"
+              onPress={() => navigateTo('itinerary')}
+            />
+            <FeatureCard
+              icon={<MessageSquare size={24} color="#059669" />}
+              title="Concierge"
+              subtitle="24/7 support"
+              onPress={() => navigateTo('concierge')}
+            />
+            <FeatureCard
+              icon={<Ionicons name="tennisball" size={24} color="#059669" />}
+              title="Book Courts"
+              subtitle="Reserve pickleball time"
+              onPress={() => navigateTo('courts')}
+            />
+            <FeatureCard
+              icon={<Users size={24} color="#059669" />}
+              title="Find Players"
+              subtitle="Connect with guests"
+              onPress={() => navigateTo('players')}
+            />
+            <FeatureCard
+              icon={<Car size={24} color="#059669" />}
+              title="Transportation"
+              subtitle="Request a ride"
+              onPress={() => navigateTo('transport')}
+            />
+            <FeatureCard
+              icon={<Camera size={24} color="#059669" />}
+              title="Photo Gallery"
+              subtitle="Trip memories"
+              onPress={() => navigateTo('photos')}
+            />
+            <FeatureCard
+              icon={<BookOpen size={24} color="#059669" />}
+              title="My Journal"
+              subtitle="Your photos"
+              onPress={() => navigateTo('journal')}
+            />
+          </View>
+        </View>
+
+        {/* Spacer to prevent SOS button overlap */}
+        <View className="h-24" />
       </ScrollView>
+
+      {/* Floating SOS Button */}
+      <View className="absolute bottom-6 right-6">
+        <SOSButton onPress={() => setSOSModalVisible(true)} />
+      </View>
+
+      {/* SOS Modal */}
+      <SOSModal
+        visible={sosModalVisible}
+        tripId={tripId!}
+        onClose={() => setSOSModalVisible(false)}
+        onSuccess={() => {
+          setSOSModalVisible(false);
+          Alert.alert(
+            'SOS Sent',
+            'Our team has been notified and will contact you shortly.',
+            [{ text: 'OK' }]
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }
