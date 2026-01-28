@@ -7,6 +7,7 @@
 
 import { OneSignal, LogLevel, NotificationClickEvent } from 'react-native-onesignal';
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 
 /**
  * Initialize OneSignal SDK
@@ -35,25 +36,50 @@ export function initializeOneSignal(): void {
   // Initialize the SDK
   OneSignal.initialize(appId);
 
-  // Set up notification click handler
-  // Deep link handling deferred to Plan 14-02
+  // Set up notification click handler with deep link navigation
   OneSignal.Notifications.addEventListener('click', (event: NotificationClickEvent) => {
     if (__DEV__) {
       console.log('[OneSignal] Notification clicked:', event.notification);
     }
 
-    // Extract deep link data if present
+    // Extract deep link data from additionalData
+    // Using additionalData instead of Launch URL because iOS has known issue
+    // where Linking.getInitialURL() returns null for cold-start notifications
     const data = event.notification.additionalData as {
       tripId?: string;
       screen?: string;
       deepLink?: string;
     } | undefined;
 
-    if (data?.deepLink && __DEV__) {
-      console.log('[OneSignal] Deep link data:', data.deepLink);
+    if (!data) {
+      if (__DEV__) {
+        console.log('[OneSignal] No additionalData in notification');
+      }
+      return;
     }
 
-    // Deep link navigation will be implemented in Plan 14-02
+    // Navigate based on data payload
+    if (data.deepLink) {
+      // Full deep link path provided
+      if (__DEV__) {
+        console.log('[OneSignal] Navigating to deep link:', data.deepLink);
+      }
+      router.push(data.deepLink as any);
+    } else if (data.tripId && data.screen) {
+      // Trip + screen combination
+      const path = `/trip/${data.tripId}/${data.screen}`;
+      if (__DEV__) {
+        console.log('[OneSignal] Navigating to trip screen:', path);
+      }
+      router.push(path as any);
+    } else if (data.tripId) {
+      // Trip overview only
+      const path = `/trip/${data.tripId}`;
+      if (__DEV__) {
+        console.log('[OneSignal] Navigating to trip:', path);
+      }
+      router.push(path as any);
+    }
   });
 
   if (__DEV__) {
