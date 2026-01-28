@@ -6,6 +6,8 @@ import {
   isBiometricsEnabled,
   authenticateWithBiometrics,
 } from '../../lib/biometrics';
+import { OfflineBanner } from '@/components/OfflineBanner';
+import { PendingMutationsIndicator } from '@/components/PendingMutationsIndicator';
 
 export default function AppLayout() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -66,10 +68,16 @@ export default function AppLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <View className="flex-1">
+      <OfflineBanner />
+      <View className="absolute top-12 right-4 z-50">
+        <PendingMutationsIndicator />
+      </View>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </View>
   );
 }
