@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 14 of 14 (Production Polish)
-Plan: 1 of 5 complete (14-03)
-Status: In progress (Wave 1)
-Last activity: 2026-01-28 — Completed 14-03-PLAN.md (Offline Mode Polish)
+Plan: 2 of 5 complete (14-01, 14-03)
+Status: In progress (Wave 1 complete)
+Last activity: 2026-01-28 — Completed 14-01-PLAN.md (OneSignal Push Notifications)
 
-Progress: [################░] 94% (18/19 plans complete in v2.0)
+Progress: [#################░] 95% (19/20 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 17
+- Total plans completed: 19
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -82,6 +82,7 @@ See: .planning/MILESTONES.md
 - 13-02: 5 min (Alumni Profile & Journey Screen)
 - 13-03: 3 min (Passport Stamps Collection)
 - 13-04: 4 min (Testimonial & Rebooking Screens)
+- 14-01: 6 min (OneSignal Push Notifications)
 - 14-03: 4 min (Offline Mode Polish)
 
 ## Accumulated Context
@@ -137,6 +138,9 @@ Recent decisions affecting v2.0:
 - **[13-03]** Earned stamps sorted first in StampGrid
 - **[13-04]** Local URI storage for testimonial photos (Supabase upload deferred)
 - **[13-04]** 10% alumni discount displayed as constant from business config
+- **[14-01]** OneSignal plugin must be FIRST in app.json plugins array
+- **[14-01]** Clerk user ID as OneSignal external_id for server targeting
+- **[14-01]** No permission prompt in onesignal.ts (contextual request in app flow)
 - **[14-03]** Amber color for offline banner (warning tone)
 - **[14-03]** Blue color for sync indicator (activity without concern)
 - **[14-03]** Floating position for PendingMutationsIndicator (no layout shift)
@@ -153,6 +157,7 @@ Recent decisions affecting v2.0:
 
 **User Setup Required:**
 - Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET, EXPO_PUBLIC_STREAM_API_KEY) need configuration
+- OneSignal env vars (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID) need configuration
 
 ### Blockers/Concerns
 
@@ -173,26 +178,27 @@ Recent decisions affecting v2.0:
 - All 4 plans executed successfully
 
 **Phase 14 (Polish):**
-- OneSignal must be first plugin in app.json for iOS push capability
+- ~~OneSignal must be first plugin in app.json for iOS push capability~~ RESOLVED: configured in 14-01
+- OneSignal env vars need user configuration before push testing
 
 ## Session Continuity
 
-Last session: 2026-01-28T11:19:00Z
-Stopped at: Completed 14-03-PLAN.md (Offline Mode Polish)
+Last session: 2026-01-28T11:22:19Z
+Stopped at: Completed 14-01-PLAN.md (OneSignal Push Notifications)
 Resume file: None
 
 ## Next Steps
 
 Phase 14 Production Polish IN PROGRESS:
+- [x] Wave 1: 14-01 (OneSignal push) — COMPLETE
 - [x] Wave 1: 14-03 (offline polish) — COMPLETE
-- [ ] Wave 1: 14-01 (OneSignal push) — may be running in parallel
 - [ ] Wave 2: 14-02 (deep linking), 14-04 (EAS config) — parallel, 14-04 has checkpoint
 - [ ] Wave 3: 14-05 (app store submission) — checkpoint
 
 **User Setup Required for Phase 14:**
-- OneSignal account and API keys (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY)
+- OneSignal account and API keys (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID)
 - Apple Developer account with Team ID
 - Google Play Console with service account
 - App Store Connect app created
 
-Run `/gsd:execute-phase 14` to begin execution.
+Run `/gsd:execute-phase 14` to continue with Wave 2.
