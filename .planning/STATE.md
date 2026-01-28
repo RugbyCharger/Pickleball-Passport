@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 14 in progress
+**Current focus:** v2.0 Mobile App COMPLETE
 
 ## Current Position
 
-Phase: 14 of 14 (Production Polish)
-Plan: 4 of 5 complete (14-01, 14-02, 14-03, 14-04)
-Status: In progress (Wave 2 complete, Wave 3 pending)
-Last activity: 2026-01-28 — Completed 14-04-PLAN.md (EAS Build Configuration)
+Phase: 14 of 14 (Production Polish) COMPLETE
+Plan: 5 of 5 complete (14-01, 14-02, 14-03, 14-04, 14-05)
+Status: v2.0 Mobile App complete, ready for deployment
+Last activity: 2026-01-28 — Completed 14-05-PLAN.md (App Store Submission)
 
-Progress: [##################] 100% (21/21 plans complete in v2.0)
+Progress: [####################] 100% (22/22 plans complete in v2.0)
 
 ## Milestone History
 
@@ -34,6 +34,11 @@ Progress: [##################] 100% (21/21 plans complete in v2.0)
 - 1 phase, 1 plan, 3 requirements
 - Features: Gift cancellation, message editing, notification resend
 - Archived: `.planning/milestones/v1.3-ROADMAP.md`, `.planning/milestones/v1.3-REQUIREMENTS.md`
+
+**v2.0 Mobile App shipped 2026-01-28**
+- 5 phases, 22 plans
+- Phases: 10-Foundation, 11-PreTrip, 12-DuringTrip, 13-Alumni, 14-Polish
+- Features: Full mobile app with Expo, push notifications, deep linking, offline support
 
 See: .planning/MILESTONES.md
 
@@ -64,7 +69,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 19
+- Total plans completed: 22
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -85,6 +90,8 @@ See: .planning/MILESTONES.md
 - 14-01: 6 min (OneSignal Push Notifications)
 - 14-02: 3 min (Deep Linking and Notifications)
 - 14-03: 4 min (Offline Mode Polish)
+- 14-04: ~5 min (EAS Build Configuration)
+- 14-05: 2 min (App Store Submission Checklist)
 
 ## Accumulated Context
 
@@ -148,6 +155,8 @@ Recent decisions affecting v2.0:
 - **[14-02]** additionalData for notification payloads (iOS cold-start compatibility)
 - **[14-02]** MMKV for notification prompt shown state
 - **[14-02]** NotificationPrompt in trip overview (contextual, not on app launch)
+- **[14-04]** EAS profiles: development (simulator), preview (internal), production (stores)
+- **[14-05]** Deployment checklist approach for credential-dependent submission steps
 
 ### Pending Todos
 
@@ -159,51 +168,40 @@ Recent decisions affecting v2.0:
 **Technical Debt (v2.0 mobile):**
 - tRPC types need proper monorepo sharing (no autocomplete on mobile)
 
-**User Setup Required:**
-- Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET, EXPO_PUBLIC_STREAM_API_KEY) need configuration
-- OneSignal env vars (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID) need configuration
+**User Setup Required for Deployment:**
+- Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET, EXPO_PUBLIC_STREAM_API_KEY)
+- OneSignal env vars (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID)
+- Apple Developer account with Team ID
+- Google Play Console with service account
+- App Store Connect app created
 
 ### Blockers/Concerns
 
-**Phase 10 (Foundation): ALL RESOLVED**
-- ~~tRPC v11.4+ crashes on React Native Hermes~~ RESOLVED: pinned to 11.3.1 in 10-02
-- ~~Clerk has no prebuilt UI components on mobile~~ RESOLVED: custom auth UI built in 10-02
-- ~~Duplicate React/React Native versions in monorepo can cause crashes~~ RESOLVED: exact version pinning in 10-01
+**All phases complete. No blockers for deployment.**
 
-**Phase 11 (Pre-Trip): ALL RESOLVED**
-- ~~Supabase Realtime WebSocket module import failures on React Native~~ RESOLVED: Using Stream Chat instead
-- ~~Stream Chat requires backend chat.getStreamToken tRPC endpoint~~ RESOLVED: chatRouter created in 11-01
-- Stream Chat env vars need user configuration (documented in VERIFICATION.md)
-
-**Phase 12 (During-Trip): None**
-- Backend foundation complete, all screens built
-
-**Phase 13 (Alumni Engagement): COMPLETE**
-- All 4 plans executed successfully
-
-**Phase 14 (Polish):**
-- ~~OneSignal must be first plugin in app.json for iOS push capability~~ RESOLVED: configured in 14-01
-- OneSignal env vars need user configuration before push testing
+Deployment requires user credentials - see `.planning/phases/14-production-polish/DEPLOYMENT_CHECKLIST.md`
 
 ## Session Continuity
 
-Last session: 2026-01-28T17:03:00Z
-Stopped at: Completed 14-04-PLAN.md (EAS Build Configuration)
+Last session: 2026-01-28T11:36:30Z
+Stopped at: Completed 14-05-PLAN.md (App Store Submission)
 Resume file: None
 
 ## Next Steps
 
-Phase 14 Production Polish IN PROGRESS:
-- [x] Wave 1: 14-01 (OneSignal push) — COMPLETE
-- [x] Wave 1: 14-03 (offline polish) — COMPLETE
-- [x] Wave 2: 14-02 (deep linking) — COMPLETE
-- [x] Wave 2: 14-04 (EAS config) — COMPLETE
-- [ ] Wave 3: 14-05 (app store submission) — checkpoint, requires user credential setup
+**v2.0 Mobile App COMPLETE**
 
-**User Setup Required for Phase 14:**
-- OneSignal account and API keys (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY, EXPO_PUBLIC_ONESIGNAL_APP_ID)
-- Apple Developer account with Team ID — replace APPLE_TEAM_ID_PLACEHOLDER in app.json
-- Google Play Console with service account — place google-service-account.json in mobile/
-- App Store Connect app created — replace APP_STORE_CONNECT_APP_ID_PLACEHOLDER in eas.json
+All 5 phases finished:
+- [x] Phase 10: Mobile App Foundation (3 plans)
+- [x] Phase 11: Pre-Trip Experience (5 plans)
+- [x] Phase 12: During-Trip Experience (5 plans)
+- [x] Phase 13: Alumni Engagement (4 plans)
+- [x] Phase 14: Production Polish (5 plans)
 
-Run `/gsd:execute-phase 14` to continue with Wave 3 after credentials configured.
+**To deploy to app stores:**
+1. Follow `.planning/phases/14-production-polish/DEPLOYMENT_CHECKLIST.md`
+2. Configure all credential placeholders
+3. Run EAS build commands
+4. Submit to TestFlight and Play Store internal track
+
+**Ready for next milestone when user decides.**
