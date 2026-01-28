@@ -174,10 +174,14 @@ Plans:
 4. Guest can tap notification and app opens to correct screen (deep linking works)
 5. Offline mode gracefully degrades when internet unavailable (cached data shows, mutations require online)
 
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 14-01: TBD during phase planning
+- [ ] 14-01-PLAN.md — OneSignal push notification infrastructure (SDK, backend service)
+- [ ] 14-02-PLAN.md — Deep linking configuration (Universal Links, App Links, notification handlers)
+- [ ] 14-03-PLAN.md — Offline mode polish (banner, pending mutations indicator)
+- [ ] 14-04-PLAN.md — EAS build profiles and credentials setup
+- [ ] 14-05-PLAN.md — App store submission (TestFlight, Play Store internal track)
 
 ## Progress
 
@@ -190,4 +194,4 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 11. Pre-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
 | 12. During-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
 | 13. Alumni | v2.0 | 4/4 | Complete | 2026-01-28 |
-| 14. Polish | v2.0 | 0/? | Not started | - |
+| 14. Polish | v2.0 | 0/5 | Not started | - |
