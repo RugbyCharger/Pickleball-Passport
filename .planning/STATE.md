@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 12 Complete, Phase 13 next
+**Current focus:** v2.0 Mobile App — Phase 13 in progress
 
 ## Current Position
 
-Phase: 12 of 14 (During-Trip Experience)
-Plan: 5 of 5 complete
-Status: Phase complete, verified (9/9 criteria passed)
-Last activity: 2026-01-28 — Completed 12-05-PLAN.md (Trip Overview Hub)
+Phase: 13 of 14 (Alumni Engagement)
+Plan: 1 of 4 complete
+Status: In progress
+Last activity: 2026-01-28 — Completed 13-01-PLAN.md (Alumni Backend Foundation)
 
-Progress: [##########] 100% (13/13 plans complete in v2.0)
+Progress: [#############-] 93% (14/15 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 12
+- Total plans completed: 14
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -78,6 +78,7 @@ See: .planning/MILESTONES.md
 - 12-03: 6 min (Activity Check-in, Courts, Players, Transport)
 - 12-04: 4 min (Photo Journal & Gallery)
 - 12-05: 8 min (Trip Overview Hub)
+- 13-01: 6 min (Alumni Backend Foundation)
 
 ## Accumulated Context
 
@@ -121,6 +122,9 @@ Recent decisions affecting v2.0:
 - **[12-04]** Image compression: max 1920px width, 70% JPEG quality via expo-image-manipulator
 - **[12-05]** Floating SOS button at bottom-right for always-visible emergency access
 - **[12-05]** 7 feature cards in 2-column grid for during-trip navigation
+- **[13-01]** Stamp criteria stored as JSON unlockCriteria for flexibility
+- **[13-01]** Alumni directory opt-in via showInAlumniDirectory field
+- **[13-01]** Stamps awarded via trigger-based checkAndAward mutation
 
 ### Pending Todos
 
@@ -150,22 +154,24 @@ Recent decisions affecting v2.0:
 **Phase 12 (During-Trip): None**
 - Backend foundation complete, all screens built
 
+**Phase 13 (Alumni Engagement): None**
+- Backend foundation complete (13-01)
+
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T06:53:33Z
-Stopped at: Completed 12-05-PLAN.md (Trip Overview Hub) - Phase 12 complete
+Last session: 2026-01-28T07:40:28Z
+Stopped at: Completed 13-01-PLAN.md (Alumni Backend Foundation)
 Resume file: None
 
 ## Next Steps
 
-Phase 12 During-Trip COMPLETE:
-- [x] 12-01 During-Trip Backend Foundation (Prisma models, tRPC routers)
-- [x] 12-02 Emergency SOS & Concierge Chat (SOS button, location hook, concierge)
-- [x] 12-03 Activity Check-in, Courts, Players, Transport screens
-- [x] 12-04 Photo Journal & Gallery (compression, upload, gallery screens)
-- [x] 12-05 Trip Overview Hub (SOS integration, feature navigation)
+Phase 13 Alumni Engagement IN PROGRESS:
+- [x] 13-01 Alumni Backend Foundation (Prisma models, tRPC routers)
+- [ ] 13-02 Alumni Profile & Journey Screen
+- [ ] 13-03 Passport Stamps Collection
+- [ ] 13-04 Alumni Directory & Social Features
 
-Ready to proceed to Phase 13 (Post-Trip) or Phase 14 (Polish).
+Ready to proceed to 13-02 (Alumni Profile & Journey Screen).
