@@ -47,6 +47,7 @@ import { transportRouter } from './routers/transport'
 import { sosRouter } from './routers/sos'
 import { alumniRouter } from './routers/alumni'
 import { stampsRouter } from './routers/stamps'
+import { pushRouter } from './routers/push'
 
 export const appRouter = router({
   user: userRouter,
@@ -90,6 +91,7 @@ export const appRouter = router({
   sos: sosRouter,
   alumni: alumniRouter,
   stamps: stampsRouter,
+  push: pushRouter,
 })
 
 // Export type definition for the router
