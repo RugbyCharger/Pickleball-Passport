@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 10 of 14 (Foundation - Auth + API Integration)
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In progress
-Last activity: 2026-01-28 — Completed 10-01-PLAN.md (Mobile App Scaffold)
+Last activity: 2026-01-28 — Completed 10-02-PLAN.md (Clerk Auth + tRPC Client)
 
-Progress: [##........] 20% (1/5 plans complete in v2.0)
+Progress: [####......] 40% (2/5 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,8 +64,9 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 1
+- Total plans completed: 2
 - 10-01: 8 min (Mobile App Scaffold)
+- 10-02: 10 min (Clerk Auth + tRPC Client)
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting v2.0:
 - **[10-01]** Exact version pinning (no ^ or ~) to prevent duplicate React issues
 - **[10-01]** NativeWind v4 for Tailwind-style className styling
 - **[10-01]** Auth route groups: (auth) for public, (app) for protected routes
+- **[10-02]** Use `any` type for tRPC router on mobile (type sharing deferred)
+- **[10-02]** Custom Clerk auth UI (no prebuilt components on mobile)
 
 ### Pending Todos
 
@@ -88,13 +91,14 @@ Recent decisions affecting v2.0:
 - ~170 console.log statements remain
 - Large router files could be split
 
-None specific to v2.0 yet.
+**Technical Debt (v2.0 mobile):**
+- tRPC types need proper monorepo sharing (no autocomplete on mobile)
 
 ### Blockers/Concerns
 
 **Phase 10 (Foundation):**
-- tRPC v11.4+ crashes on React Native Hermes — must pin to exact v11.3.1
-- Clerk has no prebuilt UI components on mobile — custom auth UI required
+- ~~tRPC v11.4+ crashes on React Native Hermes~~ RESOLVED: pinned to 11.3.1 in 10-02
+- ~~Clerk has no prebuilt UI components on mobile~~ RESOLVED: custom auth UI built in 10-02
 - ~~Duplicate React/React Native versions in monorepo can cause crashes~~ RESOLVED: exact version pinning in 10-01
 
 **Phase 11 (Pre-Trip):**
@@ -105,10 +109,10 @@ None specific to v2.0 yet.
 
 ## Session Continuity
 
-Last session: 2026-01-28T00:11:38Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-01-28T00:24:35Z
+Stopped at: Completed 10-02-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Ready to execute 10-02-PLAN.md (Clerk Auth Integration)
+Ready to execute 10-03-PLAN.md (Dashboard UI)
