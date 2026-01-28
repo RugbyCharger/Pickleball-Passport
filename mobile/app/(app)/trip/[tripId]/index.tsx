@@ -180,6 +180,20 @@ export default function TripOverviewScreen() {
             onPress={() => navigateTo('chat')}
             showChevron
           />
+          <ChecklistItem
+            title="Trip Photos"
+            description="View group photo gallery"
+            isComplete={false}
+            onPress={() => navigateTo('photos')}
+            showChevron
+          />
+          <ChecklistItem
+            title="My Journal"
+            description="Capture your trip memories"
+            isComplete={false}
+            onPress={() => navigateTo('journal')}
+            showChevron
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
