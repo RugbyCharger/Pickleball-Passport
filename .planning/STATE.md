@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 13 in progress
+**Current focus:** v2.0 Mobile App — Phase 14 in progress
 
 ## Current Position
 
-Phase: 13 of 14 (Alumni Engagement)
-Plan: 4 of 4 complete
-Status: Phase complete
-Last activity: 2026-01-28 — Completed 13-04-PLAN.md (Testimonial & Rebooking Screens)
+Phase: 14 of 14 (Production Polish)
+Plan: 1 of 5 complete (14-03)
+Status: In progress (Wave 1)
+Last activity: 2026-01-28 — Completed 14-03-PLAN.md (Offline Mode Polish)
 
-Progress: [################] 100% (17/17 plans complete in v2.0)
+Progress: [################░] 94% (18/19 plans complete in v2.0)
 
 ## Milestone History
 
@@ -82,6 +82,7 @@ See: .planning/MILESTONES.md
 - 13-02: 5 min (Alumni Profile & Journey Screen)
 - 13-03: 3 min (Passport Stamps Collection)
 - 13-04: 4 min (Testimonial & Rebooking Screens)
+- 14-03: 4 min (Offline Mode Polish)
 
 ## Accumulated Context
 
@@ -136,6 +137,9 @@ Recent decisions affecting v2.0:
 - **[13-03]** Earned stamps sorted first in StampGrid
 - **[13-04]** Local URI storage for testimonial photos (Supabase upload deferred)
 - **[13-04]** 10% alumni discount displayed as constant from business config
+- **[14-03]** Amber color for offline banner (warning tone)
+- **[14-03]** Blue color for sync indicator (activity without concern)
+- **[14-03]** Floating position for PendingMutationsIndicator (no layout shift)
 
 ### Pending Todos
 
@@ -173,16 +177,22 @@ Recent decisions affecting v2.0:
 
 ## Session Continuity
 
-Last session: 2026-01-28T10:36:21Z
-Stopped at: Completed 13-04-PLAN.md (Testimonial & Rebooking Screens)
+Last session: 2026-01-28T11:19:00Z
+Stopped at: Completed 14-03-PLAN.md (Offline Mode Polish)
 Resume file: None
 
 ## Next Steps
 
-Phase 13 Alumni Engagement COMPLETE:
-- [x] 13-01 Alumni Backend Foundation (Prisma models, tRPC routers)
-- [x] 13-02 Alumni Profile & Journey Screen
-- [x] 13-03 Passport Stamps Collection
-- [x] 13-04 Testimonial & Rebooking Screens
+Phase 14 Production Polish IN PROGRESS:
+- [x] Wave 1: 14-03 (offline polish) — COMPLETE
+- [ ] Wave 1: 14-01 (OneSignal push) — may be running in parallel
+- [ ] Wave 2: 14-02 (deep linking), 14-04 (EAS config) — parallel, 14-04 has checkpoint
+- [ ] Wave 3: 14-05 (app store submission) — checkpoint
 
-v2.0 Mobile App is now feature-complete. Ready to proceed to Phase 14 (Polish & Launch).
+**User Setup Required for Phase 14:**
+- OneSignal account and API keys (ONESIGNAL_APP_ID, ONESIGNAL_REST_API_KEY)
+- Apple Developer account with Team ID
+- Google Play Console with service account
+- App Store Connect app created
+
+Run `/gsd:execute-phase 14` to begin execution.
