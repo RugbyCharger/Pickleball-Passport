@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 14 of 14 (Production Polish)
-Plan: 2 of 5 complete (14-01, 14-03)
-Status: In progress (Wave 1 complete)
-Last activity: 2026-01-28 — Completed 14-01-PLAN.md (OneSignal Push Notifications)
+Plan: 3 of 5 complete (14-01, 14-02, 14-03)
+Status: In progress (Wave 2 in progress)
+Last activity: 2026-01-28 — Completed 14-02-PLAN.md (Deep Linking and Notifications)
 
-Progress: [#################░] 95% (19/20 plans complete in v2.0)
+Progress: [#################░] 96% (20/21 plans complete in v2.0)
 
 ## Milestone History
 
@@ -83,6 +83,7 @@ See: .planning/MILESTONES.md
 - 13-03: 3 min (Passport Stamps Collection)
 - 13-04: 4 min (Testimonial & Rebooking Screens)
 - 14-01: 6 min (OneSignal Push Notifications)
+- 14-02: 3 min (Deep Linking and Notifications)
 - 14-03: 4 min (Offline Mode Polish)
 
 ## Accumulated Context
@@ -144,6 +145,9 @@ Recent decisions affecting v2.0:
 - **[14-03]** Amber color for offline banner (warning tone)
 - **[14-03]** Blue color for sync indicator (activity without concern)
 - **[14-03]** Floating position for PendingMutationsIndicator (no layout shift)
+- **[14-02]** additionalData for notification payloads (iOS cold-start compatibility)
+- **[14-02]** MMKV for notification prompt shown state
+- **[14-02]** NotificationPrompt in trip overview (contextual, not on app launch)
 
 ### Pending Todos
 
@@ -183,8 +187,8 @@ Recent decisions affecting v2.0:
 
 ## Session Continuity
 
-Last session: 2026-01-28T11:22:19Z
-Stopped at: Completed 14-01-PLAN.md (OneSignal Push Notifications)
+Last session: 2026-01-28T11:29:46Z
+Stopped at: Completed 14-02-PLAN.md (Deep Linking and Notifications)
 Resume file: None
 
 ## Next Steps
@@ -192,7 +196,8 @@ Resume file: None
 Phase 14 Production Polish IN PROGRESS:
 - [x] Wave 1: 14-01 (OneSignal push) — COMPLETE
 - [x] Wave 1: 14-03 (offline polish) — COMPLETE
-- [ ] Wave 2: 14-02 (deep linking), 14-04 (EAS config) — parallel, 14-04 has checkpoint
+- [x] Wave 2: 14-02 (deep linking) — COMPLETE
+- [ ] Wave 2: 14-04 (EAS config) — has checkpoint
 - [ ] Wave 3: 14-05 (app store submission) — checkpoint
 
 **User Setup Required for Phase 14:**
