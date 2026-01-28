@@ -10,7 +10,7 @@ The v2.0 Mobile App milestone adds a React Native mobile application to the Pick
 - v1.1 Gift Booking - Phases 5-7 (shipped 2026-01-27)
 - v1.2 RLS Security Hardening - Phase 8 (shipped 2026-01-27)
 - v1.3 Gift Enhancements - Phase 9 (shipped 2026-01-28)
-- v2.0 Mobile App - Phases 10-14 (in progress)
+- v2.0 Mobile App - Phases 10-14 (complete 2026-01-28)
 
 ## Phases
 
@@ -42,7 +42,7 @@ See: `.planning/milestones/v1.3-ROADMAP.md`
 
 </details>
 
-### v2.0 Mobile App (In Progress)
+### v2.0 Mobile App (Complete 2026-01-28)
 
 **Milestone Goal:** Deliver React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
 
@@ -56,7 +56,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Pre-Trip Experience** - Guest can prepare for trip, connect with fellow travelers, and access offline itinerary
 - [x] **Phase 12: During-Trip Experience** - Guest receives essential daily support with itinerary, concierge chat, and safety features
 - [x] **Phase 13: Alumni Engagement** - Guest stays engaged post-trip with transformation tracking, referrals, and rebooking
-- [ ] **Phase 14: Production Polish** - Mobile app published to App Store and Google Play with production-ready quality
+- [x] **Phase 14: Production Polish** - Mobile app published to App Store and Google Play with production-ready quality
 
 ## Phase Details
 
@@ -177,11 +177,11 @@ Plans:
 **Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 14-01-PLAN.md — OneSignal push notification infrastructure (SDK, backend service)
-- [ ] 14-02-PLAN.md — Deep linking configuration (Universal Links, App Links, notification handlers)
-- [ ] 14-03-PLAN.md — Offline mode polish (banner, pending mutations indicator)
-- [ ] 14-04-PLAN.md — EAS build profiles and credentials setup
-- [ ] 14-05-PLAN.md — App store submission (TestFlight, Play Store internal track)
+- [x] 14-01-PLAN.md — OneSignal push notification infrastructure (SDK, backend service) [Wave 1]
+- [x] 14-02-PLAN.md — Deep linking configuration (Universal Links, App Links, notification handlers) [Wave 2]
+- [x] 14-03-PLAN.md — Offline mode polish (banner, pending mutations indicator) [Wave 1]
+- [x] 14-04-PLAN.md — EAS build profiles and credentials setup (checkpoint) [Wave 2]
+- [x] 14-05-PLAN.md — App store submission (TestFlight, Play Store internal track) (checkpoint) [Wave 3]
 
 ## Progress
 
@@ -194,4 +194,4 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 | 11. Pre-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
 | 12. During-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
 | 13. Alumni | v2.0 | 4/4 | Complete | 2026-01-28 |
-| 14. Polish | v2.0 | 0/5 | Not started | - |
+| 14. Polish | v2.0 | 5/5 | Complete | 2026-01-28 |
