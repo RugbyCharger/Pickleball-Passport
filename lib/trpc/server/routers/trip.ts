@@ -157,6 +157,7 @@ export const tripRouter = router({
 
       return {
         ...trip,
+        userBookingId: userBooking.id,
         daysUntilTrip: Math.max(0, daysUntilTrip),
         hasStarted: daysUntilTrip <= 0,
       }
