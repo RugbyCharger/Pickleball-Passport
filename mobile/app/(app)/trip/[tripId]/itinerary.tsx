@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   RefreshControl,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Calendar,
-  MapPin,
-  Clock,
   Wifi,
   WifiOff,
   ChevronDown,
@@ -21,16 +20,7 @@ import {
 import { trpc } from '@/lib/trpc';
 import { useOfflineItinerary } from '@/hooks/useOfflineItinerary';
 import { useNetworkStatus } from '@/lib/offline';
-
-// Activity type colors matching web app
-const ACTIVITY_COLORS: Record<string, { bg: string; text: string }> = {
-  PICKLEBALL: { bg: 'bg-green-100', text: 'text-green-700' },
-  MEDICAL: { bg: 'bg-red-100', text: 'text-red-700' },
-  WELLNESS: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  CULTURAL: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  MEAL: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  FREE_TIME: { bg: 'bg-blue-100', text: 'text-blue-700' },
-};
+import { ActivityCard } from '@/components/trip/ActivityCard';
 
 interface Activity {
   id: string;
@@ -48,45 +38,37 @@ interface Day {
   itineraryActivities: Activity[];
 }
 
-function ActivityCard({ activity }: { activity: Activity }) {
-  const colors = ACTIVITY_COLORS[activity.type] || { bg: 'bg-gray-100', text: 'text-gray-700' };
-
-  return (
-    <View className="bg-white rounded-lg p-3 mb-2 border border-gray-100">
-      <View className="flex-row items-start">
-        {activity.time && (
-          <View className="mr-3">
-            <View className="flex-row items-center">
-              <Clock size={14} color="#6B7280" />
-              <Text className="text-gray-600 text-sm ml-1">{activity.time}</Text>
-            </View>
-          </View>
-        )}
-        <View className="flex-1">
-          <View className="flex-row items-center mb-1">
-            <View className={`px-2 py-0.5 rounded-full ${colors.bg}`}>
-              <Text className={`text-xs font-medium ${colors.text}`}>
-                {activity.type.replace('_', ' ')}
-              </Text>
-            </View>
-          </View>
-          <Text className="text-gray-800 font-medium">{activity.title}</Text>
-          {activity.description && (
-            <Text className="text-gray-600 text-sm mt-1">{activity.description}</Text>
-          )}
-          {activity.location && (
-            <View className="flex-row items-center mt-2">
-              <MapPin size={12} color="#9CA3AF" />
-              <Text className="text-gray-500 text-xs ml-1">{activity.location}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-    </View>
-  );
+interface DaySectionProps {
+  day: Day;
+  isExpanded: boolean;
+  onToggle: () => void;
+  checkedInActivityIds: Set<string>;
+  tripStartDate: Date | null;
+  onCheckIn: (activityId: string) => void;
+  isCheckingIn: boolean;
+  checkingInActivityId: string | null;
 }
 
-function DaySection({ day, isExpanded, onToggle }: { day: Day; isExpanded: boolean; onToggle: () => void }) {
+function DaySection({
+  day,
+  isExpanded,
+  onToggle,
+  checkedInActivityIds,
+  tripStartDate,
+  onCheckIn,
+  isCheckingIn,
+  checkingInActivityId,
+}: DaySectionProps) {
+  // Calculate if this day is today or in the past (can check in)
+  const canCheckInForDay = useMemo(() => {
+    if (!tripStartDate) return false;
+    const dayDate = new Date(tripStartDate);
+    dayDate.setDate(dayDate.getDate() + (day.dayNumber - 1));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dayDate <= today;
+  }, [tripStartDate, day.dayNumber]);
+
   return (
     <View className="mb-4">
       <TouchableOpacity
@@ -112,7 +94,14 @@ function DaySection({ day, isExpanded, onToggle }: { day: Day; isExpanded: boole
             <Text className="text-gray-500 text-center py-4">No activities scheduled</Text>
           ) : (
             day.itineraryActivities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
+              <ActivityCard
+                key={activity.id}
+                activity={activity}
+                isCheckedIn={checkedInActivityIds.has(activity.id)}
+                canCheckIn={canCheckInForDay && !checkedInActivityIds.has(activity.id)}
+                onCheckIn={() => onCheckIn(activity.id)}
+                isCheckingIn={isCheckingIn && checkingInActivityId === activity.id}
+              />
             ))
           )}
         </View>
@@ -124,9 +113,11 @@ function DaySection({ day, isExpanded, onToggle }: { day: Day; isExpanded: boole
 export default function ItineraryScreen() {
   const { tripId } = useLocalSearchParams<{ tripId: string }>();
   const [expandedDays, setExpandedDays] = useState<Set<number>>(new Set([1]));
+  const [checkingInActivityId, setCheckingInActivityId] = useState<string | null>(null);
   const { isConnected } = useNetworkStatus();
+  const utils = trpc.useUtils();
 
-  // Get trip details to find package
+  // Get trip details to find package and start date
   const { data: trip } = trpc.trip.getTripDetails.useQuery(
     { tripId: tripId! },
     { enabled: !!tripId }
@@ -141,6 +132,45 @@ export default function ItineraryScreen() {
   const userBooking = bookings?.find(
     (b: { trip?: { id: string } }) => b.trip?.id === tripId
   );
+
+  // Get check-ins for this booking
+  const { data: checkIns } = trpc.activity.getCheckIns.useQuery(
+    { bookingId: userBooking?.id! },
+    { enabled: !!userBooking?.id }
+  );
+
+  // Create a Set of checked-in activity IDs for quick lookup
+  const checkedInActivityIds = useMemo(() => {
+    if (!checkIns) return new Set<string>();
+    return new Set(checkIns.map((ci: { activityId: string }) => ci.activityId));
+  }, [checkIns]);
+
+  // Check-in mutation
+  const checkInMutation = trpc.activity.checkIn.useMutation({
+    onMutate: () => {
+      // Don't set checking state here, it's set in handleCheckIn
+    },
+    onSuccess: () => {
+      utils.activity.getCheckIns.invalidate({ bookingId: userBooking?.id });
+      setCheckingInActivityId(null);
+    },
+    onError: (error: { message?: string }) => {
+      setCheckingInActivityId(null);
+      Alert.alert('Check-in Failed', error.message || 'Could not check in. Please try again.');
+    },
+  });
+
+  const handleCheckIn = (activityId: string) => {
+    if (!userBooking?.id || !isConnected) {
+      Alert.alert('Cannot Check In', 'You must be online to check in to activities.');
+      return;
+    }
+    setCheckingInActivityId(activityId);
+    checkInMutation.mutate({
+      bookingId: userBooking.id,
+      activityId,
+    });
+  };
 
   // Get itinerary with offline-first behavior
   const {
@@ -175,6 +205,9 @@ export default function ItineraryScreen() {
         minute: '2-digit',
       })
     : null;
+
+  // Get trip start date for check-in eligibility calculation
+  const tripStartDate = trip?.startDate ? new Date(trip.startDate) : null;
 
   return (
     <SafeAreaView edges={['bottom']} className="flex-1 bg-gray-100">
@@ -242,6 +275,11 @@ export default function ItineraryScreen() {
                 day={day}
                 isExpanded={expandedDays.has(day.dayNumber)}
                 onToggle={() => toggleDay(day.dayNumber)}
+                checkedInActivityIds={checkedInActivityIds as Set<string>}
+                tripStartDate={tripStartDate}
+                onCheckIn={handleCheckIn}
+                isCheckingIn={checkInMutation.isPending}
+                checkingInActivityId={checkingInActivityId}
               />
             ))}
         </ScrollView>
