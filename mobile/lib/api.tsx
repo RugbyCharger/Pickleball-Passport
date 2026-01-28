@@ -1,10 +1,18 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, ReactNode } from 'react';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { useState, ReactNode, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
 import { trpc, createTRPCClient } from './trpc';
+import { queryPersister } from './query-persister';
+import { setupOfflineDetection } from './offline';
 
 export function ApiProvider({ children }: { children: ReactNode }) {
   const { getToken } = useAuth();
+
+  // Set up offline detection on mount
+  useEffect(() => {
+    setupOfflineDetection();
+  }, []);
 
   const [queryClient] = useState(
     () =>
@@ -13,6 +21,7 @@ export function ApiProvider({ children }: { children: ReactNode }) {
           queries: {
             staleTime: 1000 * 60, // 1 minute
             retry: 1,
+            gcTime: 1000 * 60 * 60 * 24 * 30, // 30 days for persistence
           },
         },
       })
@@ -26,7 +35,15 @@ export function ApiProvider({ children }: { children: ReactNode }) {
 
   return (
     <TRPCProvider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister: queryPersister,
+          maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        }}
+      >
+        {children}
+      </PersistQueryClientProvider>
     </TRPCProvider>
   );
 }
