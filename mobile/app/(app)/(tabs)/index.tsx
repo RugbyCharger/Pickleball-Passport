@@ -4,13 +4,16 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '@clerk/clerk-expo';
+import { router } from 'expo-router';
 import { trpc } from '../../../lib/api';
 import { BookingCard } from '../../../components/BookingCard';
+import { useAlumniStatus } from '../../../hooks/useAlumniStatus';
 import { useState } from 'react';
-import { Ticket } from 'lucide-react-native';
+import { Ticket, ChevronRight, GraduationCap } from 'lucide-react-native';
 
 // Booking type from tRPC API
 interface Booking {
@@ -32,6 +35,7 @@ interface Booking {
 export default function Dashboard() {
   const { user } = useUser();
   const [refreshing, setRefreshing] = useState(false);
+  const { isAlumni, totalTrips } = useAlumniStatus();
 
   const {
     data: bookings,
@@ -67,6 +71,26 @@ export default function Dashboard() {
           </Text>
           <Text className="text-gray-600 mt-1">Your upcoming adventures</Text>
         </View>
+
+        {/* Alumni Hub Card */}
+        {isAlumni && (
+          <TouchableOpacity
+            onPress={() => router.push('/alumni')}
+            className="mb-4 bg-purple-600 p-4 rounded-xl flex-row items-center"
+          >
+            <View className="w-12 h-12 bg-purple-500 rounded-full items-center justify-center">
+              <GraduationCap size={24} color="white" />
+            </View>
+            <View className="ml-3 flex-1">
+              <Text className="text-white font-bold">Alumni Hub</Text>
+              <Text className="text-purple-200 text-sm">
+                {totalTrips} trip{totalTrips !== 1 ? 's' : ''} completed - View
+                benefits
+              </Text>
+            </View>
+            <ChevronRight size={20} color="white" />
+          </TouchableOpacity>
+        )}
 
         {isLoading ? (
           <View className="py-8 items-center">
