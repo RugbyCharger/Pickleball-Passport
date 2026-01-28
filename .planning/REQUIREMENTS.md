@@ -14,13 +14,13 @@
 
 ### Pre-Trip Experience
 
-- [ ] **MOB-PRETRIP-01**: Guest can view countdown to trip departure
-- [ ] **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items
-- [ ] **MOB-PRETRIP-03**: Guest can upload passport document
-- [ ] **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in)
-- [ ] **MOB-PRETRIP-05**: Guest can chat with trip group before departure
-- [ ] **MOB-PRETRIP-06**: Guest can view and customize packing list
-- [ ] **MOB-PRETRIP-07**: Guest can download offline itinerary
+- [x] **MOB-PRETRIP-01**: Guest can view countdown to trip departure
+- [x] **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items
+- [x] **MOB-PRETRIP-03**: Guest can upload passport document
+- [x] **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in)
+- [x] **MOB-PRETRIP-05**: Guest can chat with trip group before departure
+- [x] **MOB-PRETRIP-06**: Guest can view and customize packing list
+- [x] **MOB-PRETRIP-07**: Guest can download offline itinerary
 
 ### During-Trip Experience
 
@@ -76,13 +76,13 @@ Based on research findings:
 | MOB-SETUP-01 | 10 | Complete |
 | MOB-AUTH-01 | 10 | Complete |
 | MOB-AUTH-02 | 10 | Complete |
-| MOB-PRETRIP-01 | 11 | Pending |
-| MOB-PRETRIP-02 | 11 | Pending |
-| MOB-PRETRIP-03 | 11 | Pending |
-| MOB-PRETRIP-04 | 11 | Pending |
-| MOB-PRETRIP-05 | 11 | Pending |
-| MOB-PRETRIP-06 | 11 | Pending |
-| MOB-PRETRIP-07 | 11 | Pending |
+| MOB-PRETRIP-01 | 11 | Complete |
+| MOB-PRETRIP-02 | 11 | Complete |
+| MOB-PRETRIP-03 | 11 | Complete |
+| MOB-PRETRIP-04 | 11 | Complete |
+| MOB-PRETRIP-05 | 11 | Complete |
+| MOB-PRETRIP-06 | 11 | Complete |
+| MOB-PRETRIP-07 | 11 | Complete |
 | MOB-TRIP-01 | 12 | Pending |
 | MOB-TRIP-02 | 12 | Pending |
 | MOB-TRIP-03 | 12 | Pending |

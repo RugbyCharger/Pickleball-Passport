@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 11 IN PROGRESS
+**Current focus:** v2.0 Mobile App — Phase 11 COMPLETE
 
 ## Current Position
 
-Phase: 11 of 14 (Pre-Trip Features)
-Plan: 4 of 5 complete
-Status: In progress
-Last activity: 2026-01-28 — Completed 11-03-PLAN.md (Trip Overview Screen)
+Phase: 11 of 14 (Pre-Trip Features) — COMPLETE
+Plan: 5 of 5 complete
+Status: Phase complete, ready for Phase 12
+Last activity: 2026-01-28 — Completed Phase 11 (Pre-Trip Experience)
 
-Progress: [#######...] 70% (7/10 plans complete in v2.0)
+Progress: [########..] 80% (8/10 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,14 +64,15 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 7
+- Total plans completed: 8
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
-- 11-01: (Research - not tracked)
+- 11-01: 8 min (Pre-Trip Backend Foundation)
 - 11-02: 4 min (Offline Infrastructure)
 - 11-03: 6 min (Trip Overview Screen)
 - 11-04: 6 min (Fellow Travelers & Packing List)
+- 11-05: ~8 min (Chat + Offline Itinerary)
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting v2.0:
 - **[11-03]** BookingCard navigates to trip overview for confirmed trips
 - **[11-04]** userBookingId added to getTripDetails response for mobile screen data fetching
 - **[11-04]** SectionList with category grouping for packing list organization
+- **[11-05]** Offline itinerary uses staleTime: Infinity and networkMode: offlineFirst
+- **[11-05]** Stream Chat wrapped in TripChat component with offline/error handling
 
 ### Pending Todos
 
@@ -110,6 +113,9 @@ Recent decisions affecting v2.0:
 **Technical Debt (v2.0 mobile):**
 - tRPC types need proper monorepo sharing (no autocomplete on mobile)
 
+**User Setup Required:**
+- Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET, EXPO_PUBLIC_STREAM_API_KEY) need configuration
+
 ### Blockers/Concerns
 
 **Phase 10 (Foundation): ALL RESOLVED**
@@ -117,27 +123,28 @@ Recent decisions affecting v2.0:
 - ~~Clerk has no prebuilt UI components on mobile~~ RESOLVED: custom auth UI built in 10-02
 - ~~Duplicate React/React Native versions in monorepo can cause crashes~~ RESOLVED: exact version pinning in 10-01
 
-**Phase 11 (Pre-Trip):**
+**Phase 11 (Pre-Trip): ALL RESOLVED**
 - ~~Supabase Realtime WebSocket module import failures on React Native~~ RESOLVED: Using Stream Chat instead
 - ~~Stream Chat requires backend chat.getStreamToken tRPC endpoint~~ RESOLVED: chatRouter created in 11-01
-- Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET) need to be configured
+- Stream Chat env vars need user configuration (documented in VERIFICATION.md)
 
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T04:52:27Z
-Stopped at: Completed 11-04-PLAN.md (Fellow Travelers & Packing List)
+Last session: 2026-01-28
+Stopped at: Completed Phase 11 (Pre-Trip Experience)
 Resume file: None
 
 ## Next Steps
 
-Phase 11 Pre-Trip IN PROGRESS. Completed:
+Phase 11 Pre-Trip COMPLETE. All plans executed:
 - [x] 11-01 Pre-Trip Backend Foundation (Prisma models, tRPC routers)
-- [x] 11-02 Offline Infrastructure
+- [x] 11-02 Offline Infrastructure (MMKV, Stream Chat, query persistence)
 - [x] 11-03 Trip Overview Screen (countdown, checklist, passport upload)
 - [x] 11-04 Fellow Travelers & Packing List (TravelerCard, PackingListItem, screens)
+- [x] 11-05 Chat + Offline Itinerary (TripChat, useOfflineItinerary)
 
-Ready to execute:
-- 11-05 Chat implementation
+Ready to plan:
+- Phase 12: During-Trip Experience
