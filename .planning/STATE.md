@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 14
+- Total plans completed: 17
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -81,6 +81,7 @@ See: .planning/MILESTONES.md
 - 13-01: 6 min (Alumni Backend Foundation)
 - 13-02: 5 min (Alumni Profile & Journey Screen)
 - 13-03: 3 min (Passport Stamps Collection)
+- 13-04: 4 min (Testimonial & Rebooking Screens)
 
 ## Accumulated Context
 
@@ -133,6 +134,8 @@ Recent decisions affecting v2.0:
 - **[13-03]** Category-based emoji icons for stamps (no custom icons needed)
 - **[13-03]** useDeferredValue for search debounce in alumni directory
 - **[13-03]** Earned stamps sorted first in StampGrid
+- **[13-04]** Local URI storage for testimonial photos (Supabase upload deferred)
+- **[13-04]** 10% alumni discount displayed as constant from business config
 
 ### Pending Todos
 
@@ -162,24 +165,24 @@ Recent decisions affecting v2.0:
 **Phase 12 (During-Trip): None**
 - Backend foundation complete, all screens built
 
-**Phase 13 (Alumni Engagement): None**
-- Backend foundation complete (13-01)
+**Phase 13 (Alumni Engagement): COMPLETE**
+- All 4 plans executed successfully
 
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T10:35:00Z
-Stopped at: Completed 13-03-PLAN.md (Passport Stamps Collection)
+Last session: 2026-01-28T10:36:21Z
+Stopped at: Completed 13-04-PLAN.md (Testimonial & Rebooking Screens)
 Resume file: None
 
 ## Next Steps
 
-Phase 13 Alumni Engagement IN PROGRESS:
+Phase 13 Alumni Engagement COMPLETE:
 - [x] 13-01 Alumni Backend Foundation (Prisma models, tRPC routers)
 - [x] 13-02 Alumni Profile & Journey Screen
 - [x] 13-03 Passport Stamps Collection
-- [ ] 13-04 Alumni Directory & Social Features
+- [x] 13-04 Testimonial & Rebooking Screens
 
-Ready to proceed to 13-04 (Alumni Directory & Social Features).
+v2.0 Mobile App is now feature-complete. Ready to proceed to Phase 14 (Polish & Launch).
