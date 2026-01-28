@@ -8,9 +8,9 @@
 
 ### Setup & Authentication
 
-- [ ] **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript
-- [ ] **MOB-AUTH-01**: Guest can log in with email/password via Clerk
-- [ ] **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID)
+- [x] **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript
+- [x] **MOB-AUTH-01**: Guest can log in with email/password via Clerk
+- [x] **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID)
 
 ### Pre-Trip Experience
 
@@ -73,9 +73,9 @@ Based on research findings:
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| MOB-SETUP-01 | 10 | Pending |
-| MOB-AUTH-01 | 10 | Pending |
-| MOB-AUTH-02 | 10 | Pending |
+| MOB-SETUP-01 | 10 | Complete |
+| MOB-AUTH-01 | 10 | Complete |
+| MOB-AUTH-02 | 10 | Complete |
 | MOB-PRETRIP-01 | 11 | Pending |
 | MOB-PRETRIP-02 | 11 | Pending |
 | MOB-PRETRIP-03 | 11 | Pending |

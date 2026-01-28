@@ -52,7 +52,7 @@ See: `.planning/milestones/v1.3-ROADMAP.md`
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 10: Foundation (Auth + API Integration)** - Mobile app can authenticate guests and call existing tRPC API
+- [x] **Phase 10: Foundation (Auth + API Integration)** - Mobile app can authenticate guests and call existing tRPC API
 - [ ] **Phase 11: Pre-Trip Experience** - Guest can prepare for trip, connect with fellow travelers, and access offline itinerary
 - [ ] **Phase 12: During-Trip Experience** - Guest receives essential daily support with itinerary, concierge chat, and safety features
 - [ ] **Phase 13: Alumni Engagement** - Guest stays engaged post-trip with transformation tracking, referrals, and rebooking
@@ -77,9 +77,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 10-01-PLAN.md — Scaffold Expo app with TypeScript, Expo Router, and NativeWind
-- [ ] 10-02-PLAN.md — Implement Clerk auth and tRPC client with Bearer tokens
-- [ ] 10-03-PLAN.md — Add biometrics and build authenticated dashboard with bookings
+- [x] 10-01-PLAN.md — Scaffold Expo app with TypeScript, Expo Router, and NativeWind
+- [x] 10-02-PLAN.md — Implement Clerk auth and tRPC client with Bearer tokens
+- [x] 10-03-PLAN.md — Add biometrics and build authenticated dashboard with bookings
 
 ### Phase 11: Pre-Trip Experience
 
@@ -175,7 +175,7 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 10. Foundation | v2.0 | 0/3 | Ready to execute | - |
+| 10. Foundation | v2.0 | 3/3 | Complete | 2026-01-28 |
 | 11. Pre-Trip | v2.0 | 0/? | Not started | - |
 | 12. During-Trip | v2.0 | 0/? | Not started | - |
 | 13. Alumni | v2.0 | 0/? | Not started | - |
