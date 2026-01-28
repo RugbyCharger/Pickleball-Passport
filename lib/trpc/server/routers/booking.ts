@@ -1393,6 +1393,7 @@ export const bookingRouter = router({
         },
         trip: {
           select: {
+            id: true,
             name: true,
             destination: true,
             startDate: true,

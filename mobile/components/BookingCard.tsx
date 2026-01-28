@@ -11,6 +11,7 @@ interface Booking {
     name: string;
   };
   trip: {
+    id: string;
     startDate: Date | string;
     endDate: Date | string;
     destination: string;
@@ -62,10 +63,19 @@ export function BookingCard({ booking }: BookingCardProps) {
     }).format(cents / 100);
   };
 
+  // Navigate to trip overview for confirmed trips, otherwise to booking details
+  const handlePress = () => {
+    if (booking.trip && (booking.status === 'CONFIRMED' || booking.status === 'COMPLETED')) {
+      router.push(`/trip/${booking.trip.id}`);
+    } else {
+      router.push(`/(app)/booking/${booking.id}`);
+    }
+  };
+
   return (
     <TouchableOpacity
       className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4"
-      onPress={() => router.push(`/(app)/booking/${booking.id}`)}
+      onPress={handlePress}
       activeOpacity={0.7}
     >
       <View className="flex-row justify-between items-start mb-2">

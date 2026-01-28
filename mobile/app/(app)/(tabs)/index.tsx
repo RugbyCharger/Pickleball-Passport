@@ -21,6 +21,7 @@ interface Booking {
     name: string;
   };
   trip: {
+    id: string;
     startDate: Date | string;
     endDate: Date | string;
     destination: string;
