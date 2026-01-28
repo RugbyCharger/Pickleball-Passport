@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 11 of 14 (Pre-Trip Features)
-Plan: 2 of 4 complete
+Plan: 1 of 5 complete
 Status: In progress
-Last activity: 2026-01-28 — Completed 11-02-PLAN.md (Offline Infrastructure)
+Last activity: 2026-01-28 — Completed 11-01-PLAN.md (Pre-Trip Backend Foundation)
 
-Progress: [#######...] 70% (5/7 plans complete in v2.0)
+Progress: [######....] 60% (4/7 plans complete in v2.0)
 
 ## Milestone History
 
@@ -89,9 +89,9 @@ Recent decisions affecting v2.0:
 - **[10-03]** Biometric prompt on foreground via AppState listener
 - **[10-03]** SecureStore for biometrics preference (not AsyncStorage)
 - **[10-03]** Booking categorization: upcoming/past/pending based on trip dates
-- **[11-02]** MMKV adapter pattern for TanStack Query persistence
-- **[11-02]** Stream Chat singleton with lazy initialization
-- **[11-02]** 30-day cache max age for offline itinerary access
+- **[11-01]** Default checklist items defined in code for simplicity
+- **[11-01]** Fellow travelers requires mutual opt-in via showInTravelersList
+- **[11-01]** Stream Chat client lazy-initialized to avoid build-time env errors
 
 ### Pending Todos
 
@@ -111,24 +111,26 @@ Recent decisions affecting v2.0:
 - ~~Duplicate React/React Native versions in monorepo can cause crashes~~ RESOLVED: exact version pinning in 10-01
 
 **Phase 11 (Pre-Trip):**
-- ~~Supabase Realtime WebSocket module import failures on React Native~~ RESOLVED: Using Stream Chat instead (11-02)
-- Stream Chat requires backend chat.getStreamToken tRPC endpoint for token generation
+- ~~Supabase Realtime WebSocket module import failures on React Native~~ RESOLVED: Using Stream Chat instead
+- ~~Stream Chat requires backend chat.getStreamToken tRPC endpoint~~ RESOLVED: chatRouter created in 11-01
+- Stream Chat env vars (STREAM_API_KEY, STREAM_API_SECRET) need to be configured
 
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T04:35:34Z
-Stopped at: Completed 11-02-PLAN.md (Offline Infrastructure)
+Last session: 2026-01-28T04:38:39Z
+Stopped at: Completed 11-01-PLAN.md (Pre-Trip Backend Foundation)
 Resume file: None
 
 ## Next Steps
 
 Phase 11 Pre-Trip IN PROGRESS. Completed:
-- [x] 11-01 Research (offline patterns, Stream Chat evaluation)
-- [x] 11-02 Offline Infrastructure (MMKV, query persistence, Stream Chat client)
+- [x] 11-01 Pre-Trip Backend Foundation (Prisma models, tRPC routers)
 
 Ready to execute:
+- 11-02 Offline Infrastructure
 - 11-03 Trip Details view
 - 11-04 Chat implementation
+- 11-05 Pre-Trip UI
