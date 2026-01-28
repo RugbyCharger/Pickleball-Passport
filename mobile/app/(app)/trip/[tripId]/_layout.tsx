@@ -30,16 +30,28 @@ export default function TripLayout() {
         options={{ title: 'Packing List' }}
       />
       <Stack.Screen
+        name="concierge"
+        options={{ title: 'Concierge Support' }}
+      />
+      <Stack.Screen
+        name="courts"
+        options={{ title: 'Book Courts' }}
+      />
+      <Stack.Screen
+        name="players"
+        options={{ title: 'Find Players' }}
+      />
+      <Stack.Screen
+        name="transport"
+        options={{ title: 'Transportation' }}
+      />
+      <Stack.Screen
         name="photos"
         options={{ title: 'Trip Photos' }}
       />
       <Stack.Screen
         name="journal"
         options={{ title: 'My Journal' }}
-      />
-      <Stack.Screen
-        name="concierge"
-        options={{ title: 'Concierge' }}
       />
     </Stack>
   );
