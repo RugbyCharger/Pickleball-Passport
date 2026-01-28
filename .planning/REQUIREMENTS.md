@@ -24,15 +24,15 @@
 
 ### During-Trip Experience
 
-- [ ] **MOB-TRIP-01**: Guest can view daily itinerary with activities
-- [ ] **MOB-TRIP-02**: Guest can check in to activities
-- [ ] **MOB-TRIP-03**: Guest can chat with concierge 24/7
-- [ ] **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location
-- [ ] **MOB-TRIP-05**: Guest can book pickleball courts
-- [ ] **MOB-TRIP-06**: Guest can find other guests to play with
-- [ ] **MOB-TRIP-07**: Guest can upload photos to trip journal
-- [ ] **MOB-TRIP-08**: Guest can view group photo gallery
-- [ ] **MOB-TRIP-09**: Guest can request transportation
+- [x] **MOB-TRIP-01**: Guest can view daily itinerary with activities
+- [x] **MOB-TRIP-02**: Guest can check in to activities
+- [x] **MOB-TRIP-03**: Guest can chat with concierge 24/7
+- [x] **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location
+- [x] **MOB-TRIP-05**: Guest can book pickleball courts
+- [x] **MOB-TRIP-06**: Guest can find other guests to play with
+- [x] **MOB-TRIP-07**: Guest can upload photos to trip journal
+- [x] **MOB-TRIP-08**: Guest can view group photo gallery
+- [x] **MOB-TRIP-09**: Guest can request transportation
 
 ### Alumni Engagement
 
@@ -83,15 +83,15 @@ Based on research findings:
 | MOB-PRETRIP-05 | 11 | Complete |
 | MOB-PRETRIP-06 | 11 | Complete |
 | MOB-PRETRIP-07 | 11 | Complete |
-| MOB-TRIP-01 | 12 | Pending |
-| MOB-TRIP-02 | 12 | Pending |
-| MOB-TRIP-03 | 12 | Pending |
-| MOB-TRIP-04 | 12 | Pending |
-| MOB-TRIP-05 | 12 | Pending |
-| MOB-TRIP-06 | 12 | Pending |
-| MOB-TRIP-07 | 12 | Pending |
-| MOB-TRIP-08 | 12 | Pending |
-| MOB-TRIP-09 | 12 | Pending |
+| MOB-TRIP-01 | 12 | Complete |
+| MOB-TRIP-02 | 12 | Complete |
+| MOB-TRIP-03 | 12 | Complete |
+| MOB-TRIP-04 | 12 | Complete |
+| MOB-TRIP-05 | 12 | Complete |
+| MOB-TRIP-06 | 12 | Complete |
+| MOB-TRIP-07 | 12 | Complete |
+| MOB-TRIP-08 | 12 | Complete |
+| MOB-TRIP-09 | 12 | Complete |
 | MOB-ALUMNI-01 | 13 | Pending |
 | MOB-ALUMNI-02 | 13 | Pending |
 | MOB-ALUMNI-03 | 13 | Pending |

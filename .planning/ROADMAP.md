@@ -54,7 +54,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 10: Foundation (Auth + API Integration)** - Mobile app can authenticate guests and call existing tRPC API
 - [x] **Phase 11: Pre-Trip Experience** - Guest can prepare for trip, connect with fellow travelers, and access offline itinerary
-- [ ] **Phase 12: During-Trip Experience** - Guest receives essential daily support with itinerary, concierge chat, and safety features
+- [x] **Phase 12: During-Trip Experience** - Guest receives essential daily support with itinerary, concierge chat, and safety features
 - [ ] **Phase 13: Alumni Engagement** - Guest stays engaged post-trip with transformation tracking, referrals, and rebooking
 - [ ] **Phase 14: Production Polish** - Mobile app published to App Store and Google Play with production-ready quality
 
@@ -129,11 +129,11 @@ Plans:
 **Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 12-01-PLAN.md — Backend foundation (Prisma models, tRPC routers)
-- [ ] 12-02-PLAN.md — SOS & Concierge (GPS location, emergency button, concierge chat)
-- [ ] 12-03-PLAN.md — Activity check-in, court booking, find players, transportation
-- [ ] 12-04-PLAN.md — Photo journal & gallery (compression, upload, gallery screens)
-- [ ] 12-05-PLAN.md — Wire up trip overview with navigation + human verification
+- [x] 12-01-PLAN.md — Backend foundation (Prisma models, tRPC routers)
+- [x] 12-02-PLAN.md — SOS & Concierge (GPS location, emergency button, concierge chat)
+- [x] 12-03-PLAN.md — Activity check-in, court booking, find players, transportation
+- [x] 12-04-PLAN.md — Photo journal & gallery (compression, upload, gallery screens)
+- [x] 12-05-PLAN.md — Wire up trip overview with navigation + human verification
 
 ### Phase 13: Alumni Engagement
 
@@ -185,6 +185,6 @@ Phases execute in numeric order: 10 -> 11 -> 12 -> 13 -> 14
 |-------|-----------|----------------|--------|-----------|
 | 10. Foundation | v2.0 | 3/3 | Complete | 2026-01-28 |
 | 11. Pre-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
-| 12. During-Trip | v2.0 | 0/5 | Planned | - |
+| 12. During-Trip | v2.0 | 5/5 | Complete | 2026-01-28 |
 | 13. Alumni | v2.0 | 0/? | Not started | - |
 | 14. Polish | v2.0 | 0/? | Not started | - |
