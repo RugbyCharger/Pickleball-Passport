@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 10 COMPLETE, ready for Phase 11
+**Current focus:** v2.0 Mobile App — Phase 11 IN PROGRESS
 
 ## Current Position
 
-Phase: 10 of 14 (Foundation - Auth + API Integration) - COMPLETE
-Plan: 3 of 3 complete
-Status: Phase 10 complete, ready for Phase 11
-Last activity: 2026-01-28 — Completed 10-03-PLAN.md (Dashboard UI + Biometrics)
+Phase: 11 of 14 (Pre-Trip Features)
+Plan: 2 of 4 complete
+Status: In progress
+Last activity: 2026-01-28 — Completed 11-02-PLAN.md (Offline Infrastructure)
 
-Progress: [######....] 60% (3/5 plans complete in v2.0)
+Progress: [#######...] 70% (5/7 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,10 +64,12 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 3
+- Total plans completed: 5
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
+- 11-01: (Research - not tracked)
+- 11-02: 4 min (Offline Infrastructure)
 
 ## Accumulated Context
 
@@ -87,6 +89,9 @@ Recent decisions affecting v2.0:
 - **[10-03]** Biometric prompt on foreground via AppState listener
 - **[10-03]** SecureStore for biometrics preference (not AsyncStorage)
 - **[10-03]** Booking categorization: upcoming/past/pending based on trip dates
+- **[11-02]** MMKV adapter pattern for TanStack Query persistence
+- **[11-02]** Stream Chat singleton with lazy initialization
+- **[11-02]** 30-day cache max age for offline itinerary access
 
 ### Pending Todos
 
@@ -106,26 +111,24 @@ Recent decisions affecting v2.0:
 - ~~Duplicate React/React Native versions in monorepo can cause crashes~~ RESOLVED: exact version pinning in 10-01
 
 **Phase 11 (Pre-Trip):**
-- Supabase Realtime WebSocket module import failures on React Native — may need alternative chat solution (Stream Chat, PubNub, or tRPC subscriptions)
+- ~~Supabase Realtime WebSocket module import failures on React Native~~ RESOLVED: Using Stream Chat instead (11-02)
+- Stream Chat requires backend chat.getStreamToken tRPC endpoint for token generation
 
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T02:27:24Z
-Stopped at: Completed 10-03-PLAN.md (Phase 10 Foundation complete)
+Last session: 2026-01-28T04:35:34Z
+Stopped at: Completed 11-02-PLAN.md (Offline Infrastructure)
 Resume file: None
 
 ## Next Steps
 
-Phase 10 Foundation COMPLETE. All success criteria verified:
-- [x] Guest can log in with email/password on mobile app
-- [x] Guest can use Face ID or Touch ID for biometric login
-- [x] Guest can view their bookings from tRPC API on mobile dashboard
-- [x] Developer can build and run app on iOS and Android simulators
+Phase 11 Pre-Trip IN PROGRESS. Completed:
+- [x] 11-01 Research (offline patterns, Stream Chat evaluation)
+- [x] 11-02 Offline Infrastructure (MMKV, query persistence, Stream Chat client)
 
-Ready to execute Phase 11 (Pre-Trip Features):
-- Trip details view
-- Chat with trip coordinator
-- Itinerary display
+Ready to execute:
+- 11-03 Trip Details view
+- 11-04 Chat implementation
