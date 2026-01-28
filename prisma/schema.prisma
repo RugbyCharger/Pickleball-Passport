@@ -392,6 +392,7 @@ model Package {
   contentBlocks       ContentBlock[]    // CMS content blocks linked to this package
   contentVersions     PackageContentVersion[] // Audit log of content changes
   itineraryTemplates  ItineraryTemplate[]
+  packingTemplates    PackingListTemplate[] // Phase 11: Pre-Trip packing list templates
 
   @@index([slug])
   @@index([isActive])
@@ -533,6 +534,9 @@ model Booking {
   whatsappInvitationStatus String?   @default("pending") // pending, sent, joined, failed
   whatsappMilestonesSent   Json? // Tracks sent milestones: { "60_DAYS": true, "30_DAYS": true, ... }
 
+  // Phase 11: Pre-Trip Features
+  showInTravelersList Boolean @default(false) // Opt-in to appear in fellow travelers list
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? // Soft delete - preserves financial audit trail (P1-002)
@@ -551,6 +555,10 @@ model Booking {
   // Companion booking relationships
   primaryBooking    Booking?  @relation("CompanionTo", fields: [primaryBookingId], references: [id], onDelete: SetNull)
   companionBookings Booking[] @relation("CompanionTo")
+
+  // Phase 11: Pre-Trip Features
+  packingItems   GuestPackingItem[]
+  checklistItems PreTripChecklistItem[]
 
   @@index([userId])
   @@index([packageId])
@@ -2471,4 +2479,59 @@ model CustomReport {
   @@index([createdBy])
   @@index([createdAt])
   @@index([isScheduled])
+}
+
+// ============================================================================
+// PRE-TRIP FEATURES (Phase 11)
+// ============================================================================
+
+// Packing list templates - admin-managed default items for each package
+model PackingListTemplate {
+  id          String   @id @default(cuid())
+  packageId   String?
+  package     Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  category    String   // "Clothing", "Medical", "Electronics", "Documents"
+  item        String   // "Sunscreen", "Passport copy", etc.
+  isDefault   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  guestItems  GuestPackingItem[]
+
+  @@index([packageId])
+  @@index([category])
+}
+
+// Guest packing items - user customizations and tracked packing status
+model GuestPackingItem {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  templateId  String?
+  template    PackingListTemplate? @relation(fields: [templateId], references: [id])
+  item        String
+  category    String
+  isPacked    Boolean  @default(false)
+  isCustom    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([isPacked])
+}
+
+// Pre-trip checklist items - persistent completion state for pre-trip tasks
+model PreTripChecklistItem {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  itemKey     String   // "passport", "itinerary_reviewed", "packing_complete", etc.
+  isComplete  Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([bookingId, itemKey])
+  @@index([bookingId])
 }
