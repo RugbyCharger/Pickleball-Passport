@@ -40,6 +40,11 @@ import { itineraryRouter } from './routers/itinerary'
 import { packingRouter } from './routers/packing'
 import { chatRouter } from './routers/chat'
 import { checklistRouter } from './routers/checklist'
+import { activityRouter } from './routers/activity'
+import { photoRouter } from './routers/photo'
+import { courtRouter } from './routers/court'
+import { transportRouter } from './routers/transport'
+import { sosRouter } from './routers/sos'
 
 export const appRouter = router({
   user: userRouter,
@@ -76,6 +81,11 @@ export const appRouter = router({
   packing: packingRouter,
   chat: chatRouter,
   checklist: checklistRouter,
+  activity: activityRouter,
+  photo: photoRouter,
+  court: courtRouter,
+  transport: transportRouter,
+  sos: sosRouter,
 })
 
 // Export type definition for the router
