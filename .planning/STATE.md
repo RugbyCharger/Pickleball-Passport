@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-28)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App — Phase 11 COMPLETE
+**Current focus:** v2.0 Mobile App — Phase 12 In Progress
 
 ## Current Position
 
-Phase: 11 of 14 (Pre-Trip Features) — COMPLETE
-Plan: 5 of 5 complete
-Status: Phase complete, ready for Phase 12
-Last activity: 2026-01-28 — Completed Phase 11 (Pre-Trip Experience)
+Phase: 12 of 14 (During-Trip Experience)
+Plan: 1 of ? complete
+Status: In progress
+Last activity: 2026-01-28 — Completed 12-01-PLAN.md (During-Trip Backend Foundation)
 
-Progress: [########..] 80% (8/10 plans complete in v2.0)
+Progress: [#########.] 90% (9/10 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 8
+- Total plans completed: 9
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -73,6 +73,7 @@ See: .planning/MILESTONES.md
 - 11-03: 6 min (Trip Overview Screen)
 - 11-04: 6 min (Fellow Travelers & Packing List)
 - 11-05: ~8 min (Chat + Offline Itinerary)
+- 12-01: 6 min (During-Trip Backend Foundation)
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ Recent decisions affecting v2.0:
 - **[11-04]** SectionList with category grouping for packing list organization
 - **[11-05]** Offline itinerary uses staleTime: Infinity and networkMode: offlineFirst
 - **[11-05]** Stream Chat wrapped in TripChat component with offline/error handling
+- **[12-01]** GPS coordinates optional in SOSAlert to allow SOS even if location unavailable
+- **[12-01]** Photo storage URL-based (Supabase Storage upload handled separately from DB record)
+- **[12-01]** Admin-only resolve procedure for SOS alerts with audit trail
 
 ### Pending Todos
 
@@ -128,23 +132,22 @@ Recent decisions affecting v2.0:
 - ~~Stream Chat requires backend chat.getStreamToken tRPC endpoint~~ RESOLVED: chatRouter created in 11-01
 - Stream Chat env vars need user configuration (documented in VERIFICATION.md)
 
+**Phase 12 (During-Trip): None**
+- Backend foundation complete, ready for mobile screens
+
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28
-Stopped at: Completed Phase 11 (Pre-Trip Experience)
+Last session: 2026-01-28T06:12:56Z
+Stopped at: Completed 12-01-PLAN.md (During-Trip Backend Foundation)
 Resume file: None
 
 ## Next Steps
 
-Phase 11 Pre-Trip COMPLETE. All plans executed:
-- [x] 11-01 Pre-Trip Backend Foundation (Prisma models, tRPC routers)
-- [x] 11-02 Offline Infrastructure (MMKV, Stream Chat, query persistence)
-- [x] 11-03 Trip Overview Screen (countdown, checklist, passport upload)
-- [x] 11-04 Fellow Travelers & Packing List (TravelerCard, PackingListItem, screens)
-- [x] 11-05 Chat + Offline Itinerary (TripChat, useOfflineItinerary)
+Phase 12 During-Trip In Progress:
+- [x] 12-01 During-Trip Backend Foundation (Prisma models, tRPC routers)
+- [ ] 12-02+ (pending planning)
 
-Ready to plan:
-- Phase 12: During-Trip Experience
+Ready to continue Phase 12 planning and execution.
