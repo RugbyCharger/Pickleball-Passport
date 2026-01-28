@@ -2,6 +2,32 @@
 
 This checklist documents all the steps required to deploy the mobile app to Apple TestFlight and Google Play Store.
 
+## Quick Reference
+
+```bash
+# Install EAS CLI (if not already installed)
+npm install -g eas-cli
+
+# Login to Expo
+npx eas login
+
+# Build for iOS (10-30 minutes)
+cd mobile && npx eas build --platform ios --profile production
+
+# Build for Android (10-20 minutes)
+cd mobile && npx eas build --platform android --profile production
+
+# Submit iOS to TestFlight
+cd mobile && npx eas submit --platform ios --latest
+
+# Submit Android to Play Store Internal
+cd mobile && npx eas submit --platform android --latest
+
+# View/manage credentials
+npx eas credentials --platform ios
+npx eas credentials --platform android
+```
+
 ## Prerequisites
 
 Before starting, ensure you have:
