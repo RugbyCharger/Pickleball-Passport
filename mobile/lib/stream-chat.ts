@@ -79,7 +79,31 @@ export function useStreamChatClient() {
     [client]
   );
 
-  return { client, isReady, getTripChannel };
+  /**
+   * Get or create a 1:1 concierge channel for private support.
+   *
+   * Creates a messaging channel between the current user and the concierge
+   * system user. Channel ID is based on trip + user for uniqueness.
+   */
+  const getConciergeChannel = useCallback(
+    async (tripId: string): Promise<StreamChannel | null> => {
+      if (!client || !userId) return null;
+
+      // Create 1:1 channel with concierge system user
+      // Channel ID format: concierge-{tripId}-{userId} for uniqueness
+      // Type assertion needed - Stream Chat SDK types don't include custom data fields
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const channel = client.channel('messaging', `concierge-${tripId}-${userId}`, {
+        members: [userId, 'concierge'], // 'concierge' is the system user ID
+      } as any);
+
+      await channel.watch();
+      return channel;
+    },
+    [client, userId]
+  );
+
+  return { client, isReady, getTripChannel, getConciergeChannel };
 }
 
 export { getChatClient };
