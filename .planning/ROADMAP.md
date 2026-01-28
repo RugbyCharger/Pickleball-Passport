@@ -151,10 +151,13 @@ Plans:
 5. Guest can view earned passport stamps and achievement progress
 6. Guest can create and submit testimonial with photos and text
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 13-01: TBD during phase planning
+- [ ] 13-01-PLAN.md — Backend foundation (Prisma models, alumni/stamps tRPC routers)
+- [ ] 13-02-PLAN.md — Transformation journey + referrals (hub, journey summary, referral tracking)
+- [ ] 13-03-PLAN.md — Alumni directory + passport stamps (searchable directory, achievement collection)
+- [ ] 13-04-PLAN.md — Testimonial submission + rebooking (testimonial form, web deep link)
 
 ### Phase 14: Production Polish
 
