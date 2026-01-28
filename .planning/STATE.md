@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 12 of 14 (During-Trip Experience)
-Plan: 3 of 5 complete
+Plan: 4 of 5 complete
 Status: In progress
-Last activity: 2026-01-28 — Completed 12-02-PLAN.md (Emergency SOS & Concierge Chat)
+Last activity: 2026-01-28 — Completed 12-03-PLAN.md (Activity Check-in, Courts, Players, Transport)
 
-Progress: [#########.] 92% (11/12 plans complete in v2.0)
+Progress: [#########.] 93% (12/13 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 11
+- Total plans completed: 12
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -75,6 +75,7 @@ See: .planning/MILESTONES.md
 - 11-05: ~8 min (Chat + Offline Itinerary)
 - 12-01: 6 min (During-Trip Backend Foundation)
 - 12-02: 8 min (Emergency SOS & Concierge Chat)
+- 12-03: 6 min (Activity Check-in, Courts, Players, Transport)
 - 12-04: 4 min (Photo Journal & Gallery)
 
 ## Accumulated Context
@@ -111,6 +112,9 @@ Recent decisions affecting v2.0:
 - **[12-02]** SOS works without GPS - location fields optional in trigger mutation
 - **[12-02]** Concierge channel ID format: concierge-{tripId}-{userId} for uniqueness
 - **[12-02]** Location uses Balanced accuracy for battery/precision tradeoff
+- **[12-03]** Custom modal selector for date/time instead of external package
+- **[12-03]** Check-in only allowed on current or past trip days
+- **[12-03]** Invite to Play uses native Share sheet for MVP
 - **[12-04]** Local URI storage for photos (Supabase Storage upload deferred to post-v2.0)
 - **[12-04]** 3-column grid for group gallery, 2-column for personal journal
 - **[12-04]** Image compression: max 1920px width, 70% JPEG quality via expo-image-manipulator
@@ -141,15 +145,15 @@ Recent decisions affecting v2.0:
 - Stream Chat env vars need user configuration (documented in VERIFICATION.md)
 
 **Phase 12 (During-Trip): None**
-- Backend foundation complete, ready for mobile screens
+- Backend foundation complete, all screens built
 
 **Phase 14 (Polish):**
 - OneSignal must be first plugin in app.json for iOS push capability
 
 ## Session Continuity
 
-Last session: 2026-01-28T06:23:00Z
-Stopped at: Completed 12-02-PLAN.md (Emergency SOS & Concierge Chat)
+Last session: 2026-01-28T06:22:06Z
+Stopped at: Completed 12-03-PLAN.md (Activity Check-in, Courts, Players, Transport)
 Resume file: None
 
 ## Next Steps
@@ -157,7 +161,8 @@ Resume file: None
 Phase 12 During-Trip In Progress:
 - [x] 12-01 During-Trip Backend Foundation (Prisma models, tRPC routers)
 - [x] 12-02 Emergency SOS & Concierge Chat (SOS button, location hook, concierge)
+- [x] 12-03 Activity Check-in, Courts, Players, Transport screens
 - [x] 12-04 Photo Journal & Gallery (compression, upload, gallery screens)
-- [ ] 12-03/05 (pending planning - court booking, activity feed, etc.)
+- [ ] 12-05 (pending planning - if applicable)
 
 Ready to continue Phase 12 planning and execution.
