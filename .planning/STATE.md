@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-28)
 ## Current Position
 
 Phase: 12 of 14 (During-Trip Experience)
-Plan: 2 of 5 complete
+Plan: 3 of 5 complete
 Status: In progress
-Last activity: 2026-01-28 — Completed 12-04-PLAN.md (Photo Journal & Gallery)
+Last activity: 2026-01-28 — Completed 12-02-PLAN.md (Emergency SOS & Concierge Chat)
 
-Progress: [#########.] 91% (10/11 plans complete in v2.0)
+Progress: [#########.] 92% (11/12 plans complete in v2.0)
 
 ## Milestone History
 
@@ -64,7 +64,7 @@ See: .planning/MILESTONES.md
 
 ### v2.0 Velocity
 
-- Total plans completed: 10
+- Total plans completed: 11
 - 10-01: 8 min (Mobile App Scaffold)
 - 10-02: 10 min (Clerk Auth + tRPC Client)
 - 10-03: ~15 min (Dashboard UI + Biometrics)
@@ -74,6 +74,7 @@ See: .planning/MILESTONES.md
 - 11-04: 6 min (Fellow Travelers & Packing List)
 - 11-05: ~8 min (Chat + Offline Itinerary)
 - 12-01: 6 min (During-Trip Backend Foundation)
+- 12-02: 8 min (Emergency SOS & Concierge Chat)
 - 12-04: 4 min (Photo Journal & Gallery)
 
 ## Accumulated Context
@@ -107,6 +108,9 @@ Recent decisions affecting v2.0:
 - **[12-01]** GPS coordinates optional in SOSAlert to allow SOS even if location unavailable
 - **[12-01]** Photo storage URL-based (Supabase Storage upload handled separately from DB record)
 - **[12-01]** Admin-only resolve procedure for SOS alerts with audit trail
+- **[12-02]** SOS works without GPS - location fields optional in trigger mutation
+- **[12-02]** Concierge channel ID format: concierge-{tripId}-{userId} for uniqueness
+- **[12-02]** Location uses Balanced accuracy for battery/precision tradeoff
 - **[12-04]** Local URI storage for photos (Supabase Storage upload deferred to post-v2.0)
 - **[12-04]** 3-column grid for group gallery, 2-column for personal journal
 - **[12-04]** Image compression: max 1920px width, 70% JPEG quality via expo-image-manipulator
@@ -144,15 +148,16 @@ Recent decisions affecting v2.0:
 
 ## Session Continuity
 
-Last session: 2026-01-28T06:20:21Z
-Stopped at: Completed 12-04-PLAN.md (Photo Journal & Gallery)
+Last session: 2026-01-28T06:23:00Z
+Stopped at: Completed 12-02-PLAN.md (Emergency SOS & Concierge Chat)
 Resume file: None
 
 ## Next Steps
 
 Phase 12 During-Trip In Progress:
 - [x] 12-01 During-Trip Backend Foundation (Prisma models, tRPC routers)
+- [x] 12-02 Emergency SOS & Concierge Chat (SOS button, location hook, concierge)
 - [x] 12-04 Photo Journal & Gallery (compression, upload, gallery screens)
-- [ ] 12-02/03/05 (pending planning - SOS alerts, activity feed, etc.)
+- [ ] 12-03/05 (pending planning - court booking, activity feed, etc.)
 
 Ready to continue Phase 12 planning and execution.
