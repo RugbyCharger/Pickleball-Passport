@@ -20,6 +20,7 @@ import { ChecklistItem } from '../../../../components/trip/ChecklistItem';
 import { PassportUpload } from '../../../../components/trip/PassportUpload';
 import { SOSButton } from '../../../../components/sos/SOSButton';
 import { SOSModal } from '../../../../components/sos/SOSModal';
+import { NotificationPrompt } from '../../../../components/NotificationPrompt';
 
 // Feature card for during-trip navigation
 interface FeatureCardProps {
@@ -124,6 +125,9 @@ export default function TripOverviewScreen() {
         className="flex-1"
         contentContainerStyle={{ padding: 16 }}
       >
+        {/* Notification Permission Prompt */}
+        <NotificationPrompt />
+
         {/* Trip Header */}
         <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">
           <Text className="text-xl font-bold text-gray-800">{trip.name}</Text>
