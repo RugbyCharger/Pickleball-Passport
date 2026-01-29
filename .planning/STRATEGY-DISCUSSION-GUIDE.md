@@ -7,6 +7,75 @@
 
 ---
 
+## Executive Summary: For Time-Pressed Readers
+
+**The Core Question:** Should we push for a March 23 consumer launch, or use March strategically to build for Fall?
+
+**The Quick Answer:** Run a Director Fam Trip in March (6-8 directors at low cost). They experience the trip, create content, then sell Fall tours to their members. This works WITH buyer behavior rather than against it.
+
+**Why This Works:**
+- **Validates before scaling** — Learn what works in a low-stakes environment
+- **Builds sales engine** — Directors become partners who sell for years
+- **Creates content** — Real testimonials from real experience
+- **Preserves March** — Trip still happens, just framed correctly
+
+**The Three Options:**
+
+| Option | What It Is | Best For | Risk |
+|--------|-----------|----------|------|
+| **A: Push March Consumer Launch** | Go all-out for 10-12 paying guests | Risk tolerance, need immediate validation | High — works against 6-18 month booking window |
+| **B: Director Fam Trip** | 6-8 directors at $1,500-2,000 each | Building sustainable growth | Low-Medium — $12-16K investment |
+| **C: Hybrid** | 3-4 consumers + 4-5 directors | Testing both channels | Medium — split focus |
+
+**Critical First Step:** Validation Sprint (Week 1). Before ANY strategy execution, we need data: Jaron calls 20 people, Ryan researches 10 competitors, Grant calls 5 directors. If 5+ people say "I'd book this," proceed. If 0-2, stop and fix the offer.
+
+**This Guide's Structure:**
+- **Parts 1-2:** Context (who we are, where we stand)
+- **Part 3:** Validation Sprint (data gathering)
+- **Parts 4-5:** The problems (timeline, agency decision)
+- **Parts 5B-6:** Strategic frameworks + options
+- **Parts 7-12:** Implementation details
+- **Part 13:** Decisions to make today
+
+**Time Investment:**
+- This summary: 3 minutes
+- Core decisions (Parts 6, 13): 45 minutes
+- Full strategic context: 3.5 hours
+
+**Bottom Line:** If you only have 30 minutes, read Part 3 (Validation Sprint), Part 6 (Strategy Options), and Part 13 (Decisions). You'll have enough to make the key calls.
+
+---
+
+## How This Guide Works: Three Lenses on One Challenge
+
+This guide intentionally uses three complementary frameworks that create productive tension:
+
+**🔄 OODA Loop (Military Strategy)**
+- Focus: Speed of iteration and learning
+- Question: "How fast can we test and adapt?"
+- Appears in: Part 10, Decision Triggers, Quick Reference
+
+**📊 Priestley's Campaign Framework (Commercial Reality)**
+- Focus: Demand building before launch
+- Question: "Do we have enough signals before going public?"
+- Appears in: Part 5B (Campaign vs. Launch, 7-11-4 Rule, Founding Directors)
+
+**⚡ Hormozi's Value Equation (Customer Psychology)**
+- Focus: Why someone says yes
+- Question: "Is the perceived value high enough to overcome inertia?"
+- Appears in: Part 9, Appendix A (Grand Slam Offer, Lead Generation Hierarchy)
+
+**Why three lenses?** Because this decision is simultaneously:
+- A timing challenge (OODA)
+- A demand-building challenge (Priestley)
+- A value perception challenge (Hormozi)
+
+Each framework reveals different constraints. You'll feel them pulling in different directions — that's intentional. OODA pushes for speed, Priestley demands patience, Hormozi requires irresistible offers. Your job is to find the intersection where all three work.
+
+**How to use this guide:** Don't try to "resolve" the tension between frameworks. Instead, let each one illuminate different aspects of the decision. The Validation Sprint (Part 3) will tell you which framework applies most to your actual situation.
+
+---
+
 ## How to Use This Guide
 
 This guide is for all three of us to read together. We'll go section by section. Each section has:
@@ -530,6 +599,14 @@ To find 10 perfect clients, you need 100-200 interested parties.
 - Consumer prospects have something to watch and wait for
 - March still happens — but framed correctly
 
+> **Note on terminology:** "Founding Directors" is ONE way to position the Fam Trip using Priestley's campaign psychology. It's not the only way. If this language feels corporate, inauthentic, or doesn't match your brand voice, the Fam Trip mechanics work equally well with simpler framing:
+> - "Director Pilot Program"
+> - "Beta Partners"
+> - "Charter Directors"
+> - Or simply "Fam Trip"
+>
+> **What matters:** The mechanics (invite directors, low cost, capture content, build partnerships). The language is your choice. Test both internally before committing.
+
 ---
 
 ### WhatsApp vs. Email
@@ -655,7 +732,33 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 ---
 
-### What We Recommend: Option B
+### Option D: Founding Directors Campaign (Priestley-Style Hybrid)
+
+**What it means:** Run Option B (Fam Trip) but with a specific PUBLIC positioning: You're recruiting "Founding Directors" for your pilot program.
+
+| Pros | Cons |
+|------|------|
+| Directors feel honored (not subsidized) | Terminology may feel corporate |
+| Creates visible demand ("47 applied, 8 selected!") | Requires public application process |
+| Starts the 7-11-4 clock with content | More setup work |
+| Consumer prospects have something to watch | Commits to specific narrative |
+
+**How it works:**
+- Week 1-2: Public campaign announcing "We're recruiting 8 Founding Directors"
+- Week 3-4: Selection process (applications, calls, announcements)
+- March: Fam Trip with "Meet Our Founding Directors" content
+- April-Aug: Directors become core of Fall marketing
+
+**Framework alignment:**
+- **OODA:** Fast learning with committed test group
+- **Priestley:** Builds demand signals before consumer launch
+- **Hormozi:** High dream outcome (founder status) + high perceived likelihood (invited, not applied)
+
+**Note:** "Founding Directors" is a positioning choice, not a requirement. If this language doesn't fit your brand voice, Option B works equally well with simpler framing like "Director Pilot Program" or "Beta Partners." The mechanics are the same — only the narrative differs.
+
+---
+
+### What We Recommend: Option B (or Option D if the narrative fits)
 
 **Why?**
 
@@ -1339,6 +1442,15 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 
 ## Quick Reference: The Plan in One Page
 
+### Three Lenses, One Decision
+
+This guide uses three frameworks that create productive tension:
+- **OODA Loop:** How fast can we test and adapt?
+- **Priestley:** Do we have enough demand signals before going public?
+- **Hormozi:** Is the perceived value high enough?
+
+Don't resolve the tension — let each framework illuminate different aspects. The Validation Sprint tells you which matters most.
+
 ### FIRST: Validation Sprint (Week 1)
 
 **Before ANY strategy execution:**
@@ -1368,7 +1480,7 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 
 **Agency:** Renegotiate to 90-day sprint OR cancel. Don't stay locked in for 1 year before you have customers.
 
-**Strategy:** Reframe March as a Director Fam Trip (6-8 directors at low cost). They experience it, then sell Fall tours to their members.
+**Strategy:** Reframe March as a Director Fam Trip (Option B) or a "Founding Directors Campaign" (Option D — same mechanics, different public narrative). 6-8 directors at low cost experience it, then sell Fall tours to their members.
 
 **Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). Sell transformation, not trip. Add a guarantee. Use Jaron's network before the agency.
 
