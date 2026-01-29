@@ -976,15 +976,21 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 
 ---
 
-### Why Hormozi May NOT Fully Apply Here
+### Where Hormozi Applies (and Where He Doesn't)
 
-| Hormozi Examples | Thailand Tours |
-|------------------|----------------|
-| Gyms (local, low commitment) | International (high commitment) |
-| Software (instant delivery) | Requires passport, time off, planning |
-| Coaching (can start immediately) | Must coordinate with spouse |
+**Hormozi principles that DO apply:**
+- Sell transformation, not logistics ✅
+- Add guarantee to reverse risk ✅
+- Stack value (coaching + meals + courts + dental) ✅
+- Never discount — add value instead ✅
+- Warm outreach before paid ads ✅
 
-**The Risk:** Hormozi's tactics assume quick decisions. $3K Thailand trips need spouse buy-in, time-off approval, and budget planning. The "irresistible offer" approach may not close fast enough for March.
+**Hormozi tactics that DON'T apply:**
+- 7-day blitz for $3K+ travel (unrealistic timeline) ❌
+- Impulse-buy urgency for committee decisions ❌
+- Gym-style scarcity for planned vacations ❌
+
+**The hybrid:** Use Hormozi's offer design + Priestley's timeline + OODA's testing.
 
 ---
 
