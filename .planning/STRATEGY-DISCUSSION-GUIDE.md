@@ -1,7 +1,7 @@
 # Pickleball Passport: Strategy Discussion Guide
 
 **For:** Ryan, Jaron, and Grant
-**Date:** January 28, 2026
+**Date:** Friday, January 30, 2026
 **Format:** Live discussion (Google Meet/Zoom)
 **Time needed:** About 3.5 hours
 
