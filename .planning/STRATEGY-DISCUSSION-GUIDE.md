@@ -3,7 +3,7 @@
 **For:** Ryan, Jaron, and Grant
 **Date:** January 28, 2026
 **Format:** Live discussion (Google Meet/Zoom)
-**Time needed:** About 3-3.5 hours
+**Time needed:** About 3 hours
 
 ---
 
@@ -291,90 +291,7 @@ Only do this if:
 
 ---
 
-## Part 5: The Skool Community Idea (10 minutes)
-
-**Grant's question:** Should we create a $9/month Skool community to build an audience?
-
-Let's look at this idea together.
-
-### What Is Skool?
-
-Skool is a website where people can join communities. You can post, chat, and share courses. It costs about $99/month to run one.
-
-### The Idea
-
-Create a paid community ($9/month) for pickleball players interested in Thailand travel. Drive free members from LinkedIn or the Skool platform. See if there's interest.
-
-### The Facts
-
-| Question | Answer |
-|----------|--------|
-| Platform cost | ~$99/month |
-| Typical free-to-paid conversion | 1-3% |
-| Time to build audience | 3-6 months of consistent work |
-| Our current audience | Zero |
-
-**The gap problem:** Asking someone to pay $9/month when your main product is $2,499+ can confuse people. What are they buying?
-
-### The Risks
-
-**Why this might be a mistake right now:**
-
-1. **It's a distraction.** You're already juggling the agency decision, Director outreach, and March planning. Adding a community is one more thing.
-
-2. **No audience yet.** Building a community from zero takes months. You don't have months.
-
-3. **Different business model.** A $9/month subscription is very different from selling $3,000 tours. It requires constant content and moderation.
-
-4. **Feels productive but isn't.** Building a community feels like "doing something." But it doesn't directly sell tours.
-
-5. **The math is weird.** If you can get 100 people to pay $9/month, that's $900. But 100 engaged people could probably produce 3-4 tour bookings ($7,500-10,000). Same effort, very different return.
-
-### The Benefits
-
-**Why a community could help (later):**
-
-1. **Low-commitment first step.** People can try you out for $9 before committing $2,500.
-
-2. **Lead nurturing.** Keep prospects warm until they're ready to book.
-
-3. **Social proof.** A buzzing community shows you're real and people care.
-
-4. **Directors could lead it.** After the Fam Trip, directors could be community leaders.
-
-### The Verdict: NOT YET
-
-**The council says: This is the wrong time for a community.**
-
-**Why:**
-- You have zero customers and 8 weeks to launch
-- You're already stretched thin
-- Communities take months to build
-- Direct outreach (calling directors) moves the needle faster
-
-**When it WOULD make sense:**
-- After the March Fam Trip
-- When you have real content and testimonials
-- When directors are activated and can help lead
-- As a lead nurturing tool for Fall tour sales (June 2026+)
-
-### If You Really Want to Test Interest
-
-**Low-effort alternatives:**
-- Create a free WhatsApp or Telegram group (costs $0)
-- See if 50+ people join and actually talk
-- If it's active, then consider Skool later
-
-**The hard truth:** With zero bookings and 8 weeks to launch, the answer isn't building more infrastructure. The answer is picking up the phone and talking to potential directors and customers directly.
-
-**Discussion Questions:**
-- Does this make sense? Do you feel the urge to build a community anyway?
-- What's driving the interest in a community? (Fear of direct sales? Hope for passive leads?)
-- Can we agree to revisit this idea in April after the Fam Trip?
-
----
-
-## Part 6: The Strategy Options (20 minutes)
+## Part 5: The Strategy Options (20 minutes)
 
 We have three main paths. Let's look at each one.
 
@@ -484,7 +401,7 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 ---
 
-## Part 7: How Option B Would Work (15 minutes)
+## Part 6: How Option B Would Work (15 minutes)
 
 If we choose the Director Fam Trip, here's the step-by-step plan.
 
@@ -578,7 +495,7 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 
 ---
 
-## Part 8: Grant's Role Going Forward (10 minutes)
+## Part 7: Grant's Role Going Forward (10 minutes)
 
 Let's be clear about what Grant does and doesn't do.
 
@@ -617,11 +534,18 @@ Grant's job is to make sure you decide with full information. Not to decide for 
 
 ---
 
-## Part 9: The Hormozi Perspective — What Would Alex Do? (25 minutes)
+## Part 8: The Hormozi Perspective — What Would Alex Do? (30 minutes)
 
 **Who is Alex Hormozi?**
 
-Alex Hormozi built multiple $100M+ businesses. He wrote two famous books: "$100M Offers" and "$100M Leads." His main idea: make offers so good that people feel stupid saying no.
+Alex Hormozi built multiple $100M+ businesses. He wrote three bestselling books:
+- **$100M Offers** — How to make offers so good people feel stupid saying no
+- **$100M Leads** — How to get customers
+- **$100M Money Models** — How to structure your business to maximize lifetime value
+
+His newest book, Money Models, is particularly relevant for us. It's about building a business that doesn't just get customers, but turns each customer into a profit engine.
+
+**Our target demographic:** US-based wealthy, affluent retirees aged 55+ who play pickleball. This is important — these customers have money, time, and are looking for experiences.
 
 Let's apply his frameworks to our situation.
 
@@ -766,6 +690,84 @@ If Alex Hormozi was in the room, here's what he'd say:
 
 ---
 
+### The Money Model Framework (From $100M Money Models)
+
+Hormozi's newest book introduces a critical concept: **82% of businesses fail due to poor cash flow.** They run out of money before becoming profitable.
+
+A **Money Model** is a system where one customer generates enough profit to pay for acquiring two more customers within 30 days. When you achieve this, you're "printing money."
+
+**The Three Stages:**
+
+| Stage | Goal | How It Works |
+|-------|------|--------------|
+| **Stage 1: Get Cash** | Attraction Offer | Low-barrier entry that converts prospects to first-time buyers |
+| **Stage 2: Get More Cash** | Upsells + Downsells | Higher-value products sold immediately after initial purchase |
+| **Stage 3: Get the Most Cash** | Continuity Offers | Recurring revenue through subscriptions or repeat purchases |
+
+---
+
+### Applying Money Models to Pickleball Passport
+
+**The Problem:** A $2,500-4,000 tour doesn't fit the 30-day cash cycle. These are considered purchases that take weeks.
+
+**The Solution:** Build a sequence of offers that creates multiple revenue points from each customer.
+
+**Our Money Model Could Look Like:**
+
+| Stage | Offer | Price | Purpose |
+|-------|-------|-------|---------|
+| **Attraction** | "7-Day Power Serve Challenge" (lead magnet) | Free | Capture emails, build trust, show Jaron's expertise |
+| **First Sale** | Thailand Tour (8-day or 13-day) | $2,499 - $3,999 | Core product |
+| **Upsell 1** | Medical Tourism Add-On | +$2,000 - $15,000 | Dental, cosmetic work while in Thailand |
+| **Upsell 2** | Private Coaching Package | +$500 | Extra 1-on-1 sessions with Jaron |
+| **Upsell 3** | Extended Stay (add days) | +$300/day | More time to explore |
+| **Continuity** | Alumni Membership | Free (for now) | Stay connected, build referrals |
+| **Repeat** | Annual Reunion Trip | $2,499+ | Bring alumni back every year |
+| **Referral** | Bring-a-Friend Bonus | $500 credit | Turn customers into salespeople |
+
+**Why This Matters for Affluent 55+ Retirees:**
+
+| What They Have | What This Means |
+|----------------|-----------------|
+| Money | They can afford upsells — don't be shy about offering them |
+| Time | They can extend trips, come back annually |
+| Social circles | They have friends with money who also play pickleball |
+| Health concerns | Medical tourism upsell is genuinely valuable to them |
+
+**The Key Insight:** One customer who books a tour, adds dental work, extends their stay, and refers two friends could be worth $15,000-25,000 to you. Don't think of it as "one $3,000 sale."
+
+---
+
+### Building Your Customer Value Ladder
+
+Right now, you have ONE offer: the tour. Hormozi would say you need a LADDER:
+
+```
+                    ┌─────────────────────────┐
+                    │   Annual Reunion Trip   │  ← Repeat ($2,499+)
+                    │   (Continuity)          │
+                    └───────────┬─────────────┘
+                                │
+                    ┌───────────▼─────────────┐
+                    │   Medical Tourism       │  ← High-Value Upsell ($5K-15K)
+                    │   (Premium Add-On)      │
+                    └───────────┬─────────────┘
+                                │
+                    ┌───────────▼─────────────┐
+                    │   Thailand Tour         │  ← Core Offer ($2,499-$3,999)
+                    │   (Main Product)        │
+                    └───────────┬─────────────┘
+                                │
+                    ┌───────────▼─────────────┐
+                    │   7-Day Serve Challenge │  ← Free (Lead Magnet)
+                    │   (Attraction Offer)    │
+                    └─────────────────────────┘
+```
+
+**Action:** Don't just sell tours. Build the ladder.
+
+---
+
 ### The 7-Day Hormozi Blitz
 
 If we follow Hormozi's approach, here's what we do:
@@ -891,7 +893,7 @@ If no deposits by Week 3, cancel March and relaunch in June.
 
 ---
 
-## Part 10: OODA Loop — How We Learn Fast (10 minutes)
+## Part 9: OODA Loop — How We Learn Fast (10 minutes)
 
 **What is OODA?**
 
@@ -968,7 +970,7 @@ Don't wait 6 months to learn. Learn in 2 weeks. Then decide. Then test again.
 
 ---
 
-## Part 11: Inversion Thinking — How to Avoid Failure (10 minutes)
+## Part 10: Inversion Thinking — How to Avoid Failure (10 minutes)
 
 **What is Inversion?**
 
@@ -1059,7 +1061,7 @@ If those three don't happen, we're already failing.
 
 ---
 
-## Part 12: What Could Go Wrong (10 minutes)
+## Part 11: What Could Go Wrong (10 minutes)
 
 Let's talk about risks so we're ready.
 
@@ -1123,7 +1125,7 @@ Let's talk about risks so we're ready.
 
 ---
 
-## Part 13: Decisions to Make Today (15 minutes)
+## Part 12: Decisions to Make Today (15 minutes)
 
 Let's leave this call with clear answers.
 
@@ -1138,15 +1140,7 @@ Let's leave this call with clear answers.
 **Who will call the agency?** _______________
 **By when?** _______________
 
-### Decision 2: The Skool Community
-
-| Option | Your Vote |
-|--------|-----------|
-| A: Build Skool community now | |
-| B: Wait until after Fam Trip (recommended) | |
-| C: Test with free WhatsApp group first | |
-
-### Decision 3: The Hormozi Approach
+### Decision 2: The Hormozi Approach
 
 | Question | Your Answer |
 |----------|-------------|
@@ -1154,8 +1148,10 @@ Let's leave this call with clear answers.
 | Can Jaron text 100 people this week? | Yes / No |
 | What guarantee will we offer? | |
 | Will we create a lead magnet by Day 3? | Yes / No |
+| Will we actively offer medical tourism upsell? | Yes / No |
+| Will we create an alumni program for repeat trips? | Yes / No |
 
-### Decision 4: Which Strategy Path?
+### Decision 3: Which Strategy Path?
 
 | Option | Your Vote |
 |--------|-----------|
@@ -1163,7 +1159,7 @@ Let's leave this call with clear answers.
 | B: Director Fam Trip (recommended) | |
 | C: Hybrid approach | |
 
-### Decision 5: Director Targets
+### Decision 4: Director Targets
 
 If we choose Director Fam Trip:
 
@@ -1173,7 +1169,7 @@ If we choose Director Fam Trip:
 | Deadline to confirm them? | (Suggested: Feb 17) |
 | What if we don't hit that number? | (Suggested: pause and replan) |
 
-### Decision 6: Roles and Tasks
+### Decision 5: Roles and Tasks
 
 | Task | Who | By When |
 |------|-----|---------|
@@ -1184,7 +1180,7 @@ If we choose Director Fam Trip:
 | Load director list into Instantly.ai | | |
 | Set up Fizzy Kanban board | | |
 
-### Decision 7: Next Check-In
+### Decision 6: Next Check-In
 
 | Question | Answer |
 |----------|--------|
@@ -1193,7 +1189,7 @@ If we choose Director Fam Trip:
 
 ---
 
-## Part 14: What Success Looks Like (5 minutes)
+## Part 13: What Success Looks Like (5 minutes)
 
 If everything goes well, here's where we could be in one year.
 
@@ -1274,9 +1270,9 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 
 **Strategy:** Reframe March as a Director Fam Trip (6-8 directors at low cost). They experience it, then sell Fall tours to their members.
 
-**Skool Community:** NOT YET. Wait until after Fam Trip (April+). Focus on direct outreach now, not building infrastructure.
-
 **Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). Sell transformation, not trip. Add a guarantee. Use Jaron's network before the agency.
+
+**Money Model Insight:** Don't think "one $3K sale." Think value ladder: Free lead magnet → Core tour → Medical upsell → Repeat trips → Referrals. One customer could be worth $15-25K over time. Build the ladder.
 
 **OODA Insight:** We're making big decisions without watching any market signals. Run small 2-week tests before big bets.
 
