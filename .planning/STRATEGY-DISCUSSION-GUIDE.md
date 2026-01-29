@@ -3,7 +3,7 @@
 **For:** Ryan, Jaron, and Grant
 **Date:** Friday, January 30, 2026
 **Format:** Live discussion (Google Meet/Zoom)
-**Time needed:** About 3 hours (condensed from 3.5 hours)
+**Time needed:** About 3.5 hours (includes Priestley framework discussion)
 
 ---
 
@@ -440,6 +440,129 @@ Only do this if:
 - How do you feel about the 90-day renegotiation idea?
 - What would you do with the money if you canceled?
 - Who will call the agency? When?
+
+---
+
+## Part 5B: The Priestley Framework — Campaign vs. Launch (15 minutes)
+
+**Who is Daniel Priestley?**
+
+Daniel Priestley built multiple businesses and wrote bestsellers including *Oversubscribed*, *Key Person of Influence*, and *24 Assets*. His core insight: **Successful businesses don't "launch" products — they run campaigns that create demand BEFORE offers open.**
+
+His methodology is used by 150,000+ businesses globally through ScoreApp.
+
+---
+
+### The 7-11-4 Rule
+
+Before someone invests $2,500-$4,000, they typically need:
+
+| Requirement | What It Means |
+|-------------|---------------|
+| **7 hours** | Total exposure time to your brand, story, and content |
+| **11 touchpoints** | Different interactions (posts, videos, conversations, etc.) |
+| **4 media types** | Video, text, in-person, social, email, etc. |
+
+**The hard truth:** This takes 3-6 months minimum in most markets.
+
+**The good news:** Tight niche communities (like pickleball) can compress this because trust travels faster through social proof.
+
+---
+
+### The Cinderella Principle
+
+To find 10 perfect clients, you need 100-200 interested parties.
+
+| Our Current State | Priestley Minimum |
+|-------------------|-------------------|
+| ~35 LinkedIn connections | 100-200 interested parties |
+| Zero email subscribers | Critical mass of signals |
+| Zero waiting list | Demand exceeds supply |
+
+**Gap:** Significant. Building to Priestley's prerequisites would take 6-12 months.
+
+---
+
+### Campaign vs. Launch: What's the Difference?
+
+| Launch Mindset | Campaign Mindset |
+|----------------|------------------|
+| "We have a product, let's find buyers" | "We build demand, then release limited supply" |
+| One-at-a-time sales conversations | Batch engagement (10-100 people at once) |
+| Hope for word of mouth | Engineer social proof and FOMO |
+| Sell to whoever says yes | Qualify and select ideal customers |
+| Revenue is the goal | Waiting list is the goal |
+
+**Priestley's Warning:** Half-implementing campaign tactics is WORSE than not using them at all. Artificial scarcity without real demand looks desperate.
+
+---
+
+### Three Timeline Options
+
+| Option | Timeline | Approach | Risk Level |
+|--------|----------|----------|------------|
+| **A: Full Priestley** | 6 months (Fall 2026 launch) | Build audience, create content, engineer demand | Low risk, delayed revenue |
+| **B: Compressed Campaign** | 6-8 weeks | Use tight pickleball community for faster trust | Medium risk |
+| **C: Traditional Launch** | March 23 | Direct sales, no campaign infrastructure | High risk of low conversion |
+
+---
+
+### The "Founding Directors" Campaign (Recommended Hybrid)
+
+**Concept:** Reframe March as recruiting "Founding Directors" publicly, not as a consumer launch.
+
+**How it works:**
+
+| Week | Activity |
+|------|----------|
+| Week 1-2 | Public campaign: "We're recruiting 8 Founding Directors for our first Thailand trip" |
+| Week 3-4 | Selection process (applications, calls, announcements) |
+| Week 5-6 | Pre-trip content ("Meet our Founding Directors") |
+| March | Fam Trip happens — document everything |
+| April | Director testimonials become 7-11-4 content |
+| May-Aug | Fall campaign using director content and networks |
+| Sept-Oct | Fall tours launch to director networks FIRST, then public |
+
+**Why this works:**
+- Creates visible demand ("47 directors applied, 8 selected!")
+- Builds real content from real experience
+- Directors feel honored, not subsidized
+- Consumer prospects have something to watch and wait for
+- March still happens — but framed correctly
+
+---
+
+### WhatsApp vs. Email
+
+**Priestley insight:** Collect signals where your audience already lives.
+
+For affluent 55+ pickleball players, that's often WhatsApp groups with club friends — not email inboxes.
+
+| Email List | WhatsApp Group |
+|------------|----------------|
+| 20-30% open rates | 90%+ read rates |
+| Days to build trust | Hours to build trust |
+| One-way broadcast | Social proof in real-time ("I'm booking!" "Me too!") |
+| Landing page friction | Direct conversation |
+
+**Tactical idea:** Ask each Founding Director to create a "Pickleball Passport Insider" WhatsApp group with their 20 most-likely-to-travel members.
+
+---
+
+### The Key Question for This Meeting
+
+> **Are we running a CAMPAIGN or a LAUNCH?**
+
+If campaign: March 23 is the start of a 6-month journey to Fall tours.
+If launch: March 23 is a direct sales deadline with high risk.
+
+**Warning:** Trying to do both creates incoherent messaging and the worst of both worlds.
+
+**Discussion Questions:**
+- Do we have the patience and resources for a 6-month campaign?
+- Or do we need immediate revenue (which means abandoning Priestley's framework)?
+- Does the "Founding Directors" framing feel authentic or forced?
+- What's our actual warm network size across all channels?
 
 ---
 
@@ -1254,6 +1377,10 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 **OODA Insight:** We're making big decisions without watching any market signals. Run small 2-week tests before big bets.
 
 **Inversion Insight:** The existential question is "Will anyone pay $2,500+ for this?" Get ONE paying commitment in 60 days or we're already failing.
+
+**Priestley Insight:** Before someone invests $3,000+, they need 7 hours of exposure across 11 touchpoints in 4 media types. This takes 3-6 months minimum. March 23 as a "launch" is incompatible with this — but March as a "Founding Directors Campaign" kickoff works perfectly.
+
+**Campaign vs. Launch:** Are we building demand (campaign) or chasing sales (launch)? Pick one. Trying both creates incoherent messaging.
 
 ### The Timeline
 - **Jan 31:** Decide on agency (renegotiate or cancel)
