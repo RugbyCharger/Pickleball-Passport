@@ -903,7 +903,7 @@ It's a way to learn and adapt quickly. The team that learns fastest usually wins
 
 ### Our Problem Right Now
 
-We're making big decisions (agency, Fam Trip, Skool) without watching any signals from the market first.
+We're making big decisions (agency, Fam Trip) without watching any signals from the market first.
 
 **Current loop (too slow):**
 - Observe: Nothing
@@ -992,7 +992,7 @@ Then avoid those things.
 
 5. **Let the agency run wild without clear goals.** Just pay and hope.
 
-6. **Build Skool now and watch it die from emptiness.** A ghost town community proves no one cares.
+6. **Build infrastructure before customers.** Spending time on tools and systems when no one has paid yet.
 
 7. **Have no one responsible for actual sales.** Everyone "markets" but no one asks people to buy.
 
