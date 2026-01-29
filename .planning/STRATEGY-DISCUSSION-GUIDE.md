@@ -185,6 +185,12 @@ Find and analyze:
 - How do they handle the "why book with you vs. DIY?" question?
 - What's their unfair advantage?
 
+**CRITICAL: Read 50+ customer reviews** (TripAdvisor, Google, Facebook)
+- What words do customers use to describe the experience?
+- What made it "worth it" in their own language?
+- What complaints appear repeatedly?
+- Do they mention hosts/guides by name? (Tells us if personality matters)
+
 ### Director Validation Calls (Grant)
 
 Before committing $12-16K to a Fam Trip, test the assumption with 5 phone calls + an ACTION TEST:
@@ -212,6 +218,8 @@ Before committing $12-16K to a Fam Trip, test the assumption with 5 phone calls 
 ### Customer Interview Script (Jaron)
 
 Call 20 people. Not to sell — to learn.
+
+**CRITICAL:** At least 10 of these 20 MUST be your exact target demo (55+, affluent, play pickleball regularly, have traveled internationally). Track exact targets separately from others. If you don't know 10 people in this profile, we need to know that NOW — that itself is important data.
 
 **Script:**
 > "Hey, I'm working on this Thailand pickleball trip idea and I need honest feedback. If I offered an 8-day trip with daily pickleball, pro coaching, nice hotels, all meals — would you pay $2,500 for that? Be honest. If no, I really need to know why."
@@ -269,10 +277,34 @@ If we push hard for March and can't fill it:
 
 **Key insight:** Canceling a tour hurts more than never announcing it.
 
+### The March Decision We're Avoiding
+
+Let's be direct: **March 23 is probably not realistic.**
+
+**The math:**
+- Validation Sprint: 7 days
+- Data analysis + decision: 3 days
+- Director outreach: 14 days
+- Bookings + logistics: 21 days
+- **Total: 45 days of work in a 52-day window**
+
+**If validation shows we need to change the offer or destination, March is dead.**
+
+**Three honest options:**
+
+| Option | Timeline | Risk Level |
+|--------|----------|------------|
+| **Cancel March now** | Relaunch in September with 6+ months notice and validated offer | Low risk, delayed revenue |
+| **Push to May 15** | Gives us 105 days (tight but possible) | Medium risk |
+| **Force March at all costs** | 52 days, no buffer | High risk of low attendance, damaged reputation, financial loss |
+
+**We need to decide THIS in the meeting, not defer it.**
+
 **Discussion Questions:**
 - Does this timeline problem make sense to everyone?
 - How would you feel if we had to cancel March?
 - What's the minimum number of people we need to run the tour?
+- **Which of the three options feels right?**
 
 ---
 
@@ -465,7 +497,7 @@ This is travel industry jargon. Here's how it works:
 | Creates lots of content | |
 | March still happens | |
 
-**Chance of Fall success:** Good (maybe 60-75%)
+**Chance of Fall success:** Unknown (depends on director quality and incentive structure). Conservative estimate: 30-50% if we execute well.
 
 **What's a "Fam Trip"?**
 
@@ -1053,6 +1085,23 @@ If we choose Director Fam Trip:
 | How many directors do we want? | (Suggested: 6-8) |
 | Deadline to confirm them? | (Suggested: Feb 17) |
 | What if we don't hit that number? | (Suggested: pause and replan) |
+
+### Decision 5B: Director Incentive Structure
+
+**What do directors GET for selling to their members?** (Check one or more)
+
+| Option | Your Vote |
+|--------|-----------|
+| Commission model ($200 per booking they generate) | |
+| Free trip for bringing 8+ members | |
+| Club sponsorship ($500 to program fund per 5 bookings) | |
+| Partnership/reputation only (featured as Official Partner) | |
+| Other: _______________ | |
+
+**Who decides:** _______________
+**By when:** _______________
+
+**Why this matters:** Without clear incentives, we're relying on goodwill. That doesn't scale.
 
 ### Decision 6: Roles and Tasks
 
