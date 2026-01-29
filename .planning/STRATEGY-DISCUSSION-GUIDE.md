@@ -3,7 +3,7 @@
 **For:** Ryan, Jaron, and Grant
 **Date:** January 28, 2026
 **Format:** Live discussion (Google Meet/Zoom)
-**Time needed:** About 3 hours
+**Time needed:** About 3.5 hours
 
 ---
 
@@ -117,7 +117,107 @@ We've been taking shots in the dark. Here's what's happened:
 
 ---
 
-## Part 3: The Big Problem (15 minutes)
+## Part 3: Validation Sprint — Before We Do Anything Else (20 minutes)
+
+**IMPORTANT: An executive coach reviewed this guide and identified a critical gap.**
+
+We have lots of strategy but almost no customer validation. We're planning multiple moves ahead without knowing if anyone will pay for this trip.
+
+**The hard truth:** We've been strategizing in a vacuum.
+
+### What We Don't Know (And Need To Find Out)
+
+| Question | Why It Matters | Current Answer |
+|----------|----------------|----------------|
+| How many people has Jaron directly ASKED to book? | Posting isn't asking. We need direct sales attempts. | Unknown |
+| What exact words do people use when they say no? | Objections reveal the real problem | Unknown |
+| Would directors actually sell this to their members? | Our whole B2B2C model depends on this | Assumed, not validated |
+| What are competitors doing that works? | We said "only 2 competitors" but didn't analyze them | Unknown |
+| Is $2,499 the right price? | Maybe it's too low (seems cheap) or too high (barrier) | Assumed |
+
+### The Validation Sprint: Week 1 Tasks
+
+**Before ANY strategy execution, we need data.**
+
+| Who | Task | Deliverable | Deadline |
+|-----|------|-------------|----------|
+| **Jaron** | Call 20 people in his network | Document exact responses: "Would you pay $2,500 for this? Why or why not?" | 7 days |
+| **Ryan** | Research 10 competitors | One-pager: pricing, what's included, reviews, what's working | 5 days |
+| **Grant** | Call 5 potential directors | Document: "Would you sell this to your members? What would make it worth your time?" | 7 days |
+
+**This is not optional.** We can't make good decisions without this information.
+
+### The Decision Gate
+
+After Week 1, we evaluate the data:
+
+| Result | What It Means | Next Step |
+|--------|---------------|-----------|
+| **5+ people say "I'd book that"** | We have real demand | Proceed with strategy |
+| **2-4 people interested** | Demand is weak but exists | Adjust offer before proceeding |
+| **0-1 people interested** | Product problem, not marketing problem | Stop. Fix the offer first. |
+| **Directors say "No way I'm selling this"** | B2B2C model is dead | Pivot to direct-to-consumer only |
+
+### Competitor Research Checklist (Ryan)
+
+Find and analyze:
+
+| Competitor | What to Document |
+|------------|------------------|
+| Golden Triangle Pickleball | Price, duration, what's included, customer reviews |
+| Pickleball Trips | Price, duration, what's included, customer reviews |
+| Any other pickleball travel companies | Same analysis |
+| General Thailand tour operators | How do they position? What do they charge? |
+
+**Key questions to answer:**
+- What are customers saying in reviews (good and bad)?
+- What's included at each price point?
+- How do they handle the "why book with you vs. DIY?" question?
+- What's their unfair advantage?
+
+### Director Validation Calls (Grant)
+
+Before committing $12-16K to a Fam Trip, test the assumption with 5 phone calls:
+
+**Script:**
+> "Hi, I'm helping a company that runs pickleball trips to Thailand. They're considering inviting program directors to experience the trip first, then partner to offer it to members. Would that interest you? What would make it worth your time? Would you actually promote it to your members afterward?"
+
+**What we're listening for:**
+- Enthusiasm vs. polite interest
+- "I'd definitely promote this" vs. "Maybe, depends"
+- What incentives they'd need
+- Red flags (skepticism about the model, concerns about reputation)
+
+**Decision rule:** If 3+ of 5 directors say "absolutely, I'd promote this" → proceed to Fam Trip. If 0-1 → the director model may not work.
+
+### Customer Interview Script (Jaron)
+
+Call 20 people. Not to sell — to learn.
+
+**Script:**
+> "Hey, I'm working on this Thailand pickleball trip idea and I need honest feedback. If I offered an 8-day trip with daily pickleball, pro coaching, nice hotels, all meals — would you pay $2,500 for that? Be honest. If no, I really need to know why."
+
+**Document:**
+- Exact words they use (especially objections)
+- What would make them say yes?
+- Who else might be interested?
+- Would they want spouse/partner to come?
+
+**Patterns to look for:**
+- Price objections → offer problem
+- "I'd do it but not Thailand" → destination problem
+- "I'd need to see reviews first" → trust problem
+- "Sounds amazing, when can I book?" → WE HAVE DEMAND
+
+### Discussion Questions
+
+- Are we willing to pause everything for one week to gather this data?
+- Who commits to which tasks?
+- What happens if the data says "nobody wants this"?
+
+---
+
+## Part 4: The Big Problem (15 minutes)
 
 Here's the hard truth we need to face together.
 
@@ -156,7 +256,7 @@ If we push hard for March and can't fill it:
 
 ---
 
-## Part 4: The Social Media Agency Decision (20 minutes)
+## Part 5: The Social Media Agency Decision (20 minutes)
 
 **This is important. We have a time-sensitive choice to make.**
 
@@ -291,7 +391,7 @@ Only do this if:
 
 ---
 
-## Part 5: The Strategy Options (20 minutes)
+## Part 6: The Strategy Options (20 minutes)
 
 We have three main paths. Let's look at each one.
 
@@ -401,7 +501,7 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 ---
 
-## Part 6: How Option B Would Work (15 minutes)
+## Part 7: How Option B Would Work (15 minutes)
 
 If we choose the Director Fam Trip, here's the step-by-step plan.
 
@@ -495,7 +595,7 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 
 ---
 
-## Part 7: Grant's Role Going Forward (10 minutes)
+## Part 8: Grant's Role Going Forward (10 minutes)
 
 Let's be clear about what Grant does and doesn't do.
 
@@ -534,7 +634,7 @@ Grant's job is to make sure you decide with full information. Not to decide for 
 
 ---
 
-## Part 8: The Hormozi Perspective — What Would Alex Do? (30 minutes)
+## Part 9: The Hormozi Perspective — What Would Alex Do? (30 minutes)
 
 **Who is Alex Hormozi?**
 
@@ -893,7 +993,7 @@ If no deposits by Week 3, cancel March and relaunch in June.
 
 ---
 
-## Part 9: OODA Loop — How We Learn Fast (10 minutes)
+## Part 10: OODA Loop — How We Learn Fast (10 minutes)
 
 **What is OODA?**
 
@@ -970,7 +1070,7 @@ Don't wait 6 months to learn. Learn in 2 weeks. Then decide. Then test again.
 
 ---
 
-## Part 10: Inversion Thinking — How to Avoid Failure (10 minutes)
+## Part 11: Inversion Thinking — How to Avoid Failure (10 minutes)
 
 **What is Inversion?**
 
@@ -1061,7 +1161,7 @@ If those three don't happen, we're already failing.
 
 ---
 
-## Part 11: What Could Go Wrong (10 minutes)
+## Part 12: What Could Go Wrong (10 minutes)
 
 Let's talk about risks so we're ready.
 
@@ -1125,11 +1225,35 @@ Let's talk about risks so we're ready.
 
 ---
 
-## Part 12: Decisions to Make Today (15 minutes)
+## Part 13: Decisions to Make Today (15 minutes)
 
 Let's leave this call with clear answers.
 
-### Decision 1: The Agency
+### Decision 1: Validation Sprint Commitment
+
+**This is the most important decision.** Will we pause strategy execution for one week to gather real data?
+
+| Question | Your Answer |
+|----------|-------------|
+| Will we commit to the Validation Sprint? | Yes / No |
+| Jaron: Will you call 20 people this week? | Yes / No |
+| Ryan: Will you research 10 competitors? | Yes / No |
+| Grant: Will you call 5 directors? | Yes / No |
+
+**Decision Triggers Based on Data:**
+
+| Week | Trigger | If YES | If NO |
+|------|---------|--------|-------|
+| Week 1 (Validation) | 5+ people say "I'd book this" | Proceed to Week 2 | STOP. Fix the offer first. |
+| Week 3 | 2+ deposits collected ($500 each) | Continue | Pivot or pause March |
+| Week 5 | 5+ deposits collected | Full steam ahead | Reduce trip size or cancel |
+| Week 7 | 6+ confirmed participants | Execute March trip | Cancel March, replan for May/June |
+
+**The hard truth:** These triggers protect us from hoping our way into failure.
+
+---
+
+### Decision 2: The Agency
 
 | Option | Your Vote |
 |--------|-----------|
@@ -1140,7 +1264,7 @@ Let's leave this call with clear answers.
 **Who will call the agency?** _______________
 **By when?** _______________
 
-### Decision 2: The Hormozi Approach
+### Decision 3: The Hormozi Approach
 
 | Question | Your Answer |
 |----------|-------------|
@@ -1151,7 +1275,7 @@ Let's leave this call with clear answers.
 | Will we actively offer medical tourism upsell? | Yes / No |
 | Will we create an alumni program for repeat trips? | Yes / No |
 
-### Decision 3: Which Strategy Path?
+### Decision 4: Which Strategy Path?
 
 | Option | Your Vote |
 |--------|-----------|
@@ -1159,7 +1283,7 @@ Let's leave this call with clear answers.
 | B: Director Fam Trip (recommended) | |
 | C: Hybrid approach | |
 
-### Decision 4: Director Targets
+### Decision 5: Director Targets
 
 If we choose Director Fam Trip:
 
@@ -1169,18 +1293,28 @@ If we choose Director Fam Trip:
 | Deadline to confirm them? | (Suggested: Feb 17) |
 | What if we don't hit that number? | (Suggested: pause and replan) |
 
-### Decision 5: Roles and Tasks
+### Decision 6: Roles and Tasks
+
+**Week 1: Validation Sprint (BEFORE other tasks)**
 
 | Task | Who | By When |
 |------|-----|---------|
-| **BUILD DIRECTOR LEAD LIST (20-30 names)** | | |
+| **Call 20 people for customer interviews** | Jaron | 7 days |
+| **Research 10 competitors (one-pager)** | Ryan | 5 days |
+| **Call 5 directors to validate B2B2C model** | Grant | 7 days |
+
+**Week 2+: Strategy Execution (only if validation passes)**
+
+| Task | Who | By When |
+|------|-----|---------|
+| Build director lead list (20-30 names) | | |
 | Call agency about renegotiating | | |
 | Let HeyReach run out, then cancel | | |
 | Write director invitation email | | |
 | Load director list into Instantly.ai | | |
 | Set up Fizzy Kanban board | | |
 
-### Decision 6: Next Check-In
+### Decision 7: Next Check-In
 
 | Question | Answer |
 |----------|--------|
@@ -1189,7 +1323,7 @@ If we choose Director Fam Trip:
 
 ---
 
-## Part 13: What Success Looks Like (5 minutes)
+## Part 14: What Success Looks Like (5 minutes)
 
 If everything goes well, here's where we could be in one year.
 
@@ -1204,13 +1338,31 @@ If everything goes well, here's where we could be in one year.
 | 2027 tours pre-sold | 2-4 |
 | Real testimonials | 15-20 videos |
 
-### Why This Is Achievable
+### Honest Acknowledgment: We Don't Know If This Will Work
 
+**Previous versions of this guide said "60-75% chance of success."**
+
+That was a made-up number. The honest answer: **we don't know yet.**
+
+What we DO know:
 - The market is huge (36 million players)
 - Competition is low (only 2 Thailand operators)
-- Jaron's network and skills are real
-- The director model creates lasting growth
-- We're being smart, not just fast
+- Jaron has real skills and some network
+
+What we DON'T know:
+- Will anyone pay $2,500+ for this trip?
+- Will directors actually sell to their members?
+- Is Thailand the right destination?
+- Is the offer compelling enough?
+
+**The Validation Sprint will give us real answers.** Until then, we're guessing.
+
+### Why This COULD Work
+
+- The market exists
+- Competition is limited
+- We're willing to test and adapt
+- We're being honest about uncertainty
 
 ---
 
@@ -1254,17 +1406,31 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 
 ## Quick Reference: The Plan in One Page
 
+### FIRST: Validation Sprint (Week 1)
+
+**Before ANY strategy execution:**
+
+| Who | Task | Deadline |
+|-----|------|----------|
+| Jaron | Call 20 people: "Would you pay $2,500 for this?" | 7 days |
+| Ryan | Research 10 competitors (pricing, reviews, what works) | 5 days |
+| Grant | Call 5 directors: "Would you sell this to your members?" | 7 days |
+
+**Decision Gate:** If 5+ people say "I'd book this" → proceed. If 0-2 → stop and fix the offer.
+
 ### The Situation
 - March 23 is 8 weeks away
-- Zero bookings
+- Zero bookings, zero customer interviews, zero competitor analysis
 - Typical buyers book 6-18 months ahead
 - 1-year agency contract starts Feb 1 (30-day cooling-off until ~March 1)
 - Jaron has only ~35 LinkedIn connections
-- No pickleball director lead list exists yet (must build first)
+- No pickleball director lead list exists yet
 - HeyReach trial: 10 days left (let run out, then cancel)
 - Instantly.ai credits available (save for director outreach)
 
 ### The Recommendations
+
+**Validation First:** We have lots of strategy but no customer data. Fix that before spending money.
 
 **Agency:** Renegotiate to 90-day sprint OR cancel. Don't stay locked in for 1 year before you have customers.
 
@@ -1325,9 +1491,18 @@ I'll support whatever you decide. That's my job. But I want you to make this cho
 - Never build tech before 10 paying customers
 - Never promise dates you can't deliver
 
+### Decision Triggers (Go/No-Go Gates)
+
+| Week | Trigger | If YES | If NO |
+|------|---------|--------|-------|
+| Week 1 | 5+ people say "I'd book this" | Proceed | STOP. Fix offer. |
+| Week 3 | 2+ deposits ($500 each) | Continue | Pivot or pause |
+| Week 5 | 5+ deposits | Full speed | Reduce or cancel |
+| Week 7 | 6+ confirmed | Execute March | Cancel, replan May/June |
+
 ### The 60-Day Must-Haves
 
-1. **Build director lead list** (can't do anything without this)
+1. **Complete Validation Sprint** (Week 1 customer/competitor/director research)
 2. Get ONE paying commitment (deposit or full)
 3. Make agency decision (90-day or cancel)
 4. Lock in Fam Trip details (who, when, what)
