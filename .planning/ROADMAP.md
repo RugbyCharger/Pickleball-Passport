@@ -63,7 +63,7 @@ See: `.planning/milestones/v2.0-ROADMAP.md`
 **Plans**: 1 plan
 
 Plans:
-- [ ] 15-01-PLAN.md — Post-trip follow-up email sequence (COMM-03)
+- [x] 15-01-PLAN.md — Post-trip follow-up email sequence (COMM-03)
 
 #### Phase 16: SMS Integration
 **Goal**: Guests receive urgent SMS notifications for time-sensitive updates
@@ -107,7 +107,7 @@ Plans:
 | 8 | v1.2 RLS | 2/2 | Complete | 2026-01-27 |
 | 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
-| 15. Email Infrastructure | v2.1 | 0/1 | Planned | - |
+| 15. Email Infrastructure | v2.1 | 1/1 | Complete | 2026-01-30 |
 | 16. SMS Integration | v2.1 | 0/1 | Not started | - |
 | 17. Testimonial Workflow | v2.1 | 0/2 | Not started | - |
 

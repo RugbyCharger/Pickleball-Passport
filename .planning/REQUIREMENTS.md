@@ -9,9 +9,9 @@
 
 ### Email Sequences
 
-- [ ] **COMM-01**: Guest receives payment reminder email 7 days before scheduled installment
-- [ ] **COMM-02**: Guest receives pre-trip nurture sequence (60/30/14/7/1 days before departure)
-- [ ] **COMM-03**: Guest receives post-trip follow-up emails (3/7/14/30/60 days after return)
+- [x] **COMM-01**: Guest receives payment reminder email 7 days before scheduled installment
+- [x] **COMM-02**: Guest receives pre-trip nurture sequence (60/30/14/7/1 days before departure)
+- [x] **COMM-03**: Guest receives post-trip follow-up emails (3/7/14/30/60 days after return)
 
 ### SMS Notifications
 
@@ -54,9 +54,9 @@ Deferred to v2.2 or later (P2/P3 stories):
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| COMM-01 | Phase 15 | Pending |
-| COMM-02 | Phase 15 | Pending |
-| COMM-03 | Phase 15 | Pending |
+| COMM-01 | Phase 15 | Complete |
+| COMM-02 | Phase 15 | Complete |
+| COMM-03 | Phase 15 | Complete |
 | SMS-01 | Phase 16 | Pending |
 | SMS-02 | Phase 16 | Pending |
 | TEST-01 | Phase 17 | Pending |
