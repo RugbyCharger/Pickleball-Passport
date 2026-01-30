@@ -90,11 +90,10 @@ Plans:
   3. Admin can approve, reject, or request edits on testimonials
   4. Approved testimonials display on public testimonials page
   5. Testimonial submission links to existing booking/guest record
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 17-01: Testimonial Submission & Backend
-- [ ] 17-02: Admin Review & Public Display
+- [ ] 17-01-PLAN.md — Verify testimonial workflow integration and complete file uploads
 
 ## Progress
 
@@ -109,7 +108,7 @@ Plans:
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
 | 15. Email Infrastructure | v2.1 | 1/1 | Complete | 2026-01-30 |
 | 16. SMS Integration | v2.1 | 1/1 | Complete | 2026-01-30 |
-| 17. Testimonial Workflow | v2.1 | 0/2 | Not started | - |
+| 17. Testimonial Workflow | v2.1 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-30*
