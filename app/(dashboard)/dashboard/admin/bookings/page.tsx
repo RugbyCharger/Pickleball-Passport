@@ -31,6 +31,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { SendFlightDelaySMSDialog } from '@/components/admin/send-flight-delay-sms-dialog';
+import { SendItineraryChangeSMSDialog } from '@/components/admin/send-itinerary-change-sms-dialog';
 
 type FilterStatus = BookingStatus | 'ALL';
 
@@ -344,34 +346,49 @@ export default function AdminBookingsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        {availableTransitions.length > 0 ? (
-                          <div className="flex items-center justify-end gap-2">
-                            {availableTransitions.map((newStatus) => (
-                              <Button
-                                key={newStatus}
-                                onClick={() => handleUpdateStatus(booking.id, newStatus)}
-                                disabled={updateStatusMutation.isPending}
-                                size="sm"
-                                className={cn(
-                                  'flex items-center gap-1',
-                                  newStatus === 'CONFIRMED' &&
-                                    'bg-green-600 hover:bg-green-700',
-                                  newStatus === 'COMPLETED' && 'bg-blue-600 hover:bg-blue-700',
-                                  newStatus === 'CANCELLED' && 'bg-red-600 hover:bg-red-700'
-                                )}
-                              >
-                                {newStatus === 'CONFIRMED' && <CheckCircle className="h-3 w-3" />}
-                                {newStatus === 'COMPLETED' && <CheckCircle className="h-3 w-3" />}
-                                {newStatus === 'CANCELLED' && <XCircle className="h-3 w-3" />}
-                                {newStatus === 'PENDING_PAYMENT' && <Clock className="h-3 w-3" />}
-                                <ArrowRight className="h-3 w-3" />
-                                {newStatus.replace('_', ' ')}
-                              </Button>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-xs text-gray-500">No actions</span>
-                        )}
+                        <div className="space-y-2">
+                          {availableTransitions.length > 0 ? (
+                            <div className="flex items-center justify-end gap-2">
+                              {availableTransitions.map((newStatus) => (
+                                <Button
+                                  key={newStatus}
+                                  onClick={() => handleUpdateStatus(booking.id, newStatus)}
+                                  disabled={updateStatusMutation.isPending}
+                                  size="sm"
+                                  className={cn(
+                                    'flex items-center gap-1',
+                                    newStatus === 'CONFIRMED' &&
+                                      'bg-green-600 hover:bg-green-700',
+                                    newStatus === 'COMPLETED' && 'bg-blue-600 hover:bg-blue-700',
+                                    newStatus === 'CANCELLED' && 'bg-red-600 hover:bg-red-700'
+                                  )}
+                                >
+                                  {newStatus === 'CONFIRMED' && <CheckCircle className="h-3 w-3" />}
+                                  {newStatus === 'COMPLETED' && <CheckCircle className="h-3 w-3" />}
+                                  {newStatus === 'CANCELLED' && <XCircle className="h-3 w-3" />}
+                                  {newStatus === 'PENDING_PAYMENT' && <Clock className="h-3 w-3" />}
+                                  <ArrowRight className="h-3 w-3" />
+                                  {newStatus.replace('_', ' ')}
+                                </Button>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-500">No actions</span>
+                          )}
+                          {booking.status === 'CONFIRMED' && booking.trip && (
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                              <SendFlightDelaySMSDialog
+                                bookingId={booking.id}
+                                bookingReference={booking.bookingReference}
+                                tripDate={new Date(booking.trip.startDate)}
+                              />
+                              <SendItineraryChangeSMSDialog
+                                bookingId={booking.id}
+                                bookingReference={booking.bookingReference}
+                              />
+                            </div>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
