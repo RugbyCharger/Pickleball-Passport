@@ -11,21 +11,23 @@
 
 **The Core Question:** Should we push for a March 23 consumer launch, or use March strategically to build for Fall?
 
-**The Quick Answer:** Run a Director Fam Trip in March (6-8 directors at low cost). They experience the trip, create content, then sell Fall tours to their members. This works WITH buyer behavior rather than against it.
+**The Quick Answer:** Run a Director Fam Trip in March (6-8 directors at subsidized rate). They pay $2,500-3,000 for a $4,000+ value trip, experience the 3-city circuit (Bangkok → Phuket → Chiang Mai), create content, then sell Fall tours to their members. **Total investment: only $2-3K subsidy (not $12-16K).** This works WITH buyer behavior rather than against it.
 
 **Why This Works:**
 - **Validates before scaling** — Learn what works in a low-stakes environment
 - **Builds sales engine** — Directors become partners who sell for years
 - **Creates content** — Real testimonials from real experience
 - **Preserves March** — Trip still happens, just framed correctly
+- **Much lower financial risk** — Economics dramatically better than initially estimated
 
-**The Three Options:**
+**The Four Options:**
 
 | Option | What It Is | Best For | Risk |
 |--------|-----------|----------|------|
 | **A: Push March Consumer Launch** | Go all-out for 10-12 paying guests | Risk tolerance, need immediate validation | High — works against 6-18 month booking window |
-| **B: Director Fam Trip** | 6-8 directors at $1,500-2,000 each | Building sustainable growth | Low-Medium — $12-16K investment |
+| **B: Director Fam Trip** | 6-8 directors at $2,500-3,000 each ($4,000+ value) | Building sustainable growth | **Low — only $2-3K total subsidy** |
 | **C: Hybrid** | 3-4 consumers + 4-5 directors | Testing both channels | Medium — split focus |
+| **D: Beta Test Group** | 8-12 "founding members" (mix of directors + ideal customers) at early-bird pricing | Product validation + content creation | Medium — needs careful participant selection |
 
 **Critical First Step:** Validation Sprint (Week 1). Before ANY strategy execution, we need data: Jaron calls 20 people, Ryan researches 10 competitors, Jaron calls 5 directors. If 5+ people say "I'd book this," proceed. If 0-2, stop and fix the offer.
 
@@ -165,9 +167,10 @@ We've been taking shots in the dark. Here's what's happened:
 
 | Package | Price | What's Included |
 |---------|-------|-----------------|
-| 8-day trip | $2,499+ | Daily pickleball, nice hotels, airport help, tours |
-| 13-day trip | $3,999+ | More play, tournaments, island trips, coaching |
+| 12-14 day trip | $3,500-4,500 | Daily pickleball, nice hotels, airport help, 3-city circuit (Bangkok → Phuket → Chiang Mai) |
 | Medical add-on | Extra | Dental, cosmetic work (optional) |
+
+**Why 12-14 days?** US travelers face ~24-hour flights each way plus 12-hour time difference. Trip duration reality: 10-14 days minimum makes sense when factoring jet lag recovery and making the long journey worthwhile.
 
 ### The Market
 
@@ -183,6 +186,56 @@ We've been taking shots in the dark. Here's what's happened:
 **The concern:** We have 52 days, zero bookings, and zero customer validation.
 
 **Discussion Question:** Does everyone understand where we are? Any surprises?
+
+---
+
+## Part 2B: Key Operational Updates — What Changed (5 minutes)
+
+**Since the original strategy discussion, several critical operational realities have been validated that fundamentally improve our position:**
+
+### Trip Duration & Pricing Reality
+
+| Original Assumption | Updated Reality |
+|---------------------|-----------------|
+| 7-8 days viable | 10-14 days minimum makes sense for US travelers |
+| $2,499-3,999 pricing | $3,500-4,500 for 12-14 days (better value perception) |
+| Single destination focus | 3-city circuit: Bangkok → Phuket → Chiang Mai |
+
+**Why this matters:**
+- ~24 hour flights each way + 12-hour time difference = jet lag recovery needed
+- Longer trips justify the travel investment better
+- 3-city circuit provides variety and richer experience
+- Higher price point attracts more committed customers
+
+### Fam Trip Economics — THE GAME CHANGER
+
+| Original Estimate | Actual Economics |
+|-------------------|------------------|
+| $12,000-16,000 total subsidy | **$2,000-3,000 total subsidy** |
+| Directors get "free" trip | Directors pay $2,500-3,000 for $4,000+ value |
+| High financial risk | **Low financial risk** |
+
+**Why this changes everything:**
+- Directors have real skin in the game ($2,500-3,000 commitment = serious participants)
+- We only subsidize ~$1,000-1,500 per director (not full trip cost)
+- Option B (Director Fam Trip) is now LOW RISK instead of medium-high risk
+- Viable even on very tight budget
+- Directors value the experience appropriately (not "free vacation" mentality)
+
+### New Strategic Options Enabled
+
+With better economics and trip format clarity, new options emerge:
+
+| Option | What It Is |
+|--------|-----------|
+| **Beta Test Group** | 8-12 mixed participants (directors + ideal customers) at early-bird pricing |
+| **Split Model** | Offer both 8-9 day "Express" and 12-14 day "Immersive" trips |
+| **Retirement Reconnaissance** | Position 12-14 day trip as Thailand retirement scouting for 55+ demographic |
+
+**Discussion Questions:**
+- Does the 12-14 day format feel right for your vision?
+- Does the $2-3K Fam Trip investment change your risk tolerance?
+- Which new option (if any) resonates most?
 
 ---
 
@@ -202,7 +255,7 @@ We have lots of strategy but almost no customer validation. We're planning multi
 | What exact words do people use when they say no? | Objections reveal the real problem | Unknown |
 | Would directors actually sell this to their members? | Our whole B2B2C model depends on this | Assumed, not validated |
 | What are competitors doing that works? | We said "only 2 competitors" but didn't analyze them | Unknown |
-| Is $2,499 the right price? | Maybe it's too low (seems cheap) or too high (barrier) | Assumed |
+| Is $3,500-4,500 the right price for 12-14 days? | Needs validation against perceived value and competitor pricing | Assumed |
 
 ### The Validation Sprint: Week 1 Tasks
 
@@ -254,10 +307,10 @@ Find and analyze:
 
 ### Director Validation Calls (Jaron)
 
-Before committing $12-16K to a Fam Trip, test the assumption with 5 phone calls + an ACTION TEST:
+Before committing to a Fam Trip, test the assumption with 5 phone calls + an ACTION TEST:
 
 **Script:**
-> "Hi, I'm helping a company that runs pickleball trips to Thailand. They're considering inviting program directors to experience the trip first, then partner to offer it to members. Would that interest you? What would make it worth your time?"
+> "Hi, I'm helping a company that runs pickleball trips to Thailand — 12-14 day experiences across Bangkok, Phuket, and Chiang Mai. They're considering inviting program directors to experience the trip first at a subsidized rate (around $2,500-3,000 for a $4,000+ value trip), then partner to offer it to members. Would that interest you? What would make it worth your time?"
 
 **Then the action test:**
 > "I have a one-page flyer about the trip. Would you be willing to share it with your group this week — not to sell anything, just to gauge interest? This would really help us understand if the concept resonates."
@@ -283,7 +336,7 @@ Call 20 people. Not to sell — to learn.
 **CRITICAL:** At least 10 of these 20 MUST be your exact target demo (55+, affluent, play pickleball regularly, have traveled internationally). Track exact targets separately from others. If you don't know 10 people in this profile, we need to know that NOW — that itself is important data.
 
 **Script:**
-> "Hey, I'm working on this Thailand pickleball trip idea and I need honest feedback. If I offered an 8-day trip with daily pickleball, pro coaching, nice hotels, all meals — would you pay $2,500 for that? Be honest. If no, I really need to know why."
+> "Hey, I'm working on this Thailand pickleball trip idea and I need honest feedback. If I offered a 12-14 day trip across Bangkok, Phuket, and Chiang Mai with daily pickleball, pro coaching, nice hotels, all meals — would you pay $3,500-4,500 for that? Be honest. If no, I really need to know why."
 
 **Document:**
 - Exact words they use (especially objections)
@@ -311,13 +364,19 @@ Here's the hard truth we need to face together.
 
 ### How People Buy Travel
 
-Most people who buy $2,500 - $4,000 trips plan ahead. Here's what research shows:
+Most people who buy $3,500 - $4,500 trips plan ahead. Here's what research shows:
 
 | When People Book | How Far Ahead |
 |------------------|---------------|
 | Most common | 8-12 months before the trip |
 | Luxury tours | 6-18 months before |
 | Last minute | Usually needs big discounts |
+
+**Trip Duration Reality for US Travelers:**
+- Flights from US to Thailand: ~24 hours total travel time (including connections)
+- Time zone difference: 12 hours (jet lag recovery needed)
+- **Practical minimum:** 10-14 days makes economic and experiential sense
+- Shorter trips (7-8 days) compress the experience too much given travel investment
 
 ### The Math Problem
 
@@ -544,13 +603,13 @@ This is travel industry jargon. Here's how it works:
 
 ### Option B: Director Fam Trip (Recommended)
 
-**What it means:** Invite 6-8 pickleball program directors to Thailand at a low cost. They experience the trip. Then they sell Fall tours to their members.
+**What it means:** Invite 6-8 pickleball program directors to Thailand at a subsidized rate. They experience the 12-14 day trip across Bangkok, Phuket, and Chiang Mai. Then they sell Fall tours to their members.
 
 | Pros | Cons |
 |------|------|
 | Works with how people buy | Delays paying customers to Fall |
 | Builds relationships that last | Takes work to find and invite directors |
-| Less risky financially | Feels less exciting than a "real" launch |
+| **Much lower financial risk than previously thought** | Feels less exciting than a "real" launch |
 | Creates lots of content | |
 | March still happens | |
 
@@ -558,9 +617,21 @@ This is travel industry jargon. Here's how it works:
 
 **What's a "Fam Trip"?**
 
-"Fam" means "familiarization." Travel companies do this all the time. They bring travel agents on free or cheap trips. The agents try it. Then they sell it to their clients.
+"Fam" means "familiarization." Travel companies do this all the time. They bring travel agents on subsidized trips. The agents try it. Then they sell it to their clients.
 
 We'd do the same with pickleball directors. They run programs with hundreds of members. If they love the trip, they'll tell their members.
+
+**The REVISED economics (dramatically better than initial estimates):**
+- Directors pay: $2,500-3,000 each
+- Actual trip value: $4,000+ (12-14 days, 3-city circuit)
+- Our subsidy per director: ~$1,000-1,500 (NOT the full trip cost)
+- **Total investment for 6-8 directors: $2,000-3,000** (NOT $12-16K as previously estimated)
+
+**Why this changes everything:**
+- Much lower risk than initially calculated
+- Directors feel they're getting genuine value (not a "free" handout)
+- Skin in the game ($2,500-3,000) ensures serious participants
+- Viable even on tight budget
 
 **The math:**
 - 6 directors each have 200-500 members
@@ -570,7 +641,7 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 **What we'd need to do:**
 - Find 20-30 directors who might be interested
-- Invite them to March trip at low cost ($1,800-2,000)
+- Invite them to March trip at subsidized rate ($2,500-3,000 for $4,000+ value)
 - They agree to promote Fall tours if they like it
 - We capture lots of video and photos during the trip
 - Fall tours (September/October) are the real launch
@@ -589,7 +660,30 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 ---
 
-### Option D: Founding Directors Campaign (Priestley-Style Hybrid)
+### Option D: Beta Test Group
+
+**What it means:** Position March as a "Beta Test" with 8-12 carefully selected participants (mix of directors + ideal target customers) at early-bird pricing.
+
+| Pros | Cons |
+|------|------|
+| Tests product with real paying customers | Still need validation that people will pay |
+| Creates authentic content from diverse perspectives | Harder to recruit than pure director fam |
+| Validates 12-14 day format and 3-city circuit | Split focus between directors and consumers |
+| "Beta" framing sets expectation for refinement | Requires careful participant screening |
+
+**Pricing structure:**
+- Beta participants: $3,000-3,500 (early-bird discount from $4,000-4,500)
+- Position as "founding members" or "charter group"
+- Get feedback, create content, build referral engine
+
+**Framework alignment:**
+- **OODA:** Maximum learning from diverse participant types
+- **Priestley:** Creates founding narrative for future campaigns
+- **Hormozi:** Risk reversal through "beta" framing + discount
+
+---
+
+### Option E: Founding Directors Campaign (Priestley-Style Hybrid)
 
 **What it means:** Run Option B (Fam Trip) but with a specific PUBLIC positioning: You're recruiting "Founding Directors" for your pilot program.
 
@@ -615,7 +709,35 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 ---
 
-### What We Recommend: Option B (or Option D if the narrative fits)
+### Option F: Split Duration Model
+
+**What it means:** Offer two distinct trip lengths to serve different customer segments.
+
+| Trip Type | Duration | Price | Target Customer |
+|-----------|----------|-------|-----------------|
+| **Express** | 8-9 days | $2,800-3,200 | Working professionals with limited vacation time |
+| **Immersive** | 12-14 days | $3,500-4,500 | Retirees, sabbatical takers, "reconnaissance" travelers |
+
+**Why this could work:**
+- Acknowledges that not everyone can take 2 weeks off
+- Express trip focuses on 1-2 cities (Bangkok + Phuket OR Chiang Mai)
+- Immersive trip delivers full 3-city circuit
+- Different value propositions for different life stages
+
+**Risks:**
+- More complex operations
+- Could dilute brand positioning
+- Harder to fill two trip types vs. one
+
+**Retirement Reconnaissance Positioning:**
+- Frame 12-14 day trip as "retirement scouting" for 55+ demographic
+- "Try Thailand as a potential retirement destination while playing pickleball"
+- Adds medical tourism tour, cost-of-living discussions, expat community introductions
+- Differentiates from pure "vacation" positioning
+
+---
+
+### What We Recommend: Option B (or Option E if the narrative fits, or Option D for product validation)
 
 **Why?**
 
@@ -625,7 +747,9 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 3. **March still happens.** We're not giving up on the date. We're using it smarter.
 
-4. **Less risk.** If March doesn't fill with directors, we're out $12-16K. If March doesn't fill with consumers, we might lose more AND hurt our reputation.
+4. **Much lower risk than originally thought.** If March doesn't fill with directors, we're out only $2-3K (not $12-16K as originally estimated). If March doesn't fill with consumers, we might lose more AND hurt our reputation.
+
+5. **Directors are invested.** At $2,500-3,000 per person, they have real skin in the game. This isn't a "free vacation" — it's a serious business partnership opportunity.
 
 **Discussion Questions:**
 - How does each option feel to you?
@@ -664,9 +788,16 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 - Someone films everything (freelancer or us)
 - Get video testimonials from directors
 - Document the pickleball, the food, the culture
+- Test the 3-city circuit: Bangkok → Phuket → Chiang Mai
 - Debrief: What worked? What should we improve?
 
-**Investment:** About $12,000 - $16,000 (after what directors pay)
+**Investment:** About $2,000 - $3,000 total subsidy (directors pay $2,500-3,000 each for a $4,000+ value trip)
+
+**Why this economics works:**
+- Directors contribute meaningfully ($2,500-3,000 = serious commitment)
+- We only subsidize the difference (~$1,000-1,500 per person)
+- Much lower risk than full-cost fam trips
+- Directors value it appropriately (not "free vacation" mindset)
 
 ---
 
@@ -782,20 +913,22 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 
 | Part | Our Score | Why |
 |------|-----------|-----|
-| Dream Outcome | 3/10 | "Pickleball in Thailand" is vague |
+| Dream Outcome | 3/10 | "Pickleball in Thailand" is vague (needs transformation focus) |
 | Belief It Will Work | 2/10 | Zero testimonials, no proof |
 | Time to Get Result | 4/10 | Trust takes longer than 52 days |
-| Effort Required | 2/10 | $3,000 + flights + time off = huge commitment |
+| Effort Required | 2/10 | $3,500-4,500 + flights + 12-14 days + time off = huge commitment |
 
 **Our Value Score: 0.75** (Needs to be 10+). **This is why we have zero bookings.**
+
+**Key update:** 12-14 day trip at $3,500-4,500 is a BIGGER commitment than originally priced, which makes the Value Equation even more critical. We MUST nail the transformation story and risk reversal.
 
 ---
 
 ### The Fix: Sell Transformation, Not Trip
 
-**Current Offer:** "8-day pickleball trip to Thailand. $2,499."
+**Current Offer:** "12-14 day pickleball trip to Thailand. $3,500-4,500."
 
-**Better Offer:** "Return from Thailand playing your best pickleball ever — or don't pay a dime."
+**Better Offer:** "Transform your game across Bangkok, Phuket, and Chiang Mai — or don't pay a dime."
 
 **Key changes needed:**
 1. Add a real guarantee (risk reversal)
@@ -888,7 +1021,7 @@ We're making big decisions (Fam Trip) without watching any signals from the mark
 |--------|---------------|--------------|
 | Director interest | Do they actually want Fam Trip? | Count serious inquiries, not just "cool idea" |
 | Content engagement | What topics resonate? | Track shares, comments, saves |
-| Pricing feedback | Is $2,499-$3,999 right? | Survey responses |
+| Pricing feedback | Is $3,500-$4,500 right? | Survey responses |
 | Email signups | Are people interested enough to give email? | Signup count |
 | Website behavior | What do visitors look at? | Time on page, clicks |
 
@@ -981,7 +1114,7 @@ Then avoid those things.
 | What We Assume | Risk Level | Reality Check |
 |----------------|------------|---------------|
 | Directors will bring their communities | HIGH | Most influencers have likes, not buyers |
-| $2,499-$3,999 is the right price | HIGH | No one has paid yet |
+| $3,500-$4,500 is the right price | HIGH | No one has paid yet |
 | Fam Trip → Fall bookings works | MEDIUM | 6-month gap is long |
 | There are enough good directors | MEDIUM | Do they exist and want this? |
 
@@ -1060,16 +1193,18 @@ Let's talk about risks so we're ready.
 
 | Item | Cost |
 |------|------|
-| March Fam Trip (net) | $12,000 - $16,000 |
+| March Fam Trip (net subsidy) | $2,000 - $3,000 |
 
 **Question for Ryan:** Can we afford the worst case? What's our runway?
 
-### Financial Breakeven (Rough Estimate)
+### Financial Breakeven (Revised Estimate)
 
 | Scenario | Math | Breakeven |
 |----------|------|-----------|
-| **Fall Tour** | At $3,000/guest with ~40% margin, we need revenue > costs | ~8-10 guests per tour to break even |
-| **Fam Trip Investment** | $12-16K net cost, recovered if Fall tours generate $30K+ profit | 2 Fall tours with 12+ guests each |
+| **Fall Tour** | At $3,500-4,500/guest with ~35-40% margin, we need revenue > costs | ~8-10 guests per tour to break even |
+| **Fam Trip Investment** | $2-3K net subsidy, recovered if Fall tours generate $10K+ profit | 1 Fall tour with 10+ guests recovers investment |
+
+**Key revision:** Fam Trip economics are FAR better than initially estimated. At only $2-3K total subsidy (not $12-16K), this is a low-risk learning investment.
 
 **Note:** These are rough estimates. We lack validated cost data. The Validation Sprint will help us understand if customers exist before we refine financial projections.
 
@@ -1124,8 +1259,11 @@ Let's leave this call with clear answers.
 | Option | Your Vote |
 |--------|-----------|
 | A: Push for March consumer launch | |
-| B: Director Fam Trip (recommended) | |
+| B: Director Fam Trip (**recommended — only $2-3K investment**) | |
 | C: Hybrid approach | |
+| D: Beta Test Group (mixed participants) | |
+| E: Founding Directors Campaign (public positioning variant of B) | |
+| F: Split Duration Model (offer both 8-9 and 12-14 day trips) | |
 
 ### Decision 4: Director Targets
 
@@ -1249,7 +1387,11 @@ But here's the thing: **A smart change is not failure. A forced launch that flop
 
 The Director Fam Trip isn't retreat. It's strategy. You're trading a small chance at March revenue for a much better chance at Fall revenue AND a lasting sales network.
 
-I'll support whatever you decide. That's my job. But I want you to make this choice with clear eyes.
+**And the economics are far better than we initially thought.** At only $2-3K total investment (not $12-16K), this is a low-risk learning opportunity, not a big bet. Directors paying $2,500-3,000 each means they're genuinely invested, not treating it as a free vacation.
+
+The 12-14 day format across three cities gives you real operational learning. The retirement reconnaissance angle opens a powerful positioning for your 55+ demographic. This is strategic infrastructure building, not expense.
+
+I'll support whatever you decide. That's my job. But I want you to make this choice with clear eyes — and the updated numbers make Option B dramatically more attractive than it looked before.
 
 ### Questions to End On
 
@@ -1293,21 +1435,33 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - Instantly.ai credits available (save for director outreach)
 - **Key bias:** Thailand assumed but unvalidated vs. other destinations
 
+### Key Operational Updates
+- **Trip duration:** 12-14 days minimum for US travelers (~24hr flights + jet lag)
+- **Pricing:** $3,500-4,500 (not $2,499-3,999)
+- **Route:** 3-city circuit: Bangkok → Phuket → Chiang Mai
+- **Fam Trip economics:** Only $2-3K total subsidy (directors pay $2,500-3,000 each)
+- **Risk profile:** Dramatically lower than originally estimated
+
 ### The Recommendations
 
 **Validation First:** We have lots of strategy but no customer data. Fix that before spending money.
 
-**Strategy:** Reframe March as a Director Fam Trip (Option B) or a "Founding Directors Campaign" (Option D — same mechanics, different public narrative). 6-8 directors at low cost experience it, then sell Fall tours to their members.
+**Strategy:** Reframe March as a Director Fam Trip (Option B) or a "Founding Directors Campaign" (Option E — same mechanics, different public narrative). 6-8 directors at $2,500-3,000 (subsidized from $4,000+) experience it, then sell Fall tours to their members. **Total investment: only $2-3K.**
 
-**Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). Sell transformation, not trip. Add a guarantee. Use Jaron's network first.
+**New Options Available:**
+- **Option D (Beta Test):** 8-12 mixed participants at early-bird pricing for product validation
+- **Option F (Split Model):** Offer both 8-9 day "Express" and 12-14 day "Immersive" trips
+- **Retirement Reconnaissance:** Position 12-14 day trip as Thailand retirement scouting (powerful for 55+ demographic)
 
-**Money Model Insight:** Don't think "one $3K sale." Think value ladder: Free lead magnet → Core tour → Medical upsell → Repeat trips → Referrals. One customer could be worth $15-25K over time. Build the ladder.
+**Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). At $3,500-4,500 for 12-14 days, the commitment is even bigger — you MUST sell transformation, not trip. Add a guarantee. Use Jaron's network first.
+
+**Money Model Insight:** Don't think "one $4K sale." Think value ladder: Free lead magnet → Core tour → Medical upsell → Retirement reconnaissance → Repeat trips → Referrals. One customer could be worth $18-30K+ over time. Build the ladder.
 
 **OODA Insight:** We're making big decisions without watching any market signals. Run small 2-week tests before big bets.
 
-**Inversion Insight:** The existential question is "Will anyone pay $2,500+ for this?" Get ONE paying commitment in 60 days or we're already failing.
+**Inversion Insight:** The existential question is "Will anyone pay $3,500-4,500 for this?" Get ONE paying commitment in 60 days or we're already failing.
 
-**Priestley Insight:** Before someone invests $3,000+, they need 7 hours of exposure across 11 touchpoints in 4 media types. This takes 3-6 months minimum. March 23 as a "launch" is incompatible with this — but March as a "Founding Directors Campaign" kickoff works perfectly.
+**Priestley Insight:** Before someone invests $4,000+, they need 7 hours of exposure across 11 touchpoints in 4 media types. This takes 3-6 months minimum. March 23 as a "launch" is incompatible with this — but March as a "Founding Directors Campaign" kickoff works perfectly.
 
 **Campaign vs. Launch:** Are we building demand (campaign) or chasing sales (launch)? Pick one. Trying both creates incoherent messaging.
 
@@ -1328,8 +1482,8 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - **March 23:** Fam Trip
 
 ### The Investment (Recommended Path)
-- Fam Trip: $12-16K net
-- Target Fall revenue: $84-128K
+- Fam Trip: $2-3K net subsidy (directors pay $2,500-3,000 each)
+- Target Fall revenue: $105-162K (based on 30-36 guests at $3,500-4,500)
 
 ### The Hormozi 7-Day Blitz
 
@@ -1419,21 +1573,23 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 ## Grand Slam Offer Construction
 
 **Current Offer:**
-> "8-day pickleball trip to Thailand. $2,499."
+> "12-14 day pickleball trip to Thailand. $3,500-4,500."
 
 **Hormozi-Style Grand Slam:**
-> "Return from Thailand playing your best pickleball ever — or don't pay a dime."
+> "Transform your game across three Thai cities — or don't pay a dime."
 >
 > **What You Get:**
-> - 12 hours pro coaching from Jaron + guest pros ($2,400 value)
-> - Video analysis of your game, Day 1 vs Day 7 ($500 value)
+> - 18+ hours pro coaching from Jaron + guest pros ($3,600 value)
+> - Video analysis of your game, Day 1 vs Day 14 ($500 value)
 > - Personalized improvement plan ($300 value)
-> - 3 competitive tournaments ($600 value)
-> - All accommodations, meals, transport ($1,800 value)
+> - 3-city experience: Bangkok → Phuket → Chiang Mai ($800 value)
+> - 4+ competitive tournaments ($800 value)
+> - All accommodations, meals, transport for 12-14 days ($2,800 value)
 > - Lifetime access to alumni community ($500 value)
+> - Optional: Medical tourism coordination (dental, cosmetic)
 >
-> **Total Value: $6,100**
-> **Your Investment: $2,997**
+> **Total Value: $9,300+**
+> **Your Investment: $3,997**
 >
 > **The Guarantee:** If you don't measurably improve your game, full refund.
 
@@ -1511,12 +1667,13 @@ A **Money Model** is a system where one customer generates enough profit to pay 
 | Stage | Offer | Price | Purpose |
 |-------|-------|-------|---------|
 | **Attraction** | "7-Day Power Serve Challenge" | Free | Capture emails |
-| **First Sale** | Thailand Tour | $2,499 - $3,999 | Core product |
+| **First Sale** | Thailand Tour (12-14 days) | $3,500 - $4,500 | Core product |
 | **Upsell 1** | Medical Tourism Add-On | +$2,000 - $15,000 | Dental, cosmetic |
 | **Upsell 2** | Private Coaching Package | +$500 | Extra 1-on-1 |
 | **Upsell 3** | Extended Stay | +$300/day | More time |
+| **Upsell 4** | Retirement Reconnaissance Package | +$800 | Expat community intro, cost-of-living tour, property viewings |
 | **Continuity** | Alumni Membership | Free (for now) | Build referrals |
-| **Repeat** | Annual Reunion Trip | $2,499+ | Bring back |
+| **Repeat** | Annual Reunion Trip | $3,500+ | Bring back |
 | **Referral** | Bring-a-Friend Bonus | $500 credit | Turn to salespeople |
 
 **For Affluent 55+ Retirees:**
@@ -1525,7 +1682,13 @@ A **Money Model** is a system where one customer generates enough profit to pay 
 - They have social circles — they have friends who also play
 - They have health concerns — medical tourism is valuable
 
-**Key Insight:** One customer could be worth $15,000-25,000 with upsells and referrals.
+**Key Insight:** One customer could be worth $18,000-30,000+ with upsells and referrals.
+
+**Retirement reconnaissance upsell is particularly powerful for 55+ demographic:**
+- Positions trip as investment research, not just vacation
+- Justifies 12-14 day duration (needed for proper scouting)
+- Opens door to ongoing consulting/concierge services
+- Creates referrals within retirement planning communities
 
 ---
 
@@ -1533,7 +1696,7 @@ A **Money Model** is a system where one customer generates enough profit to pay 
 
 ```
                     ┌─────────────────────────┐
-                    │   Annual Reunion Trip   │  ← Repeat ($2,499+)
+                    │   Annual Reunion Trip   │  ← Repeat ($3,500+)
                     └───────────┬─────────────┘
                                 │
                     ┌───────────▼─────────────┐
@@ -1541,7 +1704,7 @@ A **Money Model** is a system where one customer generates enough profit to pay 
                     └───────────┬─────────────┘
                                 │
                     ┌───────────▼─────────────┐
-                    │   Thailand Tour         │  ← Core Offer ($2,499-$3,999)
+                    │   Thailand Tour         │  ← Core Offer ($3,500-$4,500)
                     └───────────┬─────────────┘
                                 │
                     ┌───────────▼─────────────┐
