@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.1 Communication & Content — Phase 15 Complete
+**Current focus:** v2.1 Communication & Content — Phase 16 Complete
 
 ## Current Position
 
-Phase: 15 of 17 (Email Infrastructure)
+Phase: 16 of 17 (SMS Integration)
 Plan: 1 of 1 complete
 Status: Phase complete
-Last activity: 2026-01-30 — Completed 15-01-PLAN.md (Post-Trip Email Sequence)
+Last activity: 2026-01-30 — Completed 16-01-PLAN.md (SMS Integration)
 
-Progress: [####################] 100% v2.0 | [###       ] 33% v2.1
+Progress: [####################] 100% v2.0 | [######    ] 67% v2.1
 
 ## Milestone History
 
@@ -45,7 +45,7 @@ See: .planning/MILESTONES.md
 
 ## Performance Metrics
 
-Aggregate across all milestones: 43 plans completed.
+Aggregate across all milestones: 44 plans completed.
 
 ## Accumulated Context
 
@@ -55,7 +55,9 @@ All decisions recorded in PROJECT.md Key Decisions table.
 
 Recent decisions affecting v2.1:
 - SendGrid integration exists and works (booking confirmations)
-- Twilio stubs exist but not wired up (ready for SMS integration)
+- Twilio SMS now fully integrated (flight delays, itinerary changes, emergency alerts)
+- SMS preference checking for non-emergency (canSendNotification with smsEnabled)
+- Emergency alerts bypass preferences (safety override)
 - Testimonials table exists in Prisma schema
 - Mobile app has testimonial submission UI (needs backend workflow)
 - Post-trip emails: 3/7/14/30/60 day milestones after trip ends
@@ -71,14 +73,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-30 12:05 UTC
-Stopped at: Completed 15-01-PLAN.md (Post-Trip Email Sequence)
+Last session: 2026-01-30 12:22 UTC
+Stopped at: Completed 16-01-PLAN.md (SMS Integration)
 Resume file: None
 
 ## Next Steps
 
 **v2.1 Communication & Content — IN PROGRESS**
 
-Phase 15 (Email Infrastructure) complete.
+Phase 16 (SMS Integration) complete.
 
-Next action: `/gsd:plan-phase 16` to plan SMS Integration
+Next action: `/gsd:plan-phase 17` to plan Testimonial Content workflow
