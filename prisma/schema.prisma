@@ -539,6 +539,9 @@ model Booking {
   // E11-S4: Pre-Trip Email Sequence
   preTripEmailsSent String[] @default([]) // ["60_DAYS", "30_DAYS", "14_DAYS", "7_DAYS", "1_DAY"]
 
+  // E15: Post-Trip Email Sequence
+  postTripEmailsSent String[] @default([]) // ["3_DAYS", "7_DAYS", "14_DAYS", "30_DAYS", "60_DAYS"]
+
   // E11-S10: WhatsApp Group Integration
   whatsappInvitationSentAt DateTime? // When WhatsApp invitation was sent
   whatsappGroupJoinedAt    DateTime? // When guest clicked join link
