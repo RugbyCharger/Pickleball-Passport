@@ -11,7 +11,7 @@
 
 **The Core Question:** Should we push for a March 23 consumer launch, or use March strategically to build for Fall?
 
-**The Quick Answer:** Run a Director Fam Trip in March (6-8 directors at subsidized rate). They pay $2,500-3,000 for a $4,000+ value trip, experience the 3-city circuit (Bangkok → Phuket → Chiang Mai), create content, then sell Fall tours to their members. **Total investment: only $2-3K subsidy (not $12-16K).** This works WITH buyer behavior rather than against it.
+**The Quick Answer:** Run a Director Fam Trip in March (6-8 directors at subsidized rate). They pay $2,500-3,000 to experience the full 3-city circuit—including training at Jaron's Suk Space facility in Bangkok—a $4,000+ value trip. Hosted by two American expats who live this lifestyle, they create authentic content, then sell Fall tours to their members. **Total investment: only $2-3K subsidy (not $12-16K).** This works WITH buyer behavior rather than against it.
 
 **Why This Works:**
 - **Validates before scaling** — Learn what works in a low-stakes environment
@@ -33,6 +33,7 @@
 
 **This Guide's Structure:**
 - **Parts 1-2:** Context (who we are, where we stand)
+- **Part 2B-2C:** Operational updates + our unique advantages (Suk Space, expat story)
 - **Part 3:** Validation Sprint (data gathering)
 - **Part 4:** The problems (timeline)
 - **Parts 5-6:** Strategic frameworks + options
@@ -93,19 +94,20 @@ Let's start by being clear about our roles.
 |--------|-----------|--------------|
 | **Jaron** | The Face | The public person. Posts on social media. Leads trips. Talks to customers. Semi-pro player with sponsors. |
 | **Ryan** | Operations | Makes things run. Jaron's cousin. |
-| **Grant** | Adviser \| Strategy + Support | Behind-the-scenes support. Helps Ryan with operations. Gives advice on big decisions. Voice of reason. |
+| **Grant** | Adviser \| Strategy + Support | Strictly behind-the-scenes. Based in Phuket. Helps Ryan with operations. Gives advice on big decisions. No content creation, no public-facing role. |
 
 ### How We Work Together
 
-- **Jaron** is out front. People see him first. He handles all outbound work — phone calls, Google Meets, emails, etc.
+- **Jaron** is out front. People see him first. He handles all outbound work — phone calls, Google Meets, emails, etc. He creates all content.
 - **Ryan** is behind the scenes. He makes sure things happen.
-- **Grant** operates behind the scenes as an adviser (strategy + support), helping Ryan with operations.
+- **Grant** operates strictly behind the scenes as an adviser (strategy + support), helping Ryan with operations. Based in Phuket, providing on-the-ground support for the beach segment.
 
 Grant's job is NOT to tell you what to do. His job is to:
 1. Help you see the full picture
 2. Ask questions you might not ask yourselves
 3. Keep us grounded when we get too excited
 4. Support Ryan with the day-to-day operations work
+5. **NOT:** Create content, appear in marketing, or have any public-facing role
 
 **Discussion Question:** Does this feel right to everyone? Any changes needed?
 
@@ -165,12 +167,19 @@ We've been taking shots in the dark. Here's what's happened:
 
 ### Our Product
 
+**The Core Offer:** Join two Americans living the Thailand pickleball dream—12-14 days training at Jaron's Suk Space facility in Bangkok, playing Phuket's beaches, and exploring Chiang Mai's emerging scene.
+
 | Package | Price | What's Included |
 |---------|-------|-----------------|
-| 12-14 day trip | $3,500-4,500 | Daily pickleball, nice hotels, airport help, 3-city circuit (Bangkok → Phuket → Chiang Mai) |
+| 12-14 day trip | $3,500-4,500 | Training at Suk Space (Jaron's facility), 3-city circuit (Bangkok → Phuket → Chiang Mai), nice hotels, all meals, domestic flights, daily pickleball |
 | Medical add-on | Extra | Dental, cosmetic work (optional) |
 
 **Why 12-14 days?** US travelers face ~24-hour flights each way plus 12-hour time difference. Trip duration reality: 10-14 days minimum makes sense when factoring jet lag recovery and making the long journey worthwhile.
+
+**Why we're different:**
+- **Owner-hosted:** Jaron owns part of Suk Space—you're training at HIS facility
+- **American expat guides:** Jaron & Ryan are US-born, living in Thailand
+- **Not a tour company:** We're sharing the life we actually live
 
 ### The Market
 
@@ -236,6 +245,66 @@ With better economics and trip format clarity, new options emerge:
 - Does the 12-14 day format feel right for your vision?
 - Does the $2-3K Fam Trip investment change your risk tolerance?
 - Which new option (if any) resonates most?
+
+---
+
+## Part 2C: Our Unique Advantages — Why We're Different (10 minutes)
+
+**This is critical positioning we haven't been leveraging. These aren't just features—they're why customers should choose US over any other Thailand pickleball trip.**
+
+### Jaron's Suk Space Investment
+
+| Asset | Why It Matters |
+|-------|----------------|
+| **Brand-new Bangkok pickleball facility** | Not renting space—Jaron owns part of this facility |
+| **Built-in venue for training intensive** | Days 1-3 happen at HIS place, not a random court |
+| **Existing member base** | Word-of-mouth already happening among Suk Space players |
+| **Credibility anchor** | "Come train at MY facility" is completely different from "we'll find courts" |
+
+**The pitch:** "You're not joining a tour group—you're training at the facility Jaron invested in and built."
+
+### The American Expat Angle
+
+**This is THE differentiator we've been underselling:**
+
+| What | Why It's Powerful |
+|------|-------------------|
+| **Jaron & Ryan are US-born, Thailand-based** | They understand American expectations AND Thai reality |
+| **Not tour operators—expats sharing their lifestyle** | Authentic, not transactional |
+| **"We made the move. Experience it for 12 days."** | Aspirational for 55+ demographic considering retirement abroad |
+| **Bridges US customer mindset with Thai local knowledge** | You get insider access, not tourist treatment |
+
+**The narrative:** "Two Americans living the Thailand pickleball dream invite you into their world."
+
+### In-Country Operational Advantage
+
+| Advantage | Impact |
+|-----------|--------|
+| **All three of us based in Thailand** | Real-time problem-solving, not remote coordination |
+| **Grant based in Phuket** | On-the-ground support for beach segment |
+| **Local rates, not tourist prices** | Better economics passed to customers |
+| **Existing facility relationships across 3 cities** | Smooth operations, not first-time logistics |
+
+**What this enables:** Better experience at lower cost with higher reliability.
+
+### The Pickleball Passport Difference
+
+**What makes this different from other pickleball travel:**
+
+1. **Owner-Hosted:** Jaron owns part of Suk Space. You're training at HIS facility, not renting space.
+
+2. **American Expat Guides:** We're US-born, understand American expectations, but have Thai local knowledge.
+
+3. **Three-City Circuit:** Bangkok (urban intensity at Suk Space), Phuket (beach lifestyle), Chiang Mai (cultural + emerging scene).
+
+4. **Living Laboratory:** We're not creating a trip—we're sharing the life we already live.
+
+5. **Retirement Reconnaissance:** For 55+ Americans considering international living, this is research + recreation combined.
+
+**Discussion Questions:**
+- How do we make Suk Space central to the pitch?
+- Does the "American expats sharing their lifestyle" framing feel authentic?
+- What's the best way to communicate the 3-city circuit value?
 
 ---
 
@@ -310,7 +379,7 @@ Find and analyze:
 Before committing to a Fam Trip, test the assumption with 5 phone calls + an ACTION TEST:
 
 **Script:**
-> "Hi, I'm helping a company that runs pickleball trips to Thailand — 12-14 day experiences across Bangkok, Phuket, and Chiang Mai. They're considering inviting program directors to experience the trip first at a subsidized rate (around $2,500-3,000 for a $4,000+ value trip), then partner to offer it to members. Would that interest you? What would make it worth your time?"
+> "Hi, I'm Jaron—I'm an American who moved to Thailand and invested in a pickleball facility here called Suk Space. My cousin Ryan and I are putting together 12-14 day pickleball experiences across Bangkok, Phuket, and Chiang Mai. We're considering inviting program directors to experience the trip first at a subsidized rate (around $2,500-3,000 for a $4,000+ value trip), then partner to offer it to your members. You'd be training at my facility, hosted by Americans who actually live here. Would that interest you? What would make it worth your time?"
 
 **Then the action test:**
 > "I have a one-page flyer about the trip. Would you be willing to share it with your group this week — not to sell anything, just to gauge interest? This would really help us understand if the concept resonates."
@@ -336,7 +405,7 @@ Call 20 people. Not to sell — to learn.
 **CRITICAL:** At least 10 of these 20 MUST be your exact target demo (55+, affluent, play pickleball regularly, have traveled internationally). Track exact targets separately from others. If you don't know 10 people in this profile, we need to know that NOW — that itself is important data.
 
 **Script:**
-> "Hey, I'm working on this Thailand pickleball trip idea and I need honest feedback. If I offered a 12-14 day trip across Bangkok, Phuket, and Chiang Mai with daily pickleball, pro coaching, nice hotels, all meals — would you pay $3,500-4,500 for that? Be honest. If no, I really need to know why."
+> "Hey, I'm Jaron—I moved to Thailand and invested in a pickleball facility here called Suk Space. My cousin Ryan and I are putting together 12-14 day trips where you'd train at my facility in Bangkok, then experience Phuket and Chiang Mai. Daily pickleball, pro coaching, nice hotels, all meals included. Would you pay $3,500-4,500 for that? We'd be your hosts the whole time—not a tour company, just two Americans sharing the lifestyle we actually live. Be honest. If no, I really need to know why."
 
 **Document:**
 - Exact words they use (especially objections)
@@ -603,7 +672,15 @@ This is travel industry jargon. Here's how it works:
 
 ### Option B: Director Fam Trip (Recommended)
 
-**What it means:** Invite 6-8 pickleball program directors to Thailand at a subsidized rate. They experience the 12-14 day trip across Bangkok, Phuket, and Chiang Mai. Then they sell Fall tours to their members.
+**What it means:** Invite 6-8 pickleball program directors to Thailand at a subsidized rate. They experience the 12-14 day trip across Bangkok, Phuket, and Chiang Mai—hosted by Jaron & Ryan, two American expats who live this lifestyle. Then they sell Fall tours to their members.
+
+**The Experience:**
+- **Days 1-3:** Bangkok intensive at Suk Space (Jaron's facility investment)
+- **Days 4-7:** Phuket beach pickleball and island lifestyle
+- **Days 8-11:** Chiang Mai cultural immersion + emerging pickleball scene
+- **Days 12-14:** Return to Bangkok, final sessions, departure
+
+**Hosted by:** Jaron & Ryan, American expats who moved to Thailand for this lifestyle. Not tour guides—hosts sharing their world.
 
 | Pros | Cons |
 |------|------|
@@ -612,6 +689,8 @@ This is travel industry jargon. Here's how it works:
 | **Much lower financial risk than previously thought** | Feels less exciting than a "real" launch |
 | Creates lots of content | |
 | March still happens | |
+| Directors experience Jaron's Suk Space facility | |
+| Authentic expat-hosted experience | |
 
 **Chance of Fall success:** Unknown (depends on director quality and incentive structure). Conservative estimate: 30-50% if we execute well.
 
@@ -1391,7 +1470,9 @@ The Director Fam Trip isn't retreat. It's strategy. You're trading a small chanc
 
 The 12-14 day format across three cities gives you real operational learning. The retirement reconnaissance angle opens a powerful positioning for your 55+ demographic. This is strategic infrastructure building, not expense.
 
-I'll support whatever you decide. That's my job. But I want you to make this choice with clear eyes — and the updated numbers make Option B dramatically more attractive than it looked before.
+**Most importantly: You have unique advantages you haven't been using.** Jaron's investment in Suk Space gives you credibility no other Thailand pickleball tour has. The fact that you're American expats who actually live this lifestyle—not a tour company creating a product—is THE story that differentiates you. Lead with it. "Come train at MY facility, hosted by two Americans who made the move" is completely different from "join our Thailand pickleball tour."
+
+I'll support whatever you decide. That's my job. But I want you to make this choice with clear eyes — and the updated numbers plus the unique positioning make Option B dramatically more attractive than it looked before.
 
 ### Questions to End On
 
@@ -1438,9 +1519,15 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 ### Key Operational Updates
 - **Trip duration:** 12-14 days minimum for US travelers (~24hr flights + jet lag)
 - **Pricing:** $3,500-4,500 (not $2,499-3,999)
-- **Route:** 3-city circuit: Bangkok → Phuket → Chiang Mai
+- **Route:** 3-city circuit: Bangkok (Suk Space) → Phuket → Chiang Mai
 - **Fam Trip economics:** Only $2-3K total subsidy (directors pay $2,500-3,000 each)
 - **Risk profile:** Dramatically lower than originally estimated
+
+### Our Unique Advantages (NEW)
+- **Suk Space:** Jaron's Bangkok pickleball facility—train at HIS place, not rented courts
+- **American Expats:** Jaron & Ryan are US-born, Thailand-based—they live this lifestyle
+- **In-Country Team:** All three based in Thailand (Grant in Phuket)—local rates, real-time operations
+- **The Pitch:** "Two Americans living the Thailand pickleball dream invite you into their world"
 
 ### The Recommendations
 
@@ -1473,9 +1560,9 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - **Sept-Oct:** Run Fall tours
 
 ### The Roles
-- **Jaron:** Public face, all outbound work (calls, meetings, emails), leads trips
+- **Jaron:** Public face, all outbound work (calls, meetings, emails), leads trips, creates all content
 - **Ryan:** Operations, logistics, money
-- **Grant:** Adviser | Strategy + Support (behind the scenes), helps Ryan with operations
+- **Grant:** Adviser | Strategy + Support (strictly behind the scenes, based in Phuket, no content creation)
 
 ### The Key Dates
 - **Feb 17:** 6+ directors confirmed (or we pause)
