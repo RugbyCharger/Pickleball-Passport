@@ -7,7 +7,7 @@
 - ✅ **v1.2 RLS Security** - Phase 8 (shipped 2026-01-27)
 - ✅ **v1.3 Gift Enhancements** - Phase 9 (shipped 2026-01-28)
 - ✅ **v2.0 Mobile App** - Phases 10-14 (shipped 2026-01-28)
-- 🚧 **v2.1 Communication & Content** - Phases 15-17 (in progress)
+- ✅ **v2.1 Communication & Content** - Phases 15-17 (shipped 2026-01-30)
 
 ## Phases
 
@@ -46,7 +46,7 @@ See: `.planning/milestones/v2.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v2.1 Communication & Content (In Progress)
+### ✅ v2.1 Communication & Content (Complete)
 
 **Milestone Goal:** Operators can communicate with guests throughout the trip lifecycle via automated email sequences, urgent SMS notifications, and curated testimonials.
 
@@ -93,7 +93,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 17-01-PLAN.md — Verify testimonial workflow integration and complete file uploads
+- [x] 17-01-PLAN.md — Verify testimonial workflow integration and complete file uploads
 
 ## Progress
 
@@ -108,7 +108,7 @@ Plans:
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
 | 15. Email Infrastructure | v2.1 | 1/1 | Complete | 2026-01-30 |
 | 16. SMS Integration | v2.1 | 1/1 | Complete | 2026-01-30 |
-| 17. Testimonial Workflow | v2.1 | 0/1 | Not started | - |
+| 17. Testimonial Workflow | v2.1 | 1/1 | Complete | 2026-01-30 |
 
 ---
 *Roadmap created: 2026-01-30*

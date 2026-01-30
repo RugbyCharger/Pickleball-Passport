@@ -20,9 +20,9 @@
 
 ### Testimonial Workflow
 
-- [ ] **TEST-01**: Guest can submit testimonial (video, written, or photo) via web or mobile
-- [ ] **TEST-02**: Admin can review testimonials and approve/reject/request edits
-- [ ] **TEST-03**: Published testimonials display on website testimonials page
+- [x] **TEST-01**: Guest can submit testimonial (video, written, or photo) via web or mobile
+- [x] **TEST-02**: Admin can review testimonials and approve/reject/request edits
+- [x] **TEST-03**: Published testimonials display on website testimonials page
 
 ## Future Requirements
 
@@ -59,9 +59,9 @@ Deferred to v2.2 or later (P2/P3 stories):
 | COMM-03 | Phase 15 | Complete |
 | SMS-01 | Phase 16 | Complete |
 | SMS-02 | Phase 16 | Complete |
-| TEST-01 | Phase 17 | Pending |
-| TEST-02 | Phase 17 | Pending |
-| TEST-03 | Phase 17 | Pending |
+| TEST-01 | Phase 17 | Complete |
+| TEST-02 | Phase 17 | Complete |
+| TEST-03 | Phase 17 | Complete |
 
 **Coverage:**
 - v2.1 requirements: 8 total
