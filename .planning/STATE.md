@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.1 Communication & Content — Phase 15 Email Infrastructure
+**Current focus:** v2.1 Communication & Content — Phase 15 Complete
 
 ## Current Position
 
 Phase: 15 of 17 (Email Infrastructure)
-Plan: Ready to plan
-Status: Phase ready for planning
-Last activity: 2026-01-30 — Roadmap created for v2.1
+Plan: 1 of 1 complete
+Status: Phase complete
+Last activity: 2026-01-30 — Completed 15-01-PLAN.md (Post-Trip Email Sequence)
 
-Progress: [####################] 100% v2.0 | [          ] 0% v2.1
+Progress: [####################] 100% v2.0 | [###       ] 33% v2.1
 
 ## Milestone History
 
@@ -45,7 +45,7 @@ See: .planning/MILESTONES.md
 
 ## Performance Metrics
 
-Aggregate across all milestones: 42 plans completed.
+Aggregate across all milestones: 43 plans completed.
 
 ## Accumulated Context
 
@@ -58,6 +58,8 @@ Recent decisions affecting v2.1:
 - Twilio stubs exist but not wired up (ready for SMS integration)
 - Testimonials table exists in Prisma schema
 - Mobile app has testimonial submission UI (needs backend workflow)
+- Post-trip emails: 3/7/14/30/60 day milestones after trip ends
+- Post-trip cron: 6 AM UTC daily (before pre-trip at 7 AM)
 
 ### Pending Todos
 
@@ -69,12 +71,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-30
-Stopped at: Roadmap created for v2.1
+Last session: 2026-01-30 12:05 UTC
+Stopped at: Completed 15-01-PLAN.md (Post-Trip Email Sequence)
 Resume file: None
 
 ## Next Steps
 
-**v2.1 Communication & Content — ROADMAP CREATED**
+**v2.1 Communication & Content — IN PROGRESS**
 
-Next action: `/gsd:plan-phase 15` to plan Email Infrastructure
+Phase 15 (Email Infrastructure) complete.
+
+Next action: `/gsd:plan-phase 16` to plan SMS Integration
