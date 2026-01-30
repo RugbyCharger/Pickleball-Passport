@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/cron/send-post-trip-emails",
+      "schedule": "0 6 * * *"
+    },
+    {
       "path": "/api/cron/send-pre-trip-emails",
       "schedule": "0 7 * * *"
     },
