@@ -51,20 +51,19 @@ See: `.planning/milestones/v2.0-ROADMAP.md`
 **Milestone Goal:** Operators can communicate with guests throughout the trip lifecycle via automated email sequences, urgent SMS notifications, and curated testimonials.
 
 #### Phase 15: Email Infrastructure
-**Goal**: Guests receive scheduled emails at key trip lifecycle moments (payment reminders, pre-trip nurture, post-trip follow-up)
+**Goal**: Guests receive post-trip follow-up emails at key moments (COMM-01 and COMM-02 already implemented)
 **Depends on**: Phase 14 (existing SendGrid integration)
-**Requirements**: COMM-01, COMM-02, COMM-03
+**Requirements**: COMM-01 (existing), COMM-02 (existing), COMM-03 (to implement)
 **Success Criteria** (what must be TRUE):
-  1. Guest receives payment reminder email 7 days before scheduled installment
-  2. Guest receives pre-trip emails at 60/30/14/7/1 days before departure
-  3. Guest receives post-trip emails at 3/7/14/30/60 days after return
+  1. Guest receives payment reminder email 7 days before scheduled installment (COMM-01 - existing)
+  2. Guest receives pre-trip emails at 60/30/14/7/1 days before departure (COMM-02 - existing)
+  3. Guest receives post-trip emails at 3/7/14/30/60 days after return (COMM-03 - this phase)
   4. Scheduled email jobs run reliably via cron or queue system
-  5. Admin can see email send history in booking details
-**Plans**: TBD
+  5. Post-trip emails respect user notification preferences
+**Plans**: 1 plan
 
 Plans:
-- [ ] 15-01: Background Job Infrastructure
-- [ ] 15-02: Email Sequence Implementation
+- [ ] 15-01-PLAN.md — Post-trip follow-up email sequence (COMM-03)
 
 #### Phase 16: SMS Integration
 **Goal**: Guests receive urgent SMS notifications for time-sensitive updates
@@ -108,7 +107,7 @@ Plans:
 | 8 | v1.2 RLS | 2/2 | Complete | 2026-01-27 |
 | 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
-| 15. Email Infrastructure | v2.1 | 0/2 | Not started | - |
+| 15. Email Infrastructure | v2.1 | 0/1 | Planned | - |
 | 16. SMS Integration | v2.1 | 0/1 | Not started | - |
 | 17. Testimonial Workflow | v2.1 | 0/2 | Not started | - |
 
