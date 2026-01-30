@@ -90,7 +90,7 @@ Let's start by being clear about our roles.
 | Person | Main Role | What They Do |
 |--------|-----------|--------------|
 | **Jaron** | The Face | The public person. Posts on social media. Leads trips. Talks to customers. Semi-pro player with sponsors. |
-| **Ryan** | Operations | Makes things run. Books hotels. Sets up logistics. Handles money. Jaron's cousin. |
+| **Ryan** | Operations | Makes things run. Jaron's cousin. |
 | **Grant** | Adviser \| Strategy + Support | Behind-the-scenes support. Helps Ryan with operations. Gives advice on big decisions. Voice of reason. |
 
 ### How We Work Together
@@ -130,7 +130,7 @@ Let's be honest about where we stand.
 
 | Tool | What It Does | Current Status |
 |------|--------------|----------------|
-| **HeyReach** | LinkedIn automation (connection requests) | 14-day free trial, 10 days left. Running campaign to grow Jaron's connections (~35 currently). |
+| **HeyReach** | LinkedIn automation (connection requests) | 14-day free trial, 9 days left. Running campaign to grow Jaron's connections (~35 currently). |
 | **Instantly.ai** | Cold email outreach | Have credits. Currently loaded with 900+ US travel agent leads. |
 | **Fizzy** | Kanban board for task tracking | Not set up yet. Plan to use for team coordination. |
 
@@ -155,7 +155,7 @@ We've been taking shots in the dark. Here's what's happened:
 
 | Tool | Recommendation |
 |------|----------------|
-| **HeyReach** | Let the travel agent campaign run out (10 days). Some connections are better than none. Then cancel — don't pay $799/month. |
+| **HeyReach** | Let the travel agent campaign run out (9 days left). Some connections are better than none. Then cancel — don't pay $79/month. |
 | **Instantly.ai** | Save the credits. Build a pickleball director lead list first. Then use credits for director cold email. |
 | **Fizzy** | Set up after this call. Populate with tasks based on decisions we make. |
 
@@ -644,7 +644,7 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 
 **Week 1-2 (Now):**
 - **BUILD THE DIRECTOR LIST FIRST** — Research and compile 20-30 pickleball program directors (names, clubs, contact info). This doesn't exist yet. Nothing else can happen until this is done.
-- Let HeyReach trial run out (10 days), then cancel
+- Let HeyReach trial run out (9 days), then cancel
 - Write the invitation email/message
 - Start reaching out (Jaron on social, Ryan/Grant on email via Instantly.ai)
 
@@ -1289,7 +1289,7 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - Typical buyers book 6-18 months ahead (we're outside the window)
 - Jaron has only ~35 LinkedIn connections (average is 930+ — very small)
 - No pickleball director lead list exists yet
-- HeyReach trial: 10 days left (let run out, then cancel)
+- HeyReach trial: 9 days left (let run out, then cancel)
 - Instantly.ai credits available (save for director outreach)
 - **Key bias:** Thailand assumed but unvalidated vs. other destinations
 
@@ -1375,7 +1375,7 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 
 | Tool | Action |
 |------|--------|
-| HeyReach | Let run out (10 days), then cancel |
+| HeyReach | Let run out (9 days), then cancel |
 | Instantly.ai | Save credits for director outreach |
 | Fizzy | Set up after this call |
 
