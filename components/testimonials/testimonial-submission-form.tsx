@@ -8,6 +8,8 @@
  * - Video upload
  * - Before/After photos
  * - GDPR consent tracking
+ *
+ * File uploads use Supabase Storage via signed URLs.
  */
 
 import { useState, useCallback } from 'react';
@@ -21,6 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -81,6 +84,8 @@ export function TestimonialSubmissionForm({
   const [beforePhoto, setBeforePhoto] = useState<File | null>(null);
   const [afterPhoto, setAfterPhoto] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadingFile, setUploadingFile] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm<TestimonialFormData>({
@@ -98,6 +103,8 @@ export function TestimonialSubmissionForm({
   });
 
   const testimonialType = form.watch('type');
+
+  const getUploadUrlMutation = trpc.guestTestimonial.getUploadUrl.useMutation();
 
   const submitMutation = trpc.guestTestimonial.submit.useMutation({
     onSuccess: () => {
@@ -147,24 +154,47 @@ export function TestimonialSubmissionForm({
     []
   );
 
+  /**
+   * Upload a file to Supabase Storage using signed URL
+   */
   const uploadFileToStorage = async (
     file: File,
     fileType: 'video' | 'before-photo' | 'after-photo'
   ): Promise<string | null> => {
-    // In a real implementation, this would:
-    // 1. Get a signed upload URL from the server
-    // 2. Upload the file directly to Supabase Storage
-    // 3. Return the public URL
+    try {
+      setUploadingFile(fileType);
+      setUploadProgress(0);
 
-    // For now, we'll create an object URL (in production, integrate with testimonial-storage.ts)
-    // This is a placeholder - implement actual upload when S3/Supabase is configured
-    console.log(`Would upload ${fileType}: ${file.name}`);
+      // 1. Get signed upload URL from server
+      const { uploadUrl, publicUrl } = await getUploadUrlMutation.mutateAsync({
+        fileName: file.name,
+        fileType,
+        fileSize: file.size,
+        mimeType: file.type,
+      });
 
-    // Simulate upload delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      // 2. Upload file directly to Supabase Storage using signed URL
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      });
 
-    // Return a placeholder URL (in production, return actual storage URL)
-    return `https://storage.example.com/testimonials/${fileType}/${file.name}`;
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+
+      setUploadProgress(100);
+      return publicUrl;
+    } catch (error) {
+      console.error(`Failed to upload ${fileType}:`, error);
+      toast.error(`Failed to upload ${fileType.replace('-', ' ')}. Please try again.`);
+      return null;
+    } finally {
+      setUploadingFile(null);
+    }
   };
 
   const onSubmit = async (data: TestimonialFormData) => {
@@ -177,12 +207,28 @@ export function TestimonialSubmissionForm({
 
       // Upload files based on testimonial type
       if ((data.type === 'VIDEO' || data.type === 'COMBINED') && videoFile) {
-        videoUrl = (await uploadFileToStorage(videoFile, 'video')) || undefined;
+        const url = await uploadFileToStorage(videoFile, 'video');
+        if (!url) {
+          setUploading(false);
+          return; // Upload failed, error toast already shown
+        }
+        videoUrl = url;
       }
 
       if ((data.type === 'BEFORE_AFTER' || data.type === 'COMBINED') && beforePhoto && afterPhoto) {
-        beforePhotoUrl = (await uploadFileToStorage(beforePhoto, 'before-photo')) || undefined;
-        afterPhotoUrl = (await uploadFileToStorage(afterPhoto, 'after-photo')) || undefined;
+        const beforeUrl = await uploadFileToStorage(beforePhoto, 'before-photo');
+        if (!beforeUrl) {
+          setUploading(false);
+          return;
+        }
+        beforePhotoUrl = beforeUrl;
+
+        const afterUrl = await uploadFileToStorage(afterPhoto, 'after-photo');
+        if (!afterUrl) {
+          setUploading(false);
+          return;
+        }
+        afterPhotoUrl = afterUrl;
       }
 
       // Submit testimonial
@@ -203,6 +249,7 @@ export function TestimonialSubmissionForm({
       console.error('Submit error:', error);
     } finally {
       setUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -393,10 +440,11 @@ export function TestimonialSubmissionForm({
                     onChange={handleVideoChange}
                     className="hidden"
                     id="video-upload"
+                    disabled={uploading}
                   />
                   <label
                     htmlFor="video-upload"
-                    className="cursor-pointer flex flex-col items-center gap-2"
+                    className={`cursor-pointer flex flex-col items-center gap-2 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <Video className="h-8 w-8 text-muted-foreground" />
                     {videoFile ? (
@@ -413,6 +461,14 @@ export function TestimonialSubmissionForm({
                     )}
                   </label>
                 </div>
+                {uploadingFile === 'video' && (
+                  <div className="space-y-1">
+                    <Progress value={uploadProgress} className="h-2" />
+                    <p className="text-xs text-muted-foreground text-center">
+                      Uploading video... {uploadProgress}%
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -428,10 +484,11 @@ export function TestimonialSubmissionForm({
                       onChange={handlePhotoChange('before')}
                       className="hidden"
                       id="before-photo"
+                      disabled={uploading}
                     />
                     <label
                       htmlFor="before-photo"
-                      className="cursor-pointer flex flex-col items-center gap-2"
+                      className={`cursor-pointer flex flex-col items-center gap-2 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <Image className="h-6 w-6 text-muted-foreground" />
                       {beforePhoto ? (
@@ -443,6 +500,12 @@ export function TestimonialSubmissionForm({
                       )}
                     </label>
                   </div>
+                  {uploadingFile === 'before-photo' && (
+                    <div className="space-y-1">
+                      <Progress value={uploadProgress} className="h-2" />
+                      <p className="text-xs text-muted-foreground text-center">Uploading...</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -454,10 +517,11 @@ export function TestimonialSubmissionForm({
                       onChange={handlePhotoChange('after')}
                       className="hidden"
                       id="after-photo"
+                      disabled={uploading}
                     />
                     <label
                       htmlFor="after-photo"
-                      className="cursor-pointer flex flex-col items-center gap-2"
+                      className={`cursor-pointer flex flex-col items-center gap-2 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <Image className="h-6 w-6 text-muted-foreground" />
                       {afterPhoto ? (
@@ -469,6 +533,12 @@ export function TestimonialSubmissionForm({
                       )}
                     </label>
                   </div>
+                  {uploadingFile === 'after-photo' && (
+                    <div className="space-y-1">
+                      <Progress value={uploadProgress} className="h-2" />
+                      <p className="text-xs text-muted-foreground text-center">Uploading...</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -515,7 +585,7 @@ export function TestimonialSubmissionForm({
               {uploading || submitMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {uploading ? 'Uploading files...' : 'Submitting...'}
+                  {uploadingFile ? `Uploading ${uploadingFile.replace('-', ' ')}...` : 'Submitting...'}
                 </>
               ) : (
                 'Submit Testimonial'

@@ -16,6 +16,12 @@ import { TRPCError } from '@trpc/server';
 import { GuestTestimonialStatus, GuestTestimonialType } from '@prisma/client';
 import { sendEmail } from '@/lib/email/send-email';
 import { baseEmailTemplate } from '@/lib/email/templates/base';
+import {
+  createTestimonialUploadUrl,
+  validateTestimonialFile,
+  isTestimonialStorageConfigured,
+  TESTIMONIAL_FILE_LIMITS,
+} from '@/lib/storage/testimonial-storage';
 
 // Input validation schemas
 const testimonialTypeSchema = z.enum(['TEXT', 'VIDEO', 'BEFORE_AFTER', 'COMBINED']);
@@ -25,6 +31,82 @@ export const guestTestimonialRouter = router({
   // ============================================================================
   // GUEST PROCEDURES (Submission)
   // ============================================================================
+
+  /**
+   * Get a signed upload URL for testimonial media (guest only)
+   * Returns presigned URL for direct upload to Supabase Storage
+   */
+  getUploadUrl: guestProcedure
+    .input(
+      z.object({
+        fileName: z.string().min(1, 'File name is required'),
+        fileType: z.enum(['video', 'before-photo', 'after-photo', 'thumbnail']),
+        fileSize: z.number().positive('File size must be positive'),
+        mimeType: z.string().min(1, 'MIME type is required'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check if storage is configured
+      if (!isTestimonialStorageConfigured()) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Storage is not configured. Please contact support.',
+        });
+      }
+
+      // Validate file based on type
+      const fileCategory = input.fileType === 'video' ? 'video' : 'photo';
+      const validation = validateTestimonialFile(
+        { size: input.fileSize, type: input.mimeType },
+        fileCategory
+      );
+
+      if (!validation.valid) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: validation.error || 'Invalid file',
+        });
+      }
+
+      // Create signed upload URL
+      const result = await createTestimonialUploadUrl(
+        ctx.user.id,
+        input.fileType,
+        input.fileName
+      );
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: result.error || 'Failed to create upload URL',
+        });
+      }
+
+      return {
+        uploadUrl: result.uploadUrl!,
+        publicUrl: result.publicUrl!,
+        path: result.path!,
+      };
+    }),
+
+  /**
+   * Get file upload limits for client-side validation
+   */
+  getUploadLimits: guestProcedure.query(async () => {
+    return {
+      video: {
+        maxSize: TESTIMONIAL_FILE_LIMITS.VIDEO_MAX_SIZE,
+        maxSizeMB: TESTIMONIAL_FILE_LIMITS.VIDEO_MAX_SIZE / 1024 / 1024,
+        allowedTypes: TESTIMONIAL_FILE_LIMITS.ALLOWED_VIDEO_TYPES,
+      },
+      photo: {
+        maxSize: TESTIMONIAL_FILE_LIMITS.PHOTO_MAX_SIZE,
+        maxSizeMB: TESTIMONIAL_FILE_LIMITS.PHOTO_MAX_SIZE / 1024 / 1024,
+        allowedTypes: TESTIMONIAL_FILE_LIMITS.ALLOWED_PHOTO_TYPES,
+      },
+      isConfigured: isTestimonialStorageConfigured(),
+    };
+  }),
 
   /**
    * Submit a new testimonial (guest only)
