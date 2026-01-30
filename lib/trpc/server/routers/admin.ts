@@ -12,9 +12,13 @@ import { z } from 'zod';
 import { router, adminProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { sendEmail } from '@/lib/email/send-email';
-import { apiLogger, emailLogger, stripeLogger, logError, logStripeError } from '@/lib/logger';
+import { sendSMS, sendBatchSMS, isValidPhoneNumber } from '@/lib/sms/twilio';
+import { canSendNotification } from '@/lib/preferences/user-preferences';
+import { apiLogger, emailLogger, stripeLogger, logError, logStripeError, createLogger } from '@/lib/logger';
 import { createTransfer, getPlatformBalance } from '@/lib/stripe/stripe-connect';
 import { Prisma, GiftStatus } from '@prisma/client';
+
+const smsLogger = createLogger('sms');
 
 /**
  * Get common issues for document types to help users fix rejections
@@ -1466,7 +1470,7 @@ export const adminRouter = router({
 
   /**
    * Send itinerary change SMS to a guest
-   * TODO: Implement Twilio SMS sending when Twilio is configured
+   * Checks user preferences before sending (non-emergency)
    */
   sendItineraryChangeSMS: adminProcedure
     .input(
@@ -1495,22 +1499,57 @@ export const adminRouter = router({
         });
       }
 
-      // TODO: Actually send SMS via Twilio when configured
-      apiLogger.info({
+      // Check user preference for SMS notifications
+      try {
+        const canSend = await canSendNotification(booking.userId, 'smsEnabled');
+        if (!canSend) {
+          smsLogger.info({
+            adminId: ctx.user?.id,
+            bookingId: input.bookingId,
+            userId: booking.userId,
+          }, 'Itinerary change SMS skipped - user opted out');
+          return {
+            sent: false,
+            reason: 'opted_out',
+          };
+        }
+      } catch (prefError) {
+        // If we can't get preferences, log but fail open
+        smsLogger.warn({ userId: booking.userId, error: prefError }, 'Could not check SMS preferences');
+      }
+
+      // Validate phone number
+      const phone = booking.user.guestProfile?.phone;
+      if (!phone || !isValidPhoneNumber(phone)) {
+        smsLogger.info({
+          adminId: ctx.user?.id,
+          bookingId: input.bookingId,
+          hasPhone: !!phone,
+        }, 'Itinerary change SMS skipped - invalid phone');
+        return {
+          sent: false,
+          reason: 'invalid_phone',
+        };
+      }
+
+      // Send SMS
+      const message = `Itinerary update for ${booking.bookingReference}: ${input.changeDetails}`;
+      await sendSMS({ to: phone, message });
+
+      smsLogger.info({
         adminId: ctx.user?.id,
         bookingId: input.bookingId,
-        changeDetails: input.changeDetails,
-      }, 'Itinerary change SMS requested (not implemented)');
+        bookingReference: booking.bookingReference,
+      }, 'Itinerary change SMS sent');
 
       return {
-        success: true,
-        message: 'SMS feature not yet implemented - no message was sent',
+        sent: true,
       };
     }),
 
   /**
    * Send flight delay SMS to a guest
-   * TODO: Implement Twilio SMS sending when Twilio is configured
+   * Checks user preferences before sending (non-emergency)
    */
   sendFlightDelaySMS: adminProcedure
     .input(
@@ -1543,22 +1582,57 @@ export const adminRouter = router({
         });
       }
 
-      // TODO: Actually send SMS via Twilio when configured
-      apiLogger.info({
+      // Check user preference for SMS notifications
+      try {
+        const canSend = await canSendNotification(booking.userId, 'smsEnabled');
+        if (!canSend) {
+          smsLogger.info({
+            adminId: ctx.user?.id,
+            bookingId: input.bookingId,
+            userId: booking.userId,
+          }, 'Flight delay SMS skipped - user opted out');
+          return {
+            sent: false,
+            reason: 'opted_out',
+          };
+        }
+      } catch (prefError) {
+        // If we can't get preferences, log but fail open
+        smsLogger.warn({ userId: booking.userId, error: prefError }, 'Could not check SMS preferences');
+      }
+
+      // Validate phone number
+      const phone = booking.user.guestProfile?.phone;
+      if (!phone || !isValidPhoneNumber(phone)) {
+        smsLogger.info({
+          adminId: ctx.user?.id,
+          bookingId: input.bookingId,
+          hasPhone: !!phone,
+        }, 'Flight delay SMS skipped - invalid phone');
+        return {
+          sent: false,
+          reason: 'invalid_phone',
+        };
+      }
+
+      // Send SMS
+      const message = `Flight delay for ${booking.bookingReference}: New departure ${input.delayInfo.newTime}. Contact: ${input.delayInfo.contactInfo}`;
+      await sendSMS({ to: phone, message });
+
+      smsLogger.info({
         adminId: ctx.user?.id,
         bookingId: input.bookingId,
-        delayInfo: input.delayInfo,
-      }, 'Flight delay SMS requested (not implemented)');
+        bookingReference: booking.bookingReference,
+      }, 'Flight delay SMS sent');
 
       return {
-        success: true,
-        message: 'SMS feature not yet implemented - no message was sent',
+        sent: true,
       };
     }),
 
   /**
    * Send emergency alert SMS to all guests on a trip
-   * TODO: Implement Twilio SMS sending when Twilio is configured
+   * BYPASSES user preferences - safety override for emergencies
    */
   sendEmergencyAlertSMS: adminProcedure
     .input(
@@ -1584,23 +1658,35 @@ export const adminRouter = router({
         },
       });
 
-      // Count guests with valid phone numbers
-      const guestsWithPhones = bookings.filter(
-        (b) => b.user.guestProfile?.phone
-      );
+      // Filter for valid phone numbers (NO preference check - emergency override)
+      const validPhoneBookings = bookings.filter((b) => {
+        const phone = b.user.guestProfile?.phone;
+        return phone && isValidPhoneNumber(phone);
+      });
 
-      // TODO: Actually send SMS via Twilio when configured
-      apiLogger.info({
+      const skippedCount = bookings.length - validPhoneBookings.length;
+
+      // Build message array for batch send
+      const messages = validPhoneBookings.map((b) => ({
+        to: b.user.guestProfile!.phone!,
+        message: `URGENT: ${input.alertMessage}. Contact: ${input.contactInfo}`,
+      }));
+
+      // Send batch SMS
+      if (messages.length > 0) {
+        await sendBatchSMS(messages);
+      }
+
+      smsLogger.info({
         adminId: ctx.user?.id,
         tripId: input.tripId,
-        guestCount: guestsWithPhones.length,
-        message: input.alertMessage,
-      }, 'Emergency alert SMS requested (not implemented)');
+        sentCount: messages.length,
+        skippedCount,
+      }, 'Emergency alert SMS batch sent');
 
       return {
-        sentCount: 0, // SMS not actually sent yet
-        skippedCount: bookings.length - guestsWithPhones.length,
-        message: 'SMS feature not yet implemented - no messages were sent',
+        sentCount: messages.length,
+        skippedCount,
       };
     }),
 
