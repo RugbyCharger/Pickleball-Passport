@@ -1,103 +1,74 @@
-# Requirements: v2.0 Mobile App
+# Requirements: v2.1 Communication & Content
 
-**Milestone:** v2.0 Mobile App
-**Created:** 2026-01-28
-**Core Value:** Guest can use mobile app for pre-trip preparation, during-trip experience, and post-trip alumni engagement
+**Milestone:** v2.1 Communication & Content
+**Created:** 2026-01-30
+**Source:** BMAD Epics E11 (Communication System) + E12 (Content Management) — P1 stories only
+**Core Value:** Operators can communicate with guests throughout the trip lifecycle
 
-## v2.0 Requirements
+## v2.1 Requirements
 
-### Setup & Authentication
+### Email Sequences
 
-- [x] **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript
-- [x] **MOB-AUTH-01**: Guest can log in with email/password via Clerk
-- [x] **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID)
+- [ ] **COMM-01**: Guest receives payment reminder email 7 days before scheduled installment
+- [ ] **COMM-02**: Guest receives pre-trip nurture sequence (60/30/14/7/1 days before departure)
+- [ ] **COMM-03**: Guest receives post-trip follow-up emails (3/7/14/30/60 days after return)
 
-### Pre-Trip Experience
+### SMS Notifications
 
-- [x] **MOB-PRETRIP-01**: Guest can view countdown to trip departure
-- [x] **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items
-- [x] **MOB-PRETRIP-03**: Guest can upload passport document
-- [x] **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in)
-- [x] **MOB-PRETRIP-05**: Guest can chat with trip group before departure
-- [x] **MOB-PRETRIP-06**: Guest can view and customize packing list
-- [x] **MOB-PRETRIP-07**: Guest can download offline itinerary
+- [ ] **SMS-01**: System can send SMS via Twilio integration
+- [ ] **SMS-02**: Guest receives SMS for urgent updates (flight delays, itinerary changes, emergencies)
 
-### During-Trip Experience
+### Testimonial Workflow
 
-- [x] **MOB-TRIP-01**: Guest can view daily itinerary with activities
-- [x] **MOB-TRIP-02**: Guest can check in to activities
-- [x] **MOB-TRIP-03**: Guest can chat with concierge 24/7
-- [x] **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location
-- [x] **MOB-TRIP-05**: Guest can book pickleball courts
-- [x] **MOB-TRIP-06**: Guest can find other guests to play with
-- [x] **MOB-TRIP-07**: Guest can upload photos to trip journal
-- [x] **MOB-TRIP-08**: Guest can view group photo gallery
-- [x] **MOB-TRIP-09**: Guest can request transportation
-
-### Alumni Engagement
-
-- [x] **MOB-ALUMNI-01**: Guest can view transformation journey summary
-- [x] **MOB-ALUMNI-02**: Guest can browse alumni directory
-- [x] **MOB-ALUMNI-03**: Guest can refer friends and track referrals
-- [x] **MOB-ALUMNI-04**: Guest can rebook with alumni discount
-- [x] **MOB-ALUMNI-05**: Guest can earn passport stamps for achievements
-- [x] **MOB-ALUMNI-06**: Guest can create and submit testimonial
+- [ ] **TEST-01**: Guest can submit testimonial (video, written, or photo) via web or mobile
+- [ ] **TEST-02**: Admin can review testimonials and approve/reject/request edits
+- [ ] **TEST-03**: Published testimonials display on website testimonials page
 
 ## Future Requirements
 
-None identified for future milestones at this time.
+Deferred to v2.2 or later (P2/P3 stories):
+
+### Communication (P2)
+- **COMM-04**: Guest can manage email preferences (unsubscribe by category)
+- **COMM-05**: Admin can send broadcast messages to trip groups
+- **COMM-06**: System sends automated NPS surveys 30 days after trip
+
+### Content (P2/P3)
+- **CONT-01**: Admin can manage photo galleries (upload, tag, feature)
+- **CONT-02**: Admin can manage marketing asset versions
+- **CONT-03**: System auto-transcodes uploaded videos via Mux
+- **CONT-04**: System tracks content consent per testimonial/photo
+- **CONT-05**: Admin can search content by tags and keywords
 
 ## Out of Scope
 
-- **SMS notifications** — Twilio stubs exist but not required for v2.0
-- **In-app payments** — Use existing web checkout, deep link from app
-- **Apple/Google Pay in app** — Web checkout handles payments
-- **Video calls in app** — External Zoom links sufficient for alumni meetups
-- **Public social feed** — Private trip experience, not social network
-- **AI trip planning** — Curated packages, not AI-generated itineraries
-- **Multi-language support** — English only for v2.0
-- **Offline mutations** — View-only offline mode for v2.0 (read cached data, require online for actions)
-
-## Technical Constraints
-
-Based on research findings:
-
-1. **tRPC Version:** Must pin to v11.3.1 (not 11.4+) for React Native/Hermes compatibility
-2. **Clerk UI:** No prebuilt components on mobile — custom auth UI required
-3. **Chat Solution:** Supabase Realtime may have WebSocket issues — spike during pre-trip phase
-4. **Images:** Resize to max 1920x1080, compress to <2MB before upload
-5. **OneSignal:** Must be first plugin in app.json for iOS push capability
-6. **Apple Sign-In:** Required if offering Google OAuth (App Store policy)
+| Feature | Reason |
+|---------|--------|
+| Real-time chat in admin | Concierge chat exists in mobile app, no web admin chat needed |
+| Video conferencing | External Zoom links sufficient |
+| AI-generated email content | Manual templates sufficient for v2.1 |
+| Multi-language emails | English only for now |
+| WhatsApp Business API | Existing WhatsApp integration via manual groups sufficient |
 
 ## Traceability
 
-| REQ-ID | Phase | Status |
-|--------|-------|--------|
-| MOB-SETUP-01 | 10 | Complete |
-| MOB-AUTH-01 | 10 | Complete |
-| MOB-AUTH-02 | 10 | Complete |
-| MOB-PRETRIP-01 | 11 | Complete |
-| MOB-PRETRIP-02 | 11 | Complete |
-| MOB-PRETRIP-03 | 11 | Complete |
-| MOB-PRETRIP-04 | 11 | Complete |
-| MOB-PRETRIP-05 | 11 | Complete |
-| MOB-PRETRIP-06 | 11 | Complete |
-| MOB-PRETRIP-07 | 11 | Complete |
-| MOB-TRIP-01 | 12 | Complete |
-| MOB-TRIP-02 | 12 | Complete |
-| MOB-TRIP-03 | 12 | Complete |
-| MOB-TRIP-04 | 12 | Complete |
-| MOB-TRIP-05 | 12 | Complete |
-| MOB-TRIP-06 | 12 | Complete |
-| MOB-TRIP-07 | 12 | Complete |
-| MOB-TRIP-08 | 12 | Complete |
-| MOB-TRIP-09 | 12 | Complete |
-| MOB-ALUMNI-01 | 13 | Complete |
-| MOB-ALUMNI-02 | 13 | Complete |
-| MOB-ALUMNI-03 | 13 | Complete |
-| MOB-ALUMNI-04 | 13 | Complete |
-| MOB-ALUMNI-05 | 13 | Complete |
-| MOB-ALUMNI-06 | 13 | Complete |
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| COMM-01 | Phase 15 | Pending |
+| COMM-02 | Phase 15 | Pending |
+| COMM-03 | Phase 15 | Pending |
+| SMS-01 | Phase 16 | Pending |
+| SMS-02 | Phase 16 | Pending |
+| TEST-01 | Phase 17 | Pending |
+| TEST-02 | Phase 17 | Pending |
+| TEST-03 | Phase 17 | Pending |
+
+**Coverage:**
+- v2.1 requirements: 8 total
+- Mapped to phases: 8
+- Unmapped: 0 ✓
 
 ---
-*26 requirements across 4 categories*
+*Requirements defined: 2026-01-30*
+*Roadmap created: 2026-01-30*
+*Source: BMAD epics-and-stories-Pickleball-Passport-2025-12-28.md (E11-S3/S4/S5/S6/S7, E12-S1/S2/S3)*
