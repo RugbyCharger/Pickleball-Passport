@@ -15,8 +15,8 @@
 
 ### SMS Notifications
 
-- [ ] **SMS-01**: System can send SMS via Twilio integration
-- [ ] **SMS-02**: Guest receives SMS for urgent updates (flight delays, itinerary changes, emergencies)
+- [x] **SMS-01**: System can send SMS via Twilio integration
+- [x] **SMS-02**: Guest receives SMS for urgent updates (flight delays, itinerary changes, emergencies)
 
 ### Testimonial Workflow
 
@@ -57,8 +57,8 @@ Deferred to v2.2 or later (P2/P3 stories):
 | COMM-01 | Phase 15 | Complete |
 | COMM-02 | Phase 15 | Complete |
 | COMM-03 | Phase 15 | Complete |
-| SMS-01 | Phase 16 | Pending |
-| SMS-02 | Phase 16 | Pending |
+| SMS-01 | Phase 16 | Complete |
+| SMS-02 | Phase 16 | Complete |
 | TEST-01 | Phase 17 | Pending |
 | TEST-02 | Phase 17 | Pending |
 | TEST-03 | Phase 17 | Pending |
