@@ -7,7 +7,7 @@
 
 ---
 
-## Executive Summary: For Time-Pressed Readers
+## Executive Summary
 
 **The Core Question:** Should we push for a March 23 consumer launch, or use March strategically to build for Fall?
 
@@ -27,22 +27,15 @@
 | **B: Director Fam Trip** | 6-8 directors at $1,500-2,000 each | Building sustainable growth | Low-Medium — $12-16K investment |
 | **C: Hybrid** | 3-4 consumers + 4-5 directors | Testing both channels | Medium — split focus |
 
-**Critical First Step:** Validation Sprint (Week 1). Before ANY strategy execution, we need data: Jaron calls 20 people, Ryan researches 10 competitors, Grant calls 5 directors. If 5+ people say "I'd book this," proceed. If 0-2, stop and fix the offer.
+**Critical First Step:** Validation Sprint (Week 1). Before ANY strategy execution, we need data: Jaron calls 20 people, Ryan researches 10 competitors, Jaron calls 5 directors. If 5+ people say "I'd book this," proceed. If 0-2, stop and fix the offer.
 
 **This Guide's Structure:**
 - **Parts 1-2:** Context (who we are, where we stand)
 - **Part 3:** Validation Sprint (data gathering)
-- **Parts 4-5:** The problems (timeline, agency decision)
-- **Parts 5B-6:** Strategic frameworks + options
+- **Part 4:** The problems (timeline)
+- **Parts 5-6:** Strategic frameworks + options
 - **Parts 7-12:** Implementation details
 - **Part 13:** Decisions to make today
-
-**Time Investment:**
-- This summary: 3 minutes
-- Core decisions (Parts 6, 13): 45 minutes
-- Full strategic context: 3.5 hours
-
-**Bottom Line:** If you only have 30 minutes, read Part 3 (Validation Sprint), Part 6 (Strategy Options), and Part 13 (Decisions). You'll have enough to make the key calls.
 
 ---
 
@@ -58,7 +51,7 @@ This guide intentionally uses three complementary frameworks that create product
 **📊 Priestley's Campaign Framework (Commercial Reality)**
 - Focus: Demand building before launch
 - Question: "Do we have enough signals before going public?"
-- Appears in: Part 5B (Campaign vs. Launch, 7-11-4 Rule, Founding Directors)
+- Appears in: Part 5 (Campaign vs. Launch, 7-11-4 Rule, Founding Directors)
 
 **⚡ Hormozi's Value Equation (Customer Psychology)**
 - Focus: Why someone says yes
@@ -98,19 +91,19 @@ Let's start by being clear about our roles.
 |--------|-----------|--------------|
 | **Jaron** | The Face | The public person. Posts on social media. Leads trips. Talks to customers. Semi-pro player with sponsors. |
 | **Ryan** | Operations | Makes things run. Books hotels. Sets up logistics. Handles money. Jaron's cousin. |
-| **Grant** | Strategy + Support | Helps Ryan with operations. Gives advice on big decisions. Asks hard questions. Voice of reason. |
+| **Grant** | Adviser \| Strategy + Support | Behind-the-scenes support. Helps Ryan with operations. Gives advice on big decisions. Voice of reason. |
 
 ### How We Work Together
 
-- **Jaron** is out front. People see him first.
+- **Jaron** is out front. People see him first. He handles all outbound work — phone calls, Google Meets, emails, etc.
 - **Ryan** is behind the scenes. He makes sure things happen.
-- **Grant** helps Ryan AND helps the whole team think clearly.
+- **Grant** operates behind the scenes as an adviser (strategy + support), helping Ryan with operations.
 
 Grant's job is NOT to tell you what to do. His job is to:
 1. Help you see the full picture
 2. Ask questions you might not ask yourselves
 3. Keep us grounded when we get too excited
-4. Support Ryan with the day-to-day work
+4. Support Ryan with the day-to-day operations work
 
 **Discussion Question:** Does this feel right to everyone? Any changes needed?
 
@@ -130,7 +123,6 @@ Let's be honest about where we stand.
 | Customer interviews conducted | Zero |
 | Competitor analysis completed | Zero |
 | Website testimonials | Placeholder (not real customers) |
-| Social media agency | Signed 1-year contract (starts Feb 1) |
 
 **Reality check:** 52 days with zero customer validation is extremely aggressive. Premium group travel typically books 6-18 months ahead. We need honest assessment of whether March is achievable.
 
@@ -220,7 +212,7 @@ We have lots of strategy but almost no customer validation. We're planning multi
 |-----|------|-------------|----------|
 | **Jaron** | Call 20 people (mix: 10 from network, 10 cold/referrals) | Document exact responses: "Would you pay $2,500 for this? Why or why not?" | 7 days |
 | **Ryan** | Research 10 competitors | One-pager: pricing, reviews (what customers praise/complain about), our differentiation wedge | 5 days |
-| **Grant** | Call 5 potential directors + ACTION TEST | Document responses AND ask each director to forward a one-page flyer to their group THIS WEEK | 7 days |
+| **Jaron** | Call 5 potential directors + ACTION TEST | Document responses AND ask each director to forward a one-page flyer to their group THIS WEEK | 7 days |
 
 **Why the action test matters:** Asking "would you promote this?" gets polite answers. Asking someone to actually forward a flyer THIS WEEK reveals real commitment. If directors won't share a flyer now, they won't sell tours later.
 
@@ -260,7 +252,7 @@ Find and analyze:
 - What complaints appear repeatedly?
 - Do they mention hosts/guides by name? (Tells us if personality matters)
 
-### Director Validation Calls (Grant)
+### Director Validation Calls (Jaron)
 
 Before committing $12-16K to a Fam Trip, test the assumption with 5 phone calls + an ACTION TEST:
 
@@ -377,142 +369,7 @@ Let's be direct: **March 23 is probably not realistic.**
 
 ---
 
-## Part 5: The Social Media Agency Decision (20 minutes)
-
-**This is important. We have a time-sensitive choice to make.**
-
-### The Situation
-
-| Fact | Detail |
-|------|--------|
-| Contract length | 1 year |
-| Start date | February 1, 2026 |
-| Payment | Two parts |
-| Cooling-off period | 30 days |
-| Cooling-off ends | Around March 1, 2026 |
-
-**What "cooling-off" means:** You can cancel within 30 days and get your first payment back. No penalty. After March 1, you're locked in for the full year.
-
-### The Big Question
-
-**Should you keep the 1-year contract, change it, or cancel it?**
-
-Let's look at this from different angles.
-
----
-
-### The Facts (What We Know)
-
-- You have **zero customers** right now
-- You have **zero proof** that your offer works
-- A 1-year contract means 8 months run AFTER the March launch
-- The agency money could instead pay for **5-10 Director Fam Trips**
-- After March 1, you're **locked in** no matter what happens
-
-**The math:** If the agency costs $2,000-5,000 per month, that's $24,000-60,000 over a year. That same money could fund a lot of other things.
-
----
-
-### The Risks (What Could Go Wrong)
-
-**The danger of a 1-year contract right now:**
-
-1. **You're paying to spread a message before you know if anyone wants it.** What if the offer is wrong? You'll spend money telling people about something they won't buy.
-
-2. **You lose flexibility.** What if you learn in April that you need to change your price, destination, or audience? You're stuck paying for content about the wrong thing.
-
-3. **Sunk cost trap.** If March flops, you'll feel pressure to keep the agency because "we're already paying for it" — even if it's not helping.
-
-4. **Agencies are for scaling, not testing.** Agencies work best when you know what converts. You don't know yet.
-
-**Worst case:** You spend $20,000+ over the year, launch to silence, and realize your money should have gone elsewhere.
-
----
-
-### The Benefits (What Could Go Right)
-
-**Why an agency might help:**
-
-1. **They do the work.** Jaron can focus on being the face. Ryan can focus on operations. The agency handles content.
-
-2. **They know what works.** Good agencies have seen what works for travel and lifestyle brands.
-
-3. **Professional look.** Quality content helps justify a $3,000 price tag.
-
-4. **They could document the Fam Trip.** If March becomes a Director Fam Trip, the agency could create great content from it.
-
-**Best case:** The agency creates a steady stream of content that builds trust and brings customers.
-
----
-
-### The Smart Move (What We Recommend)
-
-**Don't keep the 1-year contract as-is. Here's what to do instead:**
-
-#### Option 1: Renegotiate to 90 Days (Best Option)
-
-Call the agency this week. Say:
-
-> "We want to change to a 90-day trial focused on our March Director Fam Trip. If it goes well and we get 5+ bookings by April 15, we'll extend. Can you work with us on this?"
-
-**Why this is smart:**
-- You keep the agency if they're flexible
-- You're not locked in for a year
-- You can decide in April based on real results
-- You test whether they're a good partner
-
-**If they agree:** Sign the new 90-day deal.
-**If they refuse:** Cancel during cooling-off period.
-
----
-
-#### Option 2: Cancel Entirely
-
-If the agency won't renegotiate, cancel before March 1.
-
-**Then use that money for:**
-
-| Instead of Agency | What It Buys |
-|-------------------|--------------|
-| 3-5 subsidized Director Fam Trips | $3,000-5,000 |
-| Part-time content creator for trips | $2,000-3,000 |
-| Paid social media ads to test messages | $2,000 |
-| **Total** | About the same as 3-4 months of agency |
-
-**Why this might be better:** You get real content from real trips, not polished content about trips that haven't happened.
-
----
-
-#### Option 3: Keep the 1-Year Contract (Not Recommended)
-
-Only do this if:
-- You already have strong demand signals (waitlist, inquiries, deposits)
-- The agency has specific travel/tour experience
-- You can afford to lose this money if the launch fails
-
-**Right now, none of those are true.**
-
----
-
-### The Timeline
-
-| Date | What to Do |
-|------|------------|
-| This week (by Jan 31) | Call agency to propose 90-day sprint |
-| By Feb 5 | If they agree, sign new contract. If not, cancel. |
-| By Feb 7 | If canceling, redirect budget to Fam Trips |
-| Feb 28 | If keeping agency, check their work so far |
-| April 15 | Review results before any extension |
-
-**Discussion Questions:**
-- Why did you sign the 1-year contract? What problem were you solving?
-- How do you feel about the 90-day renegotiation idea?
-- What would you do with the money if you canceled?
-- Who will call the agency? When?
-
----
-
-## Part 5B: The Priestley Framework — Campaign vs. Launch (15 minutes)
+## Part 5: The Priestley Framework — Campaign vs. Launch (15 minutes)
 
 **Who is Daniel Priestley?**
 
@@ -770,8 +627,6 @@ We'd do the same with pickleball directors. They run programs with hundreds of m
 
 4. **Less risk.** If March doesn't fill with directors, we're out $12-16K. If March doesn't fill with consumers, we might lose more AND hurt our reputation.
 
-5. **The agency (if we keep them) can help.** They document the Fam Trip. That content sells Fall tours.
-
 **Discussion Questions:**
 - How does each option feel to you?
 - What scares you about Option B?
@@ -792,7 +647,6 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 - Let HeyReach trial run out (10 days), then cancel
 - Write the invitation email/message
 - Start reaching out (Jaron on social, Ryan/Grant on email via Instantly.ai)
-- Decide on agency: renegotiate or cancel
 
 **Week 3-4:**
 - Follow up with interested directors
@@ -807,7 +661,7 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 - March 23: Trip happens!
 
 **During the trip:**
-- Someone films everything (agency, freelancer, or us)
+- Someone films everything (freelancer or us)
 - Get video testimonials from directors
 - Document the pickleball, the food, the culture
 - Debrief: What worked? What should we improve?
@@ -858,7 +712,6 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 
 | When | What Happens |
 |------|--------------|
-| Jan 31 | Decide on agency (renegotiate or cancel) |
 | Feb 2026 | Invite and confirm 6-8 directors |
 | March 2026 | Director Fam Trip |
 | April-May 2026 | Onboard directors as partners |
@@ -875,7 +728,7 @@ If we choose the Director Fam Trip, here's the step-by-step plan.
 
 ## Part 8: Grant's Role Going Forward (10 minutes)
 
-Let's be clear about what Grant does and doesn't do.
+Let's be clear about what Grant does and doesn't do. Grant operates as an **Adviser | Strategy + Support** working entirely behind the scenes.
 
 ### What Grant Does
 
@@ -892,8 +745,9 @@ Let's be clear about what Grant does and doesn't do.
 | Area | Who Does It |
 |------|-------------|
 | Public face | Jaron |
+| All outbound work (calls, emails, Google Meets) | Jaron |
 | Final decisions | Ryan and Jaron |
-| Customer conversations | Jaron (mostly) |
+| Customer conversations | Jaron |
 | Day-to-day logistics | Ryan |
 
 ### How Decisions Get Made
@@ -957,7 +811,6 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 | 1 | Warm Outreach (Jaron's network) | **UNUSED** — start here |
 | 2 | Cold Outreach (director calls) | Starting in Validation Sprint |
 | 3 | Free Content | Just beginning |
-| 4 | Paid Ads (agency) | **We hired this first — wrong order** |
 
 **Hormozi would say:** "You're using the weakest channel first. Use the strongest."
 
@@ -967,7 +820,7 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 
 | Day | Action |
 |-----|--------|
-| Day 1 | Pause/cancel agency, rewrite offer with guarantee |
+| Day 1 | Rewrite offer with guarantee |
 | Day 2-3 | Launch lead magnet, Jaron texts 100 people |
 | Day 4-5 | Run discovery calls, close 3-5 deposits |
 | Day 6-7 | Post testimonials, announce limited spots |
@@ -1018,12 +871,12 @@ It's a way to learn and adapt quickly. The team that learns fastest usually wins
 
 ### Our Problem Right Now
 
-We're making big decisions (agency, Fam Trip) without watching any signals from the market first.
+We're making big decisions (Fam Trip) without watching any signals from the market first.
 
 **Current loop (too slow):**
 - Observe: Nothing
 - Orient: Guess what people want
-- Decide: Big bets (agency, Fam Trip)
+- Decide: Big bets (Fam Trip)
 - Act: Launch in March
 - Observe again: 6 months later
 
@@ -1070,7 +923,6 @@ Set clear rules for when to change course:
 |--------|---------------|-----------------|
 | 5+ directors want Fam Trip | Book it | Pivot to consumer focus |
 | 30+ survey responses | Analyze and learn | Messaging isn't working |
-| Agency shows results | Keep them | Cancel |
 
 ### The Key Principle
 
@@ -1097,7 +949,7 @@ Then avoid those things.
 
 ### 10 Ways to Guarantee Failure
 
-1. **Spend all our money before getting a customer.** Burn cash on agency, ads, and polish while learning nothing.
+1. **Spend all our money before getting a customer.** Burn cash on ads and polish while learning nothing.
 
 2. **Launch to consumers in March with zero proof it works.** No testimonials, no photos, just promises.
 
@@ -1105,9 +957,7 @@ Then avoid those things.
 
 4. **Ignore that people book trips 6+ months ahead.** Keep pushing for March when they've already made plans.
 
-5. **Let the agency run wild without clear goals.** Just pay and hope.
-
-6. **Build infrastructure before customers.** Spending time on tools and systems when no one has paid yet.
+5. **Build infrastructure before customers.** Spending time on tools and systems when no one has paid yet.
 
 7. **Have no one responsible for actual sales.** Everyone "markets" but no one asks people to buy.
 
@@ -1121,7 +971,6 @@ Then avoid those things.
 
 | Mistake | Why It's Tempting | Why It's Dangerous |
 |---------|-------------------|-------------------|
-| **Keep the agency because we already paid** | Sunk cost fallacy | Throwing good money after bad |
 | **Wait for everything to be "ready"** | Perfectionism | Never actually sell anything |
 | **Post on social instead of selling** | Feels productive | Busy but not effective |
 | **Assume "if we build it, they will come"** | Optimism | Great product ≠ automatic customers |
@@ -1164,8 +1013,7 @@ If the answer is no, everything else is decoration.
 
 **What must happen in the next 60 days:**
 1. Get ONE paying commitment (deposit or full)
-2. Make the agency decision (90-day or cancel)
-3. Lock in Fam Trip details (who, when, what)
+2. Lock in Fam Trip details (who, when, what)
 
 If those three don't happen, we're already failing.
 
@@ -1210,17 +1058,9 @@ Let's talk about risks so we're ready.
 
 **What's the worst case financially?**
 
-| If we keep 1-year agency | Cost |
-|--------------------------|------|
-| Agency (12 months) | $24,000 - $60,000 |
+| Item | Cost |
+|------|------|
 | March Fam Trip (net) | $12,000 - $16,000 |
-| **Total risk** | $36,000 - $76,000 |
-
-| If we cancel/renegotiate agency | Cost |
-|--------------------------------|------|
-| Agency (90 days or $0) | $6,000 - $15,000 or $0 |
-| March Fam Trip (net) | $12,000 - $16,000 |
-| **Total risk** | $12,000 - $31,000 |
 
 **Question for Ryan:** Can we afford the worst case? What's our runway?
 
@@ -1230,18 +1070,8 @@ Let's talk about risks so we're ready.
 |----------|------|-----------|
 | **Fall Tour** | At $3,000/guest with ~40% margin, we need revenue > costs | ~8-10 guests per tour to break even |
 | **Fam Trip Investment** | $12-16K net cost, recovered if Fall tours generate $30K+ profit | 2 Fall tours with 12+ guests each |
-| **Year 1 Total** | Agency ($0-15K) + Fam Trip ($12-16K) + Fall ops = $25-40K invested | Need ~$60-80K revenue to be profitable |
 
 **Note:** These are rough estimates. We lack validated cost data. The Validation Sprint will help us understand if customers exist before we refine financial projections.
-
-### Risk 5: The Agency Doesn't Fit
-
-**What if the agency can't support our plan?**
-
-- Talk to them this week
-- Ask for 90-day sprint instead of 1 year
-- If they can't adapt, use the cooling-off period to cancel
-- Better to fix this now than waste months
 
 **Discussion Questions:**
 - Which risk worries you most?
@@ -1263,7 +1093,7 @@ Let's leave this call with clear answers.
 | Will we commit to the Validation Sprint? | Yes / No |
 | Jaron: Will you call 20 people this week? | Yes / No |
 | Ryan: Will you research 10 competitors? | Yes / No |
-| Grant: Will you call 5 directors? | Yes / No |
+| Jaron: Will you call 5 directors? | Yes / No |
 
 **Decision Triggers Based on Data:**
 
@@ -1278,18 +1108,7 @@ Let's leave this call with clear answers.
 
 ---
 
-### Decision 2: The Agency
-
-| Option | Your Vote |
-|--------|-----------|
-| A: Keep 1-year contract as-is | |
-| B: Renegotiate to 90-day sprint (recommended) | |
-| C: Cancel entirely and redirect budget | |
-
-**Who will call the agency?** _______________
-**By when?** _______________
-
-### Decision 3: The Hormozi Approach
+### Decision 2: The Hormozi Approach
 
 | Question | Your Answer |
 |----------|-------------|
@@ -1300,7 +1119,7 @@ Let's leave this call with clear answers.
 | Will we actively offer medical tourism upsell? | Yes / No |
 | Will we create an alumni program for repeat trips? | Yes / No |
 
-### Decision 4: Which Strategy Path?
+### Decision 3: Which Strategy Path?
 
 | Option | Your Vote |
 |--------|-----------|
@@ -1308,7 +1127,7 @@ Let's leave this call with clear answers.
 | B: Director Fam Trip (recommended) | |
 | C: Hybrid approach | |
 
-### Decision 5: Director Targets
+### Decision 4: Director Targets
 
 If we choose Director Fam Trip:
 
@@ -1318,7 +1137,7 @@ If we choose Director Fam Trip:
 | Deadline to confirm them? | (Suggested: Feb 17) |
 | What if we don't hit that number? | (Suggested: pause and replan) |
 
-### Decision 5B: Director Incentive Structure
+### Decision 4B: Director Incentive Structure
 
 **What do directors GET for selling to their members?** (Check one or more)
 
@@ -1335,7 +1154,7 @@ If we choose Director Fam Trip:
 
 **Why this matters:** Without clear incentives, we're relying on goodwill. That doesn't scale.
 
-### Decision 6: Roles and Tasks
+### Decision 5: Roles and Tasks
 
 **Week 1: Validation Sprint (BEFORE other tasks)**
 
@@ -1343,20 +1162,19 @@ If we choose Director Fam Trip:
 |------|-----|---------|
 | **Call 20 people for customer interviews** | Jaron | 7 days |
 | **Research 10 competitors (one-pager)** | Ryan | 5 days |
-| **Call 5 directors to validate B2B2C model** | Grant | 7 days |
+| **Call 5 directors to validate B2B2C model** | Jaron | 7 days |
 
 **Week 2+: Strategy Execution (only if validation passes)**
 
 | Task | Who | By When |
 |------|-----|---------|
 | Build director lead list (20-30 names) | | |
-| Call agency about renegotiating | | |
 | Let HeyReach run out, then cancel | | |
 | Write director invitation email | | |
 | Load director list into Instantly.ai | | |
 | Set up Fizzy Kanban board | | |
 
-### Decision 7: Next Check-In
+### Decision 6: Next Check-In
 
 | Question | Answer |
 |----------|--------|
@@ -1415,12 +1233,10 @@ What we DON'T know:
 We have something good here. Thailand pickleball trips are a real opportunity. But we need to build it the right way.
 
 **The wrong way:**
-- Lock into a 1-year agency before we have customers
 - Rush to March and scramble for bookings
 - Maybe fail publicly
 
 **The right way:**
-- Keep flexibility (90-day agency or none)
 - Use March to build relationships with directors
 - Let those relationships bring customers to Fall
 - Grow from there
@@ -1432,8 +1248,6 @@ I know March 23 feels important. You told people that date. It feels like giving
 But here's the thing: **A smart change is not failure. A forced launch that flops is failure.**
 
 The Director Fam Trip isn't retreat. It's strategy. You're trading a small chance at March revenue for a much better chance at Fall revenue AND a lasting sales network.
-
-And the agency decision? **A 1-year contract before your first customer is a big bet.** The 30-day cooling-off period is a gift. Use it to get flexibility — either a 90-day trial or your money back.
 
 I'll support whatever you decide. That's my job. But I want you to make this choice with clear eyes.
 
@@ -1465,7 +1279,7 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 |-----|------|----------|
 | Jaron | Call 20 people: "Would you pay $2,500 for this?" | 7 days |
 | Ryan | Research 10 competitors (pricing, reviews, what works) | 5 days |
-| Grant | Call 5 directors: "Would you sell this to your members?" | 7 days |
+| Jaron | Call 5 directors: "Would you sell this to your members?" | 7 days |
 
 **Decision Gate:** If 5+ people say "I'd book this" → proceed. If 0-2 → stop and fix the offer.
 
@@ -1473,7 +1287,6 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - March 23 is **52 days away** (7.4 weeks — not 8)
 - Zero bookings, zero customer interviews, zero competitor analysis
 - Typical buyers book 6-18 months ahead (we're outside the window)
-- 1-year agency contract starts Feb 1 (30-day cooling-off until ~March 1)
 - Jaron has only ~35 LinkedIn connections (average is 930+ — very small)
 - No pickleball director lead list exists yet
 - HeyReach trial: 10 days left (let run out, then cancel)
@@ -1484,11 +1297,9 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 
 **Validation First:** We have lots of strategy but no customer data. Fix that before spending money.
 
-**Agency:** Renegotiate to 90-day sprint OR cancel. Don't stay locked in for 1 year before you have customers.
-
 **Strategy:** Reframe March as a Director Fam Trip (Option B) or a "Founding Directors Campaign" (Option D — same mechanics, different public narrative). 6-8 directors at low cost experience it, then sell Fall tours to their members.
 
-**Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). Sell transformation, not trip. Add a guarantee. Use Jaron's network before the agency.
+**Hormozi Insight:** Your Value Equation is broken (0.75 when it needs 10+). Sell transformation, not trip. Add a guarantee. Use Jaron's network first.
 
 **Money Model Insight:** Don't think "one $3K sale." Think value ladder: Free lead magnet → Core tour → Medical upsell → Repeat trips → Referrals. One customer could be worth $15-25K over time. Build the ladder.
 
@@ -1501,7 +1312,6 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 **Campaign vs. Launch:** Are we building demand (campaign) or chasing sales (launch)? Pick one. Trying both creates incoherent messaging.
 
 ### The Timeline
-- **Jan 31:** Decide on agency (renegotiate or cancel)
 - **February:** Invite and confirm directors
 - **March:** Run Fam Trip, capture content
 - **April-May:** Onboard directors as partners
@@ -1509,26 +1319,23 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 - **Sept-Oct:** Run Fall tours
 
 ### The Roles
-- **Jaron:** Public face, social media, leads trips
+- **Jaron:** Public face, all outbound work (calls, meetings, emails), leads trips
 - **Ryan:** Operations, logistics, money
-- **Grant:** Strategy, operations support, voice of reason
+- **Grant:** Adviser | Strategy + Support (behind the scenes), helps Ryan with operations
 
 ### The Key Dates
-- **Feb 5:** Agency decision finalized
 - **Feb 17:** 6+ directors confirmed (or we pause)
-- **March 1:** Agency cooling-off period ends
 - **March 23:** Fam Trip
 
 ### The Investment (Recommended Path)
 - Fam Trip: $12-16K net
-- Agency (90 days): $6-15K (or $0 if canceled)
 - Target Fall revenue: $84-128K
 
 ### The Hormozi 7-Day Blitz
 
 | Day | Action |
 |-----|--------|
-| Day 1 | Cancel/pause agency. Rewrite offer with guarantee. |
+| Day 1 | Rewrite offer with guarantee. |
 | Day 2-3 | Launch lead magnet. Jaron texts 100 people. |
 | Day 4-5 | Book discovery calls. Close 3-5 deposits. |
 | Day 6-7 | Post testimonials. Announce limited spots. |
@@ -1560,8 +1367,7 @@ Don't resolve the tension — let each framework illuminate different aspects. T
 
 1. **Complete Validation Sprint** (Week 1 customer/competitor/director research)
 2. Get ONE paying commitment (deposit or full)
-3. Make agency decision (90-day or cancel)
-4. Lock in Fam Trip details (who, when, what)
+3. Lock in Fam Trip details (who, when, what)
 
 **If those don't happen, we're already failing.**
 
@@ -1642,12 +1448,8 @@ Value = (Dream Outcome × Belief It Will Work) ÷ (Time to Get Result × Effort 
 | 1 | Warm Outreach | People who know you | Jaron's network (UNUSED) |
 | 2 | Cold Outreach | Direct contact with strangers | Director calls, LinkedIn DMs |
 | 3 | Free Content | Social media, YouTube, blogs | Just starting |
-| 4 | Paid Ads | Facebook, Google ads | Agency is doing this |
-
-**The Problem:** We hired an agency (Rank 4) before using Jaron's network (Rank 1).
 
 **What This Means:**
-- Cancel or pause the agency
 - Jaron texts 100 people he knows
 - Ryan calls 20 club directors
 - THEN use content and ads later
@@ -1754,14 +1556,13 @@ A **Money Model** is a system where one customer generates enough profit to pay 
 ## The 7-Day Blitz (Detailed)
 
 **Day 1 (Today):**
-- Cancel or pause the agency
 - Rewrite the offer with a guarantee
 - Jaron records 3 videos for the lead magnet
 
 **Day 2-3:**
 - Launch the lead magnet
 - Jaron texts 100 people: "Launching Thailand pickleball retreat. Want details?"
-- Ryan calls 20 club directors
+- Jaron calls 20 club directors
 
 **Day 4-5:**
 - Run discovery calls with interested people
