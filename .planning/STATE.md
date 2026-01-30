@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.1 Communication & Content — Phase 16 Complete
+**Current focus:** v2.1 Communication & Content — Phase 17 Complete
 
 ## Current Position
 
-Phase: 16 of 17 (SMS Integration)
+Phase: 17 of 17 (Testimonial Workflow)
 Plan: 1 of 1 complete
 Status: Phase complete
-Last activity: 2026-01-30 — Completed 16-01-PLAN.md (SMS Integration)
+Last activity: 2026-01-30 — Completed 17-01-PLAN.md (Testimonial Workflow Integration)
 
-Progress: [####################] 100% v2.0 | [######    ] 67% v2.1
+Progress: [####################] 100% v2.0 | [##########] 100% v2.1
 
 ## Milestone History
 
@@ -45,7 +45,7 @@ See: .planning/MILESTONES.md
 
 ## Performance Metrics
 
-Aggregate across all milestones: 44 plans completed.
+Aggregate across all milestones: 45 plans completed.
 
 ## Accumulated Context
 
@@ -62,6 +62,8 @@ Recent decisions affecting v2.1:
 - Mobile app has testimonial submission UI (needs backend workflow)
 - Post-trip emails: 3/7/14/30/60 day milestones after trip ends
 - Post-trip cron: 6 AM UTC daily (before pre-trip at 7 AM)
+- Testimonial gallery uses guestTestimonial.getPublished tRPC query
+- File uploads use Supabase Storage signed URLs (getUploadUrl procedure)
 
 ### Pending Todos
 
@@ -73,14 +75,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-30 12:22 UTC
-Stopped at: Completed 16-01-PLAN.md (SMS Integration)
+Last session: 2026-01-30 12:49 UTC
+Stopped at: Completed 17-01-PLAN.md (Testimonial Workflow Integration)
 Resume file: None
 
 ## Next Steps
 
-**v2.1 Communication & Content — IN PROGRESS**
+**v2.1 Communication & Content — COMPLETE**
 
-Phase 16 (SMS Integration) complete.
+All phases complete:
+- Phase 15 (Email System) - Post-trip email sequences
+- Phase 16 (SMS Integration) - Flight alerts, itinerary changes
+- Phase 17 (Testimonial Workflow) - Gallery integration, file uploads
 
-Next action: `/gsd:plan-phase 17` to plan Testimonial Content workflow
+Ready for v2.1 milestone archival or next milestone planning.
