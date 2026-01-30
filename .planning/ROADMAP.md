@@ -75,10 +75,10 @@ Plans:
   3. Guest receives SMS for urgent itinerary changes
   4. Guest receives SMS for emergency broadcasts
   5. Admin can trigger urgent SMS from admin panel
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 16-01: Twilio Integration & Urgent Notifications
+- [ ] 16-01-PLAN.md — Complete SMS admin procedures and integrate UI
 
 #### Phase 17: Testimonial Workflow
 **Goal**: Guests can share their transformation stories, admin can curate content, website displays approved testimonials
