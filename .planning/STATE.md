@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-28)
+See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.0 Mobile App COMPLETE
+**Current focus:** v2.1 Communication & Content
 
 ## Current Position
 
-Phase: 14 of 14 (Production Polish) COMPLETE
-Plan: 5 of 5 complete (14-01, 14-02, 14-03, 14-04, 14-05)
-Status: v2.0 Mobile App complete, ready for deployment
-Last activity: 2026-01-28 — Completed 14-05-PLAN.md (App Store Submission)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v2.1
+Last activity: 2026-01-30 — Milestone v2.1 started (BMAD E11 + E12)
 
-Progress: [####################] 100% (22/22 plans complete in v2.0)
+Progress: [                    ] 0%
 
 ## Milestone History
 
@@ -36,9 +36,10 @@ Progress: [####################] 100% (22/22 plans complete in v2.0)
 - Archived: `.planning/milestones/v1.3-ROADMAP.md`, `.planning/milestones/v1.3-REQUIREMENTS.md`
 
 **v2.0 Mobile App shipped 2026-01-28**
-- 5 phases, 22 plans
+- 5 phases, 22 plans, 26 requirements
 - Phases: 10-Foundation, 11-PreTrip, 12-DuringTrip, 13-Alumni, 14-Polish
 - Features: Full mobile app with Expo, push notifications, deep linking, offline support
+- Archived: `.planning/milestones/v2.0-ROADMAP.md`, `.planning/milestones/v2.0-REQUIREMENTS.md`
 
 See: .planning/MILESTONES.md
 
@@ -189,19 +190,10 @@ Resume file: None
 
 ## Next Steps
 
-**v2.0 Mobile App COMPLETE**
+**v2.1 Communication & Content — DEFINING REQUIREMENTS**
 
-All 5 phases finished:
-- [x] Phase 10: Mobile App Foundation (3 plans)
-- [x] Phase 11: Pre-Trip Experience (5 plans)
-- [x] Phase 12: During-Trip Experience (5 plans)
-- [x] Phase 13: Alumni Engagement (4 plans)
-- [x] Phase 14: Production Polish (5 plans)
+Milestone sourced from BMAD Epics E11 (Communication System) + E12 (Content Management).
 
-**To deploy to app stores:**
-1. Follow `.planning/phases/14-production-polish/DEPLOYMENT_CHECKLIST.md`
-2. Configure all credential placeholders
-3. Run EAS build commands
-4. Submit to TestFlight and Play Store internal track
+**Next action:** Define requirements and create roadmap
 
-**Ready for next milestone when user decides.**
+`/gsd:new-milestone` in progress — defining REQUIREMENTS.md next

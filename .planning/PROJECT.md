@@ -4,25 +4,44 @@
 
 A luxury transformation travel platform combining world-class pickleball, medical tourism, and wellness experiences in Thailand. The web application enables affluent US retirees (55+) to discover, configure, and book transformation packages, while a partner portal empowers pickleball club directors to refer members and earn rewards.
 
-## Current Milestone: v2.0 Mobile App
+## Current Milestone: v2.1 Communication & Content
 
-**Goal:** Deliver a React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
+**Goal:** Build operational systems for automated guest communication and content management to support real trip operations.
 
 **Target features:**
-- Expo React Native app with Clerk authentication and biometrics
-- Pre-trip dashboard (countdown, checklist, document upload, group chat)
-- During-trip experience (itinerary, concierge chat, court booking, photo journal)
-- Alumni engagement (referrals, rebooking, passport stamps gamification)
+- Pre-trip email sequences (60/30/14/7/1 days before departure)
+- Post-trip follow-up emails (testimonial requests, referral prompts)
+- Admin broadcast messaging (urgent updates to trip groups)
+- Testimonial submission and admin approval workflow
+- Photo gallery management with tagging and consent tracking
+
+**Source:** BMAD Epics E11 (Communication System) + E12 (Content Management)
 
 ## Current State
 
-**Version:** v1.3 Gift Enhancements (shipped 2026-01-28)
+**Version:** v2.0 Mobile App (shipped 2026-01-28)
 
-The web platform is production-ready with complete gift management:
+The platform now includes web + mobile applications:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
 - v1.2 RLS Security Hardening shipped 2026-01-27
 - v1.3 Gift Enhancements shipped 2026-01-28
+- v2.0 Mobile App shipped 2026-01-28
+
+<details>
+<summary>Completed: v2.0 Mobile App</summary>
+
+**Goal:** Deliver React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
+
+**Delivered features:**
+- ✓ Expo React Native app with Clerk authentication and biometrics
+- ✓ Pre-trip dashboard (countdown, checklist, document upload, group chat)
+- ✓ During-trip experience (itinerary, concierge chat, court booking, photo journal)
+- ✓ Alumni engagement (referrals, rebooking, passport stamps gamification)
+- ✓ Push notifications via OneSignal
+- ✓ Deep linking and offline mode support
+- ✓ App Store / Play Store submission ready
+</details>
 
 <details>
 <summary>Completed: v1.3 Gift Enhancements</summary>
@@ -110,36 +129,49 @@ The web platform is production-ready with complete gift management:
 - ✓ **Gift message editing** — Purchaser can edit message before delivery — v1.3
 - ✓ **Notification resend** — Purchaser can resend email to recipient (rate limited) — v1.3
 
+**v2.0 Mobile App (shipped 2026-01-28):**
+- ✓ **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript — v2.0
+- ✓ **MOB-AUTH-01**: Guest can log in with email/password via Clerk — v2.0
+- ✓ **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID) — v2.0
+- ✓ **MOB-PRETRIP-01**: Guest can view countdown to trip departure — v2.0
+- ✓ **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items — v2.0
+- ✓ **MOB-PRETRIP-03**: Guest can upload passport document — v2.0
+- ✓ **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in) — v2.0
+- ✓ **MOB-PRETRIP-05**: Guest can chat with trip group before departure — v2.0
+- ✓ **MOB-PRETRIP-06**: Guest can view and customize packing list — v2.0
+- ✓ **MOB-PRETRIP-07**: Guest can download offline itinerary — v2.0
+- ✓ **MOB-TRIP-01**: Guest can view daily itinerary with activities — v2.0
+- ✓ **MOB-TRIP-02**: Guest can check in to activities — v2.0
+- ✓ **MOB-TRIP-03**: Guest can chat with concierge 24/7 — v2.0
+- ✓ **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location — v2.0
+- ✓ **MOB-TRIP-05**: Guest can book pickleball courts — v2.0
+- ✓ **MOB-TRIP-06**: Guest can find other guests to play with — v2.0
+- ✓ **MOB-TRIP-07**: Guest can upload photos to trip journal — v2.0
+- ✓ **MOB-TRIP-08**: Guest can view group photo gallery — v2.0
+- ✓ **MOB-TRIP-09**: Guest can request transportation — v2.0
+- ✓ **MOB-ALUMNI-01**: Guest can view transformation journey summary — v2.0
+- ✓ **MOB-ALUMNI-02**: Guest can browse alumni directory — v2.0
+- ✓ **MOB-ALUMNI-03**: Guest can refer friends and track referrals — v2.0
+- ✓ **MOB-ALUMNI-04**: Guest can rebook with alumni discount — v2.0
+- ✓ **MOB-ALUMNI-05**: Guest can earn passport stamps for achievements — v2.0
+- ✓ **MOB-ALUMNI-06**: Guest can create and submit testimonial — v2.0
+
 ### Active
 
-<!-- v2.0 Mobile App milestone -->
+<!-- v2.1 Communication & Content milestone -->
 
-**v2.0 Mobile App:**
-- [ ] **MOB-SETUP-01**: Developer can scaffold Expo React Native app with TypeScript
-- [ ] **MOB-AUTH-01**: Guest can log in with email/password via Clerk
-- [ ] **MOB-AUTH-02**: Guest can use biometric login (Face ID, Touch ID)
-- [ ] **MOB-PRETRIP-01**: Guest can view countdown to trip departure
-- [ ] **MOB-PRETRIP-02**: Guest can complete pre-trip checklist items
-- [ ] **MOB-PRETRIP-03**: Guest can upload passport document
-- [ ] **MOB-PRETRIP-04**: Guest can view fellow travelers (opt-in)
-- [ ] **MOB-PRETRIP-05**: Guest can chat with trip group before departure
-- [ ] **MOB-PRETRIP-06**: Guest can view and customize packing list
-- [ ] **MOB-PRETRIP-07**: Guest can download offline itinerary
-- [ ] **MOB-TRIP-01**: Guest can view daily itinerary with activities
-- [ ] **MOB-TRIP-02**: Guest can check in to activities
-- [ ] **MOB-TRIP-03**: Guest can chat with concierge 24/7
-- [ ] **MOB-TRIP-04**: Guest can trigger emergency SOS with GPS location
-- [ ] **MOB-TRIP-05**: Guest can book pickleball courts
-- [ ] **MOB-TRIP-06**: Guest can find other guests to play with
-- [ ] **MOB-TRIP-07**: Guest can upload photos to trip journal
-- [ ] **MOB-TRIP-08**: Guest can view group photo gallery
-- [ ] **MOB-TRIP-09**: Guest can request transportation
-- [ ] **MOB-ALUMNI-01**: Guest can view transformation journey summary
-- [ ] **MOB-ALUMNI-02**: Guest can browse alumni directory
-- [ ] **MOB-ALUMNI-03**: Guest can refer friends and track referrals
-- [ ] **MOB-ALUMNI-04**: Guest can rebook with alumni discount
-- [ ] **MOB-ALUMNI-05**: Guest can earn passport stamps for achievements
-- [ ] **MOB-ALUMNI-06**: Guest can create and submit testimonial
+**v2.1 Communication & Content:**
+- [ ] **COMM-01**: Guest receives pre-trip email sequence (60/30/14/7/1 days before)
+- [ ] **COMM-02**: Guest receives post-trip follow-up emails (testimonial request, referral prompt)
+- [ ] **COMM-03**: Guest receives payment reminder emails (7 days before installment)
+- [ ] **COMM-04**: Admin can send broadcast messages to trip groups
+- [ ] **COMM-05**: Guest can manage email preferences (unsubscribe categories)
+- [ ] **COMM-06**: System sends automated NPS surveys (30 days after trip)
+- [ ] **CONT-01**: Guest can submit testimonial (video, written, photo)
+- [ ] **CONT-02**: Admin can review and approve testimonials
+- [ ] **CONT-03**: Published testimonials display on website
+- [ ] **CONT-04**: Admin can manage photo galleries (upload, tag, feature)
+- [ ] **CONT-05**: System tracks content consent per testimonial/photo
 
 ### Out of Scope
 
@@ -206,10 +238,12 @@ The web platform is production-ready with complete gift management:
 | CANCELLED as terminal state | Matches ACCEPTED/DECLINED/EXPIRED behavior | ✓ Implemented v1.3 |
 | Rate limit 3/24h per gift | Prevents spam while allowing multiple gifts | ✓ Implemented v1.3 |
 
-| Mobile app = v2.0 | Major platform expansion | — Pending |
-| Expo + NativeWind | Aligns with existing Tailwind patterns | — Pending |
-| tRPC shared client | Reuse existing API infrastructure | — Pending |
-| OneSignal for push | Industry standard, good Expo support | — Pending |
+| Mobile app = v2.0 | Major platform expansion | ✓ Shipped v2.0 |
+| Expo + NativeWind | Aligns with existing Tailwind patterns | ✓ Implemented v2.0 |
+| tRPC shared client | Reuse existing API infrastructure | ✓ Implemented v2.0 |
+| OneSignal for push | Industry standard, good Expo support | ✓ Implemented v2.0 |
+| Communication + Content = v2.1 | Operational systems for real trips | — Pending |
+| BMAD Epics E11 + E12 | Source requirements from established planning | — Pending |
 
 ---
-*Last updated: 2026-01-28 after v2.0 milestone started*
+*Last updated: 2026-01-30 after v2.1 milestone started*
