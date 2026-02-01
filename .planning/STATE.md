@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** None — v2.2 complete, ready to plan next milestone
+**Current focus:** v2.3 API Security — rate limiting, CSRF, CSP headers
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Between milestones
-Last activity: 2026-02-01 — v2.2 Security Hardening milestone SHIPPED
+Status: Defining requirements
+Last activity: 2026-02-01 — Milestone v2.3 started
 
-Progress: [####################] 100% v2.2 complete
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0% v2.3
 
 ## Milestone History
 
@@ -100,19 +100,18 @@ Resume file: None
 
 ## Next Steps
 
-**v2.2 Security Hardening — SHIPPED 2026-02-01**
+**v2.3 API Security — IN PROGRESS**
 
-All security vulnerabilities identified by Six Hats Council have been addressed.
-Project is ready for customer onboarding.
+**Target features:**
+- SEC-05: Rate limiting on all public endpoints (per-IP, standard protection)
+- SEC-06: CSRF protection on mutation endpoints
+- SEC-07: Content Security Policy headers
 
 **Tech debt tracked for future cleanup:**
 - 23 console.log in lib/ (ESLint catching as errors)
 - firstName/lastName not in PII redaction paths
 
-**Potential v2.3 scope (from REQUIREMENTS.md Future Requirements):**
-- SEC-05: Rate limiting on all public endpoints
-- SEC-06: CSRF protection on mutation endpoints
-- SEC-07: Content Security Policy headers
+**Deferred to v2.4+:**
 - SEC-08: Security audit logging to external SIEM
-
-Run `/gsd:new-milestone` to plan v2.3 or next milestone.
+- COMM-04: Email preference management
+- COMM-05: Broadcast messaging

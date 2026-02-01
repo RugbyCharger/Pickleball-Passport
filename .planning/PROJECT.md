@@ -4,18 +4,14 @@
 
 A luxury transformation travel platform combining world-class pickleball, medical tourism, and wellness experiences in Thailand. The web application enables affluent US retirees (55+) to discover, configure, and book transformation packages, while a partner portal empowers pickleball club directors to refer members and earn rewards.
 
-## Current Milestone: None
+## Current Milestone: v2.3 API Security
 
-Ready to plan next milestone. v2.2 Security Hardening shipped 2026-02-01.
+**Goal:** Harden public API endpoints with rate limiting, CSRF protection, and Content Security Policy headers.
 
-**Potential v2.3 scope:**
-- SEC-05: Rate limiting on all public endpoints
+**Target features:**
+- SEC-05: Rate limiting on all public endpoints (per-IP, standard protection)
 - SEC-06: CSRF protection on mutation endpoints
 - SEC-07: Content Security Policy headers
-- COMM-04: Email preference management
-- COMM-05: Broadcast messaging
-
-Run `/gsd:new-milestone` to plan next milestone.
 
 ## Current State
 
@@ -276,4 +272,4 @@ The platform is production-ready with complete security hardening:
 | BMAD Epics E11 + E12 | Source requirements from established planning | — Pending |
 
 ---
-*Last updated: 2026-01-30 after v2.1 milestone started*
+*Last updated: 2026-02-01 after v2.3 milestone started*
