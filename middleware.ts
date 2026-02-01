@@ -1,8 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/db'
+import { authLogger } from '@/lib/logger'
 
 // Route matchers for different protection levels
-const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)'])
+const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)', '/api/admin(.*)'])
+const isAdminApiRoute = createRouteMatcher(['/api/admin(.*)'])
 const isDashboardRoute = createRouteMatcher(['/dashboard(.*)'])
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -15,20 +18,69 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, request) => {
-  // Admin routes: require authentication (role check done in layout)
-  // The admin layout does server-side database role verification,
-  // which is more reliable than depending on Clerk session claims config.
+  // Admin routes: require authentication AND admin role from database
+  // SEC-01: All admin routes check database role, API routes return 403
   if (isAdminRoute(request)) {
     const { userId } = await auth()
 
-    // Not authenticated -> redirect to sign-in
+    // Not authenticated
     if (!userId) {
+      // API routes: return 401 JSON
+      if (isAdminApiRoute(request)) {
+        authLogger.warn(
+          {
+            path: request.nextUrl.pathname,
+            userAgent: request.headers.get('user-agent'),
+            ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+          },
+          'Unauthenticated admin API access attempt'
+        )
+        return NextResponse.json(
+          { error: 'Unauthorized', message: 'Authentication required' },
+          { status: 401 }
+        )
+      }
+
+      // Page routes: redirect to sign-in
       const signInUrl = new URL('/sign-in', request.url)
       signInUrl.searchParams.set('redirect_url', request.url)
       return NextResponse.redirect(signInUrl)
     }
 
-    // Authenticated -> allow through (layout handles role check)
+    // Check database role for admin access
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    })
+
+    const isAdmin = user?.role === 'ADMIN'
+
+    if (!isAdmin) {
+      // Log unauthorized access attempt
+      authLogger.warn(
+        {
+          userId,
+          role: user?.role || 'UNKNOWN',
+          path: request.nextUrl.pathname,
+          userAgent: request.headers.get('user-agent'),
+          ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        },
+        'Unauthorized admin access attempt'
+      )
+
+      // API routes: return 403 JSON
+      if (isAdminApiRoute(request)) {
+        return NextResponse.json(
+          { error: 'Forbidden', message: 'Admin access required' },
+          { status: 403 }
+        )
+      }
+
+      // Page routes: redirect to dashboard
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+
+    // Admin user -> allow access
     return NextResponse.next()
   }
 
