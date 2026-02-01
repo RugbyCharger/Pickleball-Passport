@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/db';
+import { authLogger } from '@/lib/logger';
 
 export async function POST(req: Request) {
   // Get the headers
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.error('CLERK_WEBHOOK_SECRET is not set');
+    authLogger.error('CLERK_WEBHOOK_SECRET is not set');
     return new NextResponse('Error: CLERK_WEBHOOK_SECRET not configured', {
       status: 500,
     });
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
       'svix-signature': svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error('Error verifying webhook:', err);
+    authLogger.error({ err }, 'Error verifying Clerk webhook signature');
     return new NextResponse('Error occurred', {
       status: 400,
     });
@@ -65,8 +66,7 @@ export async function POST(req: Request) {
         },
       });
 
-      // SECURITY: Don't log email addresses
-      console.log(`User created: ${id}`);
+      authLogger.info({ userId: id }, 'User created via Clerk webhook');
 
       // TODO: Send welcome email (E2-S2)
       // This will be implemented in Sprint 3 when SendGrid is set up (E11-S1)
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
 
       return new NextResponse('User created', { status: 200 });
     } catch (error) {
-      console.error('Error creating user in database:', error);
+      authLogger.error({ err: error, userId: id }, 'Failed to create user in database from Clerk webhook');
       return new NextResponse('Error creating user', { status: 500 });
     }
   }
@@ -95,10 +95,10 @@ export async function POST(req: Request) {
         },
       });
 
-      console.log(`User updated: ${id}`);
+      authLogger.info({ userId: id }, 'User updated via Clerk webhook');
       return new NextResponse('User updated', { status: 200 });
     } catch (error) {
-      console.error('Error updating user in database:', error);
+      authLogger.error({ err: error, userId: id }, 'Failed to update user in database from Clerk webhook');
       return new NextResponse('Error updating user', { status: 500 });
     }
   }
@@ -112,10 +112,10 @@ export async function POST(req: Request) {
         where: { id },
       });
 
-      console.log(`User deleted: ${id}`);
+      authLogger.info({ userId: id }, 'User deleted via Clerk webhook');
       return new NextResponse('User deleted', { status: 200 });
     } catch (error) {
-      console.error('Error deleting user from database:', error);
+      authLogger.error({ err: error, userId: id }, 'Failed to delete user from database from Clerk webhook');
       return new NextResponse('Error deleting user', { status: 500 });
     }
   }
