@@ -2,61 +2,61 @@
 
 ## Milestones
 
-- ✅ **v1.0 MVP** - Phases 1-4 (shipped 2026-01-26)
-- ✅ **v1.1 Gift Booking** - Phases 5-7 (shipped 2026-01-27)
-- ✅ **v1.2 RLS Security** - Phase 8 (shipped 2026-01-27)
-- ✅ **v1.3 Gift Enhancements** - Phase 9 (shipped 2026-01-28)
-- ✅ **v2.0 Mobile App** - Phases 10-14 (shipped 2026-01-28)
-- ✅ **v2.1 Communication & Content** - Phases 15-17 (shipped 2026-01-30)
-- ✅ **v2.2 Security Hardening** - Phase 18 (shipped 2026-02-01)
-- 🚧 **v2.3 API Security** - Phase 19 (in progress)
+- v1.0 MVP - Phases 1-4 (shipped 2026-01-26)
+- v1.1 Gift Booking - Phases 5-7 (shipped 2026-01-27)
+- v1.2 RLS Security - Phase 8 (shipped 2026-01-27)
+- v1.3 Gift Enhancements - Phase 9 (shipped 2026-01-28)
+- v2.0 Mobile App - Phases 10-14 (shipped 2026-01-28)
+- v2.1 Communication & Content - Phases 15-17 (shipped 2026-01-30)
+- v2.2 Security Hardening - Phase 18 (shipped 2026-02-01)
+- v2.3 API Security - Phase 19 (in progress)
 
 ## Phases
 
 <details>
-<summary>✅ v1.0 MVP (Phases 1-4) - SHIPPED 2026-01-26</summary>
+<summary>v1.0 MVP (Phases 1-4) - SHIPPED 2026-01-26</summary>
 
 See: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.1 Gift Booking (Phases 5-7) - SHIPPED 2026-01-27</summary>
+<summary>v1.1 Gift Booking (Phases 5-7) - SHIPPED 2026-01-27</summary>
 
 See: `.planning/milestones/v1.1-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.2 RLS Security (Phase 8) - SHIPPED 2026-01-27</summary>
+<summary>v1.2 RLS Security (Phase 8) - SHIPPED 2026-01-27</summary>
 
 See: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v1.3 Gift Enhancements (Phase 9) - SHIPPED 2026-01-28</summary>
+<summary>v1.3 Gift Enhancements (Phase 9) - SHIPPED 2026-01-28</summary>
 
 See: `.planning/milestones/v1.3-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v2.0 Mobile App (Phases 10-14) - SHIPPED 2026-01-28</summary>
+<summary>v2.0 Mobile App (Phases 10-14) - SHIPPED 2026-01-28</summary>
 
 See: `.planning/milestones/v2.0-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v2.1 Communication & Content (Phases 15-17) - SHIPPED 2026-01-30</summary>
+<summary>v2.1 Communication & Content (Phases 15-17) - SHIPPED 2026-01-30</summary>
 
 See: `.planning/milestones/v2.1-ROADMAP.md`
 
 </details>
 
 <details>
-<summary>✅ v2.2 Security Hardening (Phase 18) - SHIPPED 2026-02-01</summary>
+<summary>v2.2 Security Hardening (Phase 18) - SHIPPED 2026-02-01</summary>
 
 See: `.planning/milestones/v2.2-ROADMAP.md`
 
@@ -64,7 +64,7 @@ See: `.planning/milestones/v2.2-ROADMAP.md`
 
 ---
 
-### 🚧 v2.3 API Security (In Progress)
+### v2.3 API Security (In Progress)
 
 **Milestone Goal:** Harden public API endpoints with rate limiting, CSRF protection, and Content Security Policy headers to protect against abuse and injection attacks.
 
@@ -79,17 +79,16 @@ See: `.planning/milestones/v2.2-ROADMAP.md`
   4. Cross-origin POST without proper Origin header returns 403 Forbidden
   5. Mobile app API calls succeed (Bearer token auth bypasses CSRF checks)
   6. Browser dev tools show CSP header on all pages (no console violations for Clerk, Stripe, Supabase)
-**Plans**: 3 plans
+**Plans**: 3 plans (2 waves)
 
-**Build Order (per research):**
-1. SEC-05 Rate Limiting - Extends existing Upstash infrastructure, provides immediate abuse protection
-2. SEC-06 CSRF Protection - Mostly verification (tRPC already provides Content-Type check), add Origin validation
-3. SEC-07 CSP Headers - Requires most iteration, deploy in Report-Only mode first
+**Wave Structure:**
+- Wave 1: 19-01 (Rate Limiting - foundational)
+- Wave 2: 19-02, 19-03 (CSRF + CSP - parallel, modify different files)
 
 Plans:
-- [ ] 19-01: Rate limiting middleware (SEC-05-01 through SEC-05-05)
-- [ ] 19-02: CSRF protection and Origin validation (SEC-06-01 through SEC-06-04)
-- [ ] 19-03: Content Security Policy headers (SEC-07-01 through SEC-07-04)
+- [ ] 19-01-PLAN.md — Rate limiting middleware (SEC-05-01 through SEC-05-05)
+- [ ] 19-02-PLAN.md — CSRF protection and Origin validation (SEC-06-01 through SEC-06-04)
+- [ ] 19-03-PLAN.md — Content Security Policy headers (SEC-07-01 through SEC-07-04)
 
 **Critical Pitfalls to Avoid (from research):**
 - RL-C1: Exempt `/api/webhooks/*` and `/api/cron/*` from rate limiting
@@ -113,8 +112,8 @@ Plans:
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
 | 15-17 | v2.1 Communication | 3/3 | Complete | 2026-01-30 |
 | 18 | v2.2 Security Hardening | 4/4 | Complete | 2026-02-01 |
-| 19. API Security | v2.3 | 0/3 | Not started | - |
+| 19. API Security | v2.3 | 0/3 | Ready | - |
 
 ---
 *Roadmap updated: 2026-02-01*
-*Milestone: v2.3 API Security — IN PROGRESS*
+*Milestone: v2.3 API Security — PLANNED*
