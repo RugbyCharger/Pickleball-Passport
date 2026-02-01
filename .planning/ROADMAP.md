@@ -118,28 +118,33 @@ Plans:
 **Milestone Goal:** Fix critical security vulnerabilities identified by Six Hats Council codebase review before onboarding paying customers.
 
 #### Phase 18: Security Hardening
-**Goal**: Close 3 critical security holes that could cause data breaches, financial fraud, or system manipulation
+**Goal**: Close critical security holes identified by research: console.log audit (SEC-04), admin 403 responses (SEC-01), and verify existing webhook/encryption implementations (SEC-02, SEC-03)
 **Depends on**: Phase 17 (current production state)
-**Requirements**: SEC-01, SEC-02, SEC-03
+**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
 **Success Criteria** (what must be TRUE):
   1. Admin routes reject non-admin users with 403 Forbidden (SEC-01)
-  2. Bank account numbers encrypted at rest, never exposed in logs (SEC-02)
-  3. Stripe webhooks verify signature before processing (SEC-03)
-  4. SendGrid webhooks verify signature before processing (SEC-03)
-  5. No console.log statements containing sensitive data in production
+  2. Bank account numbers encrypted at rest, never exposed in logs (SEC-02 - verified complete)
+  3. Stripe webhooks verify signature before processing (SEC-03 - verified complete)
+  4. SendGrid webhooks verify signature before processing (SEC-03 - verified complete)
+  5. No console.log statements containing sensitive data in production (SEC-04)
   6. Security audit passes with 0 critical findings
 **Plans**: 3 plans
 
 Plans:
-- [ ] 18-01-PLAN.md — Admin authentication middleware (SEC-01)
-- [ ] 18-02-PLAN.md — Bank account encryption (SEC-02)
-- [ ] 18-03-PLAN.md — Webhook signature verification (SEC-03)
+- [ ] 18-01-PLAN.md — Console.log audit and Pino migration (SEC-04) + PII redaction + ESLint enforcement
+- [ ] 18-02-PLAN.md — Cron job logging migration to structured pino (SEC-04)
+- [ ] 18-03-PLAN.md — Admin 403 responses (SEC-01) + SEC-02/SEC-03 verification
 
 **Details:**
-Critical security fixes identified by Six Hats Council analysis on 2026-01-31:
-- **SEC-01**: Admin dashboard currently accessible to ALL authenticated users
-- **SEC-02**: Partner bank accounts stored in plaintext (Stripe Connect payout data)
-- **SEC-03**: Webhook endpoints don't verify signatures (Stripe/SendGrid can be forged)
+Based on 18-RESEARCH.md findings:
+- **SEC-04 (HIGHEST PRIORITY)**: 485+ console.log statements across 123 files; pino infrastructure exists but not consistently used
+- **SEC-01 (HIGH PRIORITY)**: Middleware redirects unauthorized users instead of returning 403 for API routes
+- **SEC-02 (COMPLETE)**: PartnerPayoutMethod removed in Phase 01; Stripe Connect handles all bank data
+- **SEC-03 (COMPLETE)**: Both Stripe and SendGrid webhooks already verify signatures
+
+**Wave Structure:**
+- Wave 1: 18-01 and 18-02 (parallel - independent logging migrations)
+- Wave 2: 18-03 (depends on 18-01 for authLogger availability)
 
 ---
 
@@ -158,5 +163,5 @@ Critical security fixes identified by Six Hats Council analysis on 2026-01-31:
 | 18. Security Hardening | v2.2 | 0/3 | In Progress | — |
 
 ---
-*Roadmap updated: 2026-01-31*
+*Roadmap updated: 2026-02-01*
 *Milestone: v2.2 Security Hardening*
