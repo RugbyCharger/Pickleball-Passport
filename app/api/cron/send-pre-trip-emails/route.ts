@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { sendPreTripEmails } from '@/lib/email/send-pre-trip-emails'
+import { cronLogger, emailLogger, logError } from '@/lib/logger'
 
 /**
  * GET /api/cron/send-pre-trip-emails
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.error('[PreTripEmails] CRON_SECRET not configured')
+    cronLogger.error({ job: 'pre-trip-emails' }, 'CRON_SECRET not configured')
     return NextResponse.json(
       { error: 'Cron job not configured' },
       { status: 500 }
@@ -32,14 +33,14 @@ export async function GET(req: NextRequest) {
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('[PreTripEmails] Unauthorized cron request')
+    cronLogger.warn({ job: 'pre-trip-emails' }, 'Unauthorized cron request')
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     )
   }
 
-  console.log('=== Send Pre-Trip Emails Cron Job Started ===')
+  cronLogger.info({ job: 'pre-trip-emails' }, 'Send Pre-Trip Emails Cron Job Started')
 
   try {
     // 2. Run the pre-trip email service
@@ -48,14 +49,15 @@ export async function GET(req: NextRequest) {
     const executionTimeMs = Date.now() - startTime
 
     // 3. Log summary
-    console.log('=== Cron Job Summary ===')
-    console.log(`Total processed: ${result.totalProcessed}`)
-    console.log(`Emails sent: ${result.emailsSent}`)
-    console.log(`Errors: ${result.errors}`)
-    console.log(`Skipped: ${result.skipped}`)
-    console.log('By milestone:', result.byMilestone)
-    console.log(`Execution time: ${executionTimeMs}ms`)
-    console.log('=== Cron Job Complete ===')
+    cronLogger.info({
+      job: 'pre-trip-emails',
+      totalProcessed: result.totalProcessed,
+      emailsSent: result.emailsSent,
+      errors: result.errors,
+      skipped: result.skipped,
+      byMilestone: result.byMilestone,
+      executionTimeMs,
+    }, 'Send Pre-Trip Emails Cron Job Complete')
 
     // 4. Return summary
     return NextResponse.json({
@@ -64,7 +66,7 @@ export async function GET(req: NextRequest) {
       executionTimeMs,
     })
   } catch (error) {
-    console.error('[PreTripEmails] Fatal error in cron job:', error)
+    logError(cronLogger, error, 'Fatal error in pre-trip-emails cron job')
 
     return NextResponse.json(
       {

@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { sendPaymentReminders } from '@/lib/payments/send-payment-reminders'
+import { cronLogger, emailLogger, logError } from '@/lib/logger'
 
 /**
  * GET /api/cron/send-payment-reminders
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.error('[PaymentReminders] CRON_SECRET not configured')
+    cronLogger.error({ job: 'payment-reminders' }, 'CRON_SECRET not configured')
     return NextResponse.json(
       { error: 'Cron job not configured' },
       { status: 500 }
@@ -32,14 +33,14 @@ export async function GET(req: NextRequest) {
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('[PaymentReminders] Unauthorized cron request')
+    cronLogger.warn({ job: 'payment-reminders' }, 'Unauthorized cron request')
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     )
   }
 
-  console.log('=== Send Payment Reminders Cron Job Started ===')
+  cronLogger.info({ job: 'payment-reminders' }, 'Send Payment Reminders Cron Job Started')
 
   try {
     // 2. Run the reminder service
@@ -48,13 +49,14 @@ export async function GET(req: NextRequest) {
     const executionTimeMs = Date.now() - startTime
 
     // 3. Log summary
-    console.log('=== Cron Job Summary ===')
-    console.log(`Total found: ${result.totalFound}`)
-    console.log(`Reminders sent: ${result.remindersSent}`)
-    console.log(`Errors: ${result.errors}`)
-    console.log(`Skipped: ${result.skipped}`)
-    console.log(`Execution time: ${executionTimeMs}ms`)
-    console.log('=== Cron Job Complete ===')
+    cronLogger.info({
+      job: 'payment-reminders',
+      totalFound: result.totalFound,
+      remindersSent: result.remindersSent,
+      errors: result.errors,
+      skipped: result.skipped,
+      executionTimeMs,
+    }, 'Send Payment Reminders Cron Job Complete')
 
     // 4. Return summary
     return NextResponse.json({
@@ -63,7 +65,7 @@ export async function GET(req: NextRequest) {
       executionTimeMs,
     })
   } catch (error) {
-    console.error('[PaymentReminders] Fatal error in cron job:', error)
+    logError(cronLogger, error, 'Fatal error in payment-reminders cron job')
 
     return NextResponse.json(
       {
