@@ -27,6 +27,22 @@ const eslintConfig = defineConfig([
     // Public assets (not code)
     "public/**",
   ]),
+  // Security: Prevent console.log in production code
+  {
+    rules: {
+      "no-console": ["error", { allow: ["warn", "error"] }],
+    },
+    ignores: [
+      // Allow console in scripts and tests
+      "scripts/**",
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "tests/**",
+      "__tests__/**",
+    ],
+  },
 ]);
 
 export default eslintConfig;
