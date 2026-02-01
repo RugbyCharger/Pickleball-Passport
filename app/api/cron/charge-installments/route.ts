@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { chargeInstallment } from '@/lib/payments/charge-installment'
 import { isRetryEligible } from '@/lib/payments/retry-calculator'
+import { cronLogger, paymentLogger, logError } from '@/lib/logger'
 
 // Maximum payments to process per execution (safety limit)
 const MAX_PAYMENTS_PER_RUN = 100
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.error('CRON_SECRET not configured')
+    cronLogger.error({ job: 'charge-installments' }, 'CRON_SECRET not configured')
     return NextResponse.json(
       { error: 'Cron job not configured' },
       { status: 500 }
@@ -41,14 +42,14 @@ export async function GET(req: NextRequest) {
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('Unauthorized cron request')
+    cronLogger.warn({ job: 'charge-installments' }, 'Unauthorized cron request')
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     )
   }
 
-  console.log('=== Charge Installments Cron Job Started ===')
+  cronLogger.info({ job: 'charge-installments' }, 'Charge Installments Cron Job Started')
 
   try {
     const today = new Date()
@@ -86,7 +87,7 @@ export async function GET(req: NextRequest) {
       take: MAX_PAYMENTS_PER_RUN,
     })
 
-    console.log(`Found ${duePayments.length} payments to process`)
+    cronLogger.info({ job: 'charge-installments', count: duePayments.length }, 'Found payments to process')
 
     // Filter out payments not yet eligible for retry
     const eligiblePayments = duePayments.filter((payment) => {
@@ -101,7 +102,7 @@ export async function GET(req: NextRequest) {
       return isRetryEligible(payment.lastAttemptAt, payment.retryCount, today)
     })
 
-    console.log(`${eligiblePayments.length} payments are eligible for charging`)
+    cronLogger.info({ job: 'charge-installments', eligible: eligiblePayments.length }, 'Payments eligible for charging')
 
     // 3. Process payments in batches
     const results: Array<{
@@ -122,7 +123,7 @@ export async function GET(req: NextRequest) {
     for (let i = 0; i < eligiblePayments.length; i += BATCH_SIZE) {
       const batch = eligiblePayments.slice(i, i + BATCH_SIZE)
 
-      console.log(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1} (${batch.length} payments)`)
+      cronLogger.debug({ job: 'charge-installments', batch: Math.floor(i / BATCH_SIZE) + 1, count: batch.length }, 'Processing batch')
 
       // Process batch in parallel
       const batchResults = await Promise.all(
@@ -157,7 +158,11 @@ export async function GET(req: NextRequest) {
               stripePaymentIntentId: result.stripePaymentIntentId,
             }
           } catch (error) {
-            console.error(`Unexpected error processing payment ${payment.id}:`, error)
+            logError(paymentLogger, error, 'Unexpected error processing payment', {
+              paymentRecordId: payment.id,
+              bookingReference: payment.booking.bookingReference,
+              installmentNumber: payment.installmentNumber || 0,
+            })
             errorCount++
 
             return {
@@ -183,15 +188,16 @@ export async function GET(req: NextRequest) {
     const executionTimeMs = Date.now() - startTime
 
     // 4. Log summary
-    console.log('=== Cron Job Summary ===')
-    console.log(`Total found: ${duePayments.length}`)
-    console.log(`Total eligible: ${eligiblePayments.length}`)
-    console.log(`Successful: ${successCount}`)
-    console.log(`Failed (retry scheduled): ${failedRetryCount}`)
-    console.log(`Failed (permanent): ${failedPermanentCount}`)
-    console.log(`Errors: ${errorCount}`)
-    console.log(`Execution time: ${executionTimeMs}ms`)
-    console.log('=== Cron Job Complete ===')
+    cronLogger.info({
+      job: 'charge-installments',
+      totalFound: duePayments.length,
+      totalEligible: eligiblePayments.length,
+      successful: successCount,
+      failedRetry: failedRetryCount,
+      failedPermanent: failedPermanentCount,
+      errors: errorCount,
+      executionTimeMs,
+    }, 'Charge Installments Cron Job Complete')
 
     // 5. Return summary
     return NextResponse.json({
@@ -206,7 +212,7 @@ export async function GET(req: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Fatal error in cron job:', error)
+    logError(cronLogger, error, 'Fatal error in charge-installments cron job')
 
     return NextResponse.json(
       {
