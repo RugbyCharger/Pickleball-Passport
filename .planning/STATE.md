@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.2 Security Hardening — Phase 18 (Critical Security Fixes)
+**Current focus:** None — v2.2 complete, ready to plan next milestone
 
 ## Current Position
 
-Phase: 18 of 18 (Security Hardening)
-Plan: 4 of 4 complete
-Status: Phase COMPLETE
-Last activity: 2026-02-01 — Completed 18-04-PLAN.md (Gap Closure - Console Log Migration)
+Phase: —
+Plan: —
+Status: Between milestones
+Last activity: 2026-02-01 — v2.2 Security Hardening milestone SHIPPED
 
-Progress: [####################] 100% v2.1 | [##########] 100% v2.2
+Progress: [####################] 100% v2.2 complete
 
 ## Milestone History
 
@@ -43,13 +43,18 @@ Progress: [####################] 100% v2.1 | [##########] 100% v2.2
 - 3 phases, 3 plans
 - Phases: 15-Email, 16-SMS, 17-Testimonials
 
+**v2.2 Security Hardening shipped 2026-02-01**
+- 1 phase, 4 plans, 4 requirements
+- Phase: 18-Security
+- Archived: `.planning/milestones/v2.2-REQUIREMENTS.md`, `.planning/milestones/v2.2-MILESTONE-AUDIT.md`
+
 See: .planning/MILESTONES.md
 
 **Production URL:** https://pickleball-passport.vercel.app
 
 ## Performance Metrics
 
-Aggregate across all milestones: 49 plans completed.
+Aggregate across all milestones: 49 plans completed (including v2.2).
 
 ## Accumulated Context
 
@@ -90,19 +95,24 @@ Recent decisions affecting v2.2:
 ## Session Continuity
 
 Last session: 2026-02-01
-Stopped at: Completed 18-04-PLAN.md - Gap closure complete, Phase 18 COMPLETE
+Stopped at: v2.2 Security Hardening milestone SHIPPED
 Resume file: None
 
 ## Next Steps
 
-**v2.2 Security Hardening — COMPLETE**
-
-Phase 18 plans:
-1. [x] 18-01-PLAN.md — Console Log Migration & PII Redaction (COMPLETE)
-2. [x] 18-02-PLAN.md — Cron Job Logging Migration (COMPLETE)
-3. [x] 18-03-PLAN.md — Admin Route Protection & SEC Verification (COMPLETE)
-4. [x] 18-04-PLAN.md — Gap Closure - Console Log Migration (COMPLETE)
+**v2.2 Security Hardening — SHIPPED 2026-02-01**
 
 All security vulnerabilities identified by Six Hats Council have been addressed.
-Zero console.log statements remain in any API route file.
 Project is ready for customer onboarding.
+
+**Tech debt tracked for future cleanup:**
+- 23 console.log in lib/ (ESLint catching as errors)
+- firstName/lastName not in PII redaction paths
+
+**Potential v2.3 scope (from REQUIREMENTS.md Future Requirements):**
+- SEC-05: Rate limiting on all public endpoints
+- SEC-06: CSRF protection on mutation endpoints
+- SEC-07: Content Security Policy headers
+- SEC-08: Security audit logging to external SIEM
+
+Run `/gsd:new-milestone` to plan v2.3 or next milestone.

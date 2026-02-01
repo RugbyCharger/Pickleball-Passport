@@ -115,6 +115,98 @@ PENDING → Cancel → CANCELLED (full refund)
 SENT    → Resend Notification (rate limited)
 ```
 
-**What's next:** Wait for user feedback or plan v1.4
+**What's next:** v2.0 Mobile App
+
+---
+
+## v2.0 Mobile App (Shipped: 2026-01-28)
+
+**Delivered:** React Native mobile app for guests covering pre-trip preparation, during-trip experience, and post-trip alumni engagement.
+
+**Phases completed:** 10-14 (22 plans total)
+
+**Key accomplishments:**
+
+- Expo React Native app with Clerk authentication and biometrics
+- Pre-trip dashboard (countdown, checklist, document upload, group chat)
+- During-trip experience (itinerary, concierge chat, court booking, photo journal)
+- Alumni engagement (referrals, rebooking, passport stamps gamification)
+- Push notifications via OneSignal
+- Deep linking and offline mode support
+- App Store / Play Store submission ready
+
+**Stats:**
+
+- 5 phases, 22 plans
+- 26 requirements shipped
+- tRPC shared API between web and mobile
+
+**What's next:** v2.1 Communication & Content
+
+---
+
+## v2.1 Communication & Content (Shipped: 2026-01-30)
+
+**Delivered:** Automated email sequences, SMS notifications, and testimonial workflow for guest communication throughout trip lifecycle.
+
+**Phases completed:** 15-17 (3 plans total)
+
+**Key accomplishments:**
+
+- Post-trip follow-up email sequence (3/7/14/30/60 days after return)
+- SMS integration via Twilio for urgent updates
+- Admin SMS broadcast capability
+- Testimonial submission workflow (video, written, photo)
+- Admin testimonial review and approval
+- Public testimonials display
+
+**Stats:**
+
+- 3 phases, 3 plans
+- Communication infrastructure complete
+
+**What's next:** v2.2 Security Hardening
+
+---
+
+## v2.2 Security Hardening (Shipped: 2026-02-01)
+
+**Delivered:** Critical security fixes identified by Six Hats Council codebase review — admin route protection, webhook signature verification, and structured logging with PII redaction.
+
+**Phases completed:** 18 (4 plans total)
+
+**Key accomplishments:**
+
+- Admin routes return 403 JSON for unauthorized API requests
+- Database role check in middleware (not just session claims)
+- Unauthorized access attempts logged with userId, path, userAgent, IP
+- 95+ console.log statements migrated to structured pino logging
+- PII auto-redaction for email, phone, accountNumber, ssn, cardNumber
+- ESLint no-console rule enforced at error level
+- Verified: Stripe Connect handles all bank data (no plaintext storage)
+- Verified: Stripe and SendGrid webhooks verify signatures
+
+**Stats:**
+
+- 1 phase, 4 plans (including gap closure)
+- 4 security requirements satisfied
+- 0 critical vulnerabilities remaining
+- Ready for customer onboarding
+
+**Security Requirements:**
+
+| Requirement | Status |
+|-------------|--------|
+| SEC-01: Admin 403 responses | ✓ Complete |
+| SEC-02: Bank data encryption | ✓ Verified (Stripe Connect) |
+| SEC-03: Webhook signatures | ✓ Verified |
+| SEC-04: No PII in console.log | ✓ Complete |
+
+**Tech Debt Tracked:**
+
+- 23 console.log in lib/ (ESLint catching as errors)
+- firstName/lastName not in PII redaction paths
+
+**What's next:** Customer onboarding ready. Plan v2.3 for rate limiting, CSRF, CSP headers.
 
 ---

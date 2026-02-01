@@ -4,29 +4,59 @@
 
 A luxury transformation travel platform combining world-class pickleball, medical tourism, and wellness experiences in Thailand. The web application enables affluent US retirees (55+) to discover, configure, and book transformation packages, while a partner portal empowers pickleball club directors to refer members and earn rewards.
 
-## Current Milestone: v2.1 Communication & Content
+## Current Milestone: None
 
-**Goal:** Build operational systems for automated guest communication and content management to support real trip operations.
+Ready to plan next milestone. v2.2 Security Hardening shipped 2026-02-01.
 
-**Target features:**
-- Pre-trip email sequences (60/30/14/7/1 days before departure)
-- Post-trip follow-up emails (testimonial requests, referral prompts)
-- Admin broadcast messaging (urgent updates to trip groups)
-- Testimonial submission and admin approval workflow
-- Photo gallery management with tagging and consent tracking
+**Potential v2.3 scope:**
+- SEC-05: Rate limiting on all public endpoints
+- SEC-06: CSRF protection on mutation endpoints
+- SEC-07: Content Security Policy headers
+- COMM-04: Email preference management
+- COMM-05: Broadcast messaging
 
-**Source:** BMAD Epics E11 (Communication System) + E12 (Content Management)
+Run `/gsd:new-milestone` to plan next milestone.
 
 ## Current State
 
-**Version:** v2.0 Mobile App (shipped 2026-01-28)
+**Version:** v2.2 Security Hardening (shipped 2026-02-01)
 
-The platform now includes web + mobile applications:
+The platform is production-ready with complete security hardening:
 - v1.0 MVP shipped 2026-01-26
 - v1.1 Gift Booking shipped 2026-01-27
 - v1.2 RLS Security Hardening shipped 2026-01-27
 - v1.3 Gift Enhancements shipped 2026-01-28
 - v2.0 Mobile App shipped 2026-01-28
+- v2.1 Communication & Content shipped 2026-01-30
+- v2.2 Security Hardening shipped 2026-02-01
+
+<details>
+<summary>Completed: v2.2 Security Hardening</summary>
+
+**Goal:** Fix critical security vulnerabilities identified by Six Hats Council before onboarding paying customers.
+
+**Delivered features:**
+- ✓ Admin routes return 403 JSON for unauthorized API requests
+- ✓ Database role check in middleware (not just session claims)
+- ✓ Unauthorized access attempts logged with context
+- ✓ 95+ console.log migrated to structured pino logging
+- ✓ PII auto-redaction (email, phone, accountNumber, ssn, cardNumber)
+- ✓ ESLint no-console rule enforced
+- ✓ Verified: Stripe Connect handles all bank data
+- ✓ Verified: Webhooks verify signatures before processing
+</details>
+
+<details>
+<summary>Completed: v2.1 Communication & Content</summary>
+
+**Goal:** Build operational systems for automated guest communication and content management.
+
+**Delivered features:**
+- ✓ Post-trip follow-up email sequence
+- ✓ SMS integration via Twilio
+- ✓ Admin SMS broadcast capability
+- ✓ Testimonial submission and approval workflow
+</details>
 
 <details>
 <summary>Completed: v2.0 Mobile App</summary>
