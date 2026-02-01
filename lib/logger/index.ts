@@ -41,6 +41,28 @@ const redactPaths = [
   '*.token',
   '*.secret',
   '*.apiKey',
+  // PII fields - prevent accidental logging of user data
+  'email',
+  'phone',
+  'phoneNumber',
+  'accountNumber',
+  'routingNumber',
+  'ssn',
+  'bankAccount',
+  'cardNumber',
+  'cvv',
+  '*.email',
+  '*.phone',
+  '*.phoneNumber',
+  '*.accountNumber',
+  '*.routingNumber',
+  '*.ssn',
+  '*.bankAccount',
+  '*.cardNumber',
+  'user.email',
+  'guest.email',
+  'customer.email',
+  'recipient.email',
 ]
 
 /**
