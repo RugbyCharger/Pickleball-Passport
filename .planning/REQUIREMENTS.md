@@ -1,80 +1,90 @@
-# Requirements: v2.2 Security Hardening
+# Requirements: v2.3 API Security
 
-**Milestone:** v2.2 Security Hardening
-**Created:** 2026-01-31
-**Source:** Six Hats Council codebase review (Black Hat analysis)
-**Core Value:** Platform is secure enough for paying customers and partner financial data
+**Milestone:** v2.3 API Security
+**Created:** 2026-02-01
+**Source:** Research + Six Hats Council security audit follow-up
+**Core Value:** Public API endpoints are protected against abuse, CSRF attacks, and XSS injection
 
-## v2.2 Requirements
+## v2.3 Requirements
 
-### Authentication & Authorization (CRITICAL)
+### Rate Limiting (SEC-05)
 
-- [x] **SEC-01**: Admin routes reject non-admin users with 403 Forbidden
-  - All `/dashboard/admin/*` pages check user role via middleware
-  - All tRPC admin procedures validate admin role
-  - Unauthorized access logged for security audit via authLogger
+- [ ] **SEC-05-01**: Unauthenticated endpoints rate limited per IP address
+  - Auth endpoints (login, signup, password reset): 10 requests/minute
+  - Contact form: 5 requests/minute
+  - Public API: 100 requests/minute
+- [ ] **SEC-05-02**: Authenticated endpoints rate limited per user ID
+  - Booking mutations: 20 requests/minute
+  - General API: 200 requests/minute
+- [ ] **SEC-05-03**: Webhook endpoints exempted from rate limiting
+  - /api/webhooks/stripe
+  - /api/webhooks/sendgrid
+  - /api/webhooks/clerk
+  - /api/webhooks/whatsapp
+- [ ] **SEC-05-04**: Rate limit responses include X-RateLimit headers
+  - X-RateLimit-Limit: max requests allowed
+  - X-RateLimit-Remaining: requests remaining
+  - X-RateLimit-Reset: seconds until reset
+- [ ] **SEC-05-05**: Rate limited requests return 429 Too Many Requests with retry-after
 
-### Data Encryption (CRITICAL)
+### CSRF Protection (SEC-06)
 
-- [x] **SEC-02**: Partner bank account data encrypted at rest
-  - Verified: No plaintext bank fields in database
-  - Stripe Connect handles all partner payout data externally
-  - PII auto-redacted in logs via pino redaction paths
+- [ ] **SEC-06-01**: Middleware validates Origin header matches allowed origins
+  - Production: pickleballpassport.com, app.pickleballpassport.com
+  - Preview: *.vercel.app
+  - Development: localhost:3000
+- [ ] **SEC-06-02**: tRPC Content-Type validation verified active
+  - Rejects requests without application/json Content-Type
+  - Blocks form-based CSRF attacks
+- [ ] **SEC-06-03**: CSRF validation skipped for Bearer token requests
+  - Mobile app uses Authorization header, not cookies
+  - Prevents false positives on mobile API calls
+- [ ] **SEC-06-04**: Webhook endpoints exempted from CSRF validation
+  - Same paths as SEC-05-03
+  - Webhooks use signature verification instead
 
-### Webhook Security (CRITICAL)
+### Content Security Policy (SEC-07)
 
-- [x] **SEC-03**: Webhook endpoints verify signatures before processing
-  - Stripe webhooks validate `stripe-signature` header via verifyWebhookSignature
-  - SendGrid webhooks validate signature via official SDK
-  - Invalid signatures rejected with 400/401
-  - Signature failures logged for security monitoring
-
-### Production Hygiene (HIGH)
-
-- [x] **SEC-04**: No sensitive data in console.log statements
-  - All API route console.log statements migrated to pino structured logging
-  - PII fields (email, phone, accountNumber, ssn, cardNumber) auto-redacted
-  - ESLint no-console rule enforced at error level
+- [ ] **SEC-07-01**: Static CSP headers configured in next.config.ts
+  - No nonce-based CSP (preserves static rendering)
+  - Applied to all pages
+- [ ] **SEC-07-02**: Third-party domains whitelisted
+  - Clerk: *.clerk.com, *.clerk.dev, challenges.cloudflare.com
+  - Stripe: js.stripe.com, api.stripe.com, hooks.stripe.com
+  - Supabase: *.supabase.co (storage)
+  - Google: *.google.com (reCAPTCHA if used)
+- [ ] **SEC-07-03**: CSP deployed in Report-Only mode first
+  - Content-Security-Policy-Report-Only header
+  - Monitor for violations before enforcement
+- [ ] **SEC-07-04**: CSP enforced after validation period
+  - Switch from Report-Only to Content-Security-Policy
+  - All pages render without CSP errors
 
 ## Success Criteria
 
-**Phase 18 is complete when ALL are TRUE:**
+**v2.3 is complete when ALL are TRUE:**
 
-1. Any non-admin user accessing `/dashboard/admin/*` gets redirected to unauthorized page
-2. `prisma studio` shows encrypted (unreadable) values for bank account fields
-3. Forged Stripe webhook (missing signature) returns 400 error
-4. `grep -r "console.log" src/` returns 0 matches in production paths (or all are redacted)
-5. Security penetration test by Claude finds 0 critical vulnerabilities
-
-## Previous v2.1 Requirements (Archived)
-
-See: `.planning/milestones/v2.1-REQUIREMENTS.md` (to be archived after v2.2 ships)
-
-### Email Sequences (Complete)
-- [x] **COMM-01**: Payment reminder emails
-- [x] **COMM-02**: Pre-trip nurture sequence
-- [x] **COMM-03**: Post-trip follow-up emails
-
-### SMS Notifications (Complete)
-- [x] **SMS-01**: Twilio integration
-- [x] **SMS-02**: Urgent update SMS
-
-### Testimonial Workflow (Complete)
-- [x] **TEST-01**: Testimonial submission
-- [x] **TEST-02**: Admin review workflow
-- [x] **TEST-03**: Public display
+1. Unauthenticated endpoint returns 429 after exceeding rate limit
+2. Authenticated endpoint rate limits by user ID, not IP
+3. Webhook endpoints process requests without rate limit blocks
+4. X-RateLimit headers present on all API responses
+5. Cross-origin POST without proper Origin header returns 403
+6. Mobile app API calls succeed (Bearer token auth)
+7. Browser dev tools show CSP header on all pages
+8. No CSP violations in console for Clerk, Stripe, Supabase features
+9. Security penetration test finds 0 critical vulnerabilities
 
 ## Future Requirements
 
-Deferred to v2.3 or later:
+Deferred to v2.4 or later:
 
 ### Security Enhancements (P2)
-- **SEC-05**: Rate limiting on all public endpoints
-- **SEC-06**: CSRF protection on mutation endpoints
-- **SEC-07**: Content Security Policy headers
 - **SEC-08**: Security audit logging to external SIEM
+- **SEC-09**: Admin dashboard showing rate limit violations
+- **SEC-10**: CSP violation reporting endpoint
+- **SEC-11**: Graduated rate limiting (slow down before block)
 
-### Communication (P2) - From v2.1
+### Communication (P2)
 - **COMM-04**: Email preference management
 - **COMM-05**: Broadcast messaging
 - **COMM-06**: NPS surveys
@@ -83,26 +93,35 @@ Deferred to v2.3 or later:
 
 | Feature | Reason |
 |---------|--------|
-| SOC 2 compliance | Too early, requires audit process |
-| PCI DSS Level 1 | Stripe handles card data, we don't store it |
-| HIPAA compliance | Not handling medical records |
-| Bug bounty program | Need stable security baseline first |
+| WAF-level blocking | Vercel/Cloudflare handle this at edge |
+| IP reputation service | Over-engineering for current scale |
+| Manual CSRF tokens | Clerk + tRPC handle this automatically |
+| Nonce-based CSP | Forces dynamic rendering, breaks static optimization |
+| Global IP blocking | False positives from NAT/CGNAT |
 
 ## Traceability
 
-| Requirement | Phase | Plan | Status |
-|-------------|-------|------|--------|
-| SEC-01 | Phase 18 | 18-03-PLAN.md | Complete |
-| SEC-02 | Phase 18 | 18-03-PLAN.md | Complete (verified) |
-| SEC-03 | Phase 18 | 18-03-PLAN.md | Complete (verified) |
-| SEC-04 | Phase 18 | 18-01, 18-02, 18-04 | Complete |
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| SEC-05-01 | Phase 19 | Pending |
+| SEC-05-02 | Phase 19 | Pending |
+| SEC-05-03 | Phase 19 | Pending |
+| SEC-05-04 | Phase 19 | Pending |
+| SEC-05-05 | Phase 19 | Pending |
+| SEC-06-01 | Phase 19 | Pending |
+| SEC-06-02 | Phase 19 | Pending |
+| SEC-06-03 | Phase 19 | Pending |
+| SEC-06-04 | Phase 19 | Pending |
+| SEC-07-01 | Phase 19 | Pending |
+| SEC-07-02 | Phase 19 | Pending |
+| SEC-07-03 | Phase 19 | Pending |
+| SEC-07-04 | Phase 19 | Pending |
 
 **Coverage:**
-- v2.2 requirements: 4 total
-- Complete: 4 ✓
-- Incomplete: 0 ✓
+- v2.3 requirements: 13 total
+- Mapped to phases: 13
+- Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-01-31*
-*Requirements completed: 2026-02-01*
-*Source: Six Hats Council Black Hat analysis*
+*Requirements defined: 2026-02-01*
+*Source: API Security research synthesis*
