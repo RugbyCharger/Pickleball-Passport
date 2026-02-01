@@ -12,6 +12,7 @@ import { auth } from '@clerk/nextjs/server';
 import { prisma as db } from '@/lib/db';
 import { downloadFromSupabaseStorage } from '@/lib/storage/supabase-storage';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { storageLogger } from '@/lib/logger';
 
 export async function GET(
   request: NextRequest,
@@ -94,7 +95,7 @@ export async function GET(
     // receiptUrl format: https://[project].supabase.co/storage/v1/object/public/receipts/[path]
     const filePath = extractFilePathFromUrl(payment.receiptUrl);
     if (!filePath) {
-      console.error('Invalid receipt URL format:', payment.receiptUrl);
+      storageLogger.error({ paymentId, receiptUrl: payment.receiptUrl }, 'Invalid receipt URL format');
       return NextResponse.json(
         { error: 'Invalid receipt URL' },
         { status: 500 }
@@ -105,7 +106,7 @@ export async function GET(
     const pdfBuffer = await downloadFromSupabaseStorage('receipts', filePath);
 
     if (!pdfBuffer) {
-      console.error('Failed to download receipt from storage:', filePath);
+      storageLogger.error({ paymentId, filePath }, 'Failed to download receipt from storage');
       return NextResponse.json(
         { error: 'Failed to download receipt' },
         { status: 500 }
@@ -125,7 +126,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Error downloading receipt:', error);
+    storageLogger.error({ err: error }, 'Error downloading receipt');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -155,7 +156,7 @@ function extractFilePathFromUrl(url: string): string | null {
     const filePath = pathParts.slice(receiptsIndex + 1).join('/');
     return filePath || null;
   } catch (error) {
-    console.error('Error parsing receipt URL:', error);
+    storageLogger.error({ err: error, url }, 'Error parsing receipt URL');
     return null;
   }
 }
