@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { authLogger } from '@/lib/logger'
 import { checkRateLimit, getIpAddress, getRateLimitHeaders } from '@/lib/rate-limit'
+import { validateOrigin, isMutationMethod } from '@/lib/security/origin-validation'
 
 // Route matchers for different protection levels
 const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)', '/api/admin(.*)'])
@@ -54,6 +55,32 @@ export default clerkMiddleware(async (auth, request) => {
           'Content-Type': 'application/json',
           ...getRateLimitHeaders(globalLimit),
         },
+      }
+    )
+  }
+
+  // CSRF Protection: Origin validation for mutation requests
+  // Note: Webhooks already exempted above (they use signature verification)
+  // Note: Bearer token requests are CSRF-immune (mobile app) - handled in validateOrigin
+  if (isMutationMethod(request.method) && !validateOrigin(request)) {
+    authLogger.warn(
+      {
+        origin: request.headers.get('origin'),
+        path: request.nextUrl.pathname,
+        method: request.method,
+        ip,
+      },
+      'CSRF: Invalid origin for mutation request'
+    )
+
+    return new NextResponse(
+      JSON.stringify({
+        error: 'Forbidden',
+        message: 'Cross-origin request blocked. Invalid origin.',
+      }),
+      {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
       }
     )
   }
