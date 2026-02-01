@@ -127,6 +127,72 @@ export const rateLimiters = {
       analytics: true,
     });
   },
+
+  /**
+   * Auth endpoints: 10 requests per minute per IP
+   * For login, signup, password reset - stricter to prevent credential stuffing
+   */
+  auth: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(10, '1 m'),
+      prefix: 'ratelimit:auth',
+      analytics: true,
+    });
+  },
+
+  /**
+   * Authenticated API: 200 requests per minute per user ID
+   * Higher limit for authenticated users to avoid carrier NAT issues
+   * Uses user ID (not IP) to properly rate limit mobile app users
+   */
+  authApi: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(200, '1 m'),
+      prefix: 'ratelimit:auth-api',
+      analytics: true,
+    });
+  },
+
+  /**
+   * Booking mutations: 20 requests per minute per user ID
+   * Stricter limit for expensive booking operations
+   * Uses user ID to avoid carrier NAT issues for mobile app users
+   */
+  booking: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(20, '1 m'),
+      prefix: 'ratelimit:booking',
+      analytics: true,
+    });
+  },
+
+  /**
+   * Global rate limit: 100 requests per minute per IP
+   * Applied in middleware for all non-webhook routes
+   */
+  global: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(100, '1 m'),
+      prefix: 'ratelimit:global',
+      analytics: true,
+    });
+  },
 };
 
 /**
@@ -210,4 +276,21 @@ export function getIpAddress(headers: Headers): string {
 
   // Fallback to unknown (should rarely happen in production)
   return 'unknown';
+}
+
+/**
+ * Generate X-RateLimit response headers from rate limit result
+ *
+ * @param result - Rate limit check result
+ * @returns Headers object with X-RateLimit-* and Retry-After headers
+ */
+export function getRateLimitHeaders(result: RateLimitResult): Record<string, string> {
+  const retryAfterSeconds = Math.ceil((result.reset - Date.now()) / 1000);
+
+  return {
+    'X-RateLimit-Limit': result.limit.toString(),
+    'X-RateLimit-Remaining': result.remaining.toString(),
+    'X-RateLimit-Reset': retryAfterSeconds.toString(),
+    'Retry-After': retryAfterSeconds.toString(),
+  };
 }
