@@ -8,7 +8,7 @@
 - ✅ **v1.3 Gift Enhancements** - Phase 9 (shipped 2026-01-28)
 - ✅ **v2.0 Mobile App** - Phases 10-14 (shipped 2026-01-28)
 - ✅ **v2.1 Communication & Content** - Phases 15-17 (shipped 2026-01-30)
-- 🔒 **v2.2 Security Hardening** - Phase 18 (in progress)
+- ✅ **v2.2 Security Hardening** - Phase 18 (shipped 2026-02-01)
 
 ## Phases
 
@@ -113,7 +113,7 @@ Plans:
 
 ---
 
-### 🔒 v2.2 Security Hardening (Current)
+### ✅ v2.2 Security Hardening (Complete)
 
 **Milestone Goal:** Fix critical security vulnerabilities identified by Six Hats Council codebase review before onboarding paying customers.
 
@@ -128,12 +128,13 @@ Plans:
   4. SendGrid webhooks verify signature before processing (SEC-03 - verified complete)
   5. No console.log statements containing sensitive data in production (SEC-04)
   6. Security audit passes with 0 critical findings
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
-- [ ] 18-01-PLAN.md — Console.log audit and Pino migration (SEC-04) + PII redaction + ESLint enforcement
-- [ ] 18-02-PLAN.md — Cron job logging migration to structured pino (SEC-04)
-- [ ] 18-03-PLAN.md — Admin 403 responses (SEC-01) + SEC-02/SEC-03 verification
+- [x] 18-01-PLAN.md — Console.log audit and Pino migration (SEC-04) + PII redaction + ESLint enforcement
+- [x] 18-02-PLAN.md — Cron job logging migration to structured pino (SEC-04)
+- [x] 18-03-PLAN.md — Admin 403 responses (SEC-01) + SEC-02/SEC-03 verification
+- [x] 18-04-PLAN.md — Gap closure: remaining console.log migration (SEC-04)
 
 **Details:**
 Based on 18-RESEARCH.md findings:
@@ -160,8 +161,8 @@ Based on 18-RESEARCH.md findings:
 | 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
 | 15-17 | v2.1 Communication | 3/3 | Complete | 2026-01-30 |
-| 18. Security Hardening | v2.2 | 0/3 | In Progress | — |
+| 18. Security Hardening | v2.2 | 4/4 | Complete | 2026-02-01 |
 
 ---
 *Roadmap updated: 2026-02-01*
-*Milestone: v2.2 Security Hardening*
+*Milestone: v2.2 Security Hardening — SHIPPED*
