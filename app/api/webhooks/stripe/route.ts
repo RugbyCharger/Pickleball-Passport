@@ -18,7 +18,7 @@ import { sendBookingConfirmation, sendEmail } from '@/lib/email/sendgrid';
 import { generatePaymentFailureEmail } from '@/lib/email/templates/payment-failure-guest';
 import { sendPaymentFailureAlert, sendOverbookingAlert, isAdminAlertsConfigured } from '@/lib/email/admin-alerts';
 import { inviteGuestByBookingId } from '@/lib/whatsapp/group-manager';
-import { whatsappLogger, stripeLogger, emailLogger } from '@/lib/logger';
+import { whatsappLogger, stripeLogger, emailLogger, partnerLogger, paymentLogger, pdfLogger } from '@/lib/logger';
 import { parseAccountUpdatedEvent, parseTransferEvent } from '@/lib/stripe/stripe-connect';
 import Stripe from 'stripe';
 
@@ -189,7 +189,10 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
           paidDate: new Date(),
         },
       });
-      console.log(`PaymentRecord updated: ${paymentRecord.id} (installment ${paymentRecord.installmentNumber})`);
+      paymentLogger.info(
+        { paymentRecordId: paymentRecord.id, installmentNumber: paymentRecord.installmentNumber },
+        'PaymentRecord updated to PAID'
+      );
     }
 
     // Get booking details
@@ -213,7 +216,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     });
 
     if (!booking) {
-      console.error(`Booking not found: ${bookingId}`);
+      stripeLogger.error({ bookingId }, 'Booking not found');
       return;
     }
 
@@ -315,13 +318,13 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         if (receiptResult.success) {
           receiptUrl = receiptResult.receiptUrl;
           pdfBuffer = receiptResult.pdfBuffer;
-          console.log(`PDF receipt generated: ${receiptResult.receiptNumber}`);
+          pdfLogger.info({ receiptNumber: receiptResult.receiptNumber }, 'PDF receipt generated');
         } else {
-          console.error('Failed to generate PDF receipt:', receiptResult.error);
+          pdfLogger.error({ error: receiptResult.error }, 'Failed to generate PDF receipt');
           // Continue processing - don't block webhook on PDF failure
         }
       } catch (pdfError) {
-        console.error('Error generating PDF receipt:', pdfError);
+        pdfLogger.error({ error: pdfError instanceof Error ? pdfError.message : String(pdfError) }, 'Error generating PDF receipt');
         // Continue processing - don't block webhook on PDF failure
       }
 
@@ -443,7 +446,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
             paymentMethod: isInstallmentPlan ? 'installments' : 'full_payment',
             installmentPlan: isInstallmentPlan ? '4 monthly installments' : undefined,
             bookingAdminUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/bookings/${booking.id}`
-          }).catch(err => console.error('Failed to send high-value booking alert:', err))
+          }).catch(err => emailLogger.error({ error: err instanceof Error ? err.message : String(err) }, 'Failed to send high-value booking alert'))
         }
       }
 
@@ -475,9 +478,9 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       }
     }
 
-    console.log(`Payment succeeded for booking: ${bookingId}`);
+    paymentLogger.info({ bookingId }, 'Payment succeeded');
   } catch (error) {
-    console.error('Error handling payment success:', error);
+    paymentLogger.error({ bookingId, error: error instanceof Error ? error.message : String(error) }, 'Error handling payment success');
   }
 }
 
@@ -518,7 +521,10 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
           status: 'FAILED',
         },
       });
-      console.log(`PaymentRecord marked as FAILED: ${paymentRecord.id} (installment ${paymentRecord.installmentNumber})`);
+      paymentLogger.info(
+        { paymentRecordId: paymentRecord.id, installmentNumber: paymentRecord.installmentNumber },
+        'PaymentRecord marked as FAILED'
+      );
     }
 
     // Fetch booking details for email
@@ -607,9 +613,9 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
       }
     }
 
-    console.log(`Payment failed for intent: ${paymentIntent.id}`);
+    paymentLogger.info({ paymentIntentId: paymentIntent.id }, 'Payment failed');
   } catch (error) {
-    console.error('Error handling payment failure:', error);
+    paymentLogger.error({ paymentIntentId: paymentIntent.id, error: error instanceof Error ? error.message : String(error) }, 'Error handling payment failure');
   }
 }
 
@@ -634,9 +640,9 @@ async function handlePaymentCanceled(paymentIntent: Stripe.PaymentIntent) {
       data: { status: 'PENDING' },
     });
 
-    console.log(`Payment canceled for intent: ${paymentIntent.id}`);
+    paymentLogger.info({ paymentIntentId: paymentIntent.id }, 'Payment canceled');
   } catch (error) {
-    console.error('Error handling payment cancellation:', error);
+    paymentLogger.error({ paymentIntentId: paymentIntent.id, error: error instanceof Error ? error.message : String(error) }, 'Error handling payment cancellation');
   }
 }
 
@@ -661,7 +667,7 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
     });
 
     if (!partner) {
-      console.error(`Partner not found with referral code: ${referralCode}`);
+      partnerLogger.error({ referralCode }, 'Partner not found with referral code');
       return;
     }
 
@@ -705,8 +711,9 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
       },
     });
 
-    console.log(
-      `Awarded ${pointsEarned} points to partner ${partner.id} for booking ${bookingId}`
+    partnerLogger.info(
+      { partnerId: partner.id, bookingId, pointsEarned },
+      'Partner points awarded'
     );
 
     // E11-S9: Send partner booking notification
@@ -739,11 +746,14 @@ async function awardPartnerPoints(referralCode: string, bookingId: string) {
         nextTier: tierProgress?.nextTier,
       });
     } catch (notificationError) {
-      console.error('Error sending partner booking notification:', notificationError);
+      partnerLogger.error(
+        { partnerId: partner.id, error: notificationError instanceof Error ? notificationError.message : String(notificationError) },
+        'Error sending partner booking notification'
+      );
       // Non-blocking - don't throw
     }
   } catch (error) {
-    console.error('Error awarding partner points:', error);
+    partnerLogger.error({ referralCode, bookingId, error: error instanceof Error ? error.message : String(error) }, 'Error awarding partner points');
   }
 }
 
@@ -757,7 +767,7 @@ async function handleRefundCompleted(charge: Stripe.Charge) {
   const { payment_intent: paymentIntentId, amount_refunded, id: chargeId } = charge;
 
   if (!paymentIntentId) {
-    console.error('Charge missing payment_intent:', chargeId);
+    stripeLogger.error({ chargeId }, 'Charge missing payment_intent');
     return;
   }
 
@@ -777,7 +787,7 @@ async function handleRefundCompleted(charge: Stripe.Charge) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for intent: ${paymentIntentId}`);
+      paymentLogger.error({ paymentIntentId }, 'Payment not found for intent');
       return;
     }
 
@@ -831,17 +841,16 @@ async function handleRefundCompleted(charge: Stripe.Charge) {
       refundDate: new Date().toISOString(),
       expectedTimeline: '5-10 business days',
     }).catch((error) => {
-      console.error('Failed to send refund confirmation email:', error);
+      emailLogger.error({ paymentId: payment.id, error: error instanceof Error ? error.message : String(error) }, 'Failed to send refund confirmation email');
       // Don't throw - email failure shouldn't block webhook
     });
 
-    console.log(
-      `Refund processed for payment ${payment.id}: $${amount_refunded / 100} (${
-        isFullRefund ? 'full' : 'partial'
-      })`
+    paymentLogger.info(
+      { paymentId: payment.id, amountRefunded: amount_refunded, isFullRefund },
+      'Refund processed'
     );
   } catch (error) {
-    console.error('Error handling refund:', error);
+    paymentLogger.error({ paymentIntentId, error: error instanceof Error ? error.message : String(error) }, 'Error handling refund');
     throw error; // Re-throw to trigger Stripe retry if needed
   }
 }
@@ -871,26 +880,29 @@ async function handleDisputeCreated(dispute: Stripe.Dispute) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for charge: ${charge}`);
+      paymentLogger.error({ chargeId: typeof charge === 'string' ? charge : charge.id }, 'Payment not found for charge');
       return;
     }
 
     // Create admin notification (Note: Requires admin user or system account)
     // For now, log the dispute details
-    console.warn(`🚨 URGENT: Payment Dispute - ${payment.booking.bookingReference}`);
-    console.warn(`Dispute ID: ${disputeId}`);
-    console.warn(`Amount: $${amount / 100}`);
-    console.warn(`Reason: ${reason}`);
-    if (evidence_details?.due_by) {
-      console.warn(`Deadline: ${new Date(evidence_details.due_by * 1000).toLocaleDateString()}`);
-    }
+    stripeLogger.warn(
+      {
+        disputeId,
+        bookingReference: payment.booking.bookingReference,
+        amount: amount / 100,
+        reason,
+        deadline: evidence_details?.due_by ? new Date(evidence_details.due_by * 1000).toISOString() : undefined,
+      },
+      'URGENT: Payment Dispute created'
+    );
 
     // TODO: Send email alert to admin team
     // This would require admin email configuration or admin user lookup
 
-    console.log(`Dispute created for payment ${payment.id}: ${disputeId}`);
+    stripeLogger.info({ paymentId: payment.id, disputeId }, 'Dispute created');
   } catch (error) {
-    console.error('Error handling dispute creation:', error);
+    stripeLogger.error({ disputeId, error: error instanceof Error ? error.message : String(error) }, 'Error handling dispute creation');
     // Don't throw - log error but acknowledge webhook
   }
 }
@@ -921,13 +933,13 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
     });
 
     if (!payment) {
-      console.error(`Payment not found for charge: ${charge}`);
+      paymentLogger.error({ chargeId: typeof charge === 'string' ? charge : charge.id }, 'Payment not found for charge');
       return;
     }
 
     if (status === 'won') {
       // Dispute won - no action needed, just log
-      console.log(`✅ Dispute won: ${disputeId} for booking ${payment.booking.bookingReference}`);
+      stripeLogger.info({ disputeId, bookingReference: payment.booking.bookingReference }, 'Dispute won');
     } else if (status === 'lost') {
       // Dispute lost - refund the guest, cancel booking
       await prisma.$transaction(async (tx) => {
@@ -962,14 +974,15 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
         }
       });
 
-      console.log(
-        `❌ Dispute lost: ${disputeId}, booking ${payment.booking.bookingReference} cancelled`
+      stripeLogger.warn(
+        { disputeId, bookingReference: payment.booking.bookingReference },
+        'Dispute lost, booking cancelled'
       );
 
       // TODO: Send email to guest explaining outcome
     }
   } catch (error) {
-    console.error('Error handling dispute closure:', error);
+    stripeLogger.error({ disputeId, error: error instanceof Error ? error.message : String(error) }, 'Error handling dispute closure');
     // Don't throw - log error but acknowledge webhook
   }
 }
