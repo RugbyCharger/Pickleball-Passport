@@ -9,6 +9,7 @@
 - ✅ **v2.0 Mobile App** - Phases 10-14 (shipped 2026-01-28)
 - ✅ **v2.1 Communication & Content** - Phases 15-17 (shipped 2026-01-30)
 - ✅ **v2.2 Security Hardening** - Phase 18 (shipped 2026-02-01)
+- 🚧 **v2.3 API Security** - Phase 19 (in progress)
 
 ## Phases
 
@@ -47,111 +48,61 @@ See: `.planning/milestones/v2.0-ROADMAP.md`
 
 </details>
 
-### ✅ v2.1 Communication & Content (Complete)
+<details>
+<summary>✅ v2.1 Communication & Content (Phases 15-17) - SHIPPED 2026-01-30</summary>
 
-**Milestone Goal:** Operators can communicate with guests throughout the trip lifecycle via automated email sequences, urgent SMS notifications, and curated testimonials.
+See: `.planning/milestones/v2.1-ROADMAP.md`
 
-#### Phase 15: Email Infrastructure
-**Goal**: Guests receive post-trip follow-up emails at key moments (COMM-01 and COMM-02 already implemented)
-**Depends on**: Phase 14 (existing SendGrid integration)
-**Requirements**: COMM-01 (existing), COMM-02 (existing), COMM-03 (to implement)
-**Success Criteria** (what must be TRUE):
-  1. Guest receives payment reminder email 7 days before scheduled installment (COMM-01 - existing)
-  2. Guest receives pre-trip emails at 60/30/14/7/1 days before departure (COMM-02 - existing)
-  3. Guest receives post-trip emails at 3/7/14/30/60 days after return (COMM-03 - this phase)
-  4. Scheduled email jobs run reliably via cron or queue system
-  5. Post-trip emails respect user notification preferences
-**Plans**: 1 plan
+</details>
 
-Plans:
-- [x] 15-01-PLAN.md — Post-trip follow-up email sequence (COMM-03)
+<details>
+<summary>✅ v2.2 Security Hardening (Phase 18) - SHIPPED 2026-02-01</summary>
 
-#### Phase 16: SMS Integration
-**Goal**: Guests receive urgent SMS notifications for time-sensitive updates
-**Depends on**: Phase 15
-**Requirements**: SMS-01, SMS-02
-**Success Criteria** (what must be TRUE):
-  1. System can send SMS via Twilio (infrastructure works)
-  2. Guest receives SMS for flight delays within minutes of notification
-  3. Guest receives SMS for urgent itinerary changes
-  4. Guest receives SMS for emergency broadcasts
-  5. Admin can trigger urgent SMS from admin panel
-**Plans**: 1 plan
+See: `.planning/milestones/v2.2-ROADMAP.md`
 
-Plans:
-- [x] 16-01-PLAN.md — Complete SMS admin procedures and integrate UI
-
-#### Phase 17: Testimonial Workflow
-**Goal**: Guests can share their transformation stories, admin can curate content, website displays approved testimonials
-**Depends on**: Phase 16
-**Requirements**: TEST-01, TEST-02, TEST-03
-**Success Criteria** (what must be TRUE):
-  1. Guest can submit testimonial (video URL, written text, or photo) via web or mobile
-  2. Admin can view pending testimonials in admin panel
-  3. Admin can approve, reject, or request edits on testimonials
-  4. Approved testimonials display on public testimonials page
-  5. Testimonial submission links to existing booking/guest record
-**Plans**: 1 plan
-
-Plans:
-- [x] 17-01-PLAN.md — Verify testimonial workflow integration and complete file uploads
-
-## Progress
-
-**Execution Order:** Phases 15 → 16 → 17
-
-| Phase | Milestone | Plans Complete | Status | Completed |
-|-------|-----------|----------------|--------|-----------|
-| 1-4 | v1.0 MVP | 9/9 | Complete | 2026-01-26 |
-| 5-7 | v1.1 Gift | 8/8 | Complete | 2026-01-27 |
-| 8 | v1.2 RLS | 2/2 | Complete | 2026-01-27 |
-| 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
-| 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
-| 15. Email Infrastructure | v2.1 | 1/1 | Complete | 2026-01-30 |
-| 16. SMS Integration | v2.1 | 1/1 | Complete | 2026-01-30 |
-| 17. Testimonial Workflow | v2.1 | 1/1 | Complete | 2026-01-30 |
+</details>
 
 ---
 
-### ✅ v2.2 Security Hardening (Complete)
+### 🚧 v2.3 API Security (In Progress)
 
-**Milestone Goal:** Fix critical security vulnerabilities identified by Six Hats Council codebase review before onboarding paying customers.
+**Milestone Goal:** Harden public API endpoints with rate limiting, CSRF protection, and Content Security Policy headers to protect against abuse and injection attacks.
 
-#### Phase 18: Security Hardening
-**Goal**: Close critical security holes identified by research: console.log audit (SEC-04), admin 403 responses (SEC-01), and verify existing webhook/encryption implementations (SEC-02, SEC-03)
-**Depends on**: Phase 17 (current production state)
-**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
+#### Phase 19: API Security
+**Goal**: Public API endpoints are protected against abuse (rate limiting), cross-site request forgery (CSRF), and cross-site scripting (CSP headers)
+**Depends on**: Phase 18 (existing middleware and logging infrastructure)
+**Requirements**: SEC-05-01, SEC-05-02, SEC-05-03, SEC-05-04, SEC-05-05, SEC-06-01, SEC-06-02, SEC-06-03, SEC-06-04, SEC-07-01, SEC-07-02, SEC-07-03, SEC-07-04
 **Success Criteria** (what must be TRUE):
-  1. Admin routes reject non-admin users with 403 Forbidden (SEC-01)
-  2. Bank account numbers encrypted at rest, never exposed in logs (SEC-02 - verified complete)
-  3. Stripe webhooks verify signature before processing (SEC-03 - verified complete)
-  4. SendGrid webhooks verify signature before processing (SEC-03 - verified complete)
-  5. No console.log statements containing sensitive data in production (SEC-04)
-  6. Security audit passes with 0 critical findings
-**Plans**: 4 plans
+  1. Unauthenticated endpoint returns 429 Too Many Requests after exceeding rate limit (with Retry-After header)
+  2. Authenticated endpoint rate limits by user ID, not just IP (mobile app users on carrier NAT not blocked)
+  3. Webhook endpoints (Stripe, SendGrid, Clerk, WhatsApp) process requests without rate limit blocks
+  4. Cross-origin POST without proper Origin header returns 403 Forbidden
+  5. Mobile app API calls succeed (Bearer token auth bypasses CSRF checks)
+  6. Browser dev tools show CSP header on all pages (no console violations for Clerk, Stripe, Supabase)
+**Plans**: 3 plans
+
+**Build Order (per research):**
+1. SEC-05 Rate Limiting - Extends existing Upstash infrastructure, provides immediate abuse protection
+2. SEC-06 CSRF Protection - Mostly verification (tRPC already provides Content-Type check), add Origin validation
+3. SEC-07 CSP Headers - Requires most iteration, deploy in Report-Only mode first
 
 Plans:
-- [x] 18-01-PLAN.md — Console.log audit and Pino migration (SEC-04) + PII redaction + ESLint enforcement
-- [x] 18-02-PLAN.md — Cron job logging migration to structured pino (SEC-04)
-- [x] 18-03-PLAN.md — Admin 403 responses (SEC-01) + SEC-02/SEC-03 verification
-- [x] 18-04-PLAN.md — Gap closure: remaining console.log migration (SEC-04)
+- [ ] 19-01: Rate limiting middleware (SEC-05-01 through SEC-05-05)
+- [ ] 19-02: CSRF protection and Origin validation (SEC-06-01 through SEC-06-04)
+- [ ] 19-03: Content Security Policy headers (SEC-07-01 through SEC-07-04)
 
-**Details:**
-Based on 18-RESEARCH.md findings:
-- **SEC-04 (HIGHEST PRIORITY)**: 485+ console.log statements across 123 files; pino infrastructure exists but not consistently used
-- **SEC-01 (HIGH PRIORITY)**: Middleware redirects unauthorized users instead of returning 403 for API routes
-- **SEC-02 (COMPLETE)**: PartnerPayoutMethod removed in Phase 01; Stripe Connect handles all bank data
-- **SEC-03 (COMPLETE)**: Both Stripe and SendGrid webhooks already verify signatures
-
-**Wave Structure:**
-- Wave 1: 18-01 and 18-02 (parallel - independent logging migrations)
-- Wave 2: 18-03 (depends on 18-01 for authLogger availability)
+**Critical Pitfalls to Avoid (from research):**
+- RL-C1: Exempt `/api/webhooks/*` and `/api/cron/*` from rate limiting
+- RL-C2: Use userId as primary identifier for authenticated traffic (IP only for unauthenticated)
+- CS-C2: Skip CSRF checks for `Authorization: Bearer` requests (mobile app)
+- CSP-C2: Add `*.clerk.com`, `challenges.cloudflare.com` to CSP
+- CSP-C3: Add `js.stripe.com`, `api.stripe.com`, `hooks.stripe.com` to CSP
 
 ---
 
 ## Progress
 
-**Execution Order:** Phase 18
+**Execution Order:** Phase 19
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -161,8 +112,9 @@ Based on 18-RESEARCH.md findings:
 | 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
 | 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
 | 15-17 | v2.1 Communication | 3/3 | Complete | 2026-01-30 |
-| 18. Security Hardening | v2.2 | 4/4 | Complete | 2026-02-01 |
+| 18 | v2.2 Security Hardening | 4/4 | Complete | 2026-02-01 |
+| 19. API Security | v2.3 | 0/3 | Not started | - |
 
 ---
 *Roadmap updated: 2026-02-01*
-*Milestone: v2.2 Security Hardening — SHIPPED*
+*Milestone: v2.3 API Security — IN PROGRESS*

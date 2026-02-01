@@ -101,26 +101,27 @@ Deferred to v2.4 or later:
 
 ## Traceability
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| SEC-05-01 | Phase 19 | Pending |
-| SEC-05-02 | Phase 19 | Pending |
-| SEC-05-03 | Phase 19 | Pending |
-| SEC-05-04 | Phase 19 | Pending |
-| SEC-05-05 | Phase 19 | Pending |
-| SEC-06-01 | Phase 19 | Pending |
-| SEC-06-02 | Phase 19 | Pending |
-| SEC-06-03 | Phase 19 | Pending |
-| SEC-06-04 | Phase 19 | Pending |
-| SEC-07-01 | Phase 19 | Pending |
-| SEC-07-02 | Phase 19 | Pending |
-| SEC-07-03 | Phase 19 | Pending |
-| SEC-07-04 | Phase 19 | Pending |
+| Requirement | Phase | Plan | Status |
+|-------------|-------|------|--------|
+| SEC-05-01 | Phase 19 | 19-01 | Pending |
+| SEC-05-02 | Phase 19 | 19-01 | Pending |
+| SEC-05-03 | Phase 19 | 19-01 | Pending |
+| SEC-05-04 | Phase 19 | 19-01 | Pending |
+| SEC-05-05 | Phase 19 | 19-01 | Pending |
+| SEC-06-01 | Phase 19 | 19-02 | Pending |
+| SEC-06-02 | Phase 19 | 19-02 | Pending |
+| SEC-06-03 | Phase 19 | 19-02 | Pending |
+| SEC-06-04 | Phase 19 | 19-02 | Pending |
+| SEC-07-01 | Phase 19 | 19-03 | Pending |
+| SEC-07-02 | Phase 19 | 19-03 | Pending |
+| SEC-07-03 | Phase 19 | 19-03 | Pending |
+| SEC-07-04 | Phase 19 | 19-03 | Pending |
 
 **Coverage:**
 - v2.3 requirements: 13 total
 - Mapped to phases: 13
-- Unmapped: 0 ✓
+- Mapped to plans: 13
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-01*
