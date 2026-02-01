@@ -1,6 +1,14 @@
 /**
  * tRPC Server Configuration
  *
+ * SECURITY NOTE: tRPC v11.8.1 includes built-in Content-Type validation
+ * that blocks form-based CSRF attacks. This protection is enabled by default
+ * and requires requests to include "Content-Type: application/json" header.
+ * See: https://github.com/trpc/trpc/pull/5526
+ *
+ * DO NOT add `allowNonBrowserRequests: true` or disable CSRF protection
+ * unless you understand the security implications.
+ *
  * This file sets up the tRPC context, middleware, and procedure builders.
  * - Context includes the authenticated Clerk user and Prisma database client
  * - Procedures can be public or protected (requiring authentication)
