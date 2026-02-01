@@ -17,6 +17,7 @@ import { prisma } from '@/lib/db';
 import { sendEmail } from '@/lib/email/send-email';
 import { generateGuestReferralCompletionEmail } from '@/lib/email/templates/guest-referral-completion';
 import { GUEST_REFERRAL_POINTS_CONFIG } from '@/lib/config/business-constants';
+import { cronLogger, partnerLogger, emailLogger, logError } from '@/lib/logger';
 
 /**
  * GET /api/cron/referral-completion-bonus
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    console.error('[ReferralCompletionBonus] CRON_SECRET not configured');
+    cronLogger.error({ job: 'referral-completion-bonus' }, 'CRON_SECRET not configured');
     return NextResponse.json(
       { error: 'Cron job not configured' },
       { status: 500 }
@@ -39,14 +40,14 @@ export async function GET(req: NextRequest) {
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('[ReferralCompletionBonus] Unauthorized cron request');
+    cronLogger.warn({ job: 'referral-completion-bonus' }, 'Unauthorized cron request');
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     );
   }
 
-  console.log('=== Referral Completion Bonus Cron Job Started ===');
+  cronLogger.info({ job: 'referral-completion-bonus' }, 'Referral Completion Bonus Cron Job Started');
 
   try {
     // 2. Calculate date range for trips that ended yesterday
@@ -59,7 +60,11 @@ export async function GET(req: NextRequest) {
     yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
     yesterdayEnd.setHours(23, 59, 59, 999);
 
-    console.log(`[ReferralCompletionBonus] Looking for trips ended between ${yesterdayStart.toISOString()} and ${yesterdayEnd.toISOString()}`);
+    cronLogger.info({
+      job: 'referral-completion-bonus',
+      dateRangeStart: yesterdayStart.toISOString(),
+      dateRangeEnd: yesterdayEnd.toISOString(),
+    }, 'Looking for trips ended in date range');
 
     // 3. Find completed bookings with referral codes from trips that ended yesterday
     // A booking is eligible if:
@@ -93,7 +98,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    console.log(`[ReferralCompletionBonus] Found ${completedBookings.length} bookings with referral codes from completed trips`);
+    cronLogger.info({
+      job: 'referral-completion-bonus',
+      count: completedBookings.length,
+    }, 'Found bookings with referral codes from completed trips');
 
     // Process results tracking
     const results: Array<{
@@ -126,7 +134,10 @@ export async function GET(req: NextRequest) {
         });
 
         if (existingCompletionEvent) {
-          console.log(`[ReferralCompletionBonus] Skipping ${booking.bookingReference} - completion bonus already awarded`);
+          cronLogger.debug({
+            job: 'referral-completion-bonus',
+            bookingReference: booking.bookingReference,
+          }, 'Skipping - completion bonus already awarded');
           results.push({
             bookingId: booking.id,
             bookingReference: booking.bookingReference,
@@ -152,7 +163,11 @@ export async function GET(req: NextRequest) {
         ]);
 
         if (!partnerProfile && !referrerUser) {
-          console.log(`[ReferralCompletionBonus] Skipping ${booking.bookingReference} - referrer not found for code ${referralCode}`);
+          cronLogger.warn({
+            job: 'referral-completion-bonus',
+            bookingReference: booking.bookingReference,
+            referralCode,
+          }, 'Skipping - referrer not found for code');
           results.push({
             bookingId: booking.id,
             bookingReference: booking.bookingReference,
@@ -272,9 +287,15 @@ export async function GET(req: NextRequest) {
             text,
           });
 
-          console.log(`[ReferralCompletionBonus] Email sent to ${referrerEmail}`);
+          emailLogger.info({
+            job: 'referral-completion-bonus',
+            bookingReference: booking.bookingReference,
+          }, 'Referral completion email sent');
         } catch (emailError) {
-          console.error(`[ReferralCompletionBonus] Failed to send email to ${referrerEmail}:`, emailError);
+          logError(emailLogger, emailError, 'Failed to send referral completion email', {
+            job: 'referral-completion-bonus',
+            bookingReference: booking.bookingReference,
+          });
           // Don't fail the whole operation if email fails
         }
 
@@ -288,9 +309,16 @@ export async function GET(req: NextRequest) {
         });
         successCount++;
 
-        console.log(`[ReferralCompletionBonus] Awarded ${bonusPoints} bonus points for ${booking.bookingReference} to ${isPartnerReferral ? 'partner' : 'guest'} referrer`);
+        partnerLogger.info({
+          job: 'referral-completion-bonus',
+          bookingReference: booking.bookingReference,
+          bonusPoints,
+          referrerType: isPartnerReferral ? 'partner' : 'guest',
+        }, 'Awarded bonus points for completed referral');
       } catch (error) {
-        console.error(`[ReferralCompletionBonus] Error processing booking ${booking.bookingReference}:`, error);
+        logError(cronLogger, error, 'Error processing booking for referral completion bonus', {
+          bookingReference: booking.bookingReference,
+        });
         results.push({
           bookingId: booking.id,
           bookingReference: booking.bookingReference,
@@ -307,14 +335,15 @@ export async function GET(req: NextRequest) {
     const executionTimeMs = Date.now() - startTime;
 
     // 7. Log summary
-    console.log('=== Referral Completion Bonus Cron Job Summary ===');
-    console.log(`Total bookings found: ${completedBookings.length}`);
-    console.log(`Successfully processed: ${successCount}`);
-    console.log(`Skipped (duplicate): ${skippedDuplicateCount}`);
-    console.log(`Skipped (no referrer): ${skippedNoReferrerCount}`);
-    console.log(`Errors: ${errorCount}`);
-    console.log(`Execution time: ${executionTimeMs}ms`);
-    console.log('=== Cron Job Complete ===');
+    cronLogger.info({
+      job: 'referral-completion-bonus',
+      totalBookingsFound: completedBookings.length,
+      successfullyProcessed: successCount,
+      skippedDuplicate: skippedDuplicateCount,
+      skippedNoReferrer: skippedNoReferrerCount,
+      errors: errorCount,
+      executionTimeMs,
+    }, 'Referral Completion Bonus Cron Job Complete');
 
     // 8. Return summary
     return NextResponse.json({
@@ -335,7 +364,7 @@ export async function GET(req: NextRequest) {
       results,
     });
   } catch (error) {
-    console.error('[ReferralCompletionBonus] Fatal error in cron job:', error);
+    logError(cronLogger, error, 'Fatal error in referral-completion-bonus cron job');
 
     return NextResponse.json(
       {

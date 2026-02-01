@@ -17,7 +17,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { GiftState } from '@prisma/client'
 import { transitionGiftState } from '@/lib/gift/gift-transition-service'
-import { giftLogger, logError } from '@/lib/logger'
+import { cronLogger, giftLogger, logError } from '@/lib/logger'
 
 // Batch size for processing (rate limiting)
 const BATCH_SIZE = 10
@@ -41,12 +41,12 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.error('CRON_SECRET not configured')
+    giftLogger.error({ job: 'expire-gifts' }, 'CRON_SECRET not configured')
     return NextResponse.json({ error: 'Cron job not configured' }, { status: 500 })
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('Unauthorized cron request')
+    giftLogger.warn({ job: 'expire-gifts' }, 'Unauthorized cron request')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

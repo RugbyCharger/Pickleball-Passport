@@ -41,12 +41,12 @@ export async function GET(request: NextRequest) {
     const cronSecret = process.env.CRON_SECRET
 
     if (!cronSecret) {
-      console.error('CRON_SECRET not configured')
+      giftLogger.error({ job: 'send-scheduled-gifts' }, 'CRON_SECRET not configured')
       return NextResponse.json({ error: 'Cron job not configured' }, { status: 500 })
     }
 
     if (authHeader !== `Bearer ${cronSecret}`) {
-      console.error('Unauthorized cron request')
+      giftLogger.warn({ job: 'send-scheduled-gifts' }, 'Unauthorized cron request')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

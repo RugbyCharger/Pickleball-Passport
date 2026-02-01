@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAndSendMilestoneMessages } from '@/lib/jobs/whatsapp-milestone-messages';
+import { cronLogger, whatsappLogger, logError } from '@/lib/logger';
 
 /**
  * GET /api/cron/whatsapp-milestones
@@ -28,16 +29,16 @@ export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    console.error('[WhatsAppMilestones] CRON_SECRET not configured');
+    cronLogger.error({ job: 'whatsapp-milestones' }, 'CRON_SECRET not configured');
     return NextResponse.json({ error: 'Cron job not configured' }, { status: 500 });
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
-    console.error('[WhatsAppMilestones] Unauthorized cron request');
+    cronLogger.warn({ job: 'whatsapp-milestones' }, 'Unauthorized cron request');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  console.log('=== WhatsApp Milestone Messages Cron Job Started ===');
+  cronLogger.info({ job: 'whatsapp-milestones' }, 'WhatsApp Milestone Messages Cron Job Started');
 
   try {
     // 2. Run the milestone messages job
@@ -46,14 +47,15 @@ export async function GET(req: NextRequest) {
     const executionTimeMs = Date.now() - startTime;
 
     // 3. Log summary
-    console.log('=== Cron Job Summary ===');
-    console.log(`Total processed: ${result.totalProcessed}`);
-    console.log(`Messages sent: ${result.messagesSent}`);
-    console.log(`Errors: ${result.errors}`);
-    console.log(`Skipped: ${result.skipped}`);
-    console.log('By milestone:', result.byMilestone);
-    console.log(`Execution time: ${executionTimeMs}ms`);
-    console.log('=== Cron Job Complete ===');
+    cronLogger.info({
+      job: 'whatsapp-milestones',
+      totalProcessed: result.totalProcessed,
+      messagesSent: result.messagesSent,
+      errors: result.errors,
+      skipped: result.skipped,
+      byMilestone: result.byMilestone,
+      executionTimeMs,
+    }, 'WhatsApp Milestone Messages Cron Job Complete');
 
     // 4. Return summary
     return NextResponse.json({
@@ -62,7 +64,7 @@ export async function GET(req: NextRequest) {
       executionTimeMs,
     });
   } catch (error) {
-    console.error('[WhatsAppMilestones] Fatal error in cron job:', error);
+    logError(cronLogger, error, 'Fatal error in whatsapp-milestones cron job');
 
     return NextResponse.json(
       {
