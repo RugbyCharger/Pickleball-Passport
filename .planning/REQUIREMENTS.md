@@ -1,74 +1,108 @@
-# Requirements: v2.1 Communication & Content
+# Requirements: v2.2 Security Hardening
 
-**Milestone:** v2.1 Communication & Content
-**Created:** 2026-01-30
-**Source:** BMAD Epics E11 (Communication System) + E12 (Content Management) — P1 stories only
-**Core Value:** Operators can communicate with guests throughout the trip lifecycle
+**Milestone:** v2.2 Security Hardening
+**Created:** 2026-01-31
+**Source:** Six Hats Council codebase review (Black Hat analysis)
+**Core Value:** Platform is secure enough for paying customers and partner financial data
 
-## v2.1 Requirements
+## v2.2 Requirements
 
-### Email Sequences
+### Authentication & Authorization (CRITICAL)
 
-- [x] **COMM-01**: Guest receives payment reminder email 7 days before scheduled installment
-- [x] **COMM-02**: Guest receives pre-trip nurture sequence (60/30/14/7/1 days before departure)
-- [x] **COMM-03**: Guest receives post-trip follow-up emails (3/7/14/30/60 days after return)
+- [ ] **SEC-01**: Admin routes reject non-admin users with 403 Forbidden
+  - All `/dashboard/admin/*` pages check user role
+  - All tRPC admin procedures validate admin role
+  - Unauthorized access logged for security audit
 
-### SMS Notifications
+### Data Encryption (CRITICAL)
 
-- [x] **SMS-01**: System can send SMS via Twilio integration
-- [x] **SMS-02**: Guest receives SMS for urgent updates (flight delays, itinerary changes, emergencies)
+- [ ] **SEC-02**: Partner bank account data encrypted at rest
+  - Bank account numbers encrypted before storage
+  - Routing numbers encrypted before storage
+  - Decryption only on authorized admin display
+  - Never log or expose plaintext bank data
 
-### Testimonial Workflow
+### Webhook Security (CRITICAL)
 
-- [x] **TEST-01**: Guest can submit testimonial (video, written, or photo) via web or mobile
-- [x] **TEST-02**: Admin can review testimonials and approve/reject/request edits
-- [x] **TEST-03**: Published testimonials display on website testimonials page
+- [ ] **SEC-03**: Webhook endpoints verify signatures before processing
+  - Stripe webhooks validate `stripe-signature` header
+  - SendGrid webhooks validate signature (if available) or IP whitelist
+  - Invalid signatures rejected with 400
+  - Signature failures logged for security monitoring
+
+### Production Hygiene (HIGH)
+
+- [ ] **SEC-04**: No sensitive data in console.log statements
+  - Audit 286 console.log statements for PII exposure
+  - Replace with structured logger (pino or similar)
+  - Remove or redact sensitive fields
+
+## Success Criteria
+
+**Phase 18 is complete when ALL are TRUE:**
+
+1. Any non-admin user accessing `/dashboard/admin/*` gets redirected to unauthorized page
+2. `prisma studio` shows encrypted (unreadable) values for bank account fields
+3. Forged Stripe webhook (missing signature) returns 400 error
+4. `grep -r "console.log" src/` returns 0 matches in production paths (or all are redacted)
+5. Security penetration test by Claude finds 0 critical vulnerabilities
+
+## Previous v2.1 Requirements (Archived)
+
+See: `.planning/milestones/v2.1-REQUIREMENTS.md` (to be archived after v2.2 ships)
+
+### Email Sequences (Complete)
+- [x] **COMM-01**: Payment reminder emails
+- [x] **COMM-02**: Pre-trip nurture sequence
+- [x] **COMM-03**: Post-trip follow-up emails
+
+### SMS Notifications (Complete)
+- [x] **SMS-01**: Twilio integration
+- [x] **SMS-02**: Urgent update SMS
+
+### Testimonial Workflow (Complete)
+- [x] **TEST-01**: Testimonial submission
+- [x] **TEST-02**: Admin review workflow
+- [x] **TEST-03**: Public display
 
 ## Future Requirements
 
-Deferred to v2.2 or later (P2/P3 stories):
+Deferred to v2.3 or later:
 
-### Communication (P2)
-- **COMM-04**: Guest can manage email preferences (unsubscribe by category)
-- **COMM-05**: Admin can send broadcast messages to trip groups
-- **COMM-06**: System sends automated NPS surveys 30 days after trip
+### Security Enhancements (P2)
+- **SEC-05**: Rate limiting on all public endpoints
+- **SEC-06**: CSRF protection on mutation endpoints
+- **SEC-07**: Content Security Policy headers
+- **SEC-08**: Security audit logging to external SIEM
 
-### Content (P2/P3)
-- **CONT-01**: Admin can manage photo galleries (upload, tag, feature)
-- **CONT-02**: Admin can manage marketing asset versions
-- **CONT-03**: System auto-transcodes uploaded videos via Mux
-- **CONT-04**: System tracks content consent per testimonial/photo
-- **CONT-05**: Admin can search content by tags and keywords
+### Communication (P2) - From v2.1
+- **COMM-04**: Email preference management
+- **COMM-05**: Broadcast messaging
+- **COMM-06**: NPS surveys
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Real-time chat in admin | Concierge chat exists in mobile app, no web admin chat needed |
-| Video conferencing | External Zoom links sufficient |
-| AI-generated email content | Manual templates sufficient for v2.1 |
-| Multi-language emails | English only for now |
-| WhatsApp Business API | Existing WhatsApp integration via manual groups sufficient |
+| SOC 2 compliance | Too early, requires audit process |
+| PCI DSS Level 1 | Stripe handles card data, we don't store it |
+| HIPAA compliance | Not handling medical records |
+| Bug bounty program | Need stable security baseline first |
 
 ## Traceability
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| COMM-01 | Phase 15 | Complete |
-| COMM-02 | Phase 15 | Complete |
-| COMM-03 | Phase 15 | Complete |
-| SMS-01 | Phase 16 | Complete |
-| SMS-02 | Phase 16 | Complete |
-| TEST-01 | Phase 17 | Complete |
-| TEST-02 | Phase 17 | Complete |
-| TEST-03 | Phase 17 | Complete |
+| Requirement | Phase | Plan | Status |
+|-------------|-------|------|--------|
+| SEC-01 | Phase 18 | 18-01-PLAN.md | Pending |
+| SEC-02 | Phase 18 | 18-02-PLAN.md | Pending |
+| SEC-03 | Phase 18 | 18-03-PLAN.md | Pending |
+| SEC-04 | Phase 18 | 18-03-PLAN.md | Pending |
 
 **Coverage:**
-- v2.1 requirements: 8 total
-- Mapped to phases: 8
+- v2.2 requirements: 4 total
+- Mapped to phases: 4
 - Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-01-30*
-*Roadmap created: 2026-01-30*
-*Source: BMAD epics-and-stories-Pickleball-Passport-2025-12-28.md (E11-S3/S4/S5/S6/S7, E12-S1/S2/S3)*
+*Requirements defined: 2026-01-31*
+*Source: Six Hats Council Black Hat analysis*

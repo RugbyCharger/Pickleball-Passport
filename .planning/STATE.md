@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Guests can book a transformation trip and partners can refer members
-**Current focus:** v2.1 Communication & Content — Phase 17 Complete
+**Current focus:** v2.2 Security Hardening — Phase 18 (Critical Security Fixes)
 
 ## Current Position
 
-Phase: 17 of 17 (Testimonial Workflow)
-Plan: 1 of 1 complete
-Status: Phase complete
-Last activity: 2026-01-30 — Completed 17-01-PLAN.md (Testimonial Workflow Integration)
+Phase: 18 of 18 (Security Hardening)
+Plan: 0 of 3 complete
+Status: Not started
+Last activity: 2026-01-31 — Phase 18 added after Six Hats Council security review
 
-Progress: [####################] 100% v2.0 | [##########] 100% v2.1
+Progress: [####################] 100% v2.1 | [..........] 0% v2.2
 
 ## Milestone History
 
@@ -39,6 +39,10 @@ Progress: [####################] 100% v2.0 | [##########] 100% v2.1
 - Phases: 10-Foundation, 11-PreTrip, 12-DuringTrip, 13-Alumni, 14-Polish
 - Archived: `.planning/milestones/v2.0-ROADMAP.md`, `.planning/milestones/v2.0-REQUIREMENTS.md`
 
+**v2.1 Communication & Content shipped 2026-01-30**
+- 3 phases, 3 plans
+- Phases: 15-Email, 16-SMS, 17-Testimonials
+
 See: .planning/MILESTONES.md
 
 **Production URL:** https://pickleball-passport.vercel.app
@@ -53,39 +57,44 @@ Aggregate across all milestones: 45 plans completed.
 
 All decisions recorded in PROJECT.md Key Decisions table.
 
-Recent decisions affecting v2.1:
-- SendGrid integration exists and works (booking confirmations)
-- Twilio SMS now fully integrated (flight delays, itinerary changes, emergency alerts)
-- SMS preference checking for non-emergency (canSendNotification with smsEnabled)
-- Emergency alerts bypass preferences (safety override)
-- Testimonials table exists in Prisma schema
-- Mobile app has testimonial submission UI (needs backend workflow)
-- Post-trip emails: 3/7/14/30/60 day milestones after trip ends
-- Post-trip cron: 6 AM UTC daily (before pre-trip at 7 AM)
-- Testimonial gallery uses guestTestimonial.getPublished tRPC query
-- File uploads use Supabase Storage signed URLs (getUploadUrl procedure)
+Recent decisions affecting v2.2:
+- Six Hats Council identified 3 CRITICAL security vulnerabilities (2026-01-31)
+- Admin dashboard accessible to all authenticated users (must fix before customer launch)
+- Bank accounts stored in plaintext (must encrypt at rest)
+- Webhook signatures not verified (must validate Stripe/SendGrid)
+- Security hardening takes priority over new features
 
 ### Pending Todos
 
-None.
+- [ ] SEC-01: Add admin role check middleware to all admin routes
+- [ ] SEC-02: Encrypt bank account numbers using @47ng/cloak or similar
+- [ ] SEC-03: Add Stripe webhook signature verification
+- [ ] SEC-03: Add SendGrid webhook signature verification
 
 ### Blockers/Concerns
 
-None.
+**CRITICAL - Do not onboard paying customers until Phase 18 complete:**
+- Admin data exposure risk (any user can access admin panel)
+- Partner financial data exposure risk (bank accounts readable if DB compromised)
+- Payment manipulation risk (forged webhooks can create fake payments)
+
+### Roadmap Evolution
+
+- Phase 18 added: Security Hardening (Six Hats Council analysis 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-01-30 12:49 UTC
-Stopped at: Completed 17-01-PLAN.md (Testimonial Workflow Integration)
+Last session: 2026-01-31
+Stopped at: Created Phase 18 for security hardening
 Resume file: None
 
 ## Next Steps
 
-**v2.1 Communication & Content — COMPLETE**
+**v2.2 Security Hardening — IN PROGRESS**
 
-All phases complete:
-- Phase 15 (Email System) - Post-trip email sequences
-- Phase 16 (SMS Integration) - Flight alerts, itinerary changes
-- Phase 17 (Testimonial Workflow) - Gallery integration, file uploads
+Phase 18 plans to create:
+1. 18-01-PLAN.md — Admin authentication middleware
+2. 18-02-PLAN.md — Bank account encryption
+3. 18-03-PLAN.md — Webhook signature verification
 
-Ready for v2.1 milestone archival or next milestone planning.
+Run `/gsd:plan-phase 18` to create detailed execution plans.

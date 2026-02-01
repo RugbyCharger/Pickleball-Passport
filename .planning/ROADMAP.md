@@ -8,6 +8,7 @@
 - ✅ **v1.3 Gift Enhancements** - Phase 9 (shipped 2026-01-28)
 - ✅ **v2.0 Mobile App** - Phases 10-14 (shipped 2026-01-28)
 - ✅ **v2.1 Communication & Content** - Phases 15-17 (shipped 2026-01-30)
+- 🔒 **v2.2 Security Hardening** - Phase 18 (in progress)
 
 ## Phases
 
@@ -111,5 +112,51 @@ Plans:
 | 17. Testimonial Workflow | v2.1 | 1/1 | Complete | 2026-01-30 |
 
 ---
-*Roadmap created: 2026-01-30*
-*Milestone: v2.1 Communication & Content*
+
+### 🔒 v2.2 Security Hardening (Current)
+
+**Milestone Goal:** Fix critical security vulnerabilities identified by Six Hats Council codebase review before onboarding paying customers.
+
+#### Phase 18: Security Hardening
+**Goal**: Close 3 critical security holes that could cause data breaches, financial fraud, or system manipulation
+**Depends on**: Phase 17 (current production state)
+**Requirements**: SEC-01, SEC-02, SEC-03
+**Success Criteria** (what must be TRUE):
+  1. Admin routes reject non-admin users with 403 Forbidden (SEC-01)
+  2. Bank account numbers encrypted at rest, never exposed in logs (SEC-02)
+  3. Stripe webhooks verify signature before processing (SEC-03)
+  4. SendGrid webhooks verify signature before processing (SEC-03)
+  5. No console.log statements containing sensitive data in production
+  6. Security audit passes with 0 critical findings
+**Plans**: 3 plans
+
+Plans:
+- [ ] 18-01-PLAN.md — Admin authentication middleware (SEC-01)
+- [ ] 18-02-PLAN.md — Bank account encryption (SEC-02)
+- [ ] 18-03-PLAN.md — Webhook signature verification (SEC-03)
+
+**Details:**
+Critical security fixes identified by Six Hats Council analysis on 2026-01-31:
+- **SEC-01**: Admin dashboard currently accessible to ALL authenticated users
+- **SEC-02**: Partner bank accounts stored in plaintext (Stripe Connect payout data)
+- **SEC-03**: Webhook endpoints don't verify signatures (Stripe/SendGrid can be forged)
+
+---
+
+## Progress
+
+**Execution Order:** Phase 18
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1-4 | v1.0 MVP | 9/9 | Complete | 2026-01-26 |
+| 5-7 | v1.1 Gift | 8/8 | Complete | 2026-01-27 |
+| 8 | v1.2 RLS | 2/2 | Complete | 2026-01-27 |
+| 9 | v1.3 Gift Enhancements | 1/1 | Complete | 2026-01-28 |
+| 10-14 | v2.0 Mobile | 22/22 | Complete | 2026-01-28 |
+| 15-17 | v2.1 Communication | 3/3 | Complete | 2026-01-30 |
+| 18. Security Hardening | v2.2 | 0/3 | In Progress | — |
+
+---
+*Roadmap updated: 2026-01-31*
+*Milestone: v2.2 Security Hardening*
