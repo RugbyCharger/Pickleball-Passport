@@ -7,7 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  --font-heading: var(--font-nunito-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -46,89 +47,149 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* Tropical Resort Brand Colors */
-  --color-ocean: #003D5C;
-  --color-ocean-light: #005580;
-  --color-ocean-dark: #002B42;
-  --color-sunset: #D4AF37;
-  --color-sunset-light: #E5C969;
-  --color-sunset-dark: #B8962E;
-  --color-sand: #F5E6D3;
-  --color-sand-light: #FDF8F3;
-  --color-sand-dark: #E8D4BD;
+  /* ==========================================================================
+     PICKLEBALL PASSPORT - OFFICIAL BRAND KIT
+     Brand Kit by: inahsempire.social
+     ========================================================================== */
+
+  /* Primary Brand Colors */
+  --color-brand-gold: #B08D55;
+  --color-brand-gold-50: #F7F3EC;
+  --color-brand-gold-100: #EFE7D9;
+  --color-brand-gold-200: #DFCFB3;
+  --color-brand-gold-300: #CFB78D;
+  --color-brand-gold-400: #BFA267;
+  --color-brand-gold-500: #B08D55;
+  --color-brand-gold-600: #8D7144;
+  --color-brand-gold-700: #6A5533;
+  --color-brand-gold-800: #463822;
+  --color-brand-gold-900: #231C11;
+
+  --color-brand-navy: #1D2D44;
+  --color-brand-navy-50: #E8EBF0;
+  --color-brand-navy-100: #D1D7E1;
+  --color-brand-navy-200: #A3AFC3;
+  --color-brand-navy-300: #7587A5;
+  --color-brand-navy-400: #495F87;
+  --color-brand-navy-500: #1D2D44;
+  --color-brand-navy-600: #172436;
+  --color-brand-navy-700: #111B29;
+  --color-brand-navy-800: #0B121B;
+  --color-brand-navy-900: #06090E;
+
+  --color-brand-rust: #9C5238;
+  --color-brand-rust-50: #F5EBE8;
+  --color-brand-rust-100: #EBD7D1;
+  --color-brand-rust-200: #D7AFA3;
+  --color-brand-rust-300: #C38775;
+  --color-brand-rust-400: #AF6047;
+  --color-brand-rust-500: #9C5238;
+  --color-brand-rust-600: #7D422D;
+  --color-brand-rust-700: #5E3122;
+  --color-brand-rust-800: #3E2116;
+  --color-brand-rust-900: #1F100B;
+
+  --color-brand-cream: #F2EAD3;
+  --color-brand-cream-50: #FDFCF8;
+  --color-brand-cream-100: #FBF9F1;
+  --color-brand-cream-200: #F7F3E3;
+  --color-brand-cream-300: #F2EAD3;
+  --color-brand-cream-400: #E8DDB8;
+  --color-brand-cream-500: #DED09D;
+  --color-brand-cream-600: #D4C382;
+  --color-brand-cream-700: #C4AD5C;
+  --color-brand-cream-800: #A08940;
+  --color-brand-cream-900: #6B5C2B;
+
+  /* Legacy Tropical Colors (kept for backwards compatibility) */
+  --color-ocean: #1D2D44;
+  --color-ocean-light: #495F87;
+  --color-ocean-dark: #0B121B;
+  --color-sunset: #B08D55;
+  --color-sunset-light: #CFB78D;
+  --color-sunset-dark: #8D7144;
+  --color-sand: #F2EAD3;
+  --color-sand-light: #FDFCF8;
+  --color-sand-dark: #E8DDB8;
   --color-palm: #2D5A3D;
   --color-palm-light: #3D7A52;
-  --color-coral: #E07A5F;
-  --color-lagoon: #4AA4B5;
+  --color-coral: #9C5238;
+  --color-lagoon: #7587A5;
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Light Theme - Brand Colors Applied */
+  --background: #FDFCF8;
+  --foreground: #1D2D44;
+  --card: #FFFFFF;
+  --card-foreground: #1D2D44;
+  --popover: #FFFFFF;
+  --popover-foreground: #1D2D44;
+  --primary: #B08D55;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F2EAD3;
+  --secondary-foreground: #1D2D44;
+  --muted: #F7F3E3;
+  --muted-foreground: #495F87;
+  --accent: #9C5238;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC3545;
+  --border: #E8DDB8;
+  --input: #E8DDB8;
+  --ring: #B08D55;
+
+  /* Chart Colors - Brand Palette */
+  --chart-1: #B08D55;
+  --chart-2: #1D2D44;
+  --chart-3: #9C5238;
+  --chart-4: #495F87;
+  --chart-5: #2D5A3D;
+
+  /* Sidebar - Brand Navy Theme */
+  --sidebar: #1D2D44;
+  --sidebar-foreground: #F2EAD3;
+  --sidebar-primary: #B08D55;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #172436;
+  --sidebar-accent-foreground: #F2EAD3;
+  --sidebar-border: #495F87;
+  --sidebar-ring: #B08D55;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0B121B;
+  --foreground: #F2EAD3;
+  --card: #1D2D44;
+  --card-foreground: #F2EAD3;
+  --popover: #1D2D44;
+  --popover-foreground: #F2EAD3;
+  --primary: #B08D55;
+  --primary-foreground: #0B121B;
+  --secondary: #172436;
+  --secondary-foreground: #F2EAD3;
+  --muted: #172436;
+  --muted-foreground: #A3AFC3;
+  --accent: #9C5238;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC3545;
+  --border: rgba(176, 141, 85, 0.2);
+  --input: rgba(176, 141, 85, 0.15);
+  --ring: #B08D55;
+  --chart-1: #CFB78D;
+  --chart-2: #7587A5;
+  --chart-3: #C38775;
+  --chart-4: #A3AFC3;
+  --chart-5: #3D7A52;
+  --sidebar: #0B121B;
+  --sidebar-foreground: #F2EAD3;
+  --sidebar-primary: #B08D55;
+  --sidebar-primary-foreground: #0B121B;
+  --sidebar-accent: #172436;
+  --sidebar-accent-foreground: #F2EAD3;
+  --sidebar-border: rgba(176, 141, 85, 0.2);
+  --sidebar-ring: #B08D55;
 }
 
 @layer base {
@@ -137,6 +198,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-nunito-sans), 'Nunito Sans', system-ui, sans-serif;
   }
 }
 
@@ -172,34 +237,61 @@
     }
   }
 
-  /* Tropical Resort Backgrounds */
-  .bg-tropical-gradient {
-    background: linear-gradient(135deg, #003D5C 0%, #005580 50%, #4AA4B5 100%);
+  /* ==========================================================================
+     BRAND GRADIENTS
+     ========================================================================== */
+
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #1D2D44 0%, #495F87 100%);
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #B08D55 0%, #CFB78D 50%, #B08D55 100%);
+  }
+
+  .bg-rust-gradient {
+    background: linear-gradient(135deg, #9C5238 0%, #C38775 100%);
+  }
+
+  .bg-cream-gradient {
+    background: linear-gradient(180deg, #FDFCF8 0%, #F2EAD3 100%);
+  }
+
+  .bg-navy-gradient {
+    background: linear-gradient(180deg, #1D2D44 0%, #0B121B 100%);
   }
 
   .bg-sunset-gradient {
-    background: linear-gradient(135deg, #D4AF37 0%, #E07A5F 50%, #F5E6D3 100%);
+    background: linear-gradient(135deg, #B08D55 0%, #9C5238 50%, #F2EAD3 100%);
+  }
+
+  /* Legacy tropical gradients (mapped to new brand colors) */
+  .bg-tropical-gradient {
+    background: linear-gradient(135deg, #1D2D44 0%, #495F87 50%, #7587A5 100%);
   }
 
   .bg-golden-hour {
-    background: linear-gradient(180deg, #FDF8F3 0%, #F5E6D3 30%, #E5C969 100%);
+    background: linear-gradient(180deg, #FDFCF8 0%, #F2EAD3 30%, #CFB78D 100%);
   }
 
   .bg-ocean-depth {
-    background: linear-gradient(180deg, #4AA4B5 0%, #005580 50%, #003D5C 100%);
+    background: linear-gradient(180deg, #7587A5 0%, #495F87 50%, #1D2D44 100%);
   }
 
   .bg-sand-texture {
-    background-color: #FDF8F3;
+    background-color: #FDFCF8;
     background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   }
 
   .bg-palm-pattern {
-    background-color: #003D5C;
-    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0C40 0 50 20 40 40C30 20 40 0 40 0Z' fill='%23005580' fill-opacity='0.15'/%3E%3Cpath d='M0 40C0 40 20 50 40 40C20 30 0 40 0 40Z' fill='%23005580' fill-opacity='0.1'/%3E%3Cpath d='M80 40C80 40 60 50 40 40C60 30 80 40 80 40Z' fill='%23005580' fill-opacity='0.1'/%3E%3Cpath d='M40 80C40 80 50 60 40 40C30 60 40 80 40 80Z' fill='%23005580' fill-opacity='0.15'/%3E%3C/svg%3E");
+    background-color: #1D2D44;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0C40 0 50 20 40 40C30 20 40 0 40 0Z' fill='%23495F87' fill-opacity='0.15'/%3E%3Cpath d='M0 40C0 40 20 50 40 40C20 30 0 40 0 40Z' fill='%23495F87' fill-opacity='0.1'/%3E%3Cpath d='M80 40C80 40 60 50 40 40C60 30 80 40 80 40Z' fill='%23495F87' fill-opacity='0.1'/%3E%3Cpath d='M40 80C40 80 50 60 40 40C30 60 40 80 40 80Z' fill='%23495F87' fill-opacity='0.15'/%3E%3C/svg%3E");
   }
 
-  /* Tropical Animations */
+  /* ==========================================================================
+     BRAND ANIMATIONS
+     ========================================================================== */
+
   .animate-wave {
     animation: wave 8s ease-in-out infinite;
   }
@@ -219,6 +311,10 @@
 
   .animate-glow {
     animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-gold-pulse {
+    animation: gold-pulse 2s ease-in-out infinite;
   }
 
   @keyframes wave {
@@ -265,63 +361,128 @@
 
   @keyframes glow {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 0 20px rgba(176, 141, 85, 0.3);
     }
     50% {
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 40px rgba(176, 141, 85, 0.6);
     }
   }
 
-  /* Tropical Card Styles */
-  .card-tropical {
-    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(245,230,211,0.5) 100%);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+  @keyframes gold-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(176, 141, 85, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(176, 141, 85, 0);
+    }
+  }
+
+  /* ==========================================================================
+     BRAND CARD STYLES
+     ========================================================================== */
+
+  .card-brand {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(242,234,211,0.5) 100%);
+    border: 1px solid rgba(176, 141, 85, 0.2);
     box-shadow:
-      0 4px 6px -1px rgba(0, 61, 92, 0.1),
-      0 2px 4px -1px rgba(0, 61, 92, 0.06),
+      0 4px 6px -1px rgba(29, 45, 68, 0.1),
+      0 2px 4px -1px rgba(29, 45, 68, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .card-brand:hover {
+    box-shadow:
+      0 20px 25px -5px rgba(29, 45, 68, 0.15),
+      0 10px 10px -5px rgba(29, 45, 68, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+  }
+
+  .card-navy {
+    background: linear-gradient(135deg, #1D2D44 0%, #172436 100%);
+    border: 1px solid rgba(176, 141, 85, 0.3);
+    box-shadow:
+      0 4px 6px -1px rgba(29, 45, 68, 0.3),
+      inset 0 1px 0 rgba(117, 135, 165, 0.2);
+  }
+
+  /* Legacy card classes (mapped to new brand) */
+  .card-tropical {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(242,234,211,0.5) 100%);
+    border: 1px solid rgba(176, 141, 85, 0.2);
+    box-shadow:
+      0 4px 6px -1px rgba(29, 45, 68, 0.1),
+      0 2px 4px -1px rgba(29, 45, 68, 0.06),
       inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   .card-tropical:hover {
     box-shadow:
-      0 20px 25px -5px rgba(0, 61, 92, 0.15),
-      0 10px 10px -5px rgba(0, 61, 92, 0.08),
+      0 20px 25px -5px rgba(29, 45, 68, 0.15),
+      0 10px 10px -5px rgba(29, 45, 68, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.8);
     transform: translateY(-2px);
   }
 
   .card-ocean {
-    background: linear-gradient(135deg, #003D5C 0%, #005580 100%);
-    border: 1px solid rgba(74, 164, 181, 0.3);
+    background: linear-gradient(135deg, #1D2D44 0%, #172436 100%);
+    border: 1px solid rgba(176, 141, 85, 0.3);
     box-shadow:
-      0 4px 6px -1px rgba(0, 61, 92, 0.3),
-      inset 0 1px 0 rgba(74, 164, 181, 0.2);
+      0 4px 6px -1px rgba(29, 45, 68, 0.3),
+      inset 0 1px 0 rgba(117, 135, 165, 0.2);
   }
 
-  /* Golden Accent Border */
+  /* ==========================================================================
+     BRAND BORDERS & DECORATIVE ELEMENTS
+     ========================================================================== */
+
   .border-golden {
-    border-image: linear-gradient(135deg, #D4AF37 0%, #E5C969 50%, #D4AF37 100%) 1;
+    border-image: linear-gradient(135deg, #B08D55 0%, #CFB78D 50%, #B08D55 100%) 1;
+  }
+
+  .border-brand {
+    border-color: rgba(176, 141, 85, 0.3);
   }
 
   /* Text Gradients */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #B08D55 0%, #CFB78D 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-navy-gradient {
+    background: linear-gradient(135deg, #1D2D44 0%, #495F87 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Legacy text gradients */
   .text-tropical-gradient {
-    background: linear-gradient(135deg, #D4AF37 0%, #E07A5F 100%);
+    background: linear-gradient(135deg, #B08D55 0%, #9C5238 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-ocean-gradient {
-    background: linear-gradient(135deg, #003D5C 0%, #4AA4B5 100%);
+    background: linear-gradient(135deg, #1D2D44 0%, #7587A5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   /* Decorative Elements */
+  .brand-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #B08D55 50%, transparent 100%);
+  }
+
   .tropical-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #B08D55 50%, transparent 100%);
   }
 
   .tropical-corner {
@@ -335,15 +496,72 @@
     left: 0;
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, transparent 50%);
+    background: linear-gradient(135deg, rgba(176, 141, 85, 0.3) 0%, transparent 50%);
     border-radius: 0 0 100% 0;
   }
 
-  /* Staggered animations for lists */
+  /* ==========================================================================
+     BRAND BUTTON STYLES
+     ========================================================================== */
+
+  .btn-brand-primary {
+    background: linear-gradient(135deg, #B08D55 0%, #8D7144 100%);
+    color: #FFFFFF;
+    border: none;
+    box-shadow: 0 4px 14px 0 rgba(176, 141, 85, 0.25);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-brand-primary:hover {
+    background: linear-gradient(135deg, #CFB78D 0%, #B08D55 100%);
+    box-shadow: 0 6px 20px 0 rgba(176, 141, 85, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-brand-secondary {
+    background: transparent;
+    color: #1D2D44;
+    border: 2px solid #B08D55;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-brand-secondary:hover {
+    background: rgba(176, 141, 85, 0.1);
+    border-color: #8D7144;
+  }
+
+  .btn-brand-navy {
+    background: linear-gradient(135deg, #1D2D44 0%, #0B121B 100%);
+    color: #F2EAD3;
+    border: 1px solid rgba(176, 141, 85, 0.3);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-brand-navy:hover {
+    background: linear-gradient(135deg, #495F87 0%, #1D2D44 100%);
+    border-color: #B08D55;
+  }
+
+  /* ==========================================================================
+     STAGGERED ANIMATIONS
+     ========================================================================== */
+
   .stagger-1 { animation-delay: 0.1s; }
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
   .stagger-6 { animation-delay: 0.6s; }
+
+  /* ==========================================================================
+     TYPOGRAPHY UTILITIES
+     ========================================================================== */
+
+  .font-heading {
+    font-family: var(--font-nunito-sans), 'Nunito Sans', system-ui, sans-serif;
+  }
+
+  .font-body {
+    font-family: var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
+  }
 }

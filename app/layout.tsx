@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Montserrat, Nunito_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
@@ -10,16 +10,29 @@ import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
 import { Footer } from "@/components/marketing/footer";
 
-const inter = Inter({
-  variable: "--font-inter",
+/**
+ * Pickleball Passport - Official Brand Fonts
+ *
+ * Primary Heading Font: Nunito Sans (Google Fonts alternative to Proxima Nova)
+ * Body Font: Montserrat
+ *
+ * Brand Kit by: inahsempire.social
+ */
+
+// Nunito Sans - Similar to Proxima Nova, used for headings
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
   subsets: ["latin"],
   display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+// Montserrat - Body text font as per brand guidelines
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -71,7 +84,7 @@ export default function RootLayout({
           />
         </head>
         <body
-          className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
+          className={`${montserrat.variable} ${nunitoSans.variable} font-sans antialiased`}
         >
           <Providers>
             <div className="flex flex-col min-h-screen">

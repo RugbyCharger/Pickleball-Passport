@@ -1,3 +1,20 @@
+/**
+ * Pickleball Passport Mobile - Global Styles
+ *
+ * Official Brand Kit Configuration
+ * Brand Kit by: inahsempire.social
+ *
+ * Colors:
+ *   - Gold: #B08D55 (Primary)
+ *   - Navy: #1D2D44 (Secondary)
+ *   - Rust: #9C5238 (Accent)
+ *   - Cream: #F2EAD3 (Background)
+ *
+ * Typography:
+ *   - Headings: Nunito Sans (Proxima Nova alternative)
+ *   - Body: Montserrat
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
