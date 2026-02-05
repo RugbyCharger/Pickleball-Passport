@@ -77,7 +77,7 @@ export function BlogPostContent({ slug }: BlogPostContentProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#003D5C]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#1D2D44]" />
       </div>
     );
   }
@@ -128,7 +128,7 @@ export function BlogPostContent({ slug }: BlogPostContentProps) {
                 {post.category && (
                   <span
                     className="inline-block px-3 py-1 rounded-full text-sm font-medium text-white mb-4"
-                    style={{ backgroundColor: post.category.color || '#003D5C' }}
+                    style={{ backgroundColor: post.category.color || '#1D2D44' }}
                   >
                     {post.category.name}
                   </span>
@@ -146,7 +146,7 @@ export function BlogPostContent({ slug }: BlogPostContentProps) {
             </div>
           </div>
         ) : (
-          <div className="bg-gradient-to-r from-[#003D5C] to-[#005A82] py-16 px-4">
+          <div className="bg-gradient-to-r from-[#1D2D44] to-[#005A82] py-16 px-4">
             <div className="max-w-4xl mx-auto">
               {/* Back Button */}
               <Link href="/blog" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8">
@@ -190,7 +190,7 @@ export function BlogPostContent({ slug }: BlogPostContentProps) {
               )}
 
               {/* Content */}
-              <div className="prose prose-lg max-w-none prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-[#003D5C] prose-img:rounded-lg">
+              <div className="prose prose-lg max-w-none prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-[#1D2D44] prose-img:rounded-lg">
                 <RichTextContent content={post.content} />
               </div>
 
@@ -286,7 +286,7 @@ export function BlogPostContent({ slug }: BlogPostContentProps) {
                       )}
                     </div>
                     <div className="p-6">
-                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#003D5C] transition-colors line-clamp-2">
+                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#1D2D44] transition-colors line-clamp-2">
                         {relatedPost.title}
                       </h3>
                       {relatedPost.excerpt && (

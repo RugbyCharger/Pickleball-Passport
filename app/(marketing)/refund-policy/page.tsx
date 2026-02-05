@@ -7,7 +7,7 @@ export default function RefundPolicyPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white py-16">
+      <section className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">
             Refund Policy
@@ -146,7 +146,7 @@ export default function RefundPolicyPage() {
               To request a refund or discuss your options:
             </p>
             <ol className="list-decimal pl-6 text-gray-600 mb-4 space-y-2">
-              <li>Email us at <a href="mailto:support@pickleballpassport.com" className="text-[#003D5C] hover:underline">support@pickleballpassport.com</a></li>
+              <li>Email us at <a href="mailto:support@pickleballpassport.com" className="text-[#1D2D44] hover:underline">support@pickleballpassport.com</a></li>
               <li>Include your booking confirmation number</li>
               <li>Explain your reason for cancellation</li>
               <li>Our team will respond within 2 business days</li>
@@ -160,7 +160,7 @@ export default function RefundPolicyPage() {
             </h2>
             <p className="text-gray-600 mb-4">
               Questions about our refund policy? Contact our support team at{' '}
-              <a href="mailto:support@pickleballpassport.com" className="text-[#003D5C] hover:underline">
+              <a href="mailto:support@pickleballpassport.com" className="text-[#1D2D44] hover:underline">
                 support@pickleballpassport.com
               </a>{' '}
               or call +1 (234) 567-890.
@@ -168,7 +168,7 @@ export default function RefundPolicyPage() {
           </div>
 
           <div className="mt-12 pt-8 border-t">
-            <Link href="/" className="text-[#003D5C] hover:underline">
+            <Link href="/" className="text-[#1D2D44] hover:underline">
               &larr; Back to Home
             </Link>
           </div>

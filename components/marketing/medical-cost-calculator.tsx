@@ -119,8 +119,8 @@ export default function MedicalCostCalculator() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-white to-[#F5E6D3]/30 border-[#D4AF37]/20 shadow-xl shadow-[#003D5C]/10 rounded-3xl overflow-hidden">
-      <CardHeader className="relative bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white pb-8">
+    <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-white to-[#F5E6D3]/30 border-[#B08D55]/20 shadow-xl shadow-[#1D2D44]/10 rounded-3xl overflow-hidden">
+      <CardHeader className="relative bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white pb-8">
         {/* Decorative elements */}
         <div className="absolute top-4 right-4 opacity-10">
           <Palmtree className="w-20 h-20" />
@@ -128,11 +128,11 @@ export default function MedicalCostCalculator() {
         <div className="absolute bottom-4 left-4 opacity-10">
           <Waves className="w-16 h-16" />
         </div>
-        <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-[#D4AF37]/10 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-[#B08D55]/10 rounded-full blur-2xl" />
 
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-xs font-medium mb-4">
-            <Sun className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Sun className="w-3.5 h-3.5 text-[#B08D55]" />
             Medical Tourism Savings
           </div>
           <CardTitle className="text-3xl font-serif text-white">
@@ -154,14 +154,14 @@ export default function MedicalCostCalculator() {
       <CardContent className="space-y-6 pt-6">
         {/* Procedure Selector */}
         <div className="space-y-2">
-          <Label htmlFor="procedure" className="text-sm font-medium text-[#003D5C]">
+          <Label htmlFor="procedure" className="text-sm font-medium text-[#1D2D44]">
             Select Procedure Type
           </Label>
           <Select value={procedureId} onValueChange={handleProcedureChange}>
-            <SelectTrigger id="procedure" className="w-full h-12 rounded-xl border-[#D4AF37]/20 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20">
+            <SelectTrigger id="procedure" className="w-full h-12 rounded-xl border-[#B08D55]/20 focus:border-[#B08D55] focus:ring-[#B08D55]/20">
               <SelectValue placeholder="Choose a procedure" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl border-[#D4AF37]/20">
+            <SelectContent className="rounded-xl border-[#B08D55]/20">
               {medicalProcedures.map((proc) => (
                 <SelectItem key={proc.id} value={proc.id} className="rounded-lg">
                   {proc.name}
@@ -170,14 +170,14 @@ export default function MedicalCostCalculator() {
             </SelectContent>
           </Select>
           {procedure && (
-            <p className="text-sm text-[#003D5C]/60">{procedure.description}</p>
+            <p className="text-sm text-[#1D2D44]/60">{procedure.description}</p>
           )}
         </div>
 
         {/* Conditional Quantity Input */}
         {procedure?.hasQuantity && (
           <div className="space-y-2">
-            <Label htmlFor="quantity" className="text-sm font-medium text-[#003D5C]">
+            <Label htmlFor="quantity" className="text-sm font-medium text-[#1D2D44]">
               Number of {procedure.unit}s
             </Label>
             <Input
@@ -188,38 +188,38 @@ export default function MedicalCostCalculator() {
               step="1"
               defaultValue={quantity}
               onChange={handleQuantityChange}
-              className="h-12 rounded-xl border-[#D4AF37]/20 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20"
+              className="h-12 rounded-xl border-[#B08D55]/20 focus:border-[#B08D55] focus:ring-[#B08D55]/20"
             />
           </div>
         )}
 
         {/* Cost Comparison Section */}
         <div className="pt-4">
-          <h3 className="text-xl font-serif font-semibold text-[#003D5C] mb-4">
+          <h3 className="text-xl font-serif font-semibold text-[#1D2D44] mb-4">
             Cost Comparison
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             {/* US Cost */}
-            <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white p-5 rounded-2xl border border-[#D4AF37]/10 shadow-lg shadow-[#003D5C]/5">
+            <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white p-5 rounded-2xl border border-[#B08D55]/10 shadow-lg shadow-[#1D2D44]/5">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-[#003D5C]/10 flex items-center justify-center">
-                  <MapPin className="h-4 w-4 text-[#003D5C]" />
+                <div className="w-8 h-8 rounded-lg bg-[#1D2D44]/10 flex items-center justify-center">
+                  <MapPin className="h-4 w-4 text-[#1D2D44]" />
                 </div>
-                <span className="text-sm font-medium text-[#003D5C]/70">
+                <span className="text-sm font-medium text-[#1D2D44]/70">
                   United States
                 </span>
               </div>
-              <p className="text-3xl font-bold text-[#003D5C]">
+              <p className="text-3xl font-bold text-[#1D2D44]">
                 {formatCurrency(usCost)}
               </p>
             </div>
 
             {/* Thailand Cost */}
-            <div className="bg-gradient-to-br from-[#003D5C] to-[#005580] p-5 rounded-2xl shadow-lg shadow-[#003D5C]/20">
+            <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-5 rounded-2xl shadow-lg shadow-[#1D2D44]/20">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                  <Plane className="h-4 w-4 text-[#D4AF37]" />
+                  <Plane className="h-4 w-4 text-[#B08D55]" />
                 </div>
                 <span className="text-sm font-medium text-white/80">
                   Thailand
@@ -239,7 +239,7 @@ export default function MedicalCostCalculator() {
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                <TrendingDown className="h-5 w-5 text-[#D4AF37]" />
+                <TrendingDown className="h-5 w-5 text-[#B08D55]" />
               </div>
               <span className="text-sm font-medium text-white/80">
                 Your Savings
@@ -248,38 +248,38 @@ export default function MedicalCostCalculator() {
             <p className="text-4xl font-bold text-white mb-2">
               {formatCurrency(savings)}
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37] text-[#003D5C] text-sm font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#B08D55] text-[#1D2D44] text-sm font-bold mb-3">
               <Sparkles className="w-4 h-4" />
               Save {savingsPercentage}%
             </div>
             <p className="text-sm text-white/80">
               {procedure?.name} costs {formatCurrency(thailandCost)} in Thailand.
-              Net savings: <strong className="text-[#D4AF37]">{formatCurrency(savings)}</strong>!
+              Net savings: <strong className="text-[#B08D55]">{formatCurrency(savings)}</strong>!
             </p>
           </div>
         </div>
 
         {/* Bar Chart */}
         <div className="pt-4">
-          <h3 className="text-lg font-serif font-semibold text-[#003D5C] mb-4">
+          <h3 className="text-lg font-serif font-semibold text-[#1D2D44] mb-4">
             Visual Comparison
           </h3>
-          <div className="bg-gradient-to-br from-[#FDF8F3] to-white rounded-2xl border border-[#D4AF37]/10 p-4 shadow-lg shadow-[#003D5C]/5">
+          <div className="bg-gradient-to-br from-[#FDF8F3] to-white rounded-2xl border border-[#B08D55]/10 p-4 shadow-lg shadow-[#1D2D44]/5">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 data={chartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#D4AF37" opacity={0.2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#B08D55" opacity={0.2} />
                 <XAxis
                   dataKey="country"
-                  tick={{ fill: '#003D5C', fontSize: 14 }}
-                  axisLine={{ stroke: '#D4AF37', opacity: 0.3 }}
+                  tick={{ fill: '#1D2D44', fontSize: 14 }}
+                  axisLine={{ stroke: '#B08D55', opacity: 0.3 }}
                 />
                 <YAxis
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                  tick={{ fill: '#003D5C', fontSize: 14 }}
-                  axisLine={{ stroke: '#D4AF37', opacity: 0.3 }}
+                  tick={{ fill: '#1D2D44', fontSize: 14 }}
+                  axisLine={{ stroke: '#B08D55', opacity: 0.3 }}
                 />
                 <Tooltip
                   formatter={(value: number | undefined) =>
@@ -292,11 +292,11 @@ export default function MedicalCostCalculator() {
                     padding: '12px 16px',
                     boxShadow: '0 4px 6px -1px rgba(0, 61, 92, 0.1)'
                   }}
-                  labelStyle={{ color: '#003D5C', fontWeight: 600 }}
+                  labelStyle={{ color: '#1D2D44', fontWeight: 600 }}
                 />
                 <Bar
                   dataKey="cost"
-                  fill="#003D5C"
+                  fill="#1D2D44"
                   radius={[8, 8, 0, 0]}
                   animationDuration={300}
                 />
@@ -310,7 +310,7 @@ export default function MedicalCostCalculator() {
           <Button
             onClick={handleCTAClick}
             size="lg"
-            className="w-full sm:w-auto px-10 py-7 text-lg rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+            className="w-full sm:w-auto px-10 py-7 text-lg rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold shadow-lg shadow-[#B08D55]/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
           >
             <Sparkles className="mr-2 h-5 w-5" />
             Apply to Learn More

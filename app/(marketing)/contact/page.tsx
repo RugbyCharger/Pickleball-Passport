@@ -166,7 +166,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FDF8F3] via-white to-[#F5E6D3]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 px-4">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 px-4">
         {/* Decorative elements */}
         <div className="absolute top-10 left-10 opacity-10">
           <Palmtree className="w-32 h-32" />
@@ -174,8 +174,8 @@ export default function ContactPage() {
         <div className="absolute bottom-10 right-10 opacity-10">
           <Waves className="w-40 h-40" />
         </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
@@ -188,7 +188,7 @@ export default function ContactPage() {
           <p className="text-xl md:text-2xl text-white/80 mb-4 max-w-2xl mx-auto">
             Have questions about your transformation journey? Our team is here to help.
           </p>
-          <div className="flex items-center justify-center gap-2 text-[#D4AF37]">
+          <div className="flex items-center justify-center gap-2 text-[#B08D55]">
             <Sun className="w-5 h-5" />
             <span className="text-sm font-medium">Typically respond within 24 hours</span>
           </div>
@@ -201,16 +201,16 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 md:p-10 border border-[#D4AF37]/10">
+              <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 md:p-10 border border-[#B08D55]/10">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center">
                     <Send className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-2xl font-serif font-bold text-[#003D5C]">
+                  <h2 className="text-2xl font-serif font-bold text-[#1D2D44]">
                     Send Us a Message
                   </h2>
                 </div>
-                <p className="text-[#003D5C]/60 mb-8 ml-13">
+                <p className="text-[#1D2D44]/60 mb-8 ml-13">
                   Fill out the form below and we&apos;ll get back to you within 24 hours.
                 </p>
 
@@ -228,7 +228,7 @@ export default function ContactPage() {
                           We&apos;ve received your message and will respond within 24 hours.
                         </p>
                         <div className="flex items-center gap-3 bg-white rounded-lg p-3 border border-[#2D5A3D]/20">
-                          <span className="text-[#003D5C] text-sm font-medium">
+                          <span className="text-[#1D2D44] text-sm font-medium">
                             Reference:
                           </span>
                           <code className="text-[#2D5A3D] font-mono font-bold text-lg">
@@ -237,7 +237,7 @@ export default function ContactPage() {
                           <button
                             type="button"
                             onClick={copyReferenceNumber}
-                            className="ml-auto text-[#2D5A3D] hover:text-[#003D5C] p-2 hover:bg-[#2D5A3D]/10 rounded-lg transition-colors"
+                            className="ml-auto text-[#2D5A3D] hover:text-[#1D2D44] p-2 hover:bg-[#2D5A3D]/10 rounded-lg transition-colors"
                             aria-label="Copy reference number"
                           >
                             <Copy className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function ContactPage() {
                   {/* Name & Email Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="name" className="text-[#003D5C] font-medium mb-2 block">
+                      <Label htmlFor="name" className="text-[#1D2D44] font-medium mb-2 block">
                         Name <span className="text-[#E07A5F]">*</span>
                       </Label>
                       <Input
@@ -281,7 +281,7 @@ export default function ContactPage() {
                         className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
                           errors.name
                             ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#003D5C]/10 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20'
+                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
                         }`}
                         disabled={isSubmitting}
                       />
@@ -293,7 +293,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="email" className="text-[#003D5C] font-medium mb-2 block">
+                      <Label htmlFor="email" className="text-[#1D2D44] font-medium mb-2 block">
                         Email <span className="text-[#E07A5F]">*</span>
                       </Label>
                       <Input
@@ -307,7 +307,7 @@ export default function ContactPage() {
                         className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
                           errors.email
                             ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#003D5C]/10 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20'
+                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
                         }`}
                         disabled={isSubmitting}
                       />
@@ -322,8 +322,8 @@ export default function ContactPage() {
                   {/* Phone & Category Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="phone" className="text-[#003D5C] font-medium mb-2 block">
-                        Phone <span className="text-[#003D5C]/40">(optional)</span>
+                      <Label htmlFor="phone" className="text-[#1D2D44] font-medium mb-2 block">
+                        Phone <span className="text-[#1D2D44]/40">(optional)</span>
                       </Label>
                       <Input
                         id="phone"
@@ -335,7 +335,7 @@ export default function ContactPage() {
                         className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
                           errors.phone
                             ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#003D5C]/10 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20'
+                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
                         }`}
                         disabled={isSubmitting}
                       />
@@ -347,7 +347,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="category" className="text-[#003D5C] font-medium mb-2 block">
+                      <Label htmlFor="category" className="text-[#1D2D44] font-medium mb-2 block">
                         How can we help? <span className="text-[#E07A5F]">*</span>
                       </Label>
                       <Select
@@ -362,12 +362,12 @@ export default function ContactPage() {
                           className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
                             errors.category
                               ? 'border-[#E07A5F]'
-                              : 'border-[#003D5C]/10 focus:border-[#D4AF37]'
+                              : 'border-[#1D2D44]/10 focus:border-[#B08D55]'
                           }`}
                         >
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#D4AF37]/20">
+                        <SelectContent className="rounded-xl border-[#B08D55]/20">
                           {categoryOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
@@ -386,8 +386,8 @@ export default function ContactPage() {
                   {/* Trip Interest & Timeline Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="tripInterest" className="text-[#003D5C] font-medium mb-2 block">
-                        Trip Interest <span className="text-[#003D5C]/40">(optional)</span>
+                      <Label htmlFor="tripInterest" className="text-[#1D2D44] font-medium mb-2 block">
+                        Trip Interest <span className="text-[#1D2D44]/40">(optional)</span>
                       </Label>
                       <Select
                         value={selectedTripInterest}
@@ -396,11 +396,11 @@ export default function ContactPage() {
                       >
                         <SelectTrigger
                           id="tripInterest"
-                          className="h-12 rounded-xl border-2 border-[#003D5C]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#D4AF37] transition-colors"
+                          className="h-12 rounded-xl border-2 border-[#1D2D44]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#B08D55] transition-colors"
                         >
                           <SelectValue placeholder="Select a trip (optional)" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#D4AF37]/20">
+                        <SelectContent className="rounded-xl border-[#B08D55]/20">
                           {tripInterestOptions.map((option) => (
                             <SelectItem key={option.value || 'empty'} value={option.value}>
                               {option.label}
@@ -411,8 +411,8 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="timeline" className="text-[#003D5C] font-medium mb-2 block">
-                        Timeline <span className="text-[#003D5C]/40">(optional)</span>
+                      <Label htmlFor="timeline" className="text-[#1D2D44] font-medium mb-2 block">
+                        Timeline <span className="text-[#1D2D44]/40">(optional)</span>
                       </Label>
                       <Select
                         value={selectedTimeline}
@@ -421,11 +421,11 @@ export default function ContactPage() {
                       >
                         <SelectTrigger
                           id="timeline"
-                          className="h-12 rounded-xl border-2 border-[#003D5C]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#D4AF37] transition-colors"
+                          className="h-12 rounded-xl border-2 border-[#1D2D44]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#B08D55] transition-colors"
                         >
                           <SelectValue placeholder="Select timeline (optional)" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#D4AF37]/20">
+                        <SelectContent className="rounded-xl border-[#B08D55]/20">
                           {timelineOptions.map((option) => (
                             <SelectItem key={option.value || 'empty'} value={option.value}>
                               {option.label}
@@ -438,7 +438,7 @@ export default function ContactPage() {
 
                   {/* Message Field */}
                   <div>
-                    <Label htmlFor="message" className="text-[#003D5C] font-medium mb-2 block">
+                    <Label htmlFor="message" className="text-[#1D2D44] font-medium mb-2 block">
                       Message <span className="text-[#E07A5F]">*</span>
                     </Label>
                     <Textarea
@@ -452,7 +452,7 @@ export default function ContactPage() {
                       className={`rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors resize-none ${
                         errors.message
                           ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                          : 'border-[#003D5C]/10 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20'
+                          : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
                       }`}
                       disabled={isSubmitting}
                     />
@@ -464,13 +464,13 @@ export default function ContactPage() {
                   </div>
 
                   {/* reCAPTCHA Notice */}
-                  <p className="text-xs text-[#003D5C]/50">
+                  <p className="text-xs text-[#1D2D44]/50">
                     This site is protected by reCAPTCHA and the Google{' '}
                     <a
                       href="https://policies.google.com/privacy"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#003D5C] hover:text-[#D4AF37] underline"
+                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
                     >
                       Privacy Policy
                     </a>{' '}
@@ -479,7 +479,7 @@ export default function ContactPage() {
                       href="https://policies.google.com/terms"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#003D5C] hover:text-[#D4AF37] underline"
+                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
                     >
                       Terms of Service
                     </a>{' '}
@@ -490,7 +490,7 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-14 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 transition-all flex items-center justify-center gap-3"
+                    className="w-full h-14 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl hover:shadow-[#B08D55]/40 transition-all flex items-center justify-center gap-3"
                   >
                     {isSubmitting ? (
                       <>
@@ -512,9 +512,9 @@ export default function ContactPage() {
             {/* Contact Info Sidebar */}
             <div className="space-y-6">
               {/* Contact Details Card */}
-              <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 border border-[#D4AF37]/10">
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-6 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#003D5C] flex items-center justify-center">
+              <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 border border-[#B08D55]/10">
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-6 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#1D2D44] flex items-center justify-center">
                     <Phone className="w-4 h-4 text-white" />
                   </div>
                   Contact Information
@@ -525,12 +525,12 @@ export default function ContactPage() {
                     href="mailto:hello@pickleballpassport.com"
                     className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#F5E6D3]/50 transition-colors group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#E5C969]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#D4AF37]/30 group-hover:to-[#E5C969]/30 transition-colors">
-                      <Mail className="h-5 w-5 text-[#D4AF37]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#B08D55]/30 group-hover:to-[#CFB78D]/30 transition-colors">
+                      <Mail className="h-5 w-5 text-[#B08D55]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#003D5C]/60 mb-1">Email</p>
-                      <p className="text-[#003D5C] font-medium group-hover:text-[#D4AF37] transition-colors">
+                      <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Email</p>
+                      <p className="text-[#1D2D44] font-medium group-hover:text-[#B08D55] transition-colors">
                         hello@pickleballpassport.com
                       </p>
                     </div>
@@ -540,47 +540,47 @@ export default function ContactPage() {
                     href="tel:+15551234567"
                     className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#F5E6D3]/50 transition-colors group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#E5C969]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#D4AF37]/30 group-hover:to-[#E5C969]/30 transition-colors">
-                      <Phone className="h-5 w-5 text-[#D4AF37]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#B08D55]/30 group-hover:to-[#CFB78D]/30 transition-colors">
+                      <Phone className="h-5 w-5 text-[#B08D55]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#003D5C]/60 mb-1">Phone</p>
-                      <p className="text-[#003D5C] font-medium group-hover:text-[#D4AF37] transition-colors">
+                      <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Phone</p>
+                      <p className="text-[#1D2D44] font-medium group-hover:text-[#B08D55] transition-colors">
                         +1 (555) 123-4567
                       </p>
                     </div>
                   </a>
 
                   <div className="flex items-start gap-4 p-4 rounded-xl">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#E5C969]/20 flex items-center justify-center flex-shrink-0">
-                      <Clock className="h-5 w-5 text-[#D4AF37]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-5 w-5 text-[#B08D55]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#003D5C]/60 mb-1">Office Hours</p>
-                      <p className="text-[#003D5C] font-medium">Monday - Friday</p>
-                      <p className="text-[#003D5C]/70 text-sm">9am - 6pm EST</p>
+                      <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Office Hours</p>
+                      <p className="text-[#1D2D44] font-medium">Monday - Friday</p>
+                      <p className="text-[#1D2D44]/70 text-sm">9am - 6pm EST</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4 p-4 rounded-xl">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37]/20 to-[#E5C969]/20 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-[#D4AF37]" />
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-5 w-5 text-[#B08D55]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#003D5C]/60 mb-1">Location</p>
-                      <p className="text-[#003D5C] font-medium">Chiang Mai, Thailand</p>
-                      <p className="text-[#003D5C]/70 text-sm">Experiences throughout Thailand</p>
+                      <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Location</p>
+                      <p className="text-[#1D2D44] font-medium">Chiang Mai, Thailand</p>
+                      <p className="text-[#1D2D44]/70 text-sm">Experiences throughout Thailand</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Response Time Card */}
-              <div className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white rounded-2xl shadow-xl shadow-[#003D5C]/20 p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/10 rounded-full blur-2xl" />
+              <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white rounded-2xl shadow-xl shadow-[#1D2D44]/20 p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#B08D55]/10 rounded-full blur-2xl" />
                 <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-[#D4AF37] flex items-center justify-center mb-4">
-                    <Sun className="w-6 h-6 text-[#003D5C]" />
+                  <div className="w-12 h-12 rounded-xl bg-[#B08D55] flex items-center justify-center mb-4">
+                    <Sun className="w-6 h-6 text-[#1D2D44]" />
                   </div>
                   <h3 className="text-lg font-serif font-bold mb-3">Response Time</h3>
                   <p className="text-white/80 text-sm mb-4 leading-relaxed">
@@ -593,16 +593,16 @@ export default function ContactPage() {
               </div>
 
               {/* FAQ Link Card */}
-              <div className="bg-gradient-to-r from-[#F5E6D3] to-[#FDF8F3] rounded-2xl p-8 border border-[#D4AF37]/20">
-                <h3 className="text-lg font-serif font-bold text-[#003D5C] mb-3">
+              <div className="bg-gradient-to-r from-[#F5E6D3] to-[#FDF8F3] rounded-2xl p-8 border border-[#B08D55]/20">
+                <h3 className="text-lg font-serif font-bold text-[#1D2D44] mb-3">
                   Quick Answers
                 </h3>
-                <p className="text-[#003D5C]/70 text-sm mb-6 leading-relaxed">
+                <p className="text-[#1D2D44]/70 text-sm mb-6 leading-relaxed">
                   Looking for quick answers? Check our FAQ page for common questions about packages, bookings, and Thailand travel.
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white font-semibold rounded-xl h-12 transition-all"
+                  className="w-full border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white font-semibold rounded-xl h-12 transition-all"
                   onClick={() => (window.location.href = '/faq')}
                 >
                   View FAQ

@@ -44,23 +44,23 @@ export function PackageGrid() {
       {pickleballPackages.map((pkg) => (
         <div
           key={pkg.id}
-          className="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-xl shadow-[#003D5C]/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-[#D4AF37]/10"
+          className="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-xl shadow-[#1D2D44]/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-[#B08D55]/10"
         >
           {/* Header */}
-          <div className="bg-gradient-to-br from-[#003D5C] to-[#005580] p-8 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-8 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <Palmtree className="w-24 h-24" />
             </div>
             <div className="relative z-10">
               <h3 className="text-2xl font-serif font-bold mb-2">{pkg.name}</h3>
-              <p className="text-[#D4AF37] font-medium mb-4">{pkg.tagline}</p>
+              <p className="text-[#B08D55] font-medium mb-4">{pkg.tagline}</p>
               <div className="flex items-center gap-4 text-sm text-white/80">
                 <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-[#D4AF37]" />
+                  <Clock className="w-4 h-4 text-[#B08D55]" />
                   {pkg.duration}
                 </span>
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                  <MapPin className="w-4 h-4 text-[#B08D55]" />
                   Thailand
                 </span>
               </div>
@@ -73,25 +73,25 @@ export function PackageGrid() {
              <ul className="space-y-4 mb-8 flex-1">
               {pkg.highlights.map((highlight, idx) => (
                 <li key={idx} className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-[#D4AF37]" />
+                  <div className="w-6 h-6 rounded-full bg-[#B08D55]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <CheckCircle className="h-4 w-4 text-[#B08D55]" />
                   </div>
-                  <span className="text-[#003D5C]/80 text-sm">{highlight}</span>
+                  <span className="text-[#1D2D44]/80 text-sm">{highlight}</span>
                 </li>
               ))}
             </ul>
 
             {/* Price & CTA */}
-            <div className="mt-auto pt-6 border-t border-[#D4AF37]/10">
+            <div className="mt-auto pt-6 border-t border-[#B08D55]/10">
                <div className="flex items-end justify-between mb-6">
                  <div>
-                   <span className="text-sm text-[#003D5C]/60 block mb-1">Starting from</span>
-                   <span className="text-3xl font-bold text-[#003D5C]">${pkg.basePrice}</span>
+                   <span className="text-sm text-[#1D2D44]/60 block mb-1">Starting from</span>
+                   <span className="text-3xl font-bold text-[#1D2D44]">${pkg.basePrice}</span>
                  </div>
                </div>
                
                <Link href="/pickleball" className="block">
-                 <Button className="w-full bg-[#003D5C] hover:bg-[#002B42] text-white h-12 rounded-xl text-base font-medium">
+                 <Button className="w-full bg-[#1D2D44] hover:bg-[#002B42] text-white h-12 rounded-xl text-base font-medium">
                    View Itinerary
                    <ArrowRight className="ml-2 h-4 w-4" />
                  </Button>
@@ -113,13 +113,13 @@ export function PackageSection() {
     <section className="relative overflow-hidden bg-gradient-to-b from-[#FDF8F3] to-white py-24">
       {/* Decorative background elements */}
       <div className="absolute top-20 left-10 opacity-[0.07]">
-        <Palmtree className="w-48 h-48 text-[#003D5C]" />
+        <Palmtree className="w-48 h-48 text-[#1D2D44]" />
       </div>
       <div className="absolute bottom-20 right-10 opacity-[0.07]">
-        <Waves className="w-56 h-56 text-[#003D5C]" />
+        <Waves className="w-56 h-56 text-[#1D2D44]" />
       </div>
-      <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/3 left-1/4 w-56 h-56 bg-[#4AA4B5]/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-[#B08D55]/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/3 left-1/4 w-56 h-56 bg-[#7587A5]/10 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -130,15 +130,15 @@ export function PackageSection() {
           transition={{ duration: 0.5 }}
           className="mb-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#003D5C]/5 text-[#003D5C] text-sm font-medium mb-6">
-            <Sun className="w-4 h-4 text-[#D4AF37]" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1D2D44]/5 text-[#1D2D44] text-sm font-medium mb-6">
+            <Sun className="w-4 h-4 text-[#B08D55]" />
             Curated Pickleball Tours
           </div>
-          <h2 className="mb-4 text-4xl font-serif font-bold text-[#003D5C] sm:text-5xl">
+          <h2 className="mb-4 text-4xl font-serif font-bold text-[#1D2D44] sm:text-5xl">
             Choose Your Adventure
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-          <p className="mx-auto max-w-2xl text-lg text-[#003D5C]/70 leading-relaxed">
+          <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+          <p className="mx-auto max-w-2xl text-lg text-[#1D2D44]/70 leading-relaxed">
             Join a community of enthusiasts for the trip of a lifetime. 
             Experience daily play, luxury relaxation, and the beauty of Thailand.
           </p>
@@ -155,13 +155,13 @@ export function PackageSection() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-16 text-center"
         >
-          <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white rounded-2xl p-8 border border-[#D4AF37]/20 shadow-xl shadow-[#003D5C]/5 max-w-2xl mx-auto">
-            <p className="mb-6 text-[#003D5C]/70 text-lg">
+          <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white rounded-2xl p-8 border border-[#B08D55]/20 shadow-xl shadow-[#1D2D44]/5 max-w-2xl mx-auto">
+            <p className="mb-6 text-[#1D2D44]/70 text-lg">
               Want to add medical treatments to your trip?
             </p>
             <Link
               href="/medical-tourism"
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-[#003D5C] px-8 py-4 font-semibold text-[#003D5C] transition-all hover:bg-[#003D5C] hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-[#1D2D44] px-8 py-4 font-semibold text-[#1D2D44] transition-all hover:bg-[#1D2D44] hover:text-white"
             >
               <Sparkles className="h-5 w-5" />
               <span>Explore Medical Tourism Options</span>

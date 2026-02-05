@@ -97,7 +97,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#003D5C] to-[#005A82] text-white py-16 px-4">
+      <section className="bg-gradient-to-r from-[#1D2D44] to-[#005A82] text-white py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Pickleball Passport Blog
@@ -184,7 +184,7 @@ export default function BlogPage() {
                     className={cn(
                       'inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors',
                       selectedTagSlug === tag.slug
-                        ? 'bg-[#003D5C] text-white'
+                        ? 'bg-[#1D2D44] text-white'
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     )}
                   >
@@ -233,7 +233,7 @@ export default function BlogPage() {
           {/* Loading State */}
           {isLoading && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[#003D5C]" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#1D2D44]" />
             </div>
           )}
 
@@ -293,7 +293,7 @@ export default function BlogPage() {
                         {post.category && (
                           <span
                             className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-white"
-                            style={{ backgroundColor: post.category.color || '#003D5C' }}
+                            style={{ backgroundColor: post.category.color || '#1D2D44' }}
                           >
                             {post.category.name}
                           </span>
@@ -302,7 +302,7 @@ export default function BlogPage() {
 
                       {/* Content */}
                       <div className="p-6">
-                        <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-[#003D5C] transition-colors line-clamp-2">
+                        <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-[#1D2D44] transition-colors line-clamp-2">
                           {post.title}
                         </h2>
                         {post.excerpt && (
@@ -316,7 +316,7 @@ export default function BlogPage() {
                             <Calendar className="h-4 w-4" />
                             {post.publishedAt && formatDate(post.publishedAt.toString())}
                           </div>
-                          <span className="inline-flex items-center gap-1 text-[#003D5C] font-medium group-hover:gap-2 transition-all">
+                          <span className="inline-flex items-center gap-1 text-[#1D2D44] font-medium group-hover:gap-2 transition-all">
                             Read more
                             <ArrowRight className="h-4 w-4" />
                           </span>
@@ -407,7 +407,7 @@ export default function BlogPage() {
             Get the latest stories and travel tips delivered to your inbox.
           </p>
           <Link href="/contact">
-            <Button size="lg" className="bg-[#003D5C] hover:bg-[#002B42]">
+            <Button size="lg" className="bg-[#1D2D44] hover:bg-[#002B42]">
               Subscribe to Newsletter
             </Button>
           </Link>

@@ -134,7 +134,7 @@ export default function TicketStatusPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#003D5C] to-[#005A82] text-white py-12 px-4">
+      <section className="bg-gradient-to-r from-[#1D2D44] to-[#005A82] text-white py-12 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
             Check Ticket Status
@@ -222,7 +222,7 @@ export default function TicketStatusPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#003D5C] hover:bg-[#002B42] text-white font-semibold py-3 flex items-center justify-center gap-2"
+                className="w-full bg-[#1D2D44] hover:bg-[#002B42] text-white font-semibold py-3 flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -274,7 +274,7 @@ export default function TicketStatusPage() {
           {ticket && (
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               {/* Ticket Header */}
-              <div className="bg-gradient-to-r from-[#003D5C] to-[#005A82] text-white p-6">
+              <div className="bg-gradient-to-r from-[#1D2D44] to-[#005A82] text-white p-6">
                 <div className="flex items-start justify-between flex-wrap gap-4">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
@@ -339,10 +339,10 @@ export default function TicketStatusPage() {
                       {ticket.replies.map((reply, index) => (
                         <div
                           key={index}
-                          className="bg-blue-50 border-l-4 border-[#003D5C] rounded-r-lg p-4"
+                          className="bg-blue-50 border-l-4 border-[#1D2D44] rounded-r-lg p-4"
                         >
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm font-medium text-[#003D5C]">
+                            <span className="text-sm font-medium text-[#1D2D44]">
                               Pickleball Passport Support
                             </span>
                             <span className="text-xs text-gray-500">
@@ -408,7 +408,7 @@ export default function TicketStatusPage() {
                           Need more help?{' '}
                           <Link
                             href="/contact"
-                            className="text-[#003D5C] underline hover:text-[#002B42]"
+                            className="text-[#1D2D44] underline hover:text-[#002B42]"
                           >
                             Contact us again
                           </Link>
@@ -426,7 +426,7 @@ export default function TicketStatusPage() {
           <div className="mt-8 text-center">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 text-[#003D5C] hover:text-[#002B42] font-medium"
+              className="inline-flex items-center gap-2 text-[#1D2D44] hover:text-[#002B42] font-medium"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Back to Contact Page

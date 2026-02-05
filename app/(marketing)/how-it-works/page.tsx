@@ -28,14 +28,14 @@ const steps = [
     title: 'Choose Your Experience',
     description: 'Decide if you want a dedicated pickleball tour, a medical tourism trip, or the full package combining both.',
     icon: Sparkles,
-    gradient: 'from-[#003D5C] to-[#4AA4B5]',
+    gradient: 'from-[#1D2D44] to-[#7587A5]',
   },
   {
     number: 2,
     title: 'Consult & Plan',
     description: 'Speak with our team to customize your itinerary, book courts, and coordinate any medical appointments.',
     icon: Calendar,
-    gradient: 'from-[#D4AF37] to-[#E5C969]',
+    gradient: 'from-[#B08D55] to-[#CFB78D]',
   },
   {
     number: 3,
@@ -104,7 +104,7 @@ export default function HowItWorksPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
         {/* Decorative elements */}
         <div className="absolute top-10 left-10 opacity-10">
           <Palmtree className="w-32 h-32" />
@@ -112,13 +112,13 @@ export default function HowItWorksPage() {
         <div className="absolute bottom-10 right-10 opacity-10">
           <Waves className="w-40 h-40" />
         </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-              <MapPin className="w-4 h-4 text-[#D4AF37]" />
+              <MapPin className="w-4 h-4 text-[#B08D55]" />
               Your Journey to Thailand
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
@@ -143,28 +143,28 @@ export default function HowItWorksPage() {
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Choose Your Path
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#003D5C]/70 max-w-2xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-2xl mx-auto">
               We offer three ways to experience Thailand. Choose what fits your goals.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Pickleball Only */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 flex flex-col">
-              <div className="bg-[#003D5C] p-6 text-center">
-                <Trophy className="w-12 h-12 text-[#D4AF37] mx-auto mb-3" />
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
+              <div className="bg-[#1D2D44] p-6 text-center">
+                <Trophy className="w-12 h-12 text-[#B08D55] mx-auto mb-3" />
                 <h3 className="text-xl font-bold text-white">Pickleball Only</h3>
               </div>
               <div className="p-8 flex-1 flex flex-col">
-                <p className="text-[#003D5C]/70 mb-6 text-center">
+                <p className="text-[#1D2D44]/70 mb-6 text-center">
                   Focus purely on the game. Enjoy daily play, tournaments, and luxury travel without any medical appointments.
                 </p>
                 <div className="mt-auto">
-                  <Link href="/pickleball" className="block text-center text-[#003D5C] font-semibold hover:text-[#D4AF37]">
+                  <Link href="/pickleball" className="block text-center text-[#1D2D44] font-semibold hover:text-[#B08D55]">
                     Learn More &rarr;
                   </Link>
                 </div>
@@ -172,25 +172,25 @@ export default function HowItWorksPage() {
             </div>
 
             {/* The Full Passport (Both) */}
-            <div className="bg-white rounded-2xl shadow-2xl shadow-[#003D5C]/20 overflow-hidden border-2 border-[#D4AF37] transform md:-translate-y-4 flex flex-col relative">
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969]" />
+            <div className="bg-white rounded-2xl shadow-2xl shadow-[#1D2D44]/20 overflow-hidden border-2 border-[#B08D55] transform md:-translate-y-4 flex flex-col relative">
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
               <div className="absolute top-3 right-3">
-                 <span className="bg-[#D4AF37] text-[#003D5C] text-xs font-bold px-2 py-1 rounded-full">MOST POPULAR</span>
+                 <span className="bg-[#B08D55] text-[#1D2D44] text-xs font-bold px-2 py-1 rounded-full">MOST POPULAR</span>
               </div>
-              <div className="bg-gradient-to-b from-[#003D5C] to-[#005580] p-8 text-center">
+              <div className="bg-gradient-to-b from-[#1D2D44] to-[#495F87] p-8 text-center">
                 <div className="flex justify-center gap-2 mb-3">
-                  <Trophy className="w-10 h-10 text-[#D4AF37]" />
-                  <Stethoscope className="w-10 h-10 text-[#4AA4B5]" />
+                  <Trophy className="w-10 h-10 text-[#B08D55]" />
+                  <Stethoscope className="w-10 h-10 text-[#7587A5]" />
                 </div>
                 <h3 className="text-2xl font-bold text-white">The Full Passport</h3>
               </div>
               <div className="p-8 flex-1 flex flex-col">
-                <p className="text-[#003D5C]/70 mb-6 text-center text-lg">
+                <p className="text-[#1D2D44]/70 mb-6 text-center text-lg">
                   The ultimate experience. Combine a pickleball vacation with dental or medical care for maximum value and transformation.
                 </p>
                 <div className="mt-auto">
                   <Link href="/apply" className="block text-center">
-                    <Button className="w-full bg-[#D4AF37] hover:bg-[#C19A2E] text-[#003D5C] font-bold">
+                    <Button className="w-full bg-[#B08D55] hover:bg-[#8D7144] text-[#1D2D44] font-bold">
                       Start Your Journey
                     </Button>
                   </Link>
@@ -199,17 +199,17 @@ export default function HowItWorksPage() {
             </div>
 
             {/* Medical Only */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 flex flex-col">
-              <div className="bg-[#003D5C] p-6 text-center">
-                <Stethoscope className="w-12 h-12 text-[#4AA4B5] mx-auto mb-3" />
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
+              <div className="bg-[#1D2D44] p-6 text-center">
+                <Stethoscope className="w-12 h-12 text-[#7587A5] mx-auto mb-3" />
                 <h3 className="text-xl font-bold text-white">Medical Only</h3>
               </div>
               <div className="p-8 flex-1 flex flex-col">
-                <p className="text-[#003D5C]/70 mb-6 text-center">
+                <p className="text-[#1D2D44]/70 mb-6 text-center">
                   Focused on your procedure and recovery. World-class care in a relaxing environment with full concierge support.
                 </p>
                 <div className="mt-auto">
-                  <Link href="/medical-tourism" className="block text-center text-[#003D5C] font-semibold hover:text-[#D4AF37]">
+                  <Link href="/medical-tourism" className="block text-center text-[#1D2D44] font-semibold hover:text-[#B08D55]">
                     Learn More &rarr;
                   </Link>
                 </div>
@@ -223,23 +223,23 @@ export default function HowItWorksPage() {
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Your Journey in 4 Simple Steps
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#003D5C]/70 max-w-3xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
               From initial consultation to your return home, we handle every detail so you can focus on playing and relaxing.
             </p>
           </div>
 
           <div className="relative">
             {/* Connection line */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#003D5C] via-[#D4AF37] to-[#2D5A3D] -translate-y-1/2 z-0" />
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#1D2D44] via-[#B08D55] to-[#2D5A3D] -translate-y-1/2 z-0" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {steps.map((step) => (
                 <div key={step.number} className="relative z-10 group">
-                  <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 text-center transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 border border-[#D4AF37]/10 h-full">
+                  <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 text-center transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 border border-[#B08D55]/10 h-full">
                     {/* Step number badge */}
                     <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center shadow-lg`}>
                       <span className="text-2xl font-bold text-white">{step.number}</span>
@@ -247,13 +247,13 @@ export default function HowItWorksPage() {
 
                     {/* Icon */}
                     <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[#F5E6D3] flex items-center justify-center">
-                      <step.icon className="h-7 w-7 text-[#003D5C]" />
+                      <step.icon className="h-7 w-7 text-[#1D2D44]" />
                     </div>
 
-                    <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                    <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                       {step.title}
                     </h3>
-                    <p className="text-[#003D5C]/70 leading-relaxed">
+                    <p className="text-[#1D2D44]/70 leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -266,10 +266,10 @@ export default function HowItWorksPage() {
 
       {/* Benefits Section */}
       <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 right-10">
-            <Sun className="w-24 h-24 text-[#D4AF37]" />
+            <Sun className="w-24 h-24 text-[#B08D55]" />
           </div>
           <div className="absolute bottom-10 left-10">
             <Palmtree className="w-20 h-20 text-white" />
@@ -281,7 +281,7 @@ export default function HowItWorksPage() {
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
               Why Choose Pickleball Passport?
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
               We combine the thrill of international pickleball with the luxury of a curated vacation.
             </p>
@@ -291,11 +291,11 @@ export default function HowItWorksPage() {
             {benefits.map((benefit, idx) => (
               <div key={idx} className="text-center group">
                 <div className="relative inline-block mb-6">
-                  <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mx-auto border border-white/20 group-hover:bg-[#D4AF37]/20 transition-colors">
-                    <benefit.icon className="h-10 w-10 text-[#D4AF37]" />
+                  <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mx-auto border border-white/20 group-hover:bg-[#B08D55]/20 transition-colors">
+                    <benefit.icon className="h-10 w-10 text-[#B08D55]" />
                   </div>
-                  <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#D4AF37] flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-[#003D5C]" />
+                  <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#B08D55] flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-[#1D2D44]" />
                   </div>
                 </div>
                 <h3 className="text-xl font-serif font-bold text-white mb-3">{benefit.title}</h3>
@@ -310,16 +310,16 @@ export default function HowItWorksPage() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               What to Expect
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Before Your Trip */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
-              <div className="bg-gradient-to-r from-[#003D5C] to-[#005580] p-6">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
+              <div className="bg-gradient-to-r from-[#1D2D44] to-[#495F87] p-6">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                     <FileText className="h-6 w-6 text-white" />
@@ -334,7 +334,7 @@ export default function HowItWorksPage() {
                       <div className="w-6 h-6 rounded-full bg-[#2D5A3D]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <CheckCircle className="h-4 w-4 text-[#2D5A3D]" />
                       </div>
-                      <span className="text-[#003D5C]/80">{item}</span>
+                      <span className="text-[#1D2D44]/80">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -342,23 +342,23 @@ export default function HowItWorksPage() {
             </div>
 
             {/* During Your Stay */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 md:-mt-4">
-              <div className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] p-6">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 md:-mt-4">
+              <div className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] p-6">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-white/30 flex items-center justify-center">
-                    <Sun className="h-6 w-6 text-[#003D5C]" />
+                    <Sun className="h-6 w-6 text-[#1D2D44]" />
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-[#003D5C]">During Your Stay</h3>
+                  <h3 className="text-xl font-serif font-bold text-[#1D2D44]">During Your Stay</h3>
                 </div>
               </div>
               <div className="p-6">
                 <ul className="space-y-4">
                   {duringStay.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-[#D4AF37]" />
+                      <div className="w-6 h-6 rounded-full bg-[#B08D55]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-[#B08D55]" />
                       </div>
-                      <span className="text-[#003D5C]/80">{item}</span>
+                      <span className="text-[#1D2D44]/80">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -366,7 +366,7 @@ export default function HowItWorksPage() {
             </div>
 
             {/* After You Return */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
               <div className="bg-gradient-to-r from-[#2D5A3D] to-[#3D7A52] p-6">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
@@ -382,7 +382,7 @@ export default function HowItWorksPage() {
                       <div className="w-6 h-6 rounded-full bg-[#2D5A3D]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <CheckCircle className="h-4 w-4 text-[#2D5A3D]" />
                       </div>
-                      <span className="text-[#003D5C]/80">{item}</span>
+                      <span className="text-[#1D2D44]/80">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -395,18 +395,18 @@ export default function HowItWorksPage() {
       {/* CTA Section */}
       <section className="py-16 sm:py-20 bg-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Sun className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" />
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+          <Sun className="w-12 h-12 text-[#B08D55] mx-auto mb-6" />
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
             Ready to Begin Your Adventure?
           </h2>
-          <p className="text-lg text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
             Take the first step toward a trip you&apos;ll never forget.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/apply">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
                 Start Your Application
@@ -417,7 +417,7 @@ export default function HowItWorksPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
+                className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
               >
                 View Packages
               </Button>

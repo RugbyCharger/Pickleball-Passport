@@ -48,12 +48,12 @@ export function Header() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-[#003D5C]/5 border-b border-[#D4AF37]/20'
+          ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-[#1D2D44]/5 border-b border-[#B08D55]/20'
           : 'bg-transparent'
       }`}
     >
       {/* Decorative top accent line */}
-      <div className="h-1 bg-gradient-to-r from-[#003D5C] via-[#D4AF37] to-[#003D5C]" />
+      <div className="h-1 bg-gradient-to-r from-[#1D2D44] via-[#B08D55] to-[#1D2D44]" />
 
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="flex h-18 items-center justify-between py-3">
@@ -62,21 +62,21 @@ export function Header() {
             <Link href="/" className="group flex items-center space-x-3">
               {/* Logo mark with tropical gradient */}
               <div className="relative">
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] shadow-lg shadow-[#003D5C]/20 transition-transform group-hover:scale-105">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] shadow-lg shadow-[#1D2D44]/20 transition-transform group-hover:scale-105">
                   <span className="text-2xl" role="img" aria-label="Pickleball">🏓</span>
                 </div>
                 {/* Golden shimmer accent */}
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#D4AF37] rounded-full opacity-80 animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#B08D55] rounded-full opacity-80 animate-pulse" />
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className="font-serif text-xl font-bold text-[#003D5C] tracking-tight">
+                <span className="font-serif text-xl font-bold text-[#1D2D44] tracking-tight">
                   Pickleball Passport
                 </span>
-                <span className="text-xs text-[#D4AF37] font-medium tracking-widest uppercase">
+                <span className="text-xs text-[#B08D55] font-medium tracking-widest uppercase">
                   Thailand Wellness
                 </span>
               </div>
-              <span className="font-serif text-xl font-bold text-[#003D5C] sm:hidden">
+              <span className="font-serif text-xl font-bold text-[#1D2D44] sm:hidden">
                 PP
               </span>
             </Link>
@@ -90,13 +90,13 @@ export function Header() {
                 href={item.href}
                 className={`relative px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg ${
                   isActive(item.href)
-                    ? 'text-[#003D5C] bg-[#F5E6D3]/50'
-                    : 'text-[#003D5C]/70 hover:text-[#003D5C] hover:bg-[#F5E6D3]/30'
+                    ? 'text-[#1D2D44] bg-[#F5E6D3]/50'
+                    : 'text-[#1D2D44]/70 hover:text-[#1D2D44] hover:bg-[#F5E6D3]/30'
                 }`}
               >
                 {item.name}
                 {isActive(item.href) && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#D4AF37] rounded-full" />
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#B08D55] rounded-full" />
                 )}
               </Link>
             ))}
@@ -107,7 +107,7 @@ export function Header() {
             {isSignedIn ? (
               <Button
                 asChild
-                className="bg-[#003D5C] hover:bg-[#002B42] text-white shadow-lg shadow-[#003D5C]/20"
+                className="bg-[#1D2D44] hover:bg-[#002B42] text-white shadow-lg shadow-[#1D2D44]/20"
               >
                 <Link href={getDashboardLink()}>
                   <User className="mr-2 h-4 w-4" />
@@ -116,12 +116,12 @@ export function Header() {
               </Button>
             ) : (
               <>
-                <Button asChild variant="ghost" className="text-[#003D5C] hover:bg-[#F5E6D3]/50">
+                <Button asChild variant="ghost" className="text-[#1D2D44] hover:bg-[#F5E6D3]/50">
                   <Link href="/sign-in">Sign In</Link>
                 </Button>
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-semibold shadow-lg shadow-[#D4AF37]/30 transition-all hover:shadow-xl hover:shadow-[#D4AF37]/40"
+                  className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold shadow-lg shadow-[#B08D55]/30 transition-all hover:shadow-xl hover:shadow-[#B08D55]/40"
                 >
                   <Link href="/apply">
                     <Sparkles className="mr-2 h-4 w-4" />
@@ -136,7 +136,7 @@ export function Header() {
           <div className="flex lg:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-xl p-2.5 text-[#003D5C] hover:bg-[#F5E6D3]/50 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition-colors"
+              className="inline-flex items-center justify-center rounded-xl p-2.5 text-[#1D2D44] hover:bg-[#F5E6D3]/50 focus:outline-none focus:ring-2 focus:ring-[#B08D55] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle menu"
@@ -156,7 +156,7 @@ export function Header() {
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="border-t border-[#D4AF37]/20 py-4">
+          <div className="border-t border-[#B08D55]/20 py-4">
             {/* Navigation Links */}
             <div className="space-y-1 pb-4">
               {navigation.map((item, index) => (
@@ -166,8 +166,8 @@ export function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block rounded-xl px-4 py-3 text-base font-medium transition-all duration-200 ${
                     isActive(item.href)
-                      ? 'bg-gradient-to-r from-[#F5E6D3] to-[#FDF8F3] text-[#003D5C] border-l-4 border-[#D4AF37]'
-                      : 'text-[#003D5C]/70 hover:bg-[#F5E6D3]/30 hover:text-[#003D5C]'
+                      ? 'bg-gradient-to-r from-[#F5E6D3] to-[#FDF8F3] text-[#1D2D44] border-l-4 border-[#B08D55]'
+                      : 'text-[#1D2D44]/70 hover:bg-[#F5E6D3]/30 hover:text-[#1D2D44]'
                   }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
@@ -177,11 +177,11 @@ export function Header() {
             </div>
 
             {/* Mobile CTA Buttons */}
-            <div className="border-t border-[#D4AF37]/20 pt-4 pb-2 space-y-3">
+            <div className="border-t border-[#B08D55]/20 pt-4 pb-2 space-y-3">
               {isSignedIn ? (
                 <Button
                   asChild
-                  className="w-full bg-[#003D5C] hover:bg-[#002B42] text-white py-6"
+                  className="w-full bg-[#1D2D44] hover:bg-[#002B42] text-white py-6"
                 >
                   <Link href={getDashboardLink()} onClick={() => setMobileMenuOpen(false)}>
                     <User className="mr-2 h-5 w-5" />
@@ -193,7 +193,7 @@ export function Header() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full border-[#003D5C]/30 text-[#003D5C] hover:bg-[#F5E6D3]/50 py-6"
+                    className="w-full border-[#1D2D44]/30 text-[#1D2D44] hover:bg-[#F5E6D3]/50 py-6"
                   >
                     <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
                       Sign In
@@ -201,7 +201,7 @@ export function Header() {
                   </Button>
                   <Button
                     asChild
-                    className="w-full bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-semibold py-6"
+                    className="w-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold py-6"
                   >
                     <Link href="/apply" onClick={() => setMobileMenuOpen(false)}>
                       <Sparkles className="mr-2 h-5 w-5" />

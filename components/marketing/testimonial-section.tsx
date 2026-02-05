@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function TestimonialSection() {
   return (
-    <section className="relative overflow-hidden py-24 bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5]">
+    <section className="relative overflow-hidden py-24 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]">
       {/* Decorative background elements */}
       <div className="absolute top-10 left-10 opacity-10">
         <Palmtree className="w-40 h-40 text-white" />
@@ -15,10 +15,10 @@ export function TestimonialSection() {
         <Waves className="w-48 h-48 text-white" />
       </div>
       <div className="absolute top-20 right-20 opacity-10">
-        <Sun className="w-32 h-32 text-[#D4AF37]" />
+        <Sun className="w-32 h-32 text-[#B08D55]" />
       </div>
-      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
 
       {/* Top wave */}
       <div className="absolute top-0 left-0 right-0 rotate-180">
@@ -31,13 +31,13 @@ export function TestimonialSection() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-            <Star className="w-4 h-4 text-[#D4AF37]" />
+            <Star className="w-4 h-4 text-[#B08D55]" />
             Guest Experiences
           </div>
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">
             Real Stories, Real Transformations
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           <p className="text-lg text-white/80 leading-relaxed">
             Hear from guests who combined pickleball paradise with life-changing
             medical tourism experiences in Thailand.
@@ -47,7 +47,7 @@ export function TestimonialSection() {
         {/* Decorative quote icon */}
         <div className="flex justify-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-            <Quote className="w-8 h-8 text-[#D4AF37]" />
+            <Quote className="w-8 h-8 text-[#B08D55]" />
           </div>
         </div>
 
@@ -60,7 +60,7 @@ export function TestimonialSection() {
         <div className="text-center mt-12">
           <Link
             href="/apply"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E5C969] px-8 py-4 font-semibold text-[#003D5C] transition-all hover:shadow-xl hover:shadow-[#D4AF37]/30 hover:-translate-y-0.5 shadow-lg shadow-[#D4AF37]/20"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] px-8 py-4 font-semibold text-[#1D2D44] transition-all hover:shadow-xl hover:shadow-[#B08D55]/30 hover:-translate-y-0.5 shadow-lg shadow-[#B08D55]/20"
           >
             Start Your Journey
             <ArrowRight className="h-5 w-5" />

@@ -59,7 +59,7 @@ export function TestimonialGallery({
                   <Skeleton className="h-8 w-8" />
                 </div>
                 <Skeleton className="h-20 w-full" />
-                <div className="pt-4 border-t border-[#D4AF37]/10">
+                <div className="pt-4 border-t border-[#B08D55]/10">
                   <Skeleton className="h-4 w-32 mb-2" />
                   <Skeleton className="h-3 w-24" />
                 </div>
@@ -107,7 +107,7 @@ export function TestimonialGallery({
           </div>
         )}
         <div className="text-center py-12 text-muted-foreground">
-          <Quote className="h-12 w-12 mx-auto mb-4 text-[#D4AF37]/30" />
+          <Quote className="h-12 w-12 mx-auto mb-4 text-[#B08D55]/30" />
           <p className="text-lg">No testimonials yet.</p>
           <p className="text-sm mt-2">Check back soon for guest stories!</p>
         </div>
@@ -157,8 +157,8 @@ export function TestimonialGallery({
                       key={i}
                       className={`h-4 w-4 ${
                         testimonial.isFeatured
-                          ? 'fill-[#D4AF37] text-[#D4AF37]'
-                          : 'fill-[#D4AF37]/50 text-[#D4AF37]/50'
+                          ? 'fill-[#B08D55] text-[#B08D55]'
+                          : 'fill-[#B08D55]/50 text-[#B08D55]/50'
                       }`}
                     />
                   ))}
@@ -166,16 +166,16 @@ export function TestimonialGallery({
                 <div className="flex items-center gap-1">
                   {/* Media indicators */}
                   {testimonial.videoUrl && (
-                    <Video className="h-4 w-4 text-[#D4AF37]/60" />
+                    <Video className="h-4 w-4 text-[#B08D55]/60" />
                   )}
                   {(testimonial.beforePhotoUrl || testimonial.afterPhotoUrl) && (
-                    <ImageIcon className="h-4 w-4 text-[#D4AF37]/60" />
+                    <ImageIcon className="h-4 w-4 text-[#B08D55]/60" />
                   )}
-                  <Quote className="h-8 w-8 text-[#D4AF37]/20" />
+                  <Quote className="h-8 w-8 text-[#B08D55]/20" />
                 </div>
               </div>
 
-              <blockquote className="text-[#003D5C]/80 italic leading-relaxed min-h-[80px]">
+              <blockquote className="text-[#1D2D44]/80 italic leading-relaxed min-h-[80px]">
                 {testimonial.content ? (
                   <>
                     &ldquo;{testimonial.content.length > 200
@@ -183,7 +183,7 @@ export function TestimonialGallery({
                       : testimonial.content}&rdquo;
                   </>
                 ) : (
-                  <span className="text-[#003D5C]/40 not-italic">
+                  <span className="text-[#1D2D44]/40 not-italic">
                     {testimonial.type === 'VIDEO'
                       ? 'Video testimonial'
                       : testimonial.type === 'BEFORE_AFTER'
@@ -193,11 +193,11 @@ export function TestimonialGallery({
                 )}
               </blockquote>
 
-              <div className="pt-4 border-t border-[#D4AF37]/10 flex items-center justify-between">
+              <div className="pt-4 border-t border-[#B08D55]/10 flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-[#003D5C]">{testimonial.guestName}</div>
+                  <div className="font-bold text-[#1D2D44]">{testimonial.guestName}</div>
                   {testimonial.guestLocation && (
-                    <div className="flex items-center gap-1 text-xs text-[#003D5C]/60">
+                    <div className="flex items-center gap-1 text-xs text-[#1D2D44]/60">
                       <MapPin className="h-3 w-3" />
                       {testimonial.guestLocation}
                     </div>
@@ -207,13 +207,13 @@ export function TestimonialGallery({
                   {testimonial.packageType && (
                     <Badge
                       variant="secondary"
-                      className="bg-[#D4AF37]/10 text-[#003D5C] hover:bg-[#D4AF37]/20"
+                      className="bg-[#B08D55]/10 text-[#1D2D44] hover:bg-[#B08D55]/20"
                     >
                       {testimonial.packageType}
                     </Badge>
                   )}
                   {testimonial.publishedAt && (
-                    <div className="flex items-center gap-1 text-xs text-[#003D5C]/40 mt-1 justify-end">
+                    <div className="flex items-center gap-1 text-xs text-[#1D2D44]/40 mt-1 justify-end">
                       <Calendar className="h-3 w-3" />
                       {new Date(testimonial.publishedAt).toLocaleDateString()}
                     </div>

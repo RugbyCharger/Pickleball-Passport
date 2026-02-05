@@ -61,7 +61,7 @@ export default function PartnerSetupPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#003D5C] mb-4" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#1D2D44] mb-4" />
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function PartnerSetupPage() {
             </p>
             <div className="flex flex-col gap-3">
               <Link href="/sign-in">
-                <Button className="w-full bg-[#003D5C] hover:bg-[#002B42]">
+                <Button className="w-full bg-[#1D2D44] hover:bg-[#002B42]">
                   Sign In
                 </Button>
               </Link>
@@ -97,7 +97,7 @@ export default function PartnerSetupPage() {
               </Link>
             </div>
             <div className="text-center">
-              <Link href="/partners" className="text-sm text-[#003D5C] hover:underline">
+              <Link href="/partners" className="text-sm text-[#1D2D44] hover:underline">
                 ← Back to Partner Program
               </Link>
             </div>
@@ -181,12 +181,12 @@ export default function PartnerSetupPage() {
             <p className="text-xs text-gray-600">Dashboard & referral code immediately</p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 text-center">
-            <Award className="h-8 w-8 text-[#D4AF37] mx-auto mb-2" />
+            <Award className="h-8 w-8 text-[#B08D55] mx-auto mb-2" />
             <p className="text-sm font-semibold text-gray-900">Earn Rewards</p>
             <p className="text-xs text-gray-600">500 Passport Points per booking</p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 text-center">
-            <Users className="h-8 w-8 text-[#003D5C] mx-auto mb-2" />
+            <Users className="h-8 w-8 text-[#1D2D44] mx-auto mb-2" />
             <p className="text-sm font-semibold text-gray-900">Free Marketing</p>
             <p className="text-xs text-gray-600">Co-branded materials included</p>
           </div>
@@ -336,7 +336,7 @@ export default function PartnerSetupPage() {
                       <Link
                         href="/partner-terms"
                         target="_blank"
-                        className="text-[#003D5C] hover:underline"
+                        className="text-[#1D2D44] hover:underline"
                       >
                         Partner Terms and Conditions
                       </Link>{' '}
@@ -358,7 +358,7 @@ export default function PartnerSetupPage() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="bg-[#003D5C] hover:bg-[#002B42] text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto"
+                  className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto"
                 >
                   {isSubmitting ? (
                     <>

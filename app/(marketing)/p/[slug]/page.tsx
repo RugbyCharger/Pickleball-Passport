@@ -74,8 +74,8 @@ export default function PartnerLandingPage() {
     );
   }
 
-  const primaryColor = landingPage.primaryColor || '#003D5C';
-  const secondaryColor = landingPage.secondaryColor || '#D4AF37';
+  const primaryColor = landingPage.primaryColor || '#1D2D44';
+  const secondaryColor = landingPage.secondaryColor || '#B08D55';
   const referralCode = landingPage.partner?.referralCode || '';
 
   return (

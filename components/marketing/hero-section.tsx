@@ -8,7 +8,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
       {/* Background Layers */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
 
       {/* Decorative tropical pattern overlay */}
       <div className="absolute inset-0 opacity-5">
@@ -25,8 +25,8 @@ export function HeroSection() {
       </div>
 
       {/* Gradient orbs for depth */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4AF37]/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-[#4AA4B5]/30 rounded-full blur-3xl animate-float animation-delay-2000" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#B08D55]/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-[#7587A5]/30 rounded-full blur-3xl animate-float animation-delay-2000" />
       <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/10 rounded-full blur-2xl animate-float animation-delay-4000" />
 
       {/* Decorative palm icon */}
@@ -34,15 +34,15 @@ export function HeroSection() {
         <Palmtree className="w-32 h-32 text-white" />
       </div>
       <div className="absolute bottom-20 right-10 opacity-10 hidden lg:block">
-        <Sun className="w-24 h-24 text-[#D4AF37]" />
+        <Sun className="w-24 h-24 text-[#B08D55]" />
       </div>
 
       {/* Hero Content */}
       <div className="container px-4 py-20 md:py-28 lg:py-36 relative z-10">
         <div className="flex flex-col items-center text-center space-y-8 max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center rounded-full border border-[#D4AF37]/40 bg-white/10 backdrop-blur-sm px-5 py-2 text-sm font-medium text-white/90 shadow-lg">
-            <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" />
+          <div className="inline-flex items-center rounded-full border border-[#B08D55]/40 bg-white/10 backdrop-blur-sm px-5 py-2 text-sm font-medium text-white/90 shadow-lg">
+            <Sparkles className="w-4 h-4 mr-2 text-[#B08D55]" />
             Premier Pickleball Travel Experiences
           </div>
 
@@ -50,11 +50,11 @@ export function HeroSection() {
           <h1 className="text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-white">
             The Ultimate{' '}
             <span className="relative inline-block">
-              <span className="text-tropical-gradient bg-gradient-to-r from-[#D4AF37] via-[#E5C969] to-[#D4AF37] bg-clip-text text-transparent">
+              <span className="text-tropical-gradient bg-gradient-to-r from-[#B08D55] via-[#CFB78D] to-[#B08D55] bg-clip-text text-transparent">
                 Pickleball Vacation
               </span>
               <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
-                <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#D4AF37" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#B08D55" strokeWidth="3" strokeLinecap="round"/>
               </svg>
             </span>
             <br />
@@ -65,7 +65,7 @@ export function HeroSection() {
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
             We curate unforgettable 8 and 13-day journeys featuring daily pickleball, 
             boutique accommodations, and full concierge support. 
-            <span className="font-bold text-[#D4AF37]"> Pickleball is the star of the show.</span>
+            <span className="font-bold text-[#B08D55]"> Pickleball is the star of the show.</span>
           </p>
 
           {/* CTA Buttons */}
@@ -73,7 +73,7 @@ export function HeroSection() {
             <Button
               asChild
               size="lg"
-              className="text-lg px-10 py-7 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold shadow-xl shadow-[#D4AF37]/30 transition-all hover:shadow-2xl hover:shadow-[#D4AF37]/40 hover:scale-105 rounded-xl"
+              className="text-lg px-10 py-7 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold shadow-xl shadow-[#B08D55]/30 transition-all hover:shadow-2xl hover:shadow-[#B08D55]/40 hover:scale-105 rounded-xl"
             >
               <Link href="/pickleball">
                 <Sparkles className="mr-2 h-5 w-5" />
@@ -99,15 +99,15 @@ export function HeroSection() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <span className="text-2xl font-bold text-[#D4AF37]">🏓</span>
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <span className="text-2xl font-bold text-[#B08D55]">🏓</span>
                   </div>
                   <div className="text-3xl font-bold text-white">Daily</div>
                   <div className="text-sm text-white/60 mt-1">Curated Play</div>
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
                     <span className="text-2xl">🏨</span>
                   </div>
                   <div className="text-3xl font-bold text-white">4-5 Star</div>
@@ -115,16 +115,16 @@ export function HeroSection() {
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <Star className="w-6 h-6 text-[#D4AF37]" />
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <Star className="w-6 h-6 text-[#B08D55]" />
                   </div>
                   <div className="text-3xl font-bold text-white">4.9</div>
                   <div className="text-sm text-white/60 mt-1">Average Rating</div>
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <Trophy className="w-6 h-6 text-[#D4AF37]" />
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <Trophy className="w-6 h-6 text-[#B08D55]" />
                   </div>
                   <div className="text-3xl font-bold text-white">#1</div>
                   <div className="text-sm text-white/60 mt-1">Pickleball Tours</div>

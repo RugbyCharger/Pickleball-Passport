@@ -87,7 +87,7 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
         {/* Decorative elements */}
         <div className="absolute top-10 left-10 opacity-10">
           <Palmtree className="w-32 h-32" />
@@ -95,12 +95,12 @@ export default function FAQPage() {
         <div className="absolute bottom-10 right-10 opacity-10">
           <Waves className="w-40 h-40" />
         </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-            <HelpCircle className="w-4 h-4 text-[#D4AF37]" />
+            <HelpCircle className="w-4 h-4 text-[#B08D55]" />
             Help Center
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
@@ -113,17 +113,17 @@ export default function FAQPage() {
           {/* Search Bar */}
           <div className="max-w-xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#003D5C]/50" />
+              <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1D2D44]/50" />
               <Input
                 placeholder="Search FAQs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-14 pr-14 py-7 text-lg bg-white text-[#003D5C] border-0 rounded-2xl shadow-xl focus:ring-2 focus:ring-[#D4AF37] placeholder:text-[#003D5C]/40"
+                className="pl-14 pr-14 py-7 text-lg bg-white text-[#1D2D44] border-0 rounded-2xl shadow-xl focus:ring-2 focus:ring-[#B08D55] placeholder:text-[#1D2D44]/40"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-[#003D5C]/40 hover:text-[#003D5C]/60 transition-colors"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-[#1D2D44]/40 hover:text-[#1D2D44]/60 transition-colors"
                   aria-label="Clear search"
                 >
                   <X className="h-5 w-5" />
@@ -155,8 +155,8 @@ export default function FAQPage() {
                   className={cn(
                     'rounded-full px-6 py-2 font-medium transition-all',
                     selectedCategoryId === null
-                      ? 'bg-gradient-to-r from-[#003D5C] to-[#005580] text-white shadow-lg'
-                      : 'border-[#003D5C]/20 text-[#003D5C] hover:bg-[#003D5C] hover:text-white'
+                      ? 'bg-gradient-to-r from-[#1D2D44] to-[#495F87] text-white shadow-lg'
+                      : 'border-[#1D2D44]/20 text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white'
                   )}
                 >
                   All Categories
@@ -170,8 +170,8 @@ export default function FAQPage() {
                     className={cn(
                       'rounded-full px-6 py-2 font-medium transition-all',
                       selectedCategoryId === category.id
-                        ? 'bg-gradient-to-r from-[#D4AF37] to-[#E5C969] text-[#003D5C] shadow-lg'
-                        : 'border-[#003D5C]/20 text-[#003D5C] hover:bg-[#D4AF37] hover:text-[#003D5C] hover:border-[#D4AF37]'
+                        ? 'bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] shadow-lg'
+                        : 'border-[#1D2D44]/20 text-[#1D2D44] hover:bg-[#B08D55] hover:text-[#1D2D44] hover:border-[#B08D55]'
                     )}
                   >
                     {category.name}
@@ -187,10 +187,10 @@ export default function FAQPage() {
           {/* Loading State */}
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center mb-4">
                 <Loader2 className="h-8 w-8 animate-spin text-white" />
               </div>
-              <p className="text-[#003D5C]/60">Loading FAQs...</p>
+              <p className="text-[#1D2D44]/60">Loading FAQs...</p>
             </div>
           )}
 
@@ -198,18 +198,18 @@ export default function FAQPage() {
           {showNoResults && (
             <div className="text-center py-16">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#F5E6D3] flex items-center justify-center">
-                <HelpCircle className="h-10 w-10 text-[#D4AF37]" />
+                <HelpCircle className="h-10 w-10 text-[#B08D55]" />
               </div>
-              <h2 className="text-2xl font-serif font-bold text-[#003D5C] mb-3">
+              <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-3">
                 No results found
               </h2>
-              <p className="text-[#003D5C]/60 mb-6">
+              <p className="text-[#1D2D44]/60 mb-6">
                 We couldn&apos;t find any FAQs matching &quot;{searchQuery}&quot;
               </p>
               <Button
                 onClick={clearSearch}
                 variant="outline"
-                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white rounded-xl px-6"
+                className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white rounded-xl px-6"
               >
                 Clear search
               </Button>
@@ -224,12 +224,12 @@ export default function FAQPage() {
                   {/* Category Header */}
                   {(selectedCategoryId === null || searchQuery) && (
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center">
                         <FolderOpen className="h-5 w-5 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-serif font-bold text-[#003D5C]">{name}</h2>
-                        <span className="text-sm text-[#003D5C]/60">
+                        <h2 className="text-xl font-serif font-bold text-[#1D2D44]">{name}</h2>
+                        <span className="text-sm text-[#1D2D44]/60">
                           {categoryFaqs.length} {categoryFaqs.length === 1 ? 'question' : 'questions'}
                         </span>
                       </div>
@@ -237,24 +237,24 @@ export default function FAQPage() {
                   )}
 
                   {/* FAQ Accordion */}
-                  <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+                  <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
                     <Accordion type="single" collapsible className="w-full">
                       {categoryFaqs.map((faq, index) => (
                         <AccordionItem
                           key={faq.id}
                           value={faq.id}
                           className={cn(
-                            'border-b border-[#D4AF37]/10',
+                            'border-b border-[#B08D55]/10',
                             index === categoryFaqs.length - 1 && 'border-b-0'
                           )}
                         >
                           <AccordionTrigger className="px-6 py-5 text-left hover:bg-[#FDF8F3] [&[data-state=open]]:bg-[#FDF8F3] transition-colors">
-                            <span className="text-base font-medium text-[#003D5C] pr-4">
+                            <span className="text-base font-medium text-[#1D2D44] pr-4">
                               {faq.question}
                             </span>
                           </AccordionTrigger>
                           <AccordionContent className="px-6 pb-6">
-                            <div className="prose prose-sm max-w-none text-[#003D5C]/70 leading-relaxed">
+                            <div className="prose prose-sm max-w-none text-[#1D2D44]/70 leading-relaxed">
                               <RichTextContent content={faq.answer} />
                             </div>
                           </AccordionContent>
@@ -271,12 +271,12 @@ export default function FAQPage() {
           {!isLoading && !searchQuery && (!faqs || faqs.length === 0) && (
             <div className="text-center py-16">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#F5E6D3] flex items-center justify-center">
-                <HelpCircle className="h-10 w-10 text-[#D4AF37]" />
+                <HelpCircle className="h-10 w-10 text-[#B08D55]" />
               </div>
-              <h2 className="text-2xl font-serif font-bold text-[#003D5C] mb-3">
+              <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-3">
                 No FAQs yet
               </h2>
-              <p className="text-[#003D5C]/60 mb-6">
+              <p className="text-[#1D2D44]/60 mb-6">
                 Check back soon for frequently asked questions.
               </p>
             </div>
@@ -287,25 +287,25 @@ export default function FAQPage() {
       {/* Still Have Questions CTA */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl shadow-xl shadow-[#003D5C]/10 p-10 md:p-14 border border-[#D4AF37]/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#003D5C]/5 rounded-full blur-2xl" />
+          <div className="bg-white rounded-3xl shadow-xl shadow-[#1D2D44]/10 p-10 md:p-14 border border-[#B08D55]/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#B08D55]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#1D2D44]/5 rounded-full blur-2xl" />
 
             <div className="relative z-10 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center shadow-lg">
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#003D5C] mb-4">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-4">
                 Still have questions?
               </h2>
-              <p className="text-[#003D5C]/70 mb-8 max-w-xl mx-auto">
+              <p className="text-[#1D2D44]/70 mb-8 max-w-xl mx-auto">
                 Can&apos;t find what you&apos;re looking for? Our team is here to help.
                 Reach out and we&apos;ll get back to you within 24 hours.
               </p>
               <Link href="/contact">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                  className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
                   Contact Us
@@ -320,18 +320,18 @@ export default function FAQPage() {
       {/* Quick Links */}
       <section className="py-16 sm:py-20 bg-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Sun className="w-12 h-12 text-[#D4AF37] mx-auto mb-6" />
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#003D5C] mb-4">
+          <Sun className="w-12 h-12 text-[#B08D55] mx-auto mb-6" />
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-4">
             Explore More
           </h2>
-          <p className="text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
             Learn more about our transformation packages and how we can help you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/how-it-works">
               <Button
                 size="lg"
-                className="bg-[#003D5C] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
+                className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
               >
                 How It Works
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -341,7 +341,7 @@ export default function FAQPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
+                className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
               >
                 View Packages
               </Button>

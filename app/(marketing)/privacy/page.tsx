@@ -98,7 +98,7 @@ export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white py-12 sm:py-16">
+      <section className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white py-12 sm:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-blue-200 mb-6" aria-label="Breadcrumb">
@@ -133,7 +133,7 @@ export default function PrivacyPolicyPage() {
                   <a
                     key={heading.slug}
                     href={`#${heading.slug}`}
-                    className="block text-sm text-gray-600 hover:text-[#003D5C] hover:underline transition-colors"
+                    className="block text-sm text-gray-600 hover:text-[#1D2D44] hover:underline transition-colors"
                   >
                     {heading.text}
                   </a>
@@ -144,7 +144,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Main Content */}
           <article className="flex-1 min-w-0">
-            <div className="prose prose-lg max-w-none prose-headings:text-[#003D5C] prose-headings:scroll-mt-8 prose-a:text-[#003D5C] hover:prose-a:text-[#D4AF37] prose-a:transition-colors prose-table:text-sm prose-th:bg-gray-100 prose-th:p-3 prose-td:p-3 prose-td:border prose-th:border">
+            <div className="prose prose-lg max-w-none prose-headings:text-[#1D2D44] prose-headings:scroll-mt-8 prose-a:text-[#1D2D44] hover:prose-a:text-[#B08D55] prose-a:transition-colors prose-table:text-sm prose-th:bg-gray-100 prose-th:p-3 prose-td:p-3 prose-td:border prose-th:border">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -207,7 +207,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 bg-[#003D5C] text-white font-medium rounded-md hover:bg-[#005580] transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 bg-[#1D2D44] text-white font-medium rounded-md hover:bg-[#495F87] transition-colors"
           >
             Contact Us
           </Link>

@@ -80,8 +80,8 @@ export default function LandingPageEditorPage() {
       headline: '',
       subheadline: '',
       clubLogoUrl: '',
-      primaryColor: '#003D5C',
-      secondaryColor: '#D4AF37',
+      primaryColor: '#1D2D44',
+      secondaryColor: '#B08D55',
       clubContact: '',
       isPublished: false,
     },
@@ -95,8 +95,8 @@ export default function LandingPageEditorPage() {
       setValue('headline', existingPage.headline || '');
       setValue('subheadline', existingPage.subheadline || '');
       setValue('clubLogoUrl', existingPage.clubLogoUrl || '');
-      setValue('primaryColor', existingPage.primaryColor || '#003D5C');
-      setValue('secondaryColor', existingPage.secondaryColor || '#D4AF37');
+      setValue('primaryColor', existingPage.primaryColor || '#1D2D44');
+      setValue('secondaryColor', existingPage.secondaryColor || '#B08D55');
       setValue('clubContact', existingPage.clubContact || '');
       setValue('isPublished', existingPage.isPublished);
     }
@@ -289,7 +289,7 @@ export default function LandingPageEditorPage() {
                     {...register('primaryColor')}
                     type="text"
                     className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="#003D5C"
+                    placeholder="#1D2D44"
                   />
                 </div>
               </div>
@@ -311,7 +311,7 @@ export default function LandingPageEditorPage() {
                     {...register('secondaryColor')}
                     type="text"
                     className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="#D4AF37"
+                    placeholder="#B08D55"
                   />
                 </div>
               </div>

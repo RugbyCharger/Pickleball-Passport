@@ -36,7 +36,7 @@ export default function PartnersPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5] text-white py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
         {/* Decorative elements */}
         <div className="absolute top-10 left-10 opacity-10">
           <Palmtree className="w-32 h-32" />
@@ -44,13 +44,13 @@ export default function PartnersPage() {
         <div className="absolute bottom-10 right-10 opacity-10">
           <Waves className="w-40 h-40" />
         </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#4AA4B5]/20 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-              <Handshake className="w-4 h-4 text-[#D4AF37]" />
+              <Handshake className="w-4 h-4 text-[#B08D55]" />
               Partner Program
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
@@ -66,11 +66,11 @@ export default function PartnersPage() {
             {/* Trust Indicators */}
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mb-10">
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Users className="h-5 w-5 text-[#D4AF37]" />
+                <Users className="h-5 w-5 text-[#B08D55]" />
                 <span className="text-sm">150+ Partner Clubs</span>
               </div>
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="h-5 w-5 text-[#D4AF37]" />
+                <Star className="h-5 w-5 text-[#B08D55]" />
                 <span className="text-sm">98% Member Satisfaction</span>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default function PartnersPage() {
               <Link href="/partner/signup">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                  className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
                   Become a Partner
@@ -111,11 +111,11 @@ export default function PartnersPage() {
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Why Partner with Pickleball Passport?
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#003D5C]/70 max-w-3xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
               We make it simple and rewarding to offer your members world-class
               wellness transformations.
             </p>
@@ -123,16 +123,16 @@ export default function PartnersPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Turnkey Marketing */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-              <div className="h-2 bg-gradient-to-r from-[#003D5C] to-[#4AA4B5]" />
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+              <div className="h-2 bg-gradient-to-r from-[#1D2D44] to-[#7587A5]" />
               <div className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <FileText className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                   Turnkey Marketing
                 </h3>
-                <p className="text-[#003D5C]/70 leading-relaxed">
+                <p className="text-[#1D2D44]/70 leading-relaxed">
                   Ready-made co-branded flyers, email templates, social media
                   graphics, and presentation decks. Everything you need to
                   promote to your members.
@@ -141,16 +141,16 @@ export default function PartnersPage() {
             </div>
 
             {/* Earn Rewards */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group md:-mt-4">
-              <div className="h-2 bg-gradient-to-r from-[#D4AF37] to-[#E5C969]" />
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group md:-mt-4">
+              <div className="h-2 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
               <div className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <Trophy className="h-8 w-8 text-[#003D5C]" />
+                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Trophy className="h-8 w-8 text-[#1D2D44]" />
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                   Earn Rewards
                 </h3>
-                <p className="text-[#003D5C]/70 leading-relaxed">
+                <p className="text-[#1D2D44]/70 leading-relaxed">
                   Passport Points for every referral. Redeem for cash payouts,
                   free trips, or premium marketing support. The more you refer,
                   the more you earn.
@@ -159,16 +159,16 @@ export default function PartnersPage() {
             </div>
 
             {/* Free Trips */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
               <div className="h-2 bg-gradient-to-r from-[#2D5A3D] to-[#3D7A52]" />
               <div className="p-8 text-center">
                 <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#2D5A3D] to-[#3D7A52] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <Plane className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                   Free Trips
                 </h3>
-                <p className="text-[#003D5C]/70 leading-relaxed">
+                <p className="text-[#1D2D44]/70 leading-relaxed">
                   Qualify for complimentary transformation experiences yourself.
                   Experience the program firsthand and bring a guest to our
                   annual partner retreats.
@@ -181,10 +181,10 @@ export default function PartnersPage() {
 
       {/* Passport Points System Section */}
       <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 right-10">
-            <Sun className="w-24 h-24 text-[#D4AF37]" />
+            <Sun className="w-24 h-24 text-[#B08D55]" />
           </div>
           <div className="absolute bottom-10 left-10">
             <Palmtree className="w-20 h-20 text-white" />
@@ -196,7 +196,7 @@ export default function PartnersPage() {
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
               Passport Points: Earn &amp; Redeem
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
               Our points-based rewards system makes it easy to track your earnings
               and redeem for valuable rewards.
@@ -207,8 +207,8 @@ export default function PartnersPage() {
             {/* How to Earn */}
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#D4AF37] flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-[#003D5C]" />
+                <div className="w-12 h-12 rounded-xl bg-[#B08D55] flex items-center justify-center">
+                  <DollarSign className="h-6 w-6 text-[#1D2D44]" />
                 </div>
                 <h3 className="text-2xl font-serif font-bold text-white">
                   How to Earn Points
@@ -226,7 +226,7 @@ export default function PartnersPage() {
                       <CheckCircle className="h-4 w-4 text-white" />
                     </div>
                     <div className="text-white">
-                      <span className="font-bold text-[#D4AF37]">{item.points} points</span>{' '}
+                      <span className="font-bold text-[#B08D55]">{item.points} points</span>{' '}
                       {item.desc}
                     </div>
                   </li>
@@ -237,8 +237,8 @@ export default function PartnersPage() {
             {/* How to Redeem */}
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#D4AF37] flex items-center justify-center">
-                  <Award className="h-6 w-6 text-[#003D5C]" />
+                <div className="w-12 h-12 rounded-xl bg-[#B08D55] flex items-center justify-center">
+                  <Award className="h-6 w-6 text-[#1D2D44]" />
                 </div>
                 <h3 className="text-2xl font-serif font-bold text-white">
                   How to Redeem Points
@@ -252,10 +252,10 @@ export default function PartnersPage() {
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Gift className="h-4 w-4 text-[#D4AF37]" />
+                      <Gift className="h-4 w-4 text-[#B08D55]" />
                     </div>
                     <div className="text-white">
-                      <span className="font-bold text-[#D4AF37]">{item.points} points</span> ={' '}
+                      <span className="font-bold text-[#B08D55]">{item.points} points</span> ={' '}
                       {item.desc}
                     </div>
                   </li>
@@ -265,17 +265,17 @@ export default function PartnersPage() {
           </div>
 
           {/* Earning Potential Callout */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center border border-[#D4AF37]/20">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center">
-              <Sparkles className="h-7 w-7 text-[#003D5C]" />
+          <div className="bg-white rounded-2xl shadow-xl p-8 text-center border border-[#B08D55]/20">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center">
+              <Sparkles className="h-7 w-7 text-[#1D2D44]" />
             </div>
-            <h4 className="text-2xl font-serif font-bold text-[#003D5C] mb-3">
+            <h4 className="text-2xl font-serif font-bold text-[#1D2D44] mb-3">
               Your Earning Potential
             </h4>
-            <p className="text-lg text-[#003D5C]/70 mb-2">
-              Refer just 10 members per year and earn a <span className="font-bold text-[#D4AF37]">free trip worth $3,500</span>
+            <p className="text-lg text-[#1D2D44]/70 mb-2">
+              Refer just 10 members per year and earn a <span className="font-bold text-[#B08D55]">free trip worth $3,500</span>
             </p>
-            <p className="text-sm text-[#003D5C]/50">
+            <p className="text-sm text-[#1D2D44]/50">
               Plus ongoing commission based on your partner tier
             </p>
           </div>
@@ -286,11 +286,11 @@ export default function PartnersPage() {
       <section className="py-16 sm:py-24 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Partner Tiers &amp; Benefits
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#003D5C]/70 max-w-3xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
               Grow your partnership and unlock better rewards. All tiers are based
               on annual booking volume.
             </p>
@@ -299,75 +299,75 @@ export default function PartnersPage() {
           {/* Tier Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Bronze */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
               <div className="h-2 bg-gradient-to-r from-[#CD7F32] to-[#A0642A]" />
               <div className="p-6 text-center">
                 <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#CD7F32] to-[#A0642A] flex items-center justify-center text-white font-bold text-xl shadow-lg">
                   B
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-1">Bronze</h3>
-                <p className="text-sm text-[#003D5C]/60 mb-4">Starting tier</p>
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Bronze</h3>
+                <p className="text-sm text-[#1D2D44]/60 mb-4">Starting tier</p>
                 <div className="space-y-2 text-sm">
-                  <p className="text-[#003D5C]"><span className="font-bold">5%</span> Commission</p>
-                  <p className="text-[#003D5C]/60">Basic materials</p>
-                  <p className="text-[#003D5C]/60">Email support</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">5%</span> Commission</p>
+                  <p className="text-[#1D2D44]/60">Basic materials</p>
+                  <p className="text-[#1D2D44]/60">Email support</p>
                 </div>
               </div>
             </div>
 
             {/* Silver */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
               <div className="h-2 bg-gradient-to-r from-[#C0C0C0] to-[#A8A8A8]" />
               <div className="p-6 text-center">
                 <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#C0C0C0] to-[#A8A8A8] flex items-center justify-center text-white font-bold text-xl shadow-lg">
                   S
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-1">Silver</h3>
-                <p className="text-sm text-[#003D5C]/60 mb-4">10+ bookings/year</p>
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Silver</h3>
+                <p className="text-sm text-[#1D2D44]/60 mb-4">10+ bookings/year</p>
                 <div className="space-y-2 text-sm">
-                  <p className="text-[#003D5C]"><span className="font-bold">7%</span> Commission</p>
-                  <p className="text-[#003D5C]"><span className="font-bold">1</span> Free trip/year</p>
-                  <p className="text-[#003D5C]/60">Priority support</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">7%</span> Commission</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">1</span> Free trip/year</p>
+                  <p className="text-[#1D2D44]/60">Priority support</p>
                 </div>
               </div>
             </div>
 
             {/* Gold */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border-2 border-[#D4AF37] ring-4 ring-[#D4AF37]/10">
-              <div className="h-2 bg-gradient-to-r from-[#D4AF37] to-[#E5C969]" />
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border-2 border-[#B08D55] ring-4 ring-[#B08D55]/10">
+              <div className="h-2 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
               <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center text-[#003D5C] font-bold text-xl shadow-lg">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center text-[#1D2D44] font-bold text-xl shadow-lg">
                   G
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-1">Gold</h3>
-                <p className="text-sm text-[#003D5C]/60 mb-4">25+ bookings/year</p>
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Gold</h3>
+                <p className="text-sm text-[#1D2D44]/60 mb-4">25+ bookings/year</p>
                 <div className="space-y-2 text-sm">
-                  <p className="text-[#003D5C]"><span className="font-bold">10%</span> Commission</p>
-                  <p className="text-[#003D5C]"><span className="font-bold">2</span> Free trips/year</p>
-                  <p className="text-[#003D5C]/60">Co-marketing opportunities</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">10%</span> Commission</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">2</span> Free trips/year</p>
+                  <p className="text-[#1D2D44]/60">Co-marketing opportunities</p>
                 </div>
               </div>
             </div>
 
             {/* Platinum */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
               <div className="h-2 bg-gradient-to-r from-[#E5E4E2] to-[#B8B8B8]" />
               <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#E5E4E2] to-[#B8B8B8] flex items-center justify-center text-[#003D5C] font-bold text-xl shadow-lg">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#E5E4E2] to-[#B8B8B8] flex items-center justify-center text-[#1D2D44] font-bold text-xl shadow-lg">
                   P
                 </div>
-                <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-1">Platinum</h3>
-                <p className="text-sm text-[#003D5C]/60 mb-4">50+ bookings/year</p>
+                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Platinum</h3>
+                <p className="text-sm text-[#1D2D44]/60 mb-4">50+ bookings/year</p>
                 <div className="space-y-2 text-sm">
-                  <p className="text-[#003D5C]"><span className="font-bold">12%</span> Commission</p>
-                  <p className="text-[#003D5C]"><span className="font-bold">4</span> Free trips/year</p>
-                  <p className="text-[#003D5C]/60">VIP access & events</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">12%</span> Commission</p>
+                  <p className="text-[#1D2D44]"><span className="font-bold">4</span> Free trips/year</p>
+                  <p className="text-[#1D2D44]/60">VIP access & events</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <p className="text-sm text-[#003D5C]/50 text-center mt-8">
+          <p className="text-sm text-[#1D2D44]/50 text-center mt-8">
             All partners start at Bronze. Tiers are evaluated annually based on
             the previous 12 months of bookings.
           </p>
@@ -378,30 +378,30 @@ export default function PartnersPage() {
       <section id="how-it-works" className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               How It Works: 3 Simple Steps
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#003D5C]/70 max-w-3xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
               Getting started as a partner is quick and easy.
             </p>
           </div>
 
           <div className="relative">
             {/* Connection line */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#003D5C] via-[#D4AF37] to-[#2D5A3D] -translate-y-1/2 z-0" />
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#1D2D44] via-[#B08D55] to-[#2D5A3D] -translate-y-1/2 z-0" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
               <div className="relative z-10">
-                <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 text-center border border-[#D4AF37]/10 h-full">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#003D5C] to-[#4AA4B5] flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+                <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 text-center border border-[#B08D55]/10 h-full">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center text-3xl font-bold text-white shadow-lg">
                     1
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                  <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                     Sign Up
                   </h3>
-                  <p className="text-[#003D5C]/70">
+                  <p className="text-[#1D2D44]/70">
                     Create your partner account in just 2 minutes. No approval
                     wait time—instant access to your dashboard and marketing
                     materials.
@@ -411,14 +411,14 @@ export default function PartnersPage() {
 
               {/* Step 2 */}
               <div className="relative z-10">
-                <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 text-center border border-[#D4AF37]/10 h-full">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center text-3xl font-bold text-[#003D5C] shadow-lg">
+                <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 text-center border border-[#B08D55]/10 h-full">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center text-3xl font-bold text-[#1D2D44] shadow-lg">
                     2
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                  <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                     Promote
                   </h3>
-                  <p className="text-[#003D5C]/70">
+                  <p className="text-[#1D2D44]/70">
                     Share your unique referral link or code with your members via
                     email, social media, or in-person events. Use our ready-made
                     marketing materials.
@@ -428,14 +428,14 @@ export default function PartnersPage() {
 
               {/* Step 3 */}
               <div className="relative z-10">
-                <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 p-8 text-center border border-[#D4AF37]/10 h-full">
+                <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 text-center border border-[#B08D55]/10 h-full">
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#2D5A3D] to-[#3D7A52] flex items-center justify-center text-3xl font-bold text-white shadow-lg">
                     3
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-[#003D5C] mb-3">
+                  <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
                     Earn
                   </h3>
-                  <p className="text-[#003D5C]/70">
+                  <p className="text-[#1D2D44]/70">
                     Get rewarded when your members book transformations. Points are
                     credited instantly, and you can track earnings in real-time via
                     your partner dashboard.
@@ -449,7 +449,7 @@ export default function PartnersPage() {
 
       {/* Partner Testimonials Section */}
       <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#003D5C] via-[#005580] to-[#4AA4B5]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10">
             <Palmtree className="w-24 h-24 text-white" />
@@ -461,52 +461,52 @@ export default function PartnersPage() {
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
               What Our Partners Say
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Testimonial 1 */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]" />
+                  <Star key={i} className="h-5 w-5 fill-[#B08D55] text-[#B08D55]" />
                 ))}
               </div>
-              <p className="text-[#003D5C]/80 italic mb-6 leading-relaxed">
+              <p className="text-[#1D2D44]/80 italic mb-6 leading-relaxed">
                 &ldquo;We&apos;ve sent 12 members on transformations this year. The
                 marketing materials make it easy, and the free trips are
                 amazing! Our members absolutely love the experiences, and we&apos;re
                 earning rewards every month.&rdquo;
               </p>
-              <div className="flex items-center justify-between pt-4 border-t border-[#D4AF37]/10">
+              <div className="flex items-center justify-between pt-4 border-t border-[#B08D55]/10">
                 <div>
-                  <p className="font-semibold text-[#003D5C]">Jennifer K.</p>
-                  <p className="text-sm text-[#003D5C]/60">
+                  <p className="font-semibold text-[#1D2D44]">Jennifer K.</p>
+                  <p className="text-sm text-[#1D2D44]/60">
                     The Villages Pickleball Club
                   </p>
                 </div>
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center text-[#003D5C] font-bold shadow-lg">
+                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center text-[#1D2D44] font-bold shadow-lg">
                   G
                 </div>
               </div>
             </div>
 
             {/* Testimonial 2 */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#D4AF37]/10">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]" />
+                  <Star key={i} className="h-5 w-5 fill-[#B08D55] text-[#B08D55]" />
                 ))}
               </div>
-              <p className="text-[#003D5C]/80 italic mb-6 leading-relaxed">
+              <p className="text-[#1D2D44]/80 italic mb-6 leading-relaxed">
                 &ldquo;Easiest partnership we&apos;ve ever joined. Our members love it,
                 and we&apos;re earning rewards every month. The support team is
                 fantastic, and the program basically runs itself.&rdquo;
               </p>
-              <div className="flex items-center justify-between pt-4 border-t border-[#D4AF37]/10">
+              <div className="flex items-center justify-between pt-4 border-t border-[#B08D55]/10">
                 <div>
-                  <p className="font-semibold text-[#003D5C]">Mike R.</p>
-                  <p className="text-sm text-[#003D5C]/60">
+                  <p className="font-semibold text-[#1D2D44]">Mike R.</p>
+                  <p className="text-sm text-[#1D2D44]/60">
                     Scottsdale Pickleball Center
                   </p>
                 </div>
@@ -522,18 +522,18 @@ export default function PartnersPage() {
       {/* CTA Section */}
       <section className="py-16 sm:py-24 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl shadow-xl shadow-[#003D5C]/10 p-10 md:p-14 border border-[#D4AF37]/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#003D5C]/5 rounded-full blur-2xl" />
+          <div className="bg-white rounded-3xl shadow-xl shadow-[#1D2D44]/10 p-10 md:p-14 border border-[#B08D55]/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#B08D55]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#1D2D44]/5 rounded-full blur-2xl" />
 
             <div className="relative z-10 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#E5C969] flex items-center justify-center shadow-lg">
-                <Handshake className="w-8 h-8 text-[#003D5C]" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center shadow-lg">
+                <Handshake className="w-8 h-8 text-[#1D2D44]" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
                 Ready to Transform Your Members&apos; Lives?
               </h2>
-              <p className="text-lg text-[#003D5C]/70 mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
                 Join 150+ partner clubs earning rewards while offering their members
                 life-changing wellness experiences. No cost to join, instant access,
                 and unlimited earning potential.
@@ -542,7 +542,7 @@ export default function PartnersPage() {
                 <Link href="/partner/signup">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl"
+                    className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                   >
                     <Sparkles className="mr-2 h-5 w-5" />
                     Become a Partner Now
@@ -558,7 +558,7 @@ export default function PartnersPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-2 border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
+                    className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
                   >
                     Download Partner Kit
                   </Button>
@@ -573,13 +573,13 @@ export default function PartnersPage() {
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003D5C] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Frequently Asked Questions
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] mx-auto mb-6 rounded-full" />
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl shadow-[#003D5C]/10 overflow-hidden border border-[#D4AF37]/10">
+          <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
             <Accordion type="single" collapsible className="w-full">
               {[
                 {
@@ -618,15 +618,15 @@ export default function PartnersPage() {
                 <AccordionItem
                   key={idx}
                   value={`item-${idx}`}
-                  className="border-b border-[#D4AF37]/10 last:border-b-0"
+                  className="border-b border-[#B08D55]/10 last:border-b-0"
                 >
                   <AccordionTrigger className="px-6 py-5 text-left hover:bg-[#FDF8F3] [&[data-state=open]]:bg-[#FDF8F3] transition-colors">
-                    <span className="text-base font-medium text-[#003D5C] pr-4">
+                    <span className="text-base font-medium text-[#1D2D44] pr-4">
                       {item.q}
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6">
-                    <p className="text-[#003D5C]/70 leading-relaxed">{item.a}</p>
+                    <p className="text-[#1D2D44]/70 leading-relaxed">{item.a}</p>
                   </AccordionContent>
                 </AccordionItem>
               ))}

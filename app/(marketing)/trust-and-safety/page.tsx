@@ -60,7 +60,7 @@ export default function TrustAndSafetyPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white py-16 sm:py-20">
+      <section className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
@@ -94,7 +94,7 @@ export default function TrustAndSafetyPage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-center h-24 mb-4">
-                  <Award className="h-16 w-16 text-[#003D5C]" />
+                  <Award className="h-16 w-16 text-[#1D2D44]" />
                 </div>
                 <CardTitle className="text-center">
                   JCI Accreditation
@@ -113,7 +113,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.jointcommissioninternational.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003D5C] hover:text-[#D4AF37] inline-flex items-center gap-1 text-sm font-medium"
+                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
                 >
                   Verify Accreditation
                   <ExternalLink className="h-4 w-4" />
@@ -125,7 +125,7 @@ export default function TrustAndSafetyPage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-center h-24 mb-4">
-                  <CheckCircle className="h-16 w-16 text-[#003D5C]" />
+                  <CheckCircle className="h-16 w-16 text-[#1D2D44]" />
                 </div>
                 <CardTitle className="text-center">
                   ISO 9001 Certified
@@ -144,7 +144,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.iso.org/iso-9001-quality-management.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003D5C] hover:text-[#D4AF37] inline-flex items-center gap-1 text-sm font-medium"
+                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
                 >
                   Learn More
                   <ExternalLink className="h-4 w-4" />
@@ -156,7 +156,7 @@ export default function TrustAndSafetyPage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-center h-24 mb-4">
-                  <Shield className="h-16 w-16 text-[#003D5C]" />
+                  <Shield className="h-16 w-16 text-[#1D2D44]" />
                 </div>
                 <CardTitle className="text-center">
                   Ministry of Health Approved
@@ -174,7 +174,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.moph.go.th/eng/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#003D5C] hover:text-[#D4AF37] inline-flex items-center gap-1 text-sm font-medium"
+                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
                 >
                   Visit MOPH
                   <ExternalLink className="h-4 w-4" />
@@ -201,7 +201,7 @@ export default function TrustAndSafetyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Medical Tourism Industry */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">
                 $1.2B+
               </div>
               <div className="text-gray-900 font-semibold mb-2">
@@ -216,7 +216,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.tatnews.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#003D5C]"
+                  className="hover:text-[#1D2D44]"
                 >
                   [Source: Tourism Authority of Thailand, 2024]
                 </a>
@@ -225,7 +225,7 @@ export default function TrustAndSafetyPage() {
 
             {/* Patient Satisfaction */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">95%+</div>
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">95%+</div>
               <div className="text-gray-900 font-semibold mb-2">
                 Patient Satisfaction Rate
               </div>
@@ -238,7 +238,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.tatnews.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#003D5C]"
+                  className="hover:text-[#1D2D44]"
                 >
                   [Source: Tourism Authority of Thailand, 2024]
                 </a>
@@ -247,7 +247,7 @@ export default function TrustAndSafetyPage() {
 
             {/* JCI Hospitals */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">70+</div>
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">70+</div>
               <div className="text-gray-900 font-semibold mb-2">
                 JCI-Accredited Hospitals
               </div>
@@ -260,7 +260,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.jointcommissioninternational.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#003D5C]"
+                  className="hover:text-[#1D2D44]"
                 >
                   [Source: JCI, 2024]
                 </a>
@@ -269,7 +269,7 @@ export default function TrustAndSafetyPage() {
 
             {/* Medical Tourists */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">
                 2.5M+
               </div>
               <div className="text-gray-900 font-semibold mb-2">
@@ -284,7 +284,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.tatnews.org/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#003D5C]"
+                  className="hover:text-[#1D2D44]"
                 >
                   [Source: Tourism Authority of Thailand, 2024]
                 </a>
@@ -293,7 +293,7 @@ export default function TrustAndSafetyPage() {
 
             {/* Safety Rating */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">A+</div>
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">A+</div>
               <div className="text-gray-900 font-semibold mb-2">
                 Healthcare System Rating
               </div>
@@ -306,7 +306,7 @@ export default function TrustAndSafetyPage() {
                   href="https://www.who.int/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#003D5C]"
+                  className="hover:text-[#1D2D44]"
                 >
                   [Source: World Health Organization, 2024]
                 </a>
@@ -315,7 +315,7 @@ export default function TrustAndSafetyPage() {
 
             {/* Success Rate */}
             <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#003D5C] mb-2">98%+</div>
+              <div className="text-5xl font-bold text-[#1D2D44] mb-2">98%+</div>
               <div className="text-gray-900 font-semibold mb-2">
                 Procedure Success Rate
               </div>
@@ -409,9 +409,9 @@ export default function TrustAndSafetyPage() {
 
             {/* Insurance Provider Info */}
             <div className="space-y-6">
-              <Card className="p-6 bg-[#003D5C] text-white">
+              <Card className="p-6 bg-[#1D2D44] text-white">
                 <div className="flex items-center gap-4 mb-4">
-                  <Shield className="h-12 w-12 text-[#D4AF37]" />
+                  <Shield className="h-12 w-12 text-[#B08D55]" />
                   <div>
                     <h3 className="text-xl font-semibold">
                       International Travel Medical Insurance
@@ -449,7 +449,7 @@ export default function TrustAndSafetyPage() {
                   href="/insurance-policy.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003D5C]"
+                  className="inline-flex items-center justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1D2D44]"
                 >
                   <FileText className="h-4 w-4 mr-2" />
                   Download Full Policy (PDF)
@@ -481,7 +481,7 @@ export default function TrustAndSafetyPage() {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <Clock className="h-6 w-6 text-[#003D5C] flex-shrink-0 mt-1" />
+                  <Clock className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">
                       24/7 Concierge Service
@@ -493,7 +493,7 @@ export default function TrustAndSafetyPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <HeartPulse className="h-6 w-6 text-[#003D5C] flex-shrink-0 mt-1" />
+                  <HeartPulse className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">
                       Medical Liaison
@@ -505,7 +505,7 @@ export default function TrustAndSafetyPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <Phone className="h-6 w-6 text-[#003D5C] flex-shrink-0 mt-1" />
+                  <Phone className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">
                       Immediate Response
@@ -531,7 +531,7 @@ export default function TrustAndSafetyPage() {
                   </div>
                   <a
                     href="tel:+66023334444"
-                    className="text-2xl font-bold text-[#003D5C] hover:text-[#D4AF37]"
+                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
                   >
                     +66 (0) 2-333-4444
                   </a>
@@ -542,7 +542,7 @@ export default function TrustAndSafetyPage() {
                   </div>
                   <a
                     href="tel:+18005554444"
-                    className="text-2xl font-bold text-[#003D5C] hover:text-[#D4AF37]"
+                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
                   >
                     +1 (800) 555-4444
                   </a>
@@ -553,7 +553,7 @@ export default function TrustAndSafetyPage() {
                     href="https://wa.me/66812345678"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-2xl font-bold text-[#003D5C] hover:text-[#D4AF37]"
+                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
                   >
                     +66 81-234-5678
                   </a>
@@ -562,7 +562,7 @@ export default function TrustAndSafetyPage() {
                   <div className="text-sm text-gray-600 mb-1">Email</div>
                   <a
                     href="mailto:support@pickleballpassport.com"
-                    className="text-lg font-bold text-[#003D5C] hover:text-[#D4AF37] break-all"
+                    className="text-lg font-bold text-[#1D2D44] hover:text-[#B08D55] break-all"
                   >
                     support@pickleballpassport.com
                   </a>
@@ -624,7 +624,7 @@ export default function TrustAndSafetyPage() {
                     Included
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-4 bg-[#003D5C] text-white rounded-lg px-4 mt-4">
+                <div className="flex justify-between items-center py-4 bg-[#1D2D44] text-white rounded-lg px-4 mt-4">
                   <span className="text-lg font-semibold">Total Price</span>
                   <span className="text-2xl font-bold">$10,150</span>
                 </div>
@@ -684,7 +684,7 @@ export default function TrustAndSafetyPage() {
                   save compared to US prices.
                 </p>
                 <Link href="/#calculator">
-                  <Button className="w-full bg-[#003D5C] hover:bg-[#D4AF37] text-white">
+                  <Button className="w-full bg-[#1D2D44] hover:bg-[#B08D55] text-white">
                     <DollarSign className="h-4 w-4 mr-2" />
                     Go to Cost Calculator
                   </Button>
@@ -868,7 +868,7 @@ export default function TrustAndSafetyPage() {
             <div className="mt-6 text-center">
               <a
                 href="/terms-and-conditions.pdf"
-                className="text-[#003D5C] hover:text-[#D4AF37] inline-flex items-center gap-2 font-medium"
+                className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-2 font-medium"
               >
                 <FileText className="h-5 w-5" />
                 View Full Terms & Conditions (PDF)
@@ -899,7 +899,7 @@ export default function TrustAndSafetyPage() {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]"
+                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
                   />
                 ))}
               </div>
@@ -927,7 +927,7 @@ export default function TrustAndSafetyPage() {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]"
+                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
                   />
                 ))}
               </div>
@@ -955,7 +955,7 @@ export default function TrustAndSafetyPage() {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className="h-5 w-5 fill-[#D4AF37] text-[#D4AF37]"
+                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
                   />
                 ))}
               </div>
@@ -982,7 +982,7 @@ export default function TrustAndSafetyPage() {
             <Link href="/testimonials">
               <Button
                 variant="outline"
-                className="border-[#003D5C] text-[#003D5C] hover:bg-[#003D5C] hover:text-white"
+                className="border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white"
               >
                 Read More Testimonials
               </Button>
@@ -992,7 +992,7 @@ export default function TrustAndSafetyPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#003D5C] to-[#005580] text-white">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
             Ready to Begin Your Transformation?
@@ -1005,7 +1005,7 @@ export default function TrustAndSafetyPage() {
             <Link href="/apply">
               <Button
                 size="lg"
-                className="bg-[#D4AF37] hover:bg-[#C19B2B] text-gray-900 px-8 py-6 text-lg w-full sm:w-auto font-semibold"
+                className="bg-[#B08D55] hover:bg-[#C19B2B] text-gray-900 px-8 py-6 text-lg w-full sm:w-auto font-semibold"
               >
                 Apply Now
               </Button>
@@ -1014,7 +1014,7 @@ export default function TrustAndSafetyPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-[#003D5C] px-8 py-6 text-lg w-full sm:w-auto font-semibold"
+                className="border-2 border-white text-white hover:bg-white hover:text-[#1D2D44] px-8 py-6 text-lg w-full sm:w-auto font-semibold"
               >
                 Contact Us
               </Button>

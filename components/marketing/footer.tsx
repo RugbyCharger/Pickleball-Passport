@@ -90,28 +90,28 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden" id="newsletter">
       {/* Decorative wave top border */}
-      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#D4AF37] via-[#E5C969] to-[#D4AF37]" />
+      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#B08D55] via-[#CFB78D] to-[#B08D55]" />
 
       {/* Newsletter Section - Sand colored */}
       <div className="bg-gradient-to-b from-[#FDF8F3] to-[#F5E6D3] pt-16 pb-12 relative">
         {/* Decorative elements */}
         <div className="absolute top-8 left-8 opacity-10">
-          <Palmtree className="w-24 h-24 text-[#003D5C]" />
+          <Palmtree className="w-24 h-24 text-[#1D2D44]" />
         </div>
         <div className="absolute top-12 right-12 opacity-10">
-          <Sun className="w-20 h-20 text-[#D4AF37]" />
+          <Sun className="w-20 h-20 text-[#B08D55]" />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#D4AF37]/20 text-[#003D5C] text-sm font-medium mb-4">
-              <Sun className="w-4 h-4 text-[#D4AF37]" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/20 text-[#1D2D44] text-sm font-medium mb-4">
+              <Sun className="w-4 h-4 text-[#B08D55]" />
               Join the Adventure
             </div>
-            <h3 className="text-3xl font-serif font-bold text-[#003D5C] mb-3">
+            <h3 className="text-3xl font-serif font-bold text-[#1D2D44] mb-3">
               Stay in the Loop
             </h3>
-            <p className="text-[#003D5C]/70 mb-8 text-lg">
+            <p className="text-[#1D2D44]/70 mb-8 text-lg">
               Get exclusive offers, wellness tips, and pickleball adventures delivered to your inbox.
             </p>
 
@@ -132,8 +132,8 @@ export function Footer() {
                   className={`w-full px-5 py-4 rounded-xl bg-white border-2 ${
                     emailError
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200'
-                      : 'border-[#D4AF37]/30 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20'
-                  } text-[#003D5C] placeholder-[#003D5C]/40 focus:outline-none focus:ring-4 transition-all shadow-lg shadow-[#003D5C]/5`}
+                      : 'border-[#B08D55]/30 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
+                  } text-[#1D2D44] placeholder-[#1D2D44]/40 focus:outline-none focus:ring-4 transition-all shadow-lg shadow-[#1D2D44]/5`}
                   disabled={subscribeMutation.isPending}
                   aria-invalid={!!emailError}
                   aria-describedby={emailError ? 'newsletter-error' : undefined}
@@ -147,7 +147,7 @@ export function Footer() {
               <button
                 type="submit"
                 disabled={subscribeMutation.isPending}
-                className="px-8 py-4 bg-gradient-to-r from-[#D4AF37] to-[#E5C969] hover:from-[#C19A2E] hover:to-[#D4AF37] text-[#003D5C] font-bold rounded-xl transition-all shadow-lg shadow-[#D4AF37]/30 hover:shadow-xl hover:shadow-[#D4AF37]/40 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold rounded-xl transition-all shadow-lg shadow-[#B08D55]/30 hover:shadow-xl hover:shadow-[#B08D55]/40 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex items-center justify-center gap-2"
               >
                 {subscribeMutation.isPending ? (
                   'Subscribing...'
@@ -160,7 +160,7 @@ export function Footer() {
               </button>
             </form>
 
-            <p className="mt-4 text-xs text-[#003D5C]/50">
+            <p className="mt-4 text-xs text-[#1D2D44]/50">
               By subscribing, you agree to receive marketing emails from Pickleball Passport. Unsubscribe anytime.
             </p>
           </div>
@@ -168,7 +168,7 @@ export function Footer() {
       </div>
 
       {/* Main Footer Content - Deep ocean */}
-      <div className="bg-gradient-to-b from-[#003D5C] to-[#002B42] text-white relative">
+      <div className="bg-gradient-to-b from-[#1D2D44] to-[#002B42] text-white relative">
         {/* Decorative wave pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full" style={{
@@ -184,21 +184,21 @@ export function Footer() {
             <div className="lg:col-span-2">
               <Link href="/" className="flex items-center space-x-3 mb-6 group">
                 <div className="relative">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#4AA4B5] to-[#003D5C] shadow-xl transition-transform group-hover:scale-105">
+                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#7587A5] to-[#1D2D44] shadow-xl transition-transform group-hover:scale-105">
                     <span className="text-2xl">🏓</span>
                   </div>
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#D4AF37] rounded-full animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#B08D55] rounded-full animate-pulse" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-serif text-2xl font-bold text-white">
                     Pickleball Passport
                   </span>
-                  <span className="text-sm text-[#D4AF37] font-medium tracking-wider">
+                  <span className="text-sm text-[#B08D55] font-medium tracking-wider">
                     Thailand Wellness
                   </span>
                 </div>
               </Link>
-              <p className="text-[#4AA4B5] mb-8 max-w-sm text-base leading-relaxed">
+              <p className="text-[#7587A5] mb-8 max-w-sm text-base leading-relaxed">
                 The ultimate pickleball getaway. Experience curated court time, luxury accommodations, and optional world-class medical care in Thailand.
               </p>
 
@@ -208,8 +208,8 @@ export function Footer() {
                   href="mailto:hello@pickleballpassport.com"
                   className="flex items-center space-x-4 text-white/80 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <Mail className="h-5 w-5 text-[#D4AF37]" />
+                  <div className="w-10 h-10 rounded-lg bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <Mail className="h-5 w-5 text-[#B08D55]" />
                   </div>
                   <span>hello@pickleballpassport.com</span>
                 </a>
@@ -217,14 +217,14 @@ export function Footer() {
                   href="tel:+15551234567"
                   className="flex items-center space-x-4 text-white/80 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center group-hover:bg-[#D4AF37]/30 transition-colors">
-                    <Phone className="h-5 w-5 text-[#D4AF37]" />
+                  <div className="w-10 h-10 rounded-lg bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <Phone className="h-5 w-5 text-[#B08D55]" />
                   </div>
                   <span>+1 (555) 123-4567</span>
                 </a>
                 <div className="flex items-center space-x-4 text-white/80">
-                  <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-[#D4AF37]" />
+                  <div className="w-10 h-10 rounded-lg bg-[#B08D55]/20 flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-[#B08D55]" />
                   </div>
                   <span>Chiang Mai, Thailand</span>
                 </div>
@@ -236,7 +236,7 @@ export function Footer() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="w-12 h-12 rounded-xl bg-white/10 hover:bg-[#D4AF37] flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-12 h-12 rounded-xl bg-white/10 hover:bg-[#B08D55] flex items-center justify-center transition-all duration-300 hover:scale-110"
                     aria-label={item.name}
                   >
                     <item.icon className="h-5 w-5 text-white" />
@@ -247,7 +247,7 @@ export function Footer() {
 
             {/* Explore Links */}
             <div>
-              <h3 className="text-[#D4AF37] font-serif font-bold text-lg mb-6 flex items-center gap-2">
+              <h3 className="text-[#B08D55] font-serif font-bold text-lg mb-6 flex items-center gap-2">
                 <Waves className="w-5 h-5" />
                 Explore
               </h3>
@@ -256,9 +256,9 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-white/70 hover:text-[#D4AF37] transition-colors flex items-center gap-2 group"
+                      className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/50 group-hover:bg-[#D4AF37] transition-colors" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
                       {item.name}
                     </Link>
                   </li>
@@ -268,7 +268,7 @@ export function Footer() {
 
             {/* Company Links */}
             <div>
-              <h3 className="text-[#D4AF37] font-serif font-bold text-lg mb-6 flex items-center gap-2">
+              <h3 className="text-[#B08D55] font-serif font-bold text-lg mb-6 flex items-center gap-2">
                 <Sun className="w-5 h-5" />
                 Company
               </h3>
@@ -277,9 +277,9 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-white/70 hover:text-[#D4AF37] transition-colors flex items-center gap-2 group"
+                      className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/50 group-hover:bg-[#D4AF37] transition-colors" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
                       {item.name}
                     </Link>
                   </li>
@@ -289,7 +289,7 @@ export function Footer() {
 
             {/* Legal Links */}
             <div>
-              <h3 className="text-[#D4AF37] font-serif font-bold text-lg mb-6">
+              <h3 className="text-[#B08D55] font-serif font-bold text-lg mb-6">
                 Legal
               </h3>
               <ul className="space-y-4">
@@ -297,9 +297,9 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-white/70 hover:text-[#D4AF37] transition-colors flex items-center gap-2 group"
+                      className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/50 group-hover:bg-[#D4AF37] transition-colors" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
                       {item.name}
                     </Link>
                   </li>
@@ -318,12 +318,12 @@ export function Footer() {
               </p>
               <div className="flex items-center space-x-4 text-sm text-white/50">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                  <span className="w-2 h-2 rounded-full bg-[#B08D55]" />
                   JCI Accredited Facilities
                 </span>
                 <span className="hidden sm:inline text-white/30">|</span>
                 <span className="hidden sm:flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#4AA4B5]" />
+                  <span className="w-2 h-2 rounded-full bg-[#7587A5]" />
                   Licensed Medical Tourism
                 </span>
               </div>

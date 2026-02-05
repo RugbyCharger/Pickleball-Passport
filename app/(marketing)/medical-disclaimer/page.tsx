@@ -7,7 +7,7 @@ export default function MedicalDisclaimerPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#005580] text-white py-16">
+      <section className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">
             Medical Disclaimer
@@ -128,14 +128,14 @@ export default function MedicalDisclaimerPage() {
             </h2>
             <p className="text-gray-600 mb-4">
               If you have questions about this medical disclaimer, please contact us at{' '}
-              <a href="mailto:info@pickleballpassport.com" className="text-[#003D5C] hover:underline">
+              <a href="mailto:info@pickleballpassport.com" className="text-[#1D2D44] hover:underline">
                 info@pickleballpassport.com
               </a>.
             </p>
           </div>
 
           <div className="mt-12 pt-8 border-t">
-            <Link href="/" className="text-[#003D5C] hover:underline">
+            <Link href="/" className="text-[#1D2D44] hover:underline">
               &larr; Back to Home
             </Link>
           </div>
