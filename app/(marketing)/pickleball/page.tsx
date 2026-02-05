@@ -18,6 +18,7 @@ import {
   Plane,
   Trophy,
 } from 'lucide-react';
+import { PickleballIcon } from '@/components/ui/logo';
 
 const packages = [
   {
@@ -33,7 +34,6 @@ const packages = [
       'Dedicated concierge support',
     ],
     featured: false,
-    icon: '🏓',
     price: '$2,499',
   },
   {
@@ -164,8 +164,8 @@ export default function PickleballPage() {
                 >
                   {/* Card Header */}
                   <div className={`p-8 text-center ${pkg.featured ? 'bg-gradient-to-br from-[#F5E6D3]/50 to-white' : ''}`}>
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center text-3xl shadow-lg">
-                      {pkg.icon}
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] flex items-center justify-center shadow-lg overflow-hidden">
+                      <PickleballIcon size="lg" />
                     </div>
                     <h3 className="text-2xl font-serif font-bold text-[#1D2D44] mb-2">
                       {pkg.name}

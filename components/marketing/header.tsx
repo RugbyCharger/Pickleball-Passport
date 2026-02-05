@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, Sparkles } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
+import { LogoIcon } from '@/components/ui/logo';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -60,13 +61,11 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="group flex items-center space-x-3">
-              {/* Logo mark with tropical gradient */}
+              {/* Logo mark */}
               <div className="relative">
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#1D2D44] to-[#7587A5] shadow-lg shadow-[#1D2D44]/20 transition-transform group-hover:scale-105">
-                  <span className="text-2xl" role="img" aria-label="Pickleball">🏓</span>
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-[#1D2D44]/20 transition-transform group-hover:scale-105">
+                  <LogoIcon size="lg" />
                 </div>
-                {/* Golden shimmer accent */}
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#B08D55] rounded-full opacity-80 animate-pulse" />
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="font-serif text-xl font-bold text-[#1D2D44] tracking-tight">

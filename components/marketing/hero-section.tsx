@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Sun, Star, Trophy, Palmtree } from 'lucide-react';
+import { PickleballIcon } from '@/components/ui/logo';
 
 export function HeroSection() {
   return (
@@ -99,8 +100,8 @@ export function HeroSection() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <span className="text-2xl font-bold text-[#B08D55]">🏓</span>
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors overflow-hidden">
+                    <PickleballIcon size="lg" />
                   </div>
                   <div className="text-3xl font-bold text-white">Daily</div>
                   <div className="text-sm text-white/60 mt-1">Curated Play</div>

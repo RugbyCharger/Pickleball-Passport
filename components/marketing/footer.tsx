@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { LogoIcon } from '@/components/ui/logo';
 
 const navigation = {
   explore: [
@@ -184,10 +185,9 @@ export function Footer() {
             <div className="lg:col-span-2">
               <Link href="/" className="flex items-center space-x-3 mb-6 group">
                 <div className="relative">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-[#7587A5] to-[#1D2D44] shadow-xl transition-transform group-hover:scale-105">
-                    <span className="text-2xl">🏓</span>
+                  <div className="flex items-center justify-center w-14 h-14 rounded-xl overflow-hidden shadow-xl transition-transform group-hover:scale-105">
+                    <LogoIcon size="xl" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#B08D55] rounded-full animate-pulse" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-serif text-2xl font-bold text-white">

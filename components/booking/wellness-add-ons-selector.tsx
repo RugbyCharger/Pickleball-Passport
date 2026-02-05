@@ -16,6 +16,7 @@ import { useBookingStore } from '@/lib/stores/booking-store'
 import AddOnCard, { type AddOnData } from './add-on-card'
 import { AddOnCategory } from '@prisma/client'
 import { AlertCircle, Loader2 } from 'lucide-react'
+import { PickleballIcon } from '@/components/ui/logo'
 
 // Wellness add-on categories
 const WELLNESS_CATEGORIES = [
@@ -40,7 +41,7 @@ const WELLNESS_CATEGORIES = [
   {
     key: AddOnCategory.PICKLEBALL,
     label: 'Pickleball Training',
-    icon: '🏓',
+    icon: 'pickleball',
     color: 'green',
   },
 ] as const
@@ -230,7 +231,11 @@ export default function WellnessAddOnsSelector({
                 `}
               >
                 <span className="flex items-center gap-2">
-                  <span className="text-xl">{category.icon}</span>
+                  {category.icon === 'pickleball' ? (
+                    <PickleballIcon size="sm" />
+                  ) : (
+                    <span className="text-xl">{category.icon}</span>
+                  )}
                   <span>{category.label}</span>
                 </span>
                 <span
