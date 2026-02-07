@@ -52,21 +52,25 @@ export function HeroSection() {
             The Ultimate{' '}
             <span className="relative inline-block">
               <span className="text-tropical-gradient bg-gradient-to-r from-[#B08D55] via-[#CFB78D] to-[#B08D55] bg-clip-text text-transparent">
-                Pickleball Vacation
+                Reset
               </span>
               <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
                 <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#B08D55" strokeWidth="3" strokeLinecap="round"/>
               </svg>
             </span>
             <br />
-            <span className="text-[#F5E6D3]">in Thailand</span>
+            <span className="text-[#F5E6D3]">Elite Play & Total Recovery</span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            We curate unforgettable 8 and 13-day journeys featuring daily pickleball, 
-            boutique accommodations, and full concierge support. 
-            <span className="font-bold text-[#B08D55]"> Pickleball is the star of the show.</span>
+            A curated 3-city journey through Bangkok, Chiang Mai and Phuket that bridges
+            world-class competitive pickleball with Thailand&apos;s leading-edge medical tourism.
+          </p>
+
+          {/* Supporting Line */}
+          <p className="text-lg sm:text-xl font-bold text-[#B08D55]">
+            Pickleball is the star. Transformation is the result.
           </p>
 
           {/* CTA Buttons */}

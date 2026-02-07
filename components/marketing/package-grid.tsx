@@ -11,7 +11,7 @@ const pickleballPackages = [
     name: '8-Day Pickleball Paradise',
     tagline: 'The Essential Experience',
     duration: '8 Days',
-    basePrice: 2499,
+    basePrice: 2888,
     highlights: [
       'Daily curated open play & clinics',
       'Luxury 4-5 star accommodation',

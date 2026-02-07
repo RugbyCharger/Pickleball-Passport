@@ -34,7 +34,7 @@ const packages = [
       'Dedicated concierge support',
     ],
     featured: false,
-    price: '$2,499',
+    price: '$2,888',
   },
   {
     name: '13-Day Ultimate Tour',
