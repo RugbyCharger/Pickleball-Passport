@@ -1,6 +1,6 @@
 # Architecture
 
-**Analysis Date:** 2026-01-25
+**Analysis Date:** 2026-02-09 (updated with production deployment info)
 
 ## Pattern Overview
 
@@ -216,6 +216,65 @@
    - Email failures: Logged but don't block booking
    - Stripe failures: Return error to user for retry
    - SMS/WhatsApp: Queued for retry via Upstash
+
+## Deployment & Infrastructure
+
+**Production URL:** https://www.thepickleballpassport.org
+
+**Hosting:**
+- Platform: Vercel (Pro Trial)
+- Team: The Pickleball Passport
+- Project: pickleball-passport
+- Deployment: Auto-deploy from `main` branch on GitHub
+- Region: Vercel Edge Network (global CDN)
+
+**Domain Configuration:**
+- Primary: `www.thepickleballpassport.org`
+- Vercel URL: `pickleball-passport-*.vercel.app` (preview deployments)
+
+**Deployment Settings:**
+- Fluid Compute: Enabled
+- Deployment Protection: Enabled
+- Cold Start Prevention: Enabled
+- Skew Protection: Disabled
+
+**Database:**
+- Provider: Supabase (PostgreSQL)
+- Access: Prisma ORM via service role (bypasses RLS)
+- Connection: Pooled connection via `DATABASE_URL`, direct via `DIRECT_URL` for migrations
+
+**Cron Jobs (Vercel Cron):**
+| Job | Schedule | Route |
+|-----|----------|-------|
+| Post-trip emails | Daily 6 AM UTC | `/api/cron/send-post-trip-emails` |
+| Pre-trip emails | Daily 7 AM UTC | `/api/cron/send-pre-trip-emails` |
+| WhatsApp milestones | Daily 8 AM UTC | `/api/cron/whatsapp-milestones` |
+| Payment reminders | Daily 9 AM UTC | `/api/cron/send-payment-reminders` |
+| Charge installments | Daily 10 AM UTC | `/api/cron/charge-installments` |
+| Referral bonuses | Daily 11 AM UTC | `/api/cron/referral-completion-bonus` |
+| Expire gifts | Daily 12 PM UTC | `/api/cron/expire-gifts` |
+| Send scheduled gifts | Daily 4 PM UTC | `/api/cron/send-scheduled-gifts` |
+
+**Security Middleware (middleware.ts):**
+- Global rate limiting: 100 req/min per IP (Upstash Redis)
+- CSRF protection: Origin validation for mutation requests (POST/PUT/PATCH/DELETE)
+- Allowed origins: `thepickleballpassport.org`, `www.thepickleballpassport.org`, `*.vercel.app` (previews)
+- Bearer token requests bypass CSRF (mobile app)
+- Webhooks and cron routes bypass rate limiting (use signature verification)
+- Admin routes: Database role check via Prisma
+
+**Static SEO Files:**
+- `app/robots.ts` — blocks bots from `/dashboard/`, `/admin/`, `/api/`
+- `app/sitemap.ts` — lists public marketing pages
+
+**Environment Variables (Required in Vercel):**
+- `DATABASE_URL`, `DIRECT_URL` — Supabase PostgreSQL
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET` — Clerk auth
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — Stripe payments
+- `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL`, `SENDGRID_WEBHOOK_VERIFICATION_KEY` — SendGrid email
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` — Rate limiting
+- `CRON_SECRET` — Vercel cron job authentication
+- `WHATSAPP_WEBHOOK_VERIFY_TOKEN` — WhatsApp Business API
 
 ## Cross-Cutting Concerns
 
