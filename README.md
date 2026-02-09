@@ -735,7 +735,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ## 🔗 Links
 
 - **Repository**: [github.com/RugbyCharger/Pickleball-Passport](https://github.com/RugbyCharger/Pickleball-Passport)
-- **Production**: [pickleball-passport.vercel.app](https://pickleball-passport.vercel.app)
+- **Production**: [www.thepickleballpassport.org](https://www.thepickleballpassport.org)
 - **Strategy Guide**: [Strategy Discussion Guide](.planning/STRATEGY-DISCUSSION-GUIDE.md)
 
 ## 📝 Recent Updates

@@ -52,7 +52,7 @@ Progress: [███████████████████████
 
 See: .planning/MILESTONES.md
 
-**Production URL:** https://pickleball-passport.vercel.app
+**Production URL:** https://www.thepickleballpassport.org
 
 ## Performance Metrics
 

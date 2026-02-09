@@ -15,9 +15,8 @@ import type { NextRequest } from 'next/server';
  */
 export const ALLOWED_ORIGINS = {
   production: [
-    'https://pickleballpassport.com',
-    'https://www.pickleballpassport.com',
-    'https://app.pickleballpassport.com',
+    'https://thepickleballpassport.org',
+    'https://www.thepickleballpassport.org',
   ],
   // Vercel preview deployments
   preview: /^https:\/\/.*\.vercel\.app$/,

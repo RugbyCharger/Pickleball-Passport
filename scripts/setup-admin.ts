@@ -26,7 +26,7 @@ async function setupAdmin(email: string) {
     if (!user) {
       console.log('❌ User not found in database.');
       console.log('\n📋 Next steps:');
-      console.log('1. Sign up at https://pickleball-passport.vercel.app/sign-up');
+      console.log('1. Sign up at https://www.thepickleballpassport.org/sign-up');
       console.log('2. Re-run this script after signing up');
       console.log('\n⚠️  Make sure CLERK_WEBHOOK_SECRET is configured (see below)');
       return;

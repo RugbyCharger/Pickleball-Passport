@@ -31,7 +31,7 @@ Dropped all 24 overly permissive RLS policies ("Dev Access" and "Allow all for d
 - After: 0 WARN, 21 INFO (RLS Enabled No Policy)
 
 **App Functionality:**
-- Production URL: https://pickleball-passport.vercel.app
+- Production URL: https://www.thepickleballpassport.org
 - HTTP Status: 200 OK
 - Service role access: Working (Prisma continues to function)
 
