@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { trpc } from '@/lib/trpc/client'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -97,7 +96,6 @@ type ContactFormInput = z.infer<typeof contactFormSchema>
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [referenceNumber, setReferenceNumber] = useState<string | null>(null)
-  const { executeRecaptcha } = useGoogleReCaptcha()
 
   const {
     register,
@@ -134,23 +132,8 @@ export default function ContactPage() {
   })
 
   const onSubmit = async (data: ContactFormInput) => {
-    if (!executeRecaptcha) {
-      toast.error('reCAPTCHA not loaded. Please refresh the page.')
-      return
-    }
-
     try {
-      const recaptchaToken = await executeRecaptcha('contact_form')
-
-      if (!recaptchaToken) {
-        toast.error('reCAPTCHA verification failed. Please try again.')
-        return
-      }
-
-      await contactMutation.mutateAsync({
-        ...data,
-        recaptchaToken,
-      })
+      await contactMutation.mutateAsync(data)
     } catch (error) {
       console.error('Contact form submission error:', error)
     }
@@ -463,29 +446,6 @@ export default function ContactPage() {
                     )}
                   </div>
 
-                  {/* reCAPTCHA Notice */}
-                  <p className="text-xs text-[#1D2D44]/50">
-                    This site is protected by reCAPTCHA and the Google{' '}
-                    <a
-                      href="https://policies.google.com/privacy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
-                    >
-                      Privacy Policy
-                    </a>{' '}
-                    and{' '}
-                    <a
-                      href="https://policies.google.com/terms"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
-                    >
-                      Terms of Service
-                    </a>{' '}
-                    apply.
-                  </p>
-
                   {/* Submit Button */}
                   <Button
                     type="submit"
@@ -522,7 +482,7 @@ export default function ContactPage() {
 
                 <div className="space-y-5">
                   <a
-                    href="mailto:hello@pickleballpassport.com"
+                    href="mailto:jaron@thepickleballpassport.org"
                     className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#F5E6D3]/50 transition-colors group"
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#B08D55]/30 group-hover:to-[#CFB78D]/30 transition-colors">
@@ -531,7 +491,7 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Email</p>
                       <p className="text-[#1D2D44] font-medium group-hover:text-[#B08D55] transition-colors">
-                        hello@pickleballpassport.com
+                        jaron@thepickleballpassport.org
                       </p>
                     </div>
                   </a>
@@ -558,7 +518,7 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Office Hours</p>
                       <p className="text-[#1D2D44] font-medium">Monday - Friday</p>
-                      <p className="text-[#1D2D44]/70 text-sm">9am - 6pm EST</p>
+                      <p className="text-[#1D2D44]/70 text-sm">9:00 AM - 6:00 PM ICT (GMT+7)</p>
                     </div>
                   </div>
 
@@ -568,7 +528,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Location</p>
-                      <p className="text-[#1D2D44] font-medium">Chiang Mai, Thailand</p>
+                      <p className="text-[#1D2D44] font-medium">Bangkok, Thailand</p>
                       <p className="text-[#1D2D44]/70 text-sm">Experiences throughout Thailand</p>
                     </div>
                   </div>

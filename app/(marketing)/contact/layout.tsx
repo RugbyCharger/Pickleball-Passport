@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: 'Contact Us - Pickleball Passport',
     description:
       'Get in touch with Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
-    url: 'https://pickleballpassport.com/contact',
+    url: 'https://thepickleballpassport.org/contact',
     siteName: 'Pickleball Passport',
     type: 'website',
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
       'Get in touch with Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/contact',
+    canonical: 'https://thepickleballpassport.org/contact',
   },
 }
 
@@ -40,23 +40,23 @@ export default function ContactLayout({
             name: 'Contact Pickleball Passport',
             description:
               'Contact page for Pickleball Passport - transformation tourism packages in Thailand',
-            url: 'https://pickleballpassport.com/contact',
+            url: 'https://thepickleballpassport.org/contact',
             mainEntity: {
               '@type': 'Organization',
               name: 'Pickleball Passport',
-              url: 'https://pickleballpassport.com',
-              email: 'hello@pickleballpassport.com',
+              url: 'https://thepickleballpassport.org',
+              email: 'jaron@thepickleballpassport.org',
               telephone: '+1-555-123-4567',
               address: {
                 '@type': 'PostalAddress',
-                addressLocality: 'Chiang Mai',
+                addressLocality: 'Bangkok',
                 addressCountry: 'Thailand',
               },
               contactPoint: {
                 '@type': 'ContactPoint',
                 telephone: '+1-555-123-4567',
                 contactType: 'Customer Service',
-                email: 'hello@pickleballpassport.com',
+                email: 'jaron@thepickleballpassport.org',
                 availableLanguage: ['English'],
                 hoursAvailable: {
                   '@type': 'OpeningHoursSpecification',

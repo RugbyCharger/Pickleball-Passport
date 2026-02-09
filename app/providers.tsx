@@ -17,7 +17,6 @@ import { useState, Suspense } from 'react'
 import { trpc } from '@/lib/trpc/client'
 import superjson from 'superjson'
 import { Toaster } from 'sonner'
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import { AnalyticsProvider } from '@/components/analytics-provider'
 
 function getBaseUrl() {
@@ -52,24 +51,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''}
-      scriptProps={{
-        async: true,
-        defer: true,
-        appendTo: 'head',
-      }}
-    >
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={null}>
-            <AnalyticsProvider>
-              <Toaster position="top-right" richColors />
-              {children}
-            </AnalyticsProvider>
-          </Suspense>
-        </QueryClientProvider>
-      </trpc.Provider>
-    </GoogleReCaptchaProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <Suspense fallback={null}>
+          <AnalyticsProvider>
+            <Toaster position="top-right" richColors />
+            {children}
+          </AnalyticsProvider>
+        </Suspense>
+      </QueryClientProvider>
+    </trpc.Provider>
   )
 }

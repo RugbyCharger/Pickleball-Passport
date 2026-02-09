@@ -87,7 +87,7 @@ export default function ContactError({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {/* Email Card */}
             <a
-              href="mailto:hello@pickleballpassport.com"
+              href="mailto:jaron@thepickleballpassport.org"
               className="group bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 border border-[#B08D55]/10 hover:border-[#B08D55]/30 transition-all hover:shadow-2xl"
             >
               <div className="flex items-center gap-4 mb-4">
@@ -101,7 +101,7 @@ export default function ContactError({
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-[#B08D55] font-semibold">
-                  hello@pickleballpassport.com
+                  jaron@thepickleballpassport.org
                 </span>
                 <ArrowRight className="w-5 h-5 text-[#B08D55] group-hover:translate-x-1 transition-transform" />
               </div>
@@ -141,7 +141,7 @@ export default function ContactError({
                 Monday - Friday
               </p>
               <p className="text-[#1D2D44]/70">
-                9:00 AM - 6:00 PM EST
+                9:00 AM - 6:00 PM ICT (GMT+7)
               </p>
             </div>
 
@@ -156,7 +156,7 @@ export default function ContactError({
                   <h3 className="text-xl font-serif font-bold">Location</h3>
                 </div>
                 <p className="text-white font-medium text-lg">
-                  Chiang Mai, Thailand
+                  Bangkok, Thailand
                 </p>
                 <p className="text-white/70">
                   Experiences throughout Thailand

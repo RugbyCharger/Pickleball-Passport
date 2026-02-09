@@ -60,47 +60,9 @@ const createPublicTicketSchema = z.object({
     .max(5000, 'Message must be 5000 characters or less'),
   tripInterest: z.string().optional(),
   timeline: z.string().optional(),
-  recaptchaToken: z.string().min(1, 'reCAPTCHA verification failed'),
   // Honeypot field - should always be empty for real users
   website: z.string().optional(),
 });
-
-/**
- * Verify reCAPTCHA token with Google API
- */
-async function verifyRecaptcha(token: string): Promise<{
-  success: boolean;
-  score: number;
-  action: string;
-}> {
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-
-  if (!secretKey) {
-    apiLogger.error('RECAPTCHA_SECRET_KEY is not configured');
-    throw new Error('reCAPTCHA is not configured');
-  }
-
-  const verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-  const response = await fetch(verifyUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `secret=${secretKey}&response=${token}`,
-  });
-
-  if (!response.ok) {
-    throw new Error('reCAPTCHA verification request failed');
-  }
-
-  const data = await response.json();
-
-  return {
-    success: data.success || false,
-    score: data.score || 0,
-    action: data.action || '',
-  };
-}
 
 export const supportRouter = router({
   /**
@@ -202,7 +164,6 @@ export const supportRouter = router({
         message,
         tripInterest,
         timeline,
-        recaptchaToken,
         website,
       } = input;
 
@@ -230,54 +191,6 @@ export const supportRouter = router({
         throw new TRPCError({
           code: 'TOO_MANY_REQUESTS',
           message: 'Too many requests. Please try again in a minute.',
-        });
-      }
-
-      // Verify reCAPTCHA
-      try {
-        const recaptchaResult = await verifyRecaptcha(recaptchaToken);
-
-        if (!recaptchaResult.success) {
-          apiLogger.warn(
-            {
-              emailDomain: email.split('@')[1] || 'unknown',
-              action: recaptchaResult.action,
-            },
-            'reCAPTCHA verification failed'
-          );
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'reCAPTCHA verification failed. Please try again.',
-          });
-        }
-
-        // Check score threshold
-        if (recaptchaResult.score < 0.5) {
-          apiLogger.warn(
-            {
-              emailDomain: email.split('@')[1] || 'unknown',
-              score: recaptchaResult.score,
-            },
-            'reCAPTCHA score too low'
-          );
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'Spam detected. Please try again.',
-          });
-        }
-
-        apiLogger.info(
-          {
-            emailDomain: email.split('@')[1] || 'unknown',
-            score: recaptchaResult.score,
-          },
-          'reCAPTCHA verification passed'
-        );
-      } catch (error) {
-        if (error instanceof TRPCError) throw error;
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'reCAPTCHA verification failed',
         });
       }
 
