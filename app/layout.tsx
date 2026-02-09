@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Nunito_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Prevent static generation - ClerkProvider requires valid keys during build
@@ -95,6 +96,7 @@ export default function RootLayout({
             </div>
           </Providers>
           <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
