@@ -75,9 +75,6 @@ export function Header() {
                   Thailand Wellness
                 </span>
               </div>
-              <span className="font-serif text-xl font-bold text-[#1D2D44] sm:hidden">
-                PP
-              </span>
             </Link>
           </div>
 
