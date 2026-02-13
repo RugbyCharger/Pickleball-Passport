@@ -11,7 +11,7 @@ import { LogoIcon } from '@/components/ui/logo';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Trips', href: '/trips' },
-  { name: 'FAQ', href: '/faq' },
+  { name: 'Wellness & Medical', href: '/medical-tourism' },
   { name: 'How It Works', href: '/how-it-works' },
   { name: 'About Us', href: '/about' },
   { name: 'Partners', href: '/partners' },

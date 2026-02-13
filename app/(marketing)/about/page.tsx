@@ -13,6 +13,7 @@ import {
   Waves,
   Star,
   Mail,
+  Linkedin,
 } from 'lucide-react';
 
 const differentiators = [
@@ -52,6 +53,7 @@ const founders = [
     role: 'Founder',
     avatar: 'JS',
     email: 'jaron@thepickleballpassport.org',
+    linkedin: 'https://www.linkedin.com/in/jaron-shoptaugh-ab675574/',
     bio: 'Jaron spent years in high-ticket sales and consulting before a transformative journey through South America shifted his perspective on what travel could be. He realized the best experiences aren\u2019t about where you go \u2014 they\u2019re about the community you build and the wellness you cultivate along the way. That insight became Pickleball Passport. Today, Jaron leads the company\u2019s vision from Bangkok, where he\u2019s hands-on with every itinerary, hotel relationship, and on-the-ground detail.',
   },
   {
@@ -59,6 +61,7 @@ const founders = [
     role: 'Chief Growth Officer',
     avatar: 'RM',
     email: 'ryan@thepickleballpassport.org',
+    linkedin: 'https://www.linkedin.com/in/ryan-magill-a407502b8/',
     bio: 'Ryan brings 15+ years of experience leading large-scale operations across energy, construction, and emerging tech. He\u2019s managed complex teams, navigated high-stakes environments, and built the kind of high-trust relationships that make ambitious projects happen. At Pickleball Passport, Ryan focuses on scaling international programs and the partner network \u2014 expanding global pathways for players, clubs, and brands to connect through unforgettable pickleball experiences.',
   },
 ];
@@ -212,12 +215,21 @@ export default function AboutPage() {
                 <p className="text-white/70 text-sm leading-relaxed mb-4">
                   {member.bio}
                 </p>
-                <div className="flex items-center justify-center gap-2 text-white/60 text-sm">
-                  <Mail className="w-4 h-4" />
+                <div className="flex items-center justify-center gap-4 text-white/60 text-sm">
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 hover:text-[#B08D55] transition-colors"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    LinkedIn
+                  </a>
                   <a
                     href={`mailto:${member.email}`}
-                    className="hover:text-[#B08D55] transition-colors"
+                    className="flex items-center gap-1.5 hover:text-[#B08D55] transition-colors"
                   >
+                    <Mail className="w-4 h-4" />
                     {member.email}
                   </a>
                 </div>
