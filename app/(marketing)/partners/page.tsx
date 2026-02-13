@@ -51,27 +51,27 @@ export default function PartnersPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
               <Handshake className="w-4 h-4 text-[#B08D55]" />
-              Partner Program
+              Pickleball Club Partner Program
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              Offer Your Members Life-Changing Experiences
+              Bring World-Class Travel to Your Pickleball Community
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Join our partner network and give your pickleball community access
-              to transformational wellness experiences in Thailand. Earn rewards,
-              free trips, and exclusive benefits while helping your members live
-              their best lives.
+              Join our partner network of pickleball clubs, leagues, and communities.
+              Offer your members exclusive access to curated international pickleball
+              travel experiences. Earn rewards and free trips while giving your players
+              something they can&apos;t get anywhere else.
             </p>
 
             {/* Trust Indicators */}
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mb-10">
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Users className="h-5 w-5 text-[#B08D55]" />
-                <span className="text-sm">150+ Partner Clubs</span>
+                <span className="text-sm">Growing Partner Network</span>
               </div>
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Star className="h-5 w-5 text-[#B08D55]" />
-                <span className="text-sm">98% Member Satisfaction</span>
+                <span className="text-sm">Trusted by Players Nationwide</span>
               </div>
             </div>
 
@@ -83,7 +83,7 @@ export default function PartnersPage() {
                   className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Become a Partner
+                  Apply to Partner
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -107,22 +107,18 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* Value Proposition Section */}
+      {/* Why Partner Section - 3 Cards */}
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-              Why Partner with Pickleball Passport?
+              Why Partner With Pickleball Passport?
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
-              We make it simple and rewarding to offer your members world-class
-              wellness transformations.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Turnkey Marketing */}
+            {/* Turnkey Promotion */}
             <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
               <div className="h-2 bg-gradient-to-r from-[#1D2D44] to-[#7587A5]" />
               <div className="p-8 text-center">
@@ -130,17 +126,17 @@ export default function PartnersPage() {
                   <FileText className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
-                  Turnkey Marketing
+                  Turnkey Promotion
                 </h3>
                 <p className="text-[#1D2D44]/70 leading-relaxed">
-                  Ready-made co-branded flyers, email templates, social media
-                  graphics, and presentation decks. Everything you need to
-                  promote to your members.
+                  We provide co-branded flyers, email templates, social media assets,
+                  and presentation decks. Everything you need to share upcoming trips
+                  with your members.
                 </p>
               </div>
             </div>
 
-            {/* Earn Rewards */}
+            {/* Earn Passport Points */}
             <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group md:-mt-4">
               <div className="h-2 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
               <div className="p-8 text-center">
@@ -148,17 +144,17 @@ export default function PartnersPage() {
                   <Trophy className="h-8 w-8 text-[#1D2D44]" />
                 </div>
                 <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
-                  Earn Rewards
+                  Earn Passport Points
                 </h3>
                 <p className="text-[#1D2D44]/70 leading-relaxed">
-                  Passport Points for every referral. Redeem for cash payouts,
-                  free trips, or premium marketing support. The more you refer,
-                  the more you earn.
+                  Earn Passport Points for every member who books through your club.
+                  Redeem for cash payouts, free trips, or premium marketing support.
+                  The more your members travel, the more you earn.
                 </p>
               </div>
             </div>
 
-            {/* Free Trips */}
+            {/* Experience It Yourself */}
             <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
               <div className="h-2 bg-gradient-to-r from-[#2D5A3D] to-[#3D7A52]" />
               <div className="p-8 text-center">
@@ -166,12 +162,12 @@ export default function PartnersPage() {
                   <Plane className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
-                  Free Trips
+                  Experience It Yourself
                 </h3>
                 <p className="text-[#1D2D44]/70 leading-relaxed">
-                  Qualify for complimentary transformation experiences yourself.
-                  Experience the program firsthand and bring a guest to our
-                  annual partner retreats.
+                  Qualifying partners earn complimentary trips to experience the
+                  program firsthand. Play in the same tournaments, stay at the same
+                  hotels, and see what your members will love — before you promote it.
                 </p>
               </div>
             </div>
@@ -179,7 +175,7 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* Passport Points System Section */}
+      {/* Who This Is For */}
       <section className="py-16 sm:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
         <div className="absolute inset-0 opacity-10">
@@ -191,13 +187,44 @@ export default function PartnersPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
+              Who This Is For
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              'Pickleball clubs and leagues looking to offer unique member benefits',
+              'Tournament directors and event organizers who want to expand into travel experiences',
+              'Pickleball content creators and ambassadors with engaged communities',
+              'Rec centers and sports facilities that want to offer international trip packages',
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#B08D55] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <CheckCircle className="h-5 w-5 text-[#1D2D44]" />
+                </div>
+                <p className="text-white/90 leading-relaxed">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Passport Points System Section */}
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
               Passport Points: Earn &amp; Redeem
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-white/70 max-w-3xl mx-auto">
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
               Our points-based rewards system makes it easy to track your earnings
               and redeem for valuable rewards.
             </p>
@@ -205,12 +232,12 @@ export default function PartnersPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             {/* How to Earn */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#B08D55] flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-[#1D2D44]" />
+                <div className="w-12 h-12 rounded-xl bg-[#1D2D44] flex items-center justify-center">
+                  <DollarSign className="h-6 w-6 text-[#B08D55]" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white">
+                <h3 className="text-2xl font-serif font-bold text-[#1D2D44]">
                   How to Earn Points
                 </h3>
               </div>
@@ -225,7 +252,7 @@ export default function PartnersPage() {
                     <div className="w-6 h-6 rounded-full bg-[#2D5A3D] flex items-center justify-center flex-shrink-0 mt-0.5">
                       <CheckCircle className="h-4 w-4 text-white" />
                     </div>
-                    <div className="text-white">
+                    <div className="text-[#1D2D44]">
                       <span className="font-bold text-[#B08D55]">{item.points} points</span>{' '}
                       {item.desc}
                     </div>
@@ -235,12 +262,12 @@ export default function PartnersPage() {
             </div>
 
             {/* How to Redeem */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-[#B08D55] flex items-center justify-center">
                   <Award className="h-6 w-6 text-[#1D2D44]" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-white">
+                <h3 className="text-2xl font-serif font-bold text-[#1D2D44]">
                   How to Redeem Points
                 </h3>
               </div>
@@ -251,10 +278,10 @@ export default function PartnersPage() {
                   { points: '2,000', desc: 'Premium marketing kit' },
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-full bg-[#B08D55]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Gift className="h-4 w-4 text-[#B08D55]" />
                     </div>
-                    <div className="text-white">
+                    <div className="text-[#1D2D44]">
                       <span className="font-bold text-[#B08D55]">{item.points} points</span> ={' '}
                       {item.desc}
                     </div>
@@ -279,98 +306,6 @@ export default function PartnersPage() {
               Plus ongoing commission based on your partner tier
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Tier Structure Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-              Partner Tiers &amp; Benefits
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
-              Grow your partnership and unlock better rewards. All tiers are based
-              on annual booking volume.
-            </p>
-          </div>
-
-          {/* Tier Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Bronze */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
-              <div className="h-2 bg-gradient-to-r from-[#CD7F32] to-[#A0642A]" />
-              <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#CD7F32] to-[#A0642A] flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                  B
-                </div>
-                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Bronze</h3>
-                <p className="text-sm text-[#1D2D44]/60 mb-4">Starting tier</p>
-                <div className="space-y-2 text-sm">
-                  <p className="text-[#1D2D44]"><span className="font-bold">5%</span> Commission</p>
-                  <p className="text-[#1D2D44]/60">Basic materials</p>
-                  <p className="text-[#1D2D44]/60">Email support</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Silver */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
-              <div className="h-2 bg-gradient-to-r from-[#C0C0C0] to-[#A8A8A8]" />
-              <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#C0C0C0] to-[#A8A8A8] flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                  S
-                </div>
-                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Silver</h3>
-                <p className="text-sm text-[#1D2D44]/60 mb-4">10+ bookings/year</p>
-                <div className="space-y-2 text-sm">
-                  <p className="text-[#1D2D44]"><span className="font-bold">7%</span> Commission</p>
-                  <p className="text-[#1D2D44]"><span className="font-bold">1</span> Free trip/year</p>
-                  <p className="text-[#1D2D44]/60">Priority support</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Gold */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border-2 border-[#B08D55] ring-4 ring-[#B08D55]/10">
-              <div className="h-2 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
-              <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center text-[#1D2D44] font-bold text-xl shadow-lg">
-                  G
-                </div>
-                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Gold</h3>
-                <p className="text-sm text-[#1D2D44]/60 mb-4">25+ bookings/year</p>
-                <div className="space-y-2 text-sm">
-                  <p className="text-[#1D2D44]"><span className="font-bold">10%</span> Commission</p>
-                  <p className="text-[#1D2D44]"><span className="font-bold">2</span> Free trips/year</p>
-                  <p className="text-[#1D2D44]/60">Co-marketing opportunities</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Platinum */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
-              <div className="h-2 bg-gradient-to-r from-[#E5E4E2] to-[#B8B8B8]" />
-              <div className="p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#E5E4E2] to-[#B8B8B8] flex items-center justify-center text-[#1D2D44] font-bold text-xl shadow-lg">
-                  P
-                </div>
-                <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-1">Platinum</h3>
-                <p className="text-sm text-[#1D2D44]/60 mb-4">50+ bookings/year</p>
-                <div className="space-y-2 text-sm">
-                  <p className="text-[#1D2D44]"><span className="font-bold">12%</span> Commission</p>
-                  <p className="text-[#1D2D44]"><span className="font-bold">4</span> Free trips/year</p>
-                  <p className="text-[#1D2D44]/60">VIP access & events</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-sm text-[#1D2D44]/50 text-center mt-8">
-            All partners start at Bronze. Tiers are evaluated annually based on
-            the previous 12 months of bookings.
-          </p>
         </div>
       </section>
 
@@ -403,7 +338,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-[#1D2D44]/70">
                     Create your partner account in just 2 minutes. No approval
-                    wait time—instant access to your dashboard and marketing
+                    wait time — instant access to your dashboard and marketing
                     materials.
                   </p>
                 </div>
@@ -436,82 +371,10 @@ export default function PartnersPage() {
                     Earn
                   </h3>
                   <p className="text-[#1D2D44]/70">
-                    Get rewarded when your members book transformations. Points are
+                    Get rewarded when your members book trips. Points are
                     credited instantly, and you can track earnings in real-time via
                     your partner dashboard.
                   </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Partner Testimonials Section */}
-      <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10">
-            <Palmtree className="w-24 h-24 text-white" />
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
-              What Our Partners Say
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Testimonial 1 */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-[#B08D55] text-[#B08D55]" />
-                ))}
-              </div>
-              <p className="text-[#1D2D44]/80 italic mb-6 leading-relaxed">
-                &ldquo;We&apos;ve sent 12 members on transformations this year. The
-                marketing materials make it easy, and the free trips are
-                amazing! Our members absolutely love the experiences, and we&apos;re
-                earning rewards every month.&rdquo;
-              </p>
-              <div className="flex items-center justify-between pt-4 border-t border-[#B08D55]/10">
-                <div>
-                  <p className="font-semibold text-[#1D2D44]">Jennifer K.</p>
-                  <p className="text-sm text-[#1D2D44]/60">
-                    The Villages Pickleball Club
-                  </p>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center text-[#1D2D44] font-bold shadow-lg">
-                  G
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-[#B08D55]/10">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-[#B08D55] text-[#B08D55]" />
-                ))}
-              </div>
-              <p className="text-[#1D2D44]/80 italic mb-6 leading-relaxed">
-                &ldquo;Easiest partnership we&apos;ve ever joined. Our members love it,
-                and we&apos;re earning rewards every month. The support team is
-                fantastic, and the program basically runs itself.&rdquo;
-              </p>
-              <div className="flex items-center justify-between pt-4 border-t border-[#B08D55]/10">
-                <div>
-                  <p className="font-semibold text-[#1D2D44]">Mike R.</p>
-                  <p className="text-sm text-[#1D2D44]/60">
-                    Scottsdale Pickleball Center
-                  </p>
-                </div>
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#C0C0C0] to-[#A8A8A8] flex items-center justify-center text-white font-bold shadow-lg">
-                  S
                 </div>
               </div>
             </div>
@@ -531,12 +394,11 @@ export default function PartnersPage() {
                 <Handshake className="w-8 h-8 text-[#1D2D44]" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-                Ready to Transform Your Members&apos; Lives?
+                Ready to Offer Your Members the Trip of a Lifetime?
               </h2>
               <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
-                Join 150+ partner clubs earning rewards while offering their members
-                life-changing wellness experiences. No cost to join, instant access,
-                and unlimited earning potential.
+                Apply to join our partner program. We&apos;ll set you up with everything
+                you need to start promoting trips to your community.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/partner/signup">
@@ -545,24 +407,18 @@ export default function PartnersPage() {
                     className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                   >
                     <Sparkles className="mr-2 h-5 w-5" />
-                    Become a Partner Now
+                    Apply to Partner
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <a
-                  href="/downloads/partner-kit.pdf"
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Button
+                  onClick={() => scrollToSection('how-it-works')}
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
                 >
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white px-10 py-7 text-lg rounded-xl font-semibold"
-                  >
-                    Download Partner Kit
-                  </Button>
-                </a>
+                  Learn More
+                </Button>
               </div>
             </div>
           </div>

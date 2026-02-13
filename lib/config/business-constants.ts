@@ -83,6 +83,21 @@ export const INSTALLMENT_CONFIG = {
   },
 } as const
 
+/**
+ * 20% deposit payment plan configuration
+ * Used for trip-page bookings (e.g., Thailand trip)
+ */
+export const DEPOSIT_20_CONFIG = {
+  /** Deposit percentage (20%) */
+  DEPOSIT_PERCENTAGE: 0.20,
+
+  /** Remainder percentage (80%) */
+  REMAINDER_PERCENTAGE: 0.80,
+
+  /** Days before trip that remainder is due */
+  REMAINDER_DUE_DAYS_BEFORE_TRIP: 30,
+} as const
+
 // ============================================================================
 // REFUND POLICY
 // ============================================================================
@@ -174,7 +189,7 @@ export const GUEST_REFERRAL_POINTS_CONFIG = {
 /**
  * Valid trip duration options (in days)
  */
-export const VALID_DURATIONS = [7, 10, 14, 21] as const
+export const VALID_DURATIONS = [7, 10, 13, 14, 21] as const
 
 /**
  * Base duration for price calculation (prices are scaled proportionally)

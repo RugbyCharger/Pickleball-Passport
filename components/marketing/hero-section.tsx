@@ -49,28 +49,32 @@ export function HeroSection() {
 
           {/* Main Headline */}
           <h1 className="text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-white">
-            The Ultimate{' '}
+            Play the{' '}
             <span className="relative inline-block">
               <span className="text-tropical-gradient bg-gradient-to-r from-[#B08D55] via-[#CFB78D] to-[#B08D55] bg-clip-text text-transparent">
-                Reset
+                World
               </span>
               <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
                 <path d="M1 5.5C40 2 80 2 100 4C120 6 160 6 199 3" stroke="#B08D55" strokeWidth="3" strokeLinecap="round"/>
               </svg>
             </span>
-            <br />
-            <span className="text-[#F5E6D3]">Elite Play & Total Recovery</span>
           </h1>
+
+          {/* Subline */}
+          <p className="text-xl sm:text-2xl md:text-3xl font-medium text-[#F5E6D3]">
+            Elite Pickleball. Unforgettable Destinations.
+          </p>
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            A curated 3-city journey through Bangkok, Chiang Mai and Phuket that bridges
-            world-class competitive pickleball with Thailand&apos;s leading-edge medical tourism.
+            A curated 3-city journey through Bangkok, Chiang Mai, and Phuket. World-class
+            pickleball, boutique hotels, cultural immersion, and the wellness reset you&apos;ve
+            been waiting for.
           </p>
 
-          {/* Supporting Line */}
+          {/* Tagline */}
           <p className="text-lg sm:text-xl font-bold text-[#B08D55]">
-            Pickleball is the star. Transformation is the result.
+            Pickleball is the passport. The experience is the destination.
           </p>
 
           {/* CTA Buttons */}
@@ -80,9 +84,9 @@ export function HeroSection() {
               size="lg"
               className="text-lg px-10 py-7 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold shadow-xl shadow-[#B08D55]/30 transition-all hover:shadow-2xl hover:shadow-[#B08D55]/40 hover:scale-105 rounded-xl"
             >
-              <Link href="/pickleball">
+              <Link href="/trips/thailand">
                 <Sparkles className="mr-2 h-5 w-5" />
-                View Trips
+                Explore Thailand
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

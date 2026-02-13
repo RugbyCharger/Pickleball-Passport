@@ -168,8 +168,8 @@ export default function PartnerSetupPage() {
             Become a Partner
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Join 150+ pickleball clubs earning rewards for referring members. Create your account in 2
-            minutes and start earning Passport Points today.
+            Join our growing network of pickleball clubs earning rewards for referring members. Create
+            your account in 2 minutes and start earning Passport Points today.
           </p>
         </div>
 

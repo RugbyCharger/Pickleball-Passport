@@ -33,7 +33,8 @@ import {
 
 // Types based on Prisma schema
 export type AccommodationTier = 'LUXURY' | 'ULTRA_LUXURY' | 'VILLA'
-export type PaymentPlan = 'FULL' | 'INSTALLMENT_4' | 'FINANCING'
+export type PaymentPlan = 'FULL' | 'INSTALLMENT_4' | 'FINANCING' | 'DEPOSIT_20'
+export type RoomOccupancy = 'SINGLE' | 'DOUBLE' | 'COUPLE'
 
 export interface SelectedPackage {
   id: string
@@ -159,6 +160,10 @@ export interface BookingState {
   giftDeliveryOption: 'immediate' | 'scheduled'
   giftDeliveryDate: Date | null
 
+  // Trip Page Booking (Phase 2)
+  occupancy: RoomOccupancy
+  includesPickleball: boolean
+
   // Actions
   setCurrentStep: (step: number) => void
   nextStep: () => void
@@ -224,6 +229,10 @@ export interface BookingState {
   setGiftDeliveryDate: (date: Date | null) => void
   validateGiftBooking: () => { isValid: boolean; errors: string[] }
 
+  // Trip page booking actions
+  setOccupancy: (occupancy: RoomOccupancy) => void
+  setIncludesPickleball: (includes: boolean) => void
+
   // Pricing calculations
   calculateSubtotal: () => number
   calculateSavings: () => number
@@ -269,6 +278,8 @@ const initialState = {
   giftMessage: '',
   giftDeliveryOption: 'immediate' as 'immediate' | 'scheduled',
   giftDeliveryDate: null,
+  occupancy: 'DOUBLE' as RoomOccupancy,
+  includesPickleball: true,
 }
 
 export const useBookingStore = create<BookingState>()(
@@ -757,6 +768,10 @@ export const useBookingStore = create<BookingState>()(
         }
       },
 
+      // Trip page booking actions
+      setOccupancy: (occupancy: RoomOccupancy) => set({ occupancy }),
+      setIncludesPickleball: (includes: boolean) => set({ includesPickleball: includes }),
+
       // Reset to initial state
       reset: () => set(initialState),
     }),
@@ -790,6 +805,9 @@ export const useBookingStore = create<BookingState>()(
         giftMessage: state.giftMessage,
         giftDeliveryOption: state.giftDeliveryOption,
         giftDeliveryDate: state.giftDeliveryDate,
+        // Trip page booking state
+        occupancy: state.occupancy,
+        includesPickleball: state.includesPickleball,
         // Modification mode state excluded from persistence
         // Exchange rates NOT persisted (fetched fresh)
       }),

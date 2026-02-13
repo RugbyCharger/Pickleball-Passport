@@ -10,8 +10,8 @@ import { LogoIcon } from '@/components/ui/logo';
 
 const navigation = [
   { name: 'Home', href: '/' },
-  { name: 'Pickleball', href: '/pickleball' },
-  { name: 'Medical Tourism', href: '/medical-tourism' },
+  { name: 'Trips', href: '/trips' },
+  { name: 'Wellness & Medical', href: '/medical-tourism' },
   { name: 'How It Works', href: '/how-it-works' },
   { name: 'Testimonials', href: '/testimonials' },
   { name: 'Partners', href: '/partners' },

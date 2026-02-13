@@ -196,7 +196,7 @@ export default function PickleballPage() {
                         </li>
                       ))}
                     </ul>
-                    <Link href={`/apply`} className="block">
+                    <Link href="/trips/thailand" className="block">
                       <Button
                         className={`w-full h-14 rounded-xl font-semibold text-base transition-all ${
                           pkg.featured
@@ -300,12 +300,12 @@ export default function PickleballPage() {
             Book your spot today and get ready for the trip of a lifetime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/apply">
+            <Link href="/trips/thailand">
               <Button
                 size="lg"
                 className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
               >
-                Apply Now
+                View Thailand Trip
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
