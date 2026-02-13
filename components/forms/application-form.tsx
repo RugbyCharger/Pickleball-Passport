@@ -290,7 +290,11 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
                 {['beginner', 'intermediate', 'advanced', 'pro'].map((level) => (
                   <label
                     key={level}
-                    className="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors"
+                    className={`relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      watch('pickleballSkillLevel') === level
+                        ? 'border-emerald-600 bg-emerald-50'
+                        : 'border-slate-200 hover:border-emerald-300'
+                    }`}
                   >
                     <input
                       type="radio"
@@ -313,7 +317,11 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
                 {['1-2x/week', '3-4x/week', '5+x/week', 'daily'].map((freq) => (
                   <label
                     key={freq}
-                    className="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors"
+                    className={`relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      watch('pickleballFrequency') === freq
+                        ? 'border-emerald-600 bg-emerald-50'
+                        : 'border-slate-200 hover:border-emerald-300'
+                    }`}
                   >
                     <input
                       type="radio"
@@ -401,7 +409,11 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
                 {['7', '10', '14', '21'].map((days) => (
                   <label
                     key={days}
-                    className="relative flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors"
+                    className={`relative flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      watch('preferredDuration') === days
+                        ? 'border-emerald-600 bg-emerald-50'
+                        : 'border-slate-200 hover:border-emerald-300'
+                    }`}
                   >
                     <input
                       type="radio"
