@@ -55,14 +55,25 @@ export function TripsListingPage() {
       <section className="py-12 sm:py-20 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Thailand - Active */}
+            {/* Thailand 13-Day - Active */}
             <TripCard
               destination="THAILAND"
               subtitle="Bangkok &bull; Chiang Mai &bull; Phuket"
-              dates="[TBD based on operator confirmation]"
-              price="From $[TBD]"
+              dates="May 15 – 27, 2026"
+              price="From $3,999"
               badge="13 Days / 12 Nights"
               href="/trips/thailand"
+              status="available"
+            />
+
+            {/* Thailand 8-Day - Active */}
+            <TripCard
+              destination="THAILAND"
+              subtitle="Bangkok &bull; Chiang Mai"
+              dates="May 15 – 22, 2026"
+              price="From $2,888"
+              badge="8 Days / 7 Nights"
+              href="/trips/thailand-8-day"
               status="available"
             />
 
@@ -72,19 +83,23 @@ export function TripsListingPage() {
               subtitle="Ubud &bull; Seminyak &bull; Uluwatu"
             />
 
-            {/* Portugal - Coming Soon */}
+            {/* Vietnam - Coming Soon */}
             <ComingSoonCard
-              destination="PORTUGAL"
-              subtitle="Lisbon &bull; Algarve &bull; Porto"
+              destination="VIETNAM"
+              subtitle="Ho Chi Minh City &bull; Hoi An &bull; Hanoi"
             />
 
-            {/* Japan - Coming Soon (hidden on some breakpoints to keep grid clean) */}
-            <div className="md:col-span-2 lg:col-span-1 md:max-w-md md:mx-auto lg:max-w-none">
-              <ComingSoonCard
-                destination="JAPAN"
-                subtitle="Tokyo &bull; Kyoto &bull; Osaka"
-              />
-            </div>
+            {/* Malaysia - Coming Soon */}
+            <ComingSoonCard
+              destination="MALAYSIA"
+              subtitle="Kuala Lumpur &bull; Langkawi &bull; Penang"
+            />
+
+            {/* Japan - Coming Soon */}
+            <ComingSoonCard
+              destination="JAPAN"
+              subtitle="Tokyo &bull; Kyoto &bull; Osaka"
+            />
           </div>
         </div>
       </section>

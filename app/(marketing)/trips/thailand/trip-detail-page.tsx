@@ -1,6 +1,7 @@
 'use client';
 
-import { Sparkles, MapPin, Calendar, Users, Trophy } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
 
 export function TripDetailPage() {
@@ -77,6 +78,22 @@ export function TripDetailPage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout />
+
+      {/* Cross-link to 8-day trip */}
+      <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-white/80 text-lg mb-3">
+            Looking for a shorter trip?
+          </p>
+          <Link
+            href="/trips/thailand-8-day"
+            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold text-xl transition-colors"
+          >
+            Check out our 8-Day Pickleball Paradise
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,24 +1,21 @@
 import { HeroSection } from '@/components/marketing/hero-section';
-import { PackageSection } from '@/components/marketing/package-grid';
-import { TestimonialSection } from '@/components/marketing/testimonial-section';
-import MedicalCostCalculator from '@/components/marketing/medical-cost-calculator';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Luxury Wellness & Pickleball Experiences in Thailand | Pickleball Passport',
-  description: 'Transform your life with luxury wellness packages combining pickleball, medical tourism, and spiritual experiences in Thailand. Join our exclusive community of wellness seekers.',
-  keywords: ['pickleball', 'wellness', 'medical tourism', 'Thailand', 'transformation', 'luxury wellness', 'dental tourism', 'pickleball retreat'],
+  title: 'Premier Pickleball Travel Experiences | Pickleball Passport',
+  description: 'Elite pickleball travel experiences in Thailand. Boutique hotels, world-class courts, cultural immersion, and unforgettable destinations. Launching May 2026.',
+  keywords: ['pickleball', 'pickleball travel', 'Thailand', 'pickleball retreat', 'pickleball vacation', 'boutique hotels', 'cultural immersion'],
   openGraph: {
-    title: 'Pickleball Passport - Luxury Wellness Experiences in Thailand',
-    description: 'Life-changing wellness packages combining pickleball, medical procedures, and spiritual transformation in Thailand.',
-    url: 'https://pickleballpassport.com',
+    title: 'Pickleball Passport - Play the World',
+    description: 'Elite pickleball travel experiences. Boutique hotels, world-class courts, and cultural immersion in Thailand.',
+    url: 'https://www.thepickleballpassport.org',
     siteName: 'Pickleball Passport',
     images: [
       {
         url: '/og-images/homepage.jpg',
         width: 1200,
         height: 630,
-        alt: 'Pickleball Passport - Luxury Wellness in Thailand',
+        alt: 'Pickleball Passport - Play the World',
       },
     ],
     locale: 'en_US',
@@ -26,14 +23,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pickleball Passport - Luxury Wellness Experiences in Thailand',
-    description: 'Life-changing wellness packages combining pickleball, medical procedures, and spiritual transformation in Thailand.',
+    title: 'Pickleball Passport - Play the World',
+    description: 'Elite pickleball travel experiences. Boutique hotels, world-class courts, and cultural immersion in Thailand.',
     images: ['/og-images/homepage.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com',
+    canonical: 'https://www.thepickleballpassport.org',
   },
   robots: {
     index: true,
@@ -45,14 +42,6 @@ export default function Home() {
   return (
     <>
       <HeroSection />
-      <PackageSection />
-
-      <TestimonialSection />
-
-      {/* Future sections will be added here:
-        - How it works
-        - FAQ preview
-      */}
     </>
   );
 }

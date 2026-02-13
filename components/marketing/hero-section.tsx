@@ -67,9 +67,8 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            A curated 3-city journey through Bangkok, Chiang Mai, and Phuket. World-class
-            pickleball, boutique hotels, cultural immersion, and the wellness reset you&apos;ve
-            been waiting for.
+            Our flagship Thailand experience launches May 15, 2026. Three cities. Boutique hotels.
+            World-class pickleball. Cultural immersion. The wellness reset you&apos;ve been waiting for.
           </p>
 
           {/* Tagline */}
@@ -91,16 +90,6 @@ export function HeroSection() {
               </Link>
             </Button>
 
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="text-lg px-10 py-7 border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:border-white/50 transition-all rounded-xl"
-            >
-              <Link href="/how-it-works">
-                Learn More
-              </Link>
-            </Button>
           </div>
 
           {/* Trust Indicators */}

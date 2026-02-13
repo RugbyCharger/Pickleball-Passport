@@ -48,6 +48,7 @@ export const applicationRouter = router({
 
         // Step 5: Discovery
         referralSource: z.string().min(1),
+        referredByPartner: z.string().nullable().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -111,6 +112,7 @@ export const applicationRouter = router({
             travelingAlone: input.travelingAlone,
             budgetRange: input.budgetRange,
             referralSource: input.referralSource,
+            referredByPartner: input.referredByPartner || null,
             referralCode: referralCode, // Epic 10: Store referral code
             // Epic 10 - US-007: Store UTM params
             utmSource,

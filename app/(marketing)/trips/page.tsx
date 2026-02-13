@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Upcoming Pickleball Trips | Pickleball Passport',
     description:
-      'Curated pickleball travel experiences across Thailand, Bali, Portugal, and Japan.',
+      'Curated pickleball travel experiences across Thailand, Bali, Vietnam, Malaysia, and Japan.',
     url: 'https://www.thepickleballpassport.org/trips',
     siteName: 'Pickleball Passport',
     locale: 'en_US',

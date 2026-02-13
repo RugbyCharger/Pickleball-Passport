@@ -11,9 +11,9 @@ import { LogoIcon } from '@/components/ui/logo';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Trips', href: '/trips' },
-  { name: 'Wellness & Medical', href: '/medical-tourism' },
+  { name: 'FAQ', href: '/faq' },
   { name: 'How It Works', href: '/how-it-works' },
-  { name: 'Testimonials', href: '/testimonials' },
+  { name: 'About Us', href: '/about' },
   { name: 'Partners', href: '/partners' },
 ];
 
@@ -72,7 +72,7 @@ export function Header() {
                   Pickleball Passport
                 </span>
                 <span className="text-xs text-[#B08D55] font-medium tracking-widest uppercase">
-                  Thailand Wellness
+                  Play the World
                 </span>
               </div>
             </Link>

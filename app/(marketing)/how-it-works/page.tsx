@@ -19,35 +19,34 @@ import {
   Waves,
   MapPin,
   Trophy,
-  Stethoscope,
 } from 'lucide-react';
 
 const steps = [
   {
     number: 1,
-    title: 'Choose Your Experience',
-    description: 'Decide if you want a dedicated pickleball tour, a medical tourism trip, or the full package combining both.',
+    title: 'Choose Your Trip',
+    description: 'Pick the experience that fits your schedule — our 8-day essential or 13-day ultimate Thailand tour.',
     icon: Sparkles,
     gradient: 'from-[#1D2D44] to-[#7587A5]',
   },
   {
     number: 2,
-    title: 'Consult & Plan',
-    description: 'Speak with our team to customize your itinerary, book courts, and coordinate any medical appointments.',
+    title: 'Apply & Plan',
+    description: 'Submit a quick application. Our team will reach out to answer questions and help you prepare for the trip.',
     icon: Calendar,
     gradient: 'from-[#B08D55] to-[#CFB78D]',
   },
   {
     number: 3,
     title: 'Travel & Play',
-    description: 'Arrive in Thailand where our concierge team handles everything. Enjoy luxury stays and daily pickleball.',
+    description: 'Arrive in Thailand where our on-the-ground team handles everything. Boutique hotels, daily pickleball, and cultural immersion.',
     icon: Plane,
     gradient: 'from-[#2D5A3D] to-[#3D7A52]',
   },
   {
     number: 4,
     title: 'Return Renewed',
-    description: 'Head home with improved skills, a rejuvenated body, and unforgettable memories.',
+    description: 'Head home with improved skills, new friendships, and unforgettable memories from across Thailand.',
     icon: Heart,
     gradient: 'from-[#E07A5F] to-[#F09B8A]',
   },
@@ -85,19 +84,19 @@ const beforeTrip = [
 ];
 
 const duringStay = [
-  'Airport VIP pickup & transfers',
-  '24/7 concierge support',
-  'Daily organized open play',
-  'Medical appointments (if applicable)',
-  'Cultural experiences & dining',
+  'Airport pickup & private transfers',
+  'Dedicated trip host on the ground',
+  '6 structured pickleball sessions',
+  'Cultural excursions, temple tours & street food walks',
+  'Wellness recovery: onsen, spa, pool access',
 ];
 
 const afterReturn = [
   'Photo & video gallery access',
-  'Medical records transfer (if applicable)',
-  'Recovery support team',
-  'Alumni community access',
-  'Future trip priority booking',
+  'Alumni community access (private group)',
+  'Future trip priority booking & early-bird pricing',
+  'Partner referral rewards (earn Passport Points)',
+  'Recommendations for your next destination',
 ];
 
 export default function HowItWorksPage() {
@@ -139,78 +138,63 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* Choose Your Path Section (Flexibility) */}
+      {/* Choose Your Experience */}
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-              Choose Your Path
+              Choose Your Experience
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-[#1D2D44]/70 max-w-2xl mx-auto">
-              We offer three ways to experience Thailand. Choose what fits your goals.
+              Two ways to experience Thailand. Pick the trip that fits your schedule.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Pickleball Only */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* 8-Day Essential */}
             <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
               <div className="bg-[#1D2D44] p-6 text-center">
-                <Trophy className="w-12 h-12 text-[#B08D55] mx-auto mb-3" />
-                <h3 className="text-xl font-bold text-white">Pickleball Only</h3>
+                <Clock className="w-12 h-12 text-[#B08D55] mx-auto mb-3" />
+                <h3 className="text-xl font-bold text-white">8-Day Essential</h3>
+                <p className="text-white/60 text-sm mt-1">Bangkok &bull; Chiang Mai</p>
               </div>
               <div className="p-8 flex-1 flex flex-col">
                 <p className="text-[#1D2D44]/70 mb-6 text-center">
-                  Focus purely on the game. Enjoy daily play, tournaments, and luxury travel without any medical appointments.
+                  The perfect introduction. 4 pickleball sessions, 2 cities, boutique hotels, cultural excursions, and wellness recovery.
                 </p>
+                <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $2,888</p>
                 <div className="mt-auto">
-                  <Link href="/pickleball" className="block text-center text-[#1D2D44] font-semibold hover:text-[#B08D55]">
-                    Learn More &rarr;
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* The Full Passport (Both) */}
-            <div className="bg-white rounded-2xl shadow-2xl shadow-[#1D2D44]/20 overflow-hidden border-2 border-[#B08D55] transform md:-translate-y-4 flex flex-col relative">
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
-              <div className="absolute top-3 right-3">
-                 <span className="bg-[#B08D55] text-[#1D2D44] text-xs font-bold px-2 py-1 rounded-full">MOST POPULAR</span>
-              </div>
-              <div className="bg-gradient-to-b from-[#1D2D44] to-[#495F87] p-8 text-center">
-                <div className="flex justify-center gap-2 mb-3">
-                  <Trophy className="w-10 h-10 text-[#B08D55]" />
-                  <Stethoscope className="w-10 h-10 text-[#7587A5]" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">The Full Passport</h3>
-              </div>
-              <div className="p-8 flex-1 flex flex-col">
-                <p className="text-[#1D2D44]/70 mb-6 text-center text-lg">
-                  The ultimate experience. Combine a pickleball vacation with dental or medical care for maximum value and transformation.
-                </p>
-                <div className="mt-auto">
-                  <Link href="/apply" className="block text-center">
+                  <Link href="/trips/thailand-8-day" className="block text-center">
                     <Button className="w-full bg-[#B08D55] hover:bg-[#8D7144] text-[#1D2D44] font-bold">
-                      Start Your Journey
+                      View Trip Details
                     </Button>
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Medical Only */}
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
-              <div className="bg-[#1D2D44] p-6 text-center">
-                <Stethoscope className="w-12 h-12 text-[#7587A5] mx-auto mb-3" />
-                <h3 className="text-xl font-bold text-white">Medical Only</h3>
+            {/* 13-Day Ultimate */}
+            <div className="bg-white rounded-2xl shadow-2xl shadow-[#1D2D44]/20 overflow-hidden border-2 border-[#B08D55] flex flex-col relative">
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D]" />
+              <div className="absolute top-3 right-3">
+                 <span className="bg-[#B08D55] text-[#1D2D44] text-xs font-bold px-2 py-1 rounded-full">FLAGSHIP</span>
+              </div>
+              <div className="bg-gradient-to-b from-[#1D2D44] to-[#495F87] p-6 text-center">
+                <Trophy className="w-12 h-12 text-[#B08D55] mx-auto mb-3" />
+                <h3 className="text-xl font-bold text-white">13-Day Ultimate</h3>
+                <p className="text-white/60 text-sm mt-1">Bangkok &bull; Chiang Mai &bull; Phuket</p>
               </div>
               <div className="p-8 flex-1 flex flex-col">
                 <p className="text-[#1D2D44]/70 mb-6 text-center">
-                  Focused on your procedure and recovery. World-class care in a relaxing environment with full concierge support.
+                  The full experience. 6 pickleball sessions, 3 cities, Michelin dining, speedboat adventures, and island relaxation.
                 </p>
+                <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $3,999</p>
                 <div className="mt-auto">
-                  <Link href="/medical-tourism" className="block text-center text-[#1D2D44] font-semibold hover:text-[#B08D55]">
-                    Learn More &rarr;
+                  <Link href="/trips/thailand" className="block text-center">
+                    <Button className="w-full bg-[#B08D55] hover:bg-[#8D7144] text-[#1D2D44] font-bold">
+                      View Trip Details
+                    </Button>
                   </Link>
                 </div>
               </div>

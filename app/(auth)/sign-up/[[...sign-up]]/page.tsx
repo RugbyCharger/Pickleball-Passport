@@ -36,6 +36,11 @@ export default function SignUpPage() {
               headerSubtitle: 'hidden',
             },
           }}
+          localization={{
+            unstable__errors: {
+              form_password_pwned: 'This password has appeared in a known data breach. For your security, please choose a different password.',
+            },
+          }}
           routing="path"
           path="/sign-up"
           forceRedirectUrl="/onboarding"

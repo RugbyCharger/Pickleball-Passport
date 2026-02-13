@@ -39,6 +39,7 @@ const step4Schema = z.object({
 
 const step5Schema = z.object({
   referralSource: z.string().min(1, 'Please tell us how you heard about us'),
+  referredByPartner: z.string().optional(),
 });
 
 // Combined schema for full form
@@ -525,6 +526,19 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
               {errors.referralSource && (
                 <p className="text-sm text-red-600 mt-1">{errors.referralSource.message}</p>
               )}
+            </div>
+
+            <div>
+              <Label htmlFor="referredByPartner">Were you referred by a pickleball club or partner?</Label>
+              <Input
+                id="referredByPartner"
+                {...register('referredByPartner')}
+                placeholder="e.g., Tampa Bay Pickleball Club, Coach Mike, etc."
+                className="mt-1"
+              />
+              <p className="text-xs text-slate-500 mt-1">
+                Optional — helps us recognize our partners
+              </p>
             </div>
 
             {/* Review Summary */}

@@ -756,6 +756,9 @@ model Application {
   // Step 5: Discovery
   referralSource String // How did you hear about us?
 
+  // Partner Referral (Manual text field)
+  referredByPartner String? // Free-text: "Were you referred by a pickleball club or partner?"
+
   // Guest Referral Attribution (Epic 10)
   referralCode String? // Referral code used when submitting application (from cookie)
 
