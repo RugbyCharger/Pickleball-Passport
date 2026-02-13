@@ -45,7 +45,6 @@ const categoryOptions = [
 ] as const
 
 const tripInterestOptions = [
-  { value: '', label: 'Select a trip (optional)' },
   { value: 'Singles Retreat', label: 'Singles Retreat' },
   { value: 'Couples Getaway', label: 'Couples Getaway' },
   { value: 'Group Adventure', label: 'Group Adventure' },
@@ -55,7 +54,6 @@ const tripInterestOptions = [
 ] as const
 
 const timelineOptions = [
-  { value: '', label: 'Select timeline (optional)' },
   { value: 'Within 1 month', label: 'Within 1 month' },
   { value: '1-3 months', label: '1-3 months' },
   { value: '3-6 months', label: '3-6 months' },
@@ -385,7 +383,7 @@ export default function ContactPage() {
                         </SelectTrigger>
                         <SelectContent className="rounded-xl border-[#B08D55]/20">
                           {tripInterestOptions.map((option) => (
-                            <SelectItem key={option.value || 'empty'} value={option.value}>
+                            <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
                           ))}
@@ -410,7 +408,7 @@ export default function ContactPage() {
                         </SelectTrigger>
                         <SelectContent className="rounded-xl border-[#B08D55]/20">
                           {timelineOptions.map((option) => (
-                            <SelectItem key={option.value || 'empty'} value={option.value}>
+                            <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
                           ))}
