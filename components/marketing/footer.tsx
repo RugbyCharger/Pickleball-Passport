@@ -316,17 +316,6 @@ export function Footer() {
               <p className="text-sm text-white/50">
                 © {currentYear} Pickleball Passport. All rights reserved.
               </p>
-              <div className="flex items-center space-x-4 text-sm text-white/50">
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#B08D55]" />
-                  JCI Accredited Facilities
-                </span>
-                <span className="hidden sm:inline text-white/30">|</span>
-                <span className="hidden sm:flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#7587A5]" />
-                  Licensed Medical Tourism
-                </span>
-              </div>
             </div>
           </div>
         </div>
