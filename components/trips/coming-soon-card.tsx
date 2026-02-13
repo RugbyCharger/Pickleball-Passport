@@ -45,7 +45,7 @@ export function ComingSoonCard({ destination, subtitle }: ComingSoonCardProps) {
             className="w-full border-2 border-[#B08D55]/30 text-[#1D2D44]/70 hover:bg-[#F5E6D3]/50 hover:border-[#B08D55]/50 rounded-xl h-12"
             onClick={() => {
               window.location.href =
-                'mailto:info@thepickleballpassport.org?subject=Notify Me: ' +
+                'mailto:jaron@thepickleballpassport.org?subject=Notify Me: ' +
                 destination +
                 '&body=Please notify me when the ' +
                 destination +

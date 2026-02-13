@@ -96,10 +96,10 @@ export function TripsListingPage() {
             New destinations are added based on demand. Want to see a specific
             destination? Email us at{' '}
             <a
-              href="mailto:info@thepickleballpassport.org"
+              href="mailto:jaron@thepickleballpassport.org"
               className="text-[#B08D55] hover:underline font-medium"
             >
-              info@thepickleballpassport.org
+              jaron@thepickleballpassport.org
             </a>{' '}
             and let us know where you want to play next.
           </p>

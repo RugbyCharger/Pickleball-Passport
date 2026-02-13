@@ -99,11 +99,21 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
   const saveToLocalStorage = () => {
     const currentData = getValues();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    toast.success('Draft saved');
+  };
+
+  // Fields to validate per step
+  const stepFields: Record<number, (keyof ApplicationFormData)[]> = {
+    1: ['firstName', 'lastName', 'email', 'phone', 'location'],
+    2: ['pickleballSkillLevel', 'pickleballFrequency'],
+    3: ['interests'],
+    4: ['preferredDuration'],
+    5: ['referralSource'],
   };
 
   // Handle next step
   const handleNext = async () => {
-    const isValid = await trigger();
+    const isValid = await trigger(stepFields[currentStep]);
     if (isValid) {
       saveToLocalStorage();
       if (currentStep < totalSteps) {
