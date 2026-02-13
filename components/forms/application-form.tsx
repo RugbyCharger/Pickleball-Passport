@@ -436,7 +436,7 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
               <Input
                 id="preferredDates"
                 {...register('preferredDates')}
-                placeholder="e.g., Spring 2025, June-July, Flexible"
+                placeholder="e.g., Spring 2026, June-July, Flexible"
               />
               <p className="text-xs text-slate-500 mt-1">
                 Don't worry - we'll finalize exact dates later
