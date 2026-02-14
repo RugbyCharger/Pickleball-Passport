@@ -47,25 +47,6 @@ const differentiators = [
   },
 ];
 
-const founders = [
-  {
-    name: 'Jaron Shoptaugh',
-    role: 'Founder',
-    avatar: 'JS',
-    email: 'jaron@thepickleballpassport.org',
-    linkedin: 'https://www.linkedin.com/in/jaron-shoptaugh-ab675574/',
-    bio: 'Jaron spent years in high-ticket sales and consulting before a transformative journey through South America shifted his perspective on what travel could be. He realized the best experiences aren\u2019t about where you go \u2014 they\u2019re about the community you build and the wellness you cultivate along the way. That insight became Pickleball Passport. Today, Jaron leads the company\u2019s vision from Bangkok, where he\u2019s hands-on with every itinerary, hotel relationship, and on-the-ground detail.',
-  },
-  {
-    name: 'Ryan Magill',
-    role: 'Chief Growth Officer',
-    avatar: 'RM',
-    email: 'ryan@thepickleballpassport.org',
-    linkedin: 'https://www.linkedin.com/in/ryan-magill-a407502b8/',
-    bio: 'Ryan brings 15+ years of experience leading large-scale operations across energy, construction, and emerging tech. He\u2019s managed complex teams, navigated high-stakes environments, and built the kind of high-trust relationships that make ambitious projects happen. At Pickleball Passport, Ryan focuses on scaling international programs and the partner network \u2014 expanding global pathways for players, clubs, and brands to connect through unforgettable pickleball experiences.',
-  },
-];
-
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
@@ -88,14 +69,8 @@ export default function AboutPage() {
               Our Story
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              Built by Players, for Players
+              From a Backyard Rink in Colorado to Pickleball Courts in Bangkok
             </h1>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-              Pickleball Passport was founded on a simple idea: the best travel
-              experiences combine community, competition, and culture. We&apos;re
-              building the world&apos;s premier international pickleball travel
-              company &mdash; one unforgettable trip at a time.
-            </p>
           </div>
         </div>
 
@@ -115,26 +90,88 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why We Exist Section */}
+      {/* Our Story Section */}
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/10 text-[#1D2D44] text-sm font-medium mb-6">
               <Sun className="w-4 h-4 text-[#B08D55]" />
-              Why We Exist
+              Our Story
             </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-8">
-              The Sport Deserves Better Travel
-            </h2>
-            <p className="text-lg text-[#1D2D44]/70 leading-relaxed">
-              Pickleball is the fastest-growing sport in America, but the travel
-              options haven&apos;t kept up. Most pickleball trips are
-              cookie-cutter resort packages with a few courts bolted on. We
-              think players deserve more. We curate multi-city journeys that
-              blend world-class pickleball with deep cultural immersion,
-              incredible food, ethical adventures, and wellness recovery &mdash;
-              all handled for you.
-            </p>
+
+            <div className="space-y-6 text-lg text-[#1D2D44]/70 leading-relaxed">
+              <p>
+                Pickleball Passport was built by two cousins who took the long way around to get here. And that&apos;s kind of the point.
+              </p>
+              <p>
+                Jaron spent seven years growing up in Saudi Arabia, then Arizona, before landing in Colorado Springs. Ryan grew up there from the start. Hockey at the outdoor rink. Snowboarding. Tennis. Pickup games of whatever was in season. Different childhoods, same wiring: competitive, outdoors, always moving.
+              </p>
+              <p>
+                They went separate ways after that. Ryan spent 15+ years in energy and construction, building teams and navigating complex projects. Jaron went into finance, chasing numbers and climbing the ladder. The money was good. The fulfillment wasn&apos;t. No matter how much he made, something was missing.
+              </p>
+              <p>
+                When COVID hit, they both felt stuck. Searching for direction. They bought a house in the Colorado mountains and rebuilt it with their own hands over two years. Started playing hockey at the community rink with their neighbors. Found themselves in a small town of four hundred people, and found something they didn&apos;t know they were looking for.
+              </p>
+              <p>
+                They partnered with a local non-profit and turned that house into a sober living home for young men in recovery. The Launchpad. Shared meals. Real accountability. Showing up for guys putting their lives back together. It wasn&apos;t a business plan. It was the most important thing either of them had ever been part of. And it taught them something they carry into everything they do now: transformation happens when you combine community, movement, and genuine care for people.
+              </p>
+              <p>
+                Jaron eventually moved to Thailand, working finance remotely. Burned out by night, but discovering pickleball during Bangkok mornings. That opened a door. Last year, they reconnected at The Launchpad, then took a holistic wellness journey through South America together. That trip was the final spark. They realized what they&apos;d built in Colorado wasn&apos;t just local impact. It was a model they could scale globally.
+              </p>
+              <p>
+                That&apos;s Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two guys who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
+              </p>
+              <p className="font-medium text-[#1D2D44]">
+                The Launchpad was their launchpad. Pickleball Passport is how they&apos;re scaling what it taught them.
+              </p>
+            </div>
+
+            {/* Founder Attribution */}
+            <div className="mt-12 pt-8 border-t border-[#B08D55]/20">
+              <p className="text-xl font-serif font-bold text-[#1D2D44] mb-1">
+                Jaron Shoptaugh &amp; Ryan Magill
+              </p>
+              <p className="text-[#B08D55] font-medium mb-4">Co-Founders</p>
+              <p className="text-sm text-[#1D2D44]/60 mb-2">
+                Based in Bangkok, Thailand 🇹🇭 &nbsp;|&nbsp; Colorado Springs roots 🏔️
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <a
+                  href="mailto:jaron@thepickleballpassport.org"
+                  className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  jaron@thepickleballpassport.org
+                </a>
+                <a
+                  href="mailto:ryan@thepickleballpassport.org"
+                  className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  ryan@thepickleballpassport.org
+                </a>
+              </div>
+              <div className="flex flex-wrap gap-4 text-sm mt-2">
+                <a
+                  href="https://www.linkedin.com/in/jaron-shoptaugh-ab675574/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  Jaron on LinkedIn
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/ryan-magill-a407502b8/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  Ryan on LinkedIn
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -168,71 +205,6 @@ export default function AboutPage() {
                 <p className="text-[#1D2D44]/70 leading-relaxed">
                   {item.description}
                 </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Meet the Founders */}
-      <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10">
-            <Palmtree className="w-24 h-24 text-white" />
-          </div>
-          <div className="absolute bottom-10 right-10">
-            <Sun className="w-20 h-20 text-[#B08D55]" />
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
-              Meet the Founders
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
-            <p className="text-lg text-white/70 max-w-2xl mx-auto">
-              The people behind the passport.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {founders.map((member, idx) => (
-              <div
-                key={idx}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-colors group"
-              >
-                <div className="flex flex-col items-center text-center mb-6">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center mb-4 text-[#1D2D44] text-2xl font-bold shadow-xl group-hover:scale-110 transition-transform">
-                    {member.avatar}
-                  </div>
-                  <h3 className="text-xl font-serif font-bold text-white mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-[#B08D55] font-medium">{member.role}</p>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed mb-4">
-                  {member.bio}
-                </p>
-                <div className="flex items-center justify-center gap-4 text-white/60 text-sm">
-                  <a
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 hover:text-[#B08D55] transition-colors"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                    LinkedIn
-                  </a>
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="flex items-center gap-1.5 hover:text-[#B08D55] transition-colors"
-                  >
-                    <Mail className="w-4 h-4" />
-                    {member.email}
-                  </a>
-                </div>
               </div>
             ))}
           </div>

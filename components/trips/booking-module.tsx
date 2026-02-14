@@ -37,10 +37,9 @@ export function BookingModule({}: BookingModuleProps) {
             Tour Dates
           </label>
           <select
-            disabled
-            className="w-full h-11 rounded-xl border border-[#1D2D44]/15 bg-white px-3 text-sm text-[#1D2D44] focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none appearance-none cursor-not-allowed opacity-60"
+            className="w-full h-11 rounded-xl border border-[#1D2D44]/15 bg-white px-3 text-sm text-[#1D2D44] focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none appearance-none"
           >
-            <option>Dates Coming Soon</option>
+            <option>May 15 – 27, 2026</option>
           </select>
         </div>
 
@@ -114,26 +113,23 @@ export function BookingModule({}: BookingModuleProps) {
 
         {/* Price Display */}
         <div className="pt-2 pb-1 text-center">
-          <p className="font-serif text-2xl font-semibold text-[#1D2D44]">Price TBD</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
+          <p className="font-serif text-2xl font-semibold text-[#1D2D44]">$3,999 <span className="text-sm font-normal text-[#1D2D44]/60">per person</span></p>
         </div>
 
         {/* Urgency Element */}
         <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55]">
-          Remaining Spots: &mdash; / 16
+          Remaining Spots: 16 / 16
         </p>
 
         {/* CTA Button */}
         <div className="space-y-2">
-          <button
-            type="button"
-            disabled
-            className="w-full h-12 rounded-xl bg-[#1D2D44]/20 text-white/60 font-semibold text-sm uppercase tracking-wider cursor-not-allowed"
+          <a
+            href="/apply"
+            className="block w-full h-12 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider flex items-center justify-center shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
           >
             Book Now
-          </button>
-          <p className="text-center text-xs text-[#1D2D44]/40">
-            Dates &amp; pricing coming soon
-          </p>
+          </a>
         </div>
       </div>
     </div>

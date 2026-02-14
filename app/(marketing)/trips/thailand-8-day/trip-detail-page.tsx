@@ -734,18 +734,21 @@ export function Thailand8DayTripPage() {
         <section className="text-center">
           <div className="bg-white rounded-2xl border border-[#B08D55]/20 shadow-lg shadow-[#1D2D44]/5 p-8 sm:p-12">
             <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-3">
-              Starting From
+              Early Bird Pricing
             </p>
             <p className="font-serif text-5xl sm:text-6xl font-bold text-[#1D2D44] mb-2">
               $2,888
             </p>
-            <p className="text-[#1D2D44]/50 text-sm mb-8">per person</p>
+            <p className="text-[#1D2D44]/50 text-sm mb-2">per person</p>
+            <p className="text-[#1D2D44]/50 text-xs mb-8">
+              Limited to 16 spots. Early bird pricing ends [date TBD].
+            </p>
 
             <Link
               href="/apply"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-white font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
             >
-              Apply Now
+              Book Now
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

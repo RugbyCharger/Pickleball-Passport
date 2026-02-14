@@ -163,6 +163,7 @@ export default function HowItWorksPage() {
                 <p className="text-[#1D2D44]/70 mb-6 text-center">
                   The perfect introduction. 4 pickleball sessions, 2 cities, boutique hotels, cultural excursions, and wellness recovery.
                 </p>
+                <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
                 <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $2,888</p>
                 <div className="mt-auto">
                   <Link href="/trips/thailand-8-day" className="block text-center">
@@ -189,6 +190,7 @@ export default function HowItWorksPage() {
                 <p className="text-[#1D2D44]/70 mb-6 text-center">
                   The full experience. 6 pickleball sessions, 3 cities, Michelin dining, speedboat adventures, and island relaxation.
                 </p>
+                <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
                 <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $3,999</p>
                 <div className="mt-auto">
                   <Link href="/trips/thailand" className="block text-center">
