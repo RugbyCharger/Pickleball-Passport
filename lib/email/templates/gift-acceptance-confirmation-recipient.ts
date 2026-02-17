@@ -173,10 +173,10 @@ export function generateGiftAcceptanceConfirmationRecipientEmail(data: GiftAccep
   `;
 
   const html = baseEmailTemplate({
-    title: '✅ Gift Accepted - Welcome to Pickleball Passport!',
+    title: '✅ Gift Accepted - Welcome to The Pickleball Passport!',
     content,
     preheader: `You've successfully accepted your gift trip to Thailand. Your booking ${data.bookingReference} is now active.`,
-    footerText: 'You received this email because you accepted a gift booking with Pickleball Passport.',
+    footerText: 'You received this email because you accepted a gift booking with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

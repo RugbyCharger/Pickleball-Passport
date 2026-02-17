@@ -131,5 +131,5 @@ We'll share updates here as your departure date approaches. In the meantime, int
 
 Looking forward to an incredible journey together! 🇹🇭✨
 
-— ${organizer}`;
+- ${organizer}`;
 }

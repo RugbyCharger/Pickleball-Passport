@@ -86,16 +86,16 @@ export function generateTicketResolvedEmail(data: TicketResolvedData): {
     </div>
 
     <p style="margin-top: 32px; color: #6b7280; font-size: 14px;">
-      Thank you for choosing Pickleball Passport. We hope we were able to help!
+      Thank you for choosing The Pickleball Passport. We hope we were able to help!
     </p>
   `
 
   const html = baseEmailTemplate({
     title: subject,
     content,
-    preheader: `Your support request ${referenceNumber} has been resolved. Thank you for contacting Pickleball Passport!`,
+    preheader: `Your support request ${referenceNumber} has been resolved. Thank you for contacting The Pickleball Passport!`,
     footerText:
-      'You received this email because you submitted a support request to Pickleball Passport.',
+      'You received this email because you submitted a support request to The Pickleball Passport.',
   })
 
   const text = generatePlainText(`
@@ -117,13 +117,13 @@ export function generateTicketResolvedEmail(data: TicketResolvedData): {
 
     Contact Us: ${contactUrl}
 
-    Thank you for choosing Pickleball Passport. We hope we were able to help!
+    Thank you for choosing The Pickleball Passport. We hope we were able to help!
 
     ---
 
-    You received this email because you submitted a support request to Pickleball Passport.
+    You received this email because you submitted a support request to The Pickleball Passport.
 
-    © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+    © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
     Chiang Mai, Thailand
   `)
 

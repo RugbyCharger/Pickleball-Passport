@@ -79,7 +79,7 @@ export async function createPaymentIntent(
       currency: currency.toLowerCase(), // E4-S13: Stripe requires lowercase currency codes
       ...paymentMethodConfig,
       receipt_email: guestEmail,
-      description: `Booking #${bookingId} - Pickleball Passport`,
+      description: `Booking #${bookingId} - The Pickleball Passport`,
       metadata: {
         bookingId,
         guestEmail,

@@ -20,7 +20,7 @@ const infoCards = [
     icon: Building2,
     title: 'JCI-Accredited Hospitals',
     description:
-      'Thailand has 60+ JCI-accredited hospitals — more than any country in Southeast Asia. JCI is the gold standard for international healthcare quality and patient safety.',
+      'Thailand has 60+ JCI-accredited hospitals, more than any country in Southeast Asia. JCI is the gold standard for international healthcare quality and patient safety.',
   },
   {
     icon: DollarSign,
@@ -156,7 +156,7 @@ export default function MedicalTourismPage() {
           <p className="text-xs sm:text-sm text-[#1D2D44]/50 mt-8 max-w-2xl mx-auto text-center leading-relaxed">
             Disclaimer: All prices shown are approximate averages compiled from publicly
             available data and third-party sources. Actual costs vary by provider, procedure
-            complexity, and individual patient needs. Pickleball Passport does not arrange,
+            complexity, and individual patient needs. The Pickleball Passport does not arrange,
             book, recommend, or endorse any specific medical or dental providers. All medical
             decisions and provider selection are the sole responsibility of the traveler. We
             strongly encourage consulting with your personal physician before pursuing any
@@ -180,8 +180,8 @@ export default function MedicalTourismPage() {
               <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
                 Many of our travelers extend their stay in Thailand to take advantage of
                 world-class dental and cosmetic care at a fraction of US costs. While
-                Pickleball Passport does not arrange or manage medical procedures, we&apos;re
-                happy to help with travel logistics — like extending your hotel stay,
+                The Pickleball Passport does not arrange or manage medical procedures, we&apos;re
+                happy to help with travel logistics, like extending your hotel stay,
                 arranging airport transfers, or adjusting your itinerary to build in
                 recovery time.
               </p>
@@ -209,7 +209,7 @@ export default function MedicalTourismPage() {
           </h2>
           <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
             Interested in the full experience? Check out our curated pickleball travel
-            packages — competitive play, boutique hotels, and cultural adventures across Thailand.
+            packages: competitive play, boutique hotels, and cultural adventures across Thailand.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pickleball">
@@ -229,14 +229,14 @@ export default function MedicalTourismPage() {
       <section className="py-8 bg-[#FDF8F3] border-t border-[#B08D55]/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[11px] sm:text-xs text-[#1D2D44]/40 leading-relaxed text-center">
-            Pickleball Passport is a travel and lifestyle company. We are not a medical
+            The Pickleball Passport is a travel and lifestyle company. We are not a medical
             provider, medical tourism agency, or healthcare facilitator. We do not recommend,
             endorse, vet, arrange, or guarantee any medical or dental providers, hospitals,
             clinics, or procedures. All information on this page is for general informational
             purposes only and should not be considered medical advice. Travelers considering
             medical or dental procedures in Thailand should conduct their own research, verify
             provider credentials independently, and consult with their personal physicians
-            before making any medical decisions. Pickleball Passport assumes no responsibility
+            before making any medical decisions. The Pickleball Passport assumes no responsibility
             or liability for any medical outcomes, complications, or experiences resulting from
             procedures obtained during or in connection with our trips.
           </p>

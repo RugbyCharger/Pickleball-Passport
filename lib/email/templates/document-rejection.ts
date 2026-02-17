@@ -191,7 +191,7 @@ export function generateDocumentRejectionEmail(data: DocumentRejectionData): {
   `;
 
   const html = baseEmailTemplate({
-    title: 'Document Update Required - Pickleball Passport',
+    title: 'Document Update Required - The Pickleball Passport',
     content,
     preheader: `Action required: Please upload a new ${data.documentTypeFriendly}`,
     footerText: `You received this email regarding your Pickleball Passport documentation.`,

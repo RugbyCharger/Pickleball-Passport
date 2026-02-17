@@ -127,7 +127,7 @@ export function generateGuestReferralCodeEmail(data: GuestReferralCodeData): {
         Questions about the referral program? Reply to this email and we'll be happy to help!
       </p>
     `,
-    footerText: 'You\'re receiving this email because you completed a Pickleball Passport experience.'
+    footerText: 'You\'re receiving this email because you completed The Pickleball Passport experience.'
   });
 
   const text = generatePlainText(`
@@ -165,8 +165,8 @@ export function generateGuestReferralCodeEmail(data: GuestReferralCodeData): {
     Questions about the referral program? Reply to this email and we'll be happy to help!
 
     --
-    Pickleball Passport
-    You're receiving this email because you completed a Pickleball Passport experience.
+    The Pickleball Passport
+    You're receiving this email because you completed The Pickleball Passport experience.
   `);
 
   return {

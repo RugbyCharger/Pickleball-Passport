@@ -9,7 +9,7 @@ const includedItems = [
   '5 group dinners: welcome dinner in each city + Bangkok farewell + Phuket closing dinner',
   '2 domestic flights (Bangkok \u2192 Chiang Mai \u2192 Phuket)',
   'All private ground transportation (air-con vans, airport transfers in all cities)',
-  '6 pickleball sessions with court fees, equipment, and structured programming',
+  '7 pickleball sessions with court fees, equipment, and structured programming',
   'Thai cooking class (half day with market tour)',
   'Elephant Nature Park visit (ethical sanctuary \u2014 no riding, no chains)',
   'Private long-tail boat sunset cruise on the Chao Phraya River',
@@ -38,13 +38,13 @@ const extrasItems = [
 const statItems = [
   { value: '16', label: 'Max Group Size' },
   {
-    value: '5/10',
+    value: '6/10',
     label: 'Activity Level',
     tooltip:
-      '5/10 \u2014 Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
+      '6/10 \u2014 Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
-  { value: '8\u201310', label: 'Hrs. of Instruction' },
-  { value: '8\u201312', label: 'Hrs. of Social Play' },
+  { value: '10\u201312', label: 'Hrs. of Instruction' },
+  { value: '10\u201314', label: 'Hrs. of Social Play' },
 ];
 
 export function TripDetailsSection() {

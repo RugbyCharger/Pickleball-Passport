@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import {
   ArrowRight,
   CheckCircle,
@@ -25,7 +27,7 @@ const steps = [
   {
     number: 1,
     title: 'Choose Your Trip',
-    description: 'Pick the experience that fits your schedule — our 8-day essential or 13-day ultimate Thailand tour.',
+    description: 'Pick the experience that fits your schedule: our 8-day essential or 13-day ultimate Thailand tour.',
     icon: Sparkles,
     gradient: 'from-[#1D2D44] to-[#7587A5]',
   },
@@ -86,7 +88,7 @@ const beforeTrip = [
 const duringStay = [
   'Airport pickup & private transfers',
   'Dedicated trip host on the ground',
-  '6 structured pickleball sessions',
+  '7 structured pickleball sessions',
   'Cultural excursions, temple tours & street food walks',
   'Wellness recovery: onsen, spa, pool access',
 ];
@@ -100,6 +102,8 @@ const afterReturn = [
 ];
 
 export default function HowItWorksPage() {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
@@ -164,7 +168,7 @@ export default function HowItWorksPage() {
                   The perfect introduction. 4 pickleball sessions, 2 cities, boutique hotels, cultural excursions, and wellness recovery.
                 </p>
                 <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
-                <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $2,888</p>
+                <p className="text-center text-lg font-bold text-[#1D2D44] mb-4">Coming Soon</p>
                 <div className="mt-auto">
                   <Link href="/trips/thailand-8-day" className="block text-center">
                     <Button className="w-full bg-[#B08D55] hover:bg-[#8D7144] text-[#1D2D44] font-bold">
@@ -188,10 +192,10 @@ export default function HowItWorksPage() {
               </div>
               <div className="p-8 flex-1 flex flex-col">
                 <p className="text-[#1D2D44]/70 mb-6 text-center">
-                  The full experience. 6 pickleball sessions, 3 cities, Michelin dining, speedboat adventures, and island relaxation.
+                  The full experience. 7 pickleball sessions, 3 cities, Michelin dining, speedboat adventures, and island relaxation.
                 </p>
                 <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
-                <p className="text-center text-2xl font-bold text-[#1D2D44] mb-4">From $3,999</p>
+                <p className="text-center text-lg font-bold text-[#1D2D44] mb-4">Coming Soon</p>
                 <div className="mt-auto">
                   <Link href="/trips/thailand" className="block text-center">
                     <Button className="w-full bg-[#B08D55] hover:bg-[#8D7144] text-[#1D2D44] font-bold">
@@ -265,7 +269,7 @@ export default function HowItWorksPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
-              Why Choose Pickleball Passport?
+              Why Choose The Pickleball Passport?
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
@@ -389,16 +393,15 @@ export default function HowItWorksPage() {
             Take the first step toward a trip you&apos;ll never forget.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/apply">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
-              >
-                <Sparkles className="mr-2 h-5 w-5" />
-                Start Your Application
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
+              onClick={() => setWaitlistOpen(true)}
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Reserve Your Spot
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
             <Link href="/pickleball">
               <Button
                 size="lg"
@@ -411,6 +414,12 @@ export default function HowItWorksPage() {
           </div>
         </div>
       </section>
+
+      <WaitlistModal
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        tripName="Thailand Trip"
+      />
     </main>
   );
 }

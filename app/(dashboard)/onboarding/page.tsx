@@ -51,7 +51,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-4xl">
         <div className="mb-8 text-center">
           <h1 className="font-playfair text-4xl font-bold text-primary mb-2">
-            Welcome to Pickleball Passport
+            Welcome to The Pickleball Passport
           </h1>
           <p className="text-muted-foreground text-lg">
             First, let us know how you&apos;ll be using our platform

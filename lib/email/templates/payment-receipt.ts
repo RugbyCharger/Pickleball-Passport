@@ -71,7 +71,7 @@ export function generatePaymentReceiptEmail(data: PaymentReceiptData): {
 
     <p>
       Thank you for your payment! This email confirms we've successfully received your payment
-      for Pickleball Passport.
+      for The Pickleball Passport.
     </p>
 
     <div style="margin: 32px 0; padding: 24px; background: linear-gradient(135deg, #059669 0%, #2563eb 100%); border-radius: 12px; text-align: center;">
@@ -166,13 +166,13 @@ export function generatePaymentReceiptEmail(data: PaymentReceiptData): {
     </p>
 
     <p>
-      Thank you for choosing Pickleball Passport!<br>
+      Thank you for choosing The Pickleball Passport!<br>
       <strong>The Pickleball Passport Team</strong> 🏓
     </p>
   `;
 
   const html = baseEmailTemplate({
-    title: 'Payment Receipt - Pickleball Passport',
+    title: 'Payment Receipt - The Pickleball Passport',
     content,
     preheader: `Payment receipt for ${data.packageName} - ${formatCurrency(data.totalAmount)}`,
     footerText: `This is a payment receipt for your Pickleball Passport booking.`,

@@ -88,7 +88,7 @@ export function generateUpcomingPaymentReminderEmail(
 
     <p>
       This is a friendly reminder that your next installment payment for your 
-      Pickleball Passport trip is coming up in <strong>7 days</strong>.
+      The Pickleball Passport trip is coming up in <strong>7 days</strong>.
     </p>
 
     <div style="margin: 32px 0; padding: 24px; background-color: #eff6ff; border-radius: 12px; border-left: 4px solid #2563eb;">
@@ -189,7 +189,7 @@ export function generateUpcomingPaymentReminderEmail(
   `
 
   const html = baseEmailTemplate({
-    title: 'Upcoming Payment Reminder - Pickleball Passport',
+    title: 'Upcoming Payment Reminder - The Pickleball Passport',
     content,
     preheader: `Upcoming payment reminder - ${formatCurrency(data.installmentAmount)} due ${formatShortDate(data.dueDate)}`,
     footerText: `This is a payment reminder for your Pickleball Passport booking (${data.bookingReference}).`,

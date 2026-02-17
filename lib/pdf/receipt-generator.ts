@@ -145,7 +145,7 @@ export async function generateReceipt(
       guestEmail: payment.booking.user.email,
 
       // Company details
-      companyName: 'Pickleball Passport',
+      companyName: 'The Pickleball Passport',
       companyEmail: 'hello@pickleballpassport.com',
       companyWebsite: 'www.pickleballpassport.com',
     };

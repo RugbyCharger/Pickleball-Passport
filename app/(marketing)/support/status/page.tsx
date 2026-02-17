@@ -343,7 +343,7 @@ export default function TicketStatusPage() {
                         >
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-sm font-medium text-[#1D2D44]">
-                              Pickleball Passport Support
+                              The Pickleball Passport Support
                             </span>
                             <span className="text-xs text-gray-500">
                               {formatDate(reply.createdAt)}

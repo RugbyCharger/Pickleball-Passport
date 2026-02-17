@@ -198,7 +198,7 @@ export function generateSystemErrorAdminEmail(
     </div>
 
     <p>
-      <strong>Pickleball Passport Admin System</strong> 🏓
+      <strong>The Pickleball Passport Admin System</strong> 🏓
     </p>
   `;
 
@@ -206,7 +206,7 @@ export function generateSystemErrorAdminEmail(
     title: 'System Error Alert',
     content,
     preheader: `${data.severity.toUpperCase()} ${data.errorType} error in ${data.environment}`,
-    footerText: 'This is an automated admin alert from Pickleball Passport.',
+    footerText: 'This is an automated admin alert from The Pickleball Passport.',
   });
 
   const text = generatePlainText(content);

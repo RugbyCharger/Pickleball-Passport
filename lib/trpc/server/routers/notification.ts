@@ -416,7 +416,7 @@ export const notificationRouter = router({
                 ` : ''}
               `,
               preheader: input.title,
-              footerText: 'This is a notification from Pickleball Passport.',
+              footerText: 'This is a notification from The Pickleball Passport.',
             });
 
             await sendEmail({

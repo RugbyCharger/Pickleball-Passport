@@ -110,7 +110,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
       </p>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
-        We're thrilled to inform you that you've been promoted from <strong>${getTierDisplayName(data.previousTier)}</strong> to <strong>${newTierDisplay}</strong> tier in the Pickleball Passport Partner Program!
+        We're thrilled to inform you that you've been promoted from <strong>${getTierDisplayName(data.previousTier)}</strong> to <strong>${newTierDisplay}</strong> tier in The Pickleball Passport Partner Program!
       </p>
 
       <!-- New Commission Rate Card -->
@@ -145,7 +145,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
       ` : ''}
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 24px 0;">
-        Thank you for being such an important part of the Pickleball Passport community. Your passion for pickleball and commitment to sharing these life-changing experiences is making a real difference!
+        Thank you for being such an important part of The Pickleball Passport community. Your passion for pickleball and commitment to sharing these life-changing experiences is making a real difference!
       </p>
 
       <!-- CTA Buttons -->
@@ -162,7 +162,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
         Keep up the amazing work! 🎉
       </p>
     `,
-    footerText: 'You\'re receiving this email because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this email because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -170,7 +170,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
 
     Hi ${data.partnerName},
 
-    We're thrilled to inform you that you've been promoted from ${getTierDisplayName(data.previousTier)} to ${newTierDisplay} tier in the Pickleball Passport Partner Program!
+    We're thrilled to inform you that you've been promoted from ${getTierDisplayName(data.previousTier)} to ${newTierDisplay} tier in The Pickleball Passport Partner Program!
 
     YOUR NEW COMMISSION RATE
     -------------------------
@@ -182,7 +182,7 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
 
     ${data.nextTierGoal ? `NEXT GOAL: ${data.nextTierGoal}` : ''}
 
-    Thank you for being such an important part of the Pickleball Passport community. Your passion for pickleball and commitment to sharing these life-changing experiences is making a real difference!
+    Thank you for being such an important part of The Pickleball Passport community. Your passion for pickleball and commitment to sharing these life-changing experiences is making a real difference!
 
     Explore Your Benefits: ${tiersUrl}
     View Dashboard: ${dashboardUrl}
@@ -190,8 +190,8 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
     Keep up the amazing work! 🎉
 
     --
-    Pickleball Passport
-    You're receiving this email because you're a valued Pickleball Passport partner.
+    The Pickleball Passport
+    You're receiving this email because you're a valued The Pickleball Passport partner.
   `);
 
   return {

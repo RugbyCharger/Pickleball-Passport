@@ -84,7 +84,7 @@ export function generateGiftDeclineConfirmationRecipientEmail(data: GiftDeclineC
     title: 'Gift Declined - Confirmation',
     content,
     preheader: 'Your gift decline has been processed.',
-    footerText: 'You received this email because you declined a gift booking with Pickleball Passport.',
+    footerText: 'You received this email because you declined a gift booking with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

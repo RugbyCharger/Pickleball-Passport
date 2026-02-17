@@ -20,7 +20,7 @@ export const pushRouter = router({
     const result = await sendPushNotification({
       userIds: [ctx.user.id],
       title: 'Test Notification',
-      message: 'Push notifications are working! This is a test from Pickleball Passport.',
+      message: 'Push notifications are working! This is a test from The Pickleball Passport.',
       data: {
         screen: 'dashboard',
         deepLink: '/dashboard',

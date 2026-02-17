@@ -122,7 +122,7 @@ export function generateGiftDeclineNotificationPurchaserEmail(data: GiftDeclineN
     title: 'Gift Declined - Refund Processed',
     content,
     preheader: `Your gift to ${data.recipientFirstName} has been declined. Full refund processed.`,
-    footerText: 'You received this email because the recipient declined your gift booking with Pickleball Passport.',
+    footerText: 'You received this email because the recipient declined your gift booking with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

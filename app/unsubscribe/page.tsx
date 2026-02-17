@@ -83,7 +83,7 @@ export default function UnsubscribePage() {
         </div>
         <h1 className="text-3xl font-bold text-gray-900">You've Been Unsubscribed</h1>
         <p className="text-gray-600 mt-4">
-          You have been unsubscribed from all optional Pickleball Passport emails.
+          You have been unsubscribed from all optional emails from The Pickleball Passport.
         </p>
       </div>
 

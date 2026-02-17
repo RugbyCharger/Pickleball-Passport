@@ -102,7 +102,7 @@ export default function PartnerLandingPage() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
               {landingPage.headline ||
-                'Transform Your Life in Thailand with Pickleball Passport'}
+                'Transform Your Life in Thailand with The Pickleball Passport'}
             </h1>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
               {landingPage.subheadline ||
@@ -141,7 +141,7 @@ export default function PartnerLandingPage() {
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-6 text-center">
-            Why Choose Pickleball Passport?
+            Why Choose The Pickleball Passport?
           </h2>
           <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
             Experience world-class wellness transformations while playing the sport you love.

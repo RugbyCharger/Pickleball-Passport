@@ -306,7 +306,7 @@ export function createDefaultVisualContent(): EmailVisualContent {
         type: 'HEADER',
         order: 0,
         content: {
-          title: 'Pickleball Passport',
+          title: 'The Pickleball Passport',
           subtitle: '',
         },
         settings: {
@@ -360,7 +360,7 @@ export function createDefaultVisualContent(): EmailVisualContent {
         type: 'FOOTER',
         order: 3,
         content: {
-          companyName: 'Pickleball Passport',
+          companyName: 'The Pickleball Passport',
           address: '123 Main Street, Chiang Mai, Thailand',
           unsubscribeText: 'Unsubscribe from these emails',
         },

@@ -32,7 +32,7 @@ export async function getBiometricType(): Promise<string> {
  */
 export async function authenticateWithBiometrics(): Promise<boolean> {
   const result = await LocalAuthentication.authenticateAsync({
-    promptMessage: 'Unlock Pickleball Passport',
+    promptMessage: 'Unlock The Pickleball Passport',
     fallbackLabel: 'Use Passcode',
     cancelLabel: 'Cancel',
     disableDeviceFallback: false,

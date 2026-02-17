@@ -39,7 +39,7 @@ export const emailRouter = router({
 
       const html = `
         <div style="font-family: sans-serif; padding: 20px;">
-          <h2>Test Email from Pickleball Passport</h2>
+          <h2>Test Email from The Pickleball Passport</h2>
           <p>${input.message}</p>
           <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
           <p style="color: #666; font-size: 12px;">

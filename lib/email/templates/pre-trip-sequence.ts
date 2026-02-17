@@ -513,7 +513,7 @@ function generate1DayEmail(data: PreTripEmailData): string {
       <div style="margin: 12px 0; padding: 12px; background-color: #ffffff; border-radius: 6px;">
         <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Airport Pickup</p>
         <p style="margin: 0; color: #111827; font-weight: 600; font-size: 16px;">
-          Our team will meet you at arrivals with a Pickleball Passport sign
+          Our team will meet you at arrivals with The Pickleball Passport sign
         </p>
       </div>
 

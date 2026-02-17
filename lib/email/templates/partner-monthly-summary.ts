@@ -141,7 +141,7 @@ export function generatePartnerMonthlySummaryEmail(data: PartnerMonthlySummaryDa
         Thank you for being an amazing partner! 🙌
       </p>
     `,
-    footerText: 'You\'re receiving this monthly summary because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this monthly summary because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -177,7 +177,7 @@ export function generatePartnerMonthlySummaryEmail(data: PartnerMonthlySummaryDa
     Thank you for being an amazing partner! 🙌
 
     --
-    Pickleball Passport
+    The Pickleball Passport
     You're receiving this monthly summary because you're a valued partner.
   `);
 

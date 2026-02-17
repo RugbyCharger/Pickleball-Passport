@@ -502,7 +502,7 @@ export default function AdminWhatsAppBroadcastPage() {
                   <MessageCircle className="h-4 w-4 text-white" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-green-800 mb-1">Pickleball Passport</p>
+                  <p className="text-sm font-medium text-green-800 mb-1">The Pickleball Passport</p>
                   <div className="bg-white rounded-lg p-3 shadow-sm">
                     <p className="text-sm text-gray-800 whitespace-pre-wrap">{message}</p>
                   </div>

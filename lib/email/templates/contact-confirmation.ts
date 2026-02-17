@@ -23,7 +23,7 @@ export function generateContactConfirmationEmail(
 } {
   const { name, message } = data
 
-  const subject = 'We Received Your Message - Pickleball Passport'
+  const subject = 'We Received Your Message - The Pickleball Passport'
 
   const content = `
     <h1>Thanks for Reaching Out, ${name}!</h1>
@@ -36,7 +36,7 @@ export function generateContactConfirmationEmail(
       <p style="margin: 0; color: #4b5563; font-style: italic; white-space: pre-wrap;">${message}</p>
     </div>
 
-    <p>In the meantime, feel free to explore our transformation tourism packages and see what Pickleball Passport has to offer.</p>
+    <p>In the meantime, feel free to explore our transformation tourism packages and see what The Pickleball Passport has to offer.</p>
 
     <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages" class="button" style="background-color: #003D5C;">
       Browse Packages
@@ -52,7 +52,7 @@ export function generateContactConfirmationEmail(
     content,
     preheader: "We've received your message and will respond within 24 hours.",
     footerText:
-      'You received this email because you contacted Pickleball Passport.',
+      'You received this email because you contacted The Pickleball Passport.',
   })
 
   const text = generatePlainText(`
@@ -64,7 +64,7 @@ export function generateContactConfirmationEmail(
 
     "${message}"
 
-    In the meantime, feel free to explore our transformation tourism packages and see what Pickleball Passport has to offer.
+    In the meantime, feel free to explore our transformation tourism packages and see what The Pickleball Passport has to offer.
 
     Browse Packages: ${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages
 
@@ -72,9 +72,9 @@ export function generateContactConfirmationEmail(
 
     ---
 
-    You received this email because you contacted Pickleball Passport.
+    You received this email because you contacted The Pickleball Passport.
 
-    © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+    © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
     Chiang Mai, Thailand
   `)
 

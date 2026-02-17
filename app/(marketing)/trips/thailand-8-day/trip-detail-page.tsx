@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import {
   Sparkles,
   MapPin,
@@ -27,7 +28,7 @@ const statItems = [
     value: '5/10',
     label: 'Activity Level',
     tooltip:
-      '5/10 — Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
+      '5/10: Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
   { value: '5–7', label: 'Hrs. Instruction' },
   { value: '5–8', label: 'Hrs. Social Play' },
@@ -554,6 +555,8 @@ function getCityColor(city: string): string {
 /* ─────────────────────── MAIN PAGE ─────────────────────── */
 
 export function Thailand8DayTripPage() {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* ══════════ TRIP HEADER ══════════ */}
@@ -725,7 +728,7 @@ export function Thailand8DayTripPage() {
           <div className="bg-[#1D2D44]/5 rounded-xl border border-[#1D2D44]/10 p-4 text-center">
             <p className="text-sm text-[#1D2D44]/70">
               <span className="font-semibold text-[#1D2D44]">Total:</span> 4
-              sessions across 2 cities &mdash; ~10 hours of court time
+              sessions across 2 cities, approximately 10 hours of court time
             </p>
           </div>
         </section>
@@ -736,21 +739,22 @@ export function Thailand8DayTripPage() {
             <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-3">
               Early Bird Pricing
             </p>
-            <p className="font-serif text-5xl sm:text-6xl font-bold text-[#1D2D44] mb-2">
-              $2,888
+            <p className="font-serif text-3xl sm:text-4xl font-bold text-[#1D2D44] mb-2">
+              Coming Soon
             </p>
-            <p className="text-[#1D2D44]/50 text-sm mb-2">per person</p>
+            <p className="text-[#1D2D44]/50 text-sm mb-2">Limited to 16 spots</p>
             <p className="text-[#1D2D44]/50 text-xs mb-8">
-              Limited to 16 spots. Early bird pricing ends [date TBD].
+              Join the waitlist to be the first to know when pricing and booking open.
             </p>
 
-            <Link
-              href="/apply"
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-white font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
             >
-              Book Now
+              Reserve Your Spot
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </button>
           </div>
         </section>
 
@@ -770,6 +774,12 @@ export function Thailand8DayTripPage() {
           </div>
         </section>
       </div>
+
+      <WaitlistModal
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        tripName="Thailand - 8 Days / 7 Nights"
+      />
     </main>
   );
 }

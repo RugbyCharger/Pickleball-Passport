@@ -53,9 +53,9 @@ function extractHeadings(content: string): Heading[] {
 }
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Pickleball Passport',
+  title: 'Privacy Policy | The Pickleball Passport',
   description:
-    'Learn how Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
+    'Learn how The Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
   keywords: [
     'privacy policy',
     'GDPR',
@@ -63,22 +63,22 @@ export const metadata: Metadata = {
     'data protection',
     'cookies',
     'personal data',
-    'Pickleball Passport privacy',
+    'The Pickleball Passport privacy',
   ],
   openGraph: {
-    title: 'Privacy Policy | Pickleball Passport',
+    title: 'Privacy Policy | The Pickleball Passport',
     description:
-      'Learn how Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
+      'Learn how The Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
     url: 'https://pickleballpassport.com/privacy',
-    siteName: 'Pickleball Passport',
+    siteName: 'The Pickleball Passport',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Privacy Policy | Pickleball Passport',
+    title: 'Privacy Policy | The Pickleball Passport',
     description:
-      'Learn how Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
+      'Learn how The Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
     site: '@PickleballPass',
     creator: '@PickleballPass',
   },

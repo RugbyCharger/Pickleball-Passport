@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import {
   ArrowRight,
   CheckCircle,
@@ -34,7 +36,7 @@ const packages = [
       'Dedicated concierge support',
     ],
     featured: false,
-    price: '$2,888',
+    price: 'Early Bird Pricing Coming Soon',
   },
   {
     name: '13-Day Ultimate Tour',
@@ -50,7 +52,7 @@ const packages = [
     ],
     featured: true,
     icon: '🏆',
-    price: '$3,999',
+    price: 'Early Bird Pricing Coming Soon',
   },
 ];
 
@@ -78,6 +80,9 @@ const includedItems = [
 ];
 
 export default function PickleballPage() {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState('');
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
@@ -180,7 +185,7 @@ export default function PickleballPage() {
                         Thailand
                       </span>
                     </div>
-                    <div className="text-xl font-bold text-[#1D2D44]">{pkg.price}</div>
+                    <div className="text-sm font-semibold text-[#B08D55]">{pkg.price}</div>
                   </div>
 
                   {/* Card Content */}
@@ -196,18 +201,20 @@ export default function PickleballPage() {
                         </li>
                       ))}
                     </ul>
-                    <Link href="/trips/thailand" className="block">
-                      <Button
-                        className={`w-full h-14 rounded-xl font-semibold text-base transition-all ${
-                          pkg.featured
-                            ? 'bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] shadow-lg shadow-[#B08D55]/30 hover:shadow-xl'
-                            : 'bg-[#1D2D44] hover:bg-[#002B42] text-white'
-                        }`}
-                      >
-                        Book This Trip
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Button>
-                    </Link>
+                    <Button
+                      className={`w-full h-14 rounded-xl font-semibold text-base transition-all ${
+                        pkg.featured
+                          ? 'bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] shadow-lg shadow-[#B08D55]/30 hover:shadow-xl'
+                          : 'bg-[#1D2D44] hover:bg-[#002B42] text-white'
+                      }`}
+                      onClick={() => {
+                        setSelectedTrip(pkg.name);
+                        setWaitlistOpen(true);
+                      }}
+                    >
+                      Reserve Your Spot
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -297,18 +304,20 @@ export default function PickleballPage() {
             Ready for Your Pickleball Getaway?
           </h2>
           <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
-            Book your spot today and get ready for the trip of a lifetime.
+            Reserve your spot today and get ready for the trip of a lifetime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/trips/thailand">
-              <Button
-                size="lg"
-                className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
-              >
-                View Thailand Trip
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
+              onClick={() => {
+                setSelectedTrip('Thailand Trip');
+                setWaitlistOpen(true);
+              }}
+            >
+              Reserve Your Spot
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
             <Link href="/contact">
               <Button
                 size="lg"
@@ -321,6 +330,12 @@ export default function PickleballPage() {
           </div>
         </div>
       </section>
+
+      <WaitlistModal
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        tripName={selectedTrip}
+      />
     </main>
   );
 }

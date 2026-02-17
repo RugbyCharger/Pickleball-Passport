@@ -66,7 +66,7 @@ export function generatePartnerPointsEarnedEmail(data: PartnerPointsEarnedData):
         </a>
       </div>
     `,
-    footerText: 'You\'re receiving this email because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this email because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -85,7 +85,7 @@ export function generatePartnerPointsEarnedEmail(data: PartnerPointsEarnedData):
     Redeem Your Points: ${rewardsUrl}
 
     --
-    Pickleball Passport
+    The Pickleball Passport
   `);
 
   return { html, text, subject };

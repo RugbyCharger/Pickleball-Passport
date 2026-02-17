@@ -17,7 +17,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import ModificationLoader from '@/components/booking/modification-loader'
 
 export const metadata: Metadata = {
-  title: 'Modify Booking | Pickleball Passport',
+  title: 'Modify Booking | The Pickleball Passport',
   description: 'Modify your booking add-ons and preferences.',
 }
 

@@ -346,7 +346,7 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
         type: 'HEADER',
         order,
         content: {
-          title: 'Pickleball Passport',
+          title: 'The Pickleball Passport',
           subtitle: '',
         },
         settings: {
@@ -435,7 +435,7 @@ function createBlock(type: EmailBlockType, order: number): EmailBlock {
         type: 'FOOTER',
         order,
         content: {
-          companyName: 'Pickleball Passport',
+          companyName: 'The Pickleball Passport',
           address: '123 Main Street, Chiang Mai, Thailand',
           unsubscribeText: 'Unsubscribe from these emails',
         },

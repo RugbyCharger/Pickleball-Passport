@@ -35,7 +35,7 @@ import Link from 'next/link'
 import { BookingConfirmationClient } from './confirmation-client'
 
 export const metadata: Metadata = {
-  title: 'Booking Confirmed | Pickleball Passport',
+  title: 'Booking Confirmed | The Pickleball Passport',
   description: 'Your booking has been confirmed!',
 }
 

@@ -86,7 +86,7 @@ export function generateInstallmentReminderEmail(
 
     <p>
       We wanted to let you know that we were unable to process your recent installment payment
-      for your upcoming Pickleball Passport trip.
+      for your upcoming The Pickleball Passport trip.
     </p>
 
     <div style="margin: 32px 0; padding: 24px; background-color: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
@@ -176,7 +176,7 @@ export function generateInstallmentReminderEmail(
   `
 
   const html = baseEmailTemplate({
-    title: 'Payment Reminder - Pickleball Passport',
+    title: 'Payment Reminder - The Pickleball Passport',
     content,
     preheader: `Installment payment reminder - ${formatCurrency(data.installmentAmount)} due`,
     footerText: `This is a payment reminder for your Pickleball Passport booking.`,

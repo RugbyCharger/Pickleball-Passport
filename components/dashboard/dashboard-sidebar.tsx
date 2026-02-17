@@ -94,7 +94,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-background border-b px-4 py-3 flex items-center justify-between">
         <Link href="/dashboard" className="font-playfair text-xl font-bold text-primary">
-          Pickleball Passport
+          The Pickleball Passport
         </Link>
         <Button
           variant="outline"
@@ -129,7 +129,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
               className="font-playfair text-2xl font-bold text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Pickleball Passport
+              The Pickleball Passport
             </Link>
           </div>
 

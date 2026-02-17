@@ -21,7 +21,7 @@ function richText(...paragraphs: string[]) {
 const SYSTEM_USER = 'system-seed'
 
 const categories = [
-  { name: 'General', slug: 'general', description: 'About Pickleball Passport', sortOrder: 1 },
+  { name: 'General', slug: 'general', description: 'About The Pickleball Passport', sortOrder: 1 },
   { name: 'Trips & Packages', slug: 'trips-packages', description: 'Booking, accommodation, and itineraries', sortOrder: 2 },
   { name: 'Pickleball', slug: 'pickleball', description: 'Courts, sessions, and skill levels', sortOrder: 3 },
   { name: 'Wellness & Culture', slug: 'wellness-culture', description: 'Wellness amenities, excursions, and dining', sortOrder: 4 },
@@ -32,15 +32,15 @@ const categories = [
 const faqs: Record<string, { question: string; answer: string[]; sortOrder: number }[]> = {
   general: [
     {
-      question: 'What is Pickleball Passport?',
+      question: 'What is The Pickleball Passport?',
       answer: [
-        'Pickleball Passport is a curated travel experience that combines world-class pickleball with boutique hotels, cultural immersion, and wellness in Thailand.',
+        'The Pickleball Passport is a curated travel experience that combines world-class pickleball with boutique hotels, cultural immersion, and wellness in Thailand.',
         'We handle everything \u2014 from structured court sessions and private transportation to handpicked accommodations, group dinners, and cultural excursions across three cities.',
       ],
       sortOrder: 1,
     },
     {
-      question: 'Who is Pickleball Passport for?',
+      question: 'Who is The Pickleball Passport for?',
       answer: [
         'Pickleball enthusiasts of all skill levels who want to combine their love of the sport with an unforgettable travel experience. Whether you\'re a competitive player, a social player, or someone who just wants an incredible trip with great people \u2014 this is for you.',
         'Travel companions who don\'t play pickleball are also welcome. They enjoy the full trip experience (hotels, dinners, excursions, wellness) at a companion rate without the court sessions.',
@@ -118,8 +118,8 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'How many pickleball sessions are there?',
       answer: [
-        '6 sessions across 3 cities: 3 sessions at SukSpace in Bangkok, 2 at BokBok in Chiang Mai, and a final championship session at Peak Racquet Park in Phuket.',
-        'Total court time is approximately 15 hours, split between 8\u201310 hours of instruction and 8\u201312 hours of social play.',
+        '7 sessions across 3 cities: 3 sessions at SukSpace in Bangkok, 2 at BokBok in Chiang Mai, and 2 at Peak Racquet Club in Phuket (welcome session + final championship).',
+        'Total court time is approximately 18 hours, split between 10\u201312 hours of instruction and 10\u201314 hours of social play.',
       ],
       sortOrder: 2,
     },
@@ -134,7 +134,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Where are the courts?',
       answer: [
-        'SukSpace in Bangkok (Thonglor, walking distance from the hotel), BokBok in Chiang Mai (5-minute drive from the hotel), and Peak Racquet Park in Phuket (5 minutes from the hotel).',
+        'SukSpace in Bangkok (Thonglor, walking distance from the hotel), BokBok in Chiang Mai (5-minute drive from the hotel), and Peak Racquet Club in Phuket (5 minutes from the hotel).',
         'All venues have regulation courts with professional lighting and quality surfaces.',
       ],
       sortOrder: 4,
@@ -168,7 +168,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
       question: 'Can I extend my stay for dental or medical work?',
       answer: [
         'Yes. Thailand is a global leader in medical tourism, and some guests choose to add days before or after the trip for dental work, health screenings, or other procedures at JCI-accredited facilities.',
-        'This is entirely independent of the Pickleball Passport trip. We can provide general guidance, but medical arrangements are your responsibility.',
+        'This is entirely independent of The Pickleball Passport trip. We can provide general guidance, but medical arrangements are your responsibility.',
       ],
       sortOrder: 4,
     },

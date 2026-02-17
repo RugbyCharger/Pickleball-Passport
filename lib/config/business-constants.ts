@@ -313,14 +313,14 @@ export const PASSPORT_STAMPS_CONFIG = {
     FIRST_TRIP: {
       code: 'FIRST_TRIP',
       name: 'First Adventure',
-      description: 'Complete your first Pickleball Passport trip',
+      description: 'Complete your first The Pickleball Passport trip',
       category: 'TRIPS',
       criteria: { type: 'TRIPS_COMPLETED', count: 1 },
     },
     REPEAT_TRAVELER: {
       code: 'REPEAT_TRAVELER',
       name: 'Repeat Traveler',
-      description: 'Complete two Pickleball Passport trips',
+      description: 'Complete two The Pickleball Passport trips',
       category: 'TRIPS',
       criteria: { type: 'TRIPS_COMPLETED', count: 2 },
     },

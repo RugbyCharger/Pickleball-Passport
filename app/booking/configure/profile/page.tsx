@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import ProfileCompletionClient from './profile-client'
 
 export const metadata: Metadata = {
-  title: 'Complete Your Profile | Pickleball Passport',
+  title: 'Complete Your Profile | The Pickleball Passport',
   description: 'Complete your guest profile before finalizing your booking.',
 }
 

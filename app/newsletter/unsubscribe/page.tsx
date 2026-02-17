@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import UnsubscribeClient from './unsubscribe-client';
 
 export const metadata = {
-  title: 'Unsubscribe | Pickleball Passport',
+  title: 'Unsubscribe | The Pickleball Passport',
   description: 'Unsubscribe from newsletter',
 };
 

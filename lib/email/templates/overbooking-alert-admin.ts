@@ -182,7 +182,7 @@ export function generateOverbookingAlertEmail(
     </div>
 
     <p>
-      <strong>Pickleball Passport Admin System</strong>
+      <strong>The Pickleball Passport Admin System</strong>
     </p>
   `;
 
@@ -190,7 +190,7 @@ export function generateOverbookingAlertEmail(
     title: 'URGENT: Overbooking Prevention Triggered',
     content,
     preheader: `Trip ${data.tripName} at capacity - guest ${data.guestEmail} paid ${formatCurrency(data.paymentAmount)}`,
-    footerText: 'This is an automated admin alert from Pickleball Passport.',
+    footerText: 'This is an automated admin alert from The Pickleball Passport.',
   });
 
   const text = generatePlainText(content);

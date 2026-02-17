@@ -133,7 +133,7 @@ export default function PartnerOnboardingPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">
-                Welcome to Pickleball Passport!
+                Welcome to The Pickleball Passport!
               </h1>
               <p className="mt-2 text-slate-600">
                 Let's get you set up in just a few steps
@@ -389,7 +389,7 @@ export default function PartnerOnboardingPage() {
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">Marketing Materials</h2>
                 <p className="mt-2 text-slate-600">
-                  Download ready-to-use resources to promote Pickleball Passport
+                  Download ready-to-use resources to promote The Pickleball Passport
                 </p>
               </div>
 

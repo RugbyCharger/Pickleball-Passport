@@ -53,31 +53,31 @@ function extractHeadings(content: string): Heading[] {
 }
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Pickleball Passport',
+  title: 'Terms of Service | The Pickleball Passport',
   description:
-    "Review Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
+    "Review The Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
   keywords: [
     'terms of service',
     'booking policy',
     'cancellation policy',
     'refund policy',
     'medical tourism terms',
-    'Pickleball Passport terms',
+    'The Pickleball Passport terms',
   ],
   openGraph: {
-    title: 'Terms of Service | Pickleball Passport',
+    title: 'Terms of Service | The Pickleball Passport',
     description:
-      "Review Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
+      "Review The Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
     url: 'https://pickleballpassport.com/terms',
-    siteName: 'Pickleball Passport',
+    siteName: 'The Pickleball Passport',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Terms of Service | Pickleball Passport',
+    title: 'Terms of Service | The Pickleball Passport',
     description:
-      "Review Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
+      "Review The Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
     site: '@PickleballPass',
     creator: '@PickleballPass',
   },

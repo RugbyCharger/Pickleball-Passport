@@ -39,7 +39,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thepickleballpassport.org'),
-  title: "Pickleball Passport | Luxury Transformation Tourism in Thailand",
+  title: "The Pickleball Passport | Luxury Transformation Tourism in Thailand",
   description: "Where Pickleball Meets World-Class Wellness and Medical Care in Thailand",
 };
 
@@ -52,22 +52,20 @@ export default function RootLayout({
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Pickleball Passport',
+    name: 'The Pickleball Passport',
     url: 'https://thepickleballpassport.org',
     logo: 'https://thepickleballpassport.org/logo.png',
     description: 'Luxury wellness and pickleball experiences combining medical tourism, spiritual transformation, and pickleball in Thailand.',
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+1-800-555-PICKLE',
+      telephone: '+1-512-564-8522',
       contactType: 'Customer Service',
       email: 'jaron@thepickleballpassport.org',
       availableLanguage: ['English'],
     },
     sameAs: [
-      'https://facebook.com/pickleballpassport',
-      'https://instagram.com/pickleballpassport',
-      'https://twitter.com/PickleballPass',
-      'https://linkedin.com/company/pickleballpassport',
+      'https://www.instagram.com/pickleball.passport',
+      'https://www.linkedin.com/in/jaron-shoptaugh-ab675574/',
     ],
     address: {
       '@type': 'PostalAddress',

@@ -25,7 +25,7 @@ import WellnessAddOnsSelector from '@/components/booking/wellness-add-ons-select
 import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
-  title: 'Wellness Add-Ons | Pickleball Passport',
+  title: 'Wellness Add-Ons | The Pickleball Passport',
   description:
     'Enhance your transformation with wellness treatments and cultural experiences.',
 }

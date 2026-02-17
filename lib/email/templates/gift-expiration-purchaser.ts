@@ -107,7 +107,7 @@ export function generateGiftExpirationPurchaserEmail(data: GiftExpirationPurchas
     title: 'Gift Expired - Refund Processed',
     content,
     preheader: `Your gift to ${data.recipientName} has expired. Full refund processed.`,
-    footerText: 'You received this email because a gift you purchased with Pickleball Passport has expired.',
+    footerText: 'You received this email because a gift you purchased with The Pickleball Passport has expired.',
   });
 
   const text = generatePlainText(html);

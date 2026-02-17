@@ -66,7 +66,7 @@ export default function PartnerMaterialsPage() {
 
   const generateSocialCaption = (material: MarketingMaterial): string => {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
-    return `🏓 Excited to share Pickleball Passport with our club members!
+    return `🏓 Excited to share The Pickleball Passport with our club members!
 
 ${material.description}
 
@@ -114,7 +114,7 @@ Learn more: ${baseUrl}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900">Marketing Materials Library</h1>
           <p className="mt-1 text-slate-600">
-            Download ready-to-use materials to promote Pickleball Passport at your club
+            Download ready-to-use materials to promote The Pickleball Passport at your club
           </p>
         </div>
 

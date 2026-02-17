@@ -53,7 +53,7 @@ export function generateTripGroupInvitationMessage(
 
   return `🎉 Hi ${data.guestName}!
 
-Welcome to Pickleball Passport! Your booking for *${data.tripName}* is confirmed.
+Welcome to The Pickleball Passport! Your booking for *${data.tripName}* is confirmed.
 
 📍 *Destination:* ${data.destination}
 📅 *Dates:* ${data.startDate} - ${data.endDate}
@@ -71,7 +71,7 @@ Tap the link above to join and introduce yourself!
 
 We're excited to have you join us in Thailand! 🏓🇹🇭
 
-— The Pickleball Passport Team`;
+- The Pickleball Passport Team`;
 }
 
 /**
@@ -90,5 +90,5 @@ Don't miss out on connecting with your fellow travelers and getting important up
 
 See you there! 🏓
 
-— The Pickleball Passport Team`;
+- The Pickleball Passport Team`;
 }

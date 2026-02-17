@@ -276,7 +276,7 @@ export function TestimonialSubmissionForm({
       <CardHeader>
         <CardTitle>Share Your Experience</CardTitle>
         <CardDescription>
-          Help others discover the Pickleball Passport experience by sharing your story.
+          Help others discover The Pickleball Passport experience by sharing your story.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -415,7 +415,7 @@ export function TestimonialSubmissionForm({
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Share your experience with Pickleball Passport..."
+                        placeholder="Share your experience with The Pickleball Passport..."
                         className="min-h-[150px]"
                         {...field}
                       />
@@ -555,7 +555,7 @@ export function TestimonialSubmissionForm({
                   <div className="space-y-1 leading-none">
                     <FormLabel>I consent to share my testimonial *</FormLabel>
                     <FormDescription>
-                      By checking this box, I consent to Pickleball Passport using my name, photo,
+                      By checking this box, I consent to The Pickleball Passport using my name, photo,
                       video, and testimonial content for marketing and promotional purposes. I
                       understand my testimonial may be displayed on the website and social media
                       channels.

@@ -42,7 +42,7 @@ export function generateContactAdminNotificationEmail(
   const content = `
     <h1>New Contact Form Submission</h1>
 
-    <p>You've received a new message from the Pickleball Passport contact form.</p>
+    <p>You've received a new message from The Pickleball Passport contact form.</p>
 
     <div style="background-color: #f9fafb; padding: 24px; border-radius: 8px; margin: 24px 0;">
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
@@ -72,7 +72,7 @@ export function generateContactAdminNotificationEmail(
       <p style="margin: 0; color: #78350f; white-space: pre-wrap;">${message}</p>
     </div>
 
-    <a href="mailto:${email}?subject=Re: Your Inquiry to Pickleball Passport" class="button" style="background-color: #003D5C;">
+    <a href="mailto:${email}?subject=Re: Your Inquiry to The Pickleball Passport" class="button" style="background-color: #003D5C;">
       Reply to ${name}
     </a>
 
@@ -86,13 +86,13 @@ export function generateContactAdminNotificationEmail(
     content,
     preheader: `New message from ${name} (${email})`,
     footerText:
-      'This is an automated notification from the Pickleball Passport contact form.',
+      'This is an automated notification from The Pickleball Passport contact form.',
   })
 
   const text = generatePlainText(`
     New Contact Form Submission
 
-    You've received a new message from the Pickleball Passport contact form.
+    You've received a new message from The Pickleball Passport contact form.
 
     Contact Details:
     - Name: ${name}
@@ -107,9 +107,9 @@ export function generateContactAdminNotificationEmail(
 
     ---
 
-    This is an automated notification from the Pickleball Passport contact form.
+    This is an automated notification from The Pickleball Passport contact form.
 
-    © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+    © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
     Chiang Mai, Thailand
   `)
 

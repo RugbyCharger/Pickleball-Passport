@@ -31,7 +31,7 @@ const step3Schema = z.object({
 });
 
 const step4Schema = z.object({
-  preferredDuration: z.enum(['7', '10', '14', '21']),
+  preferredDuration: z.enum(['8', '10', '13', '18-20']),
   preferredDates: z.string().optional(),
   travelingAlone: z.boolean(),
   budgetRange: z.string().optional(),
@@ -407,7 +407,7 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
             <div>
               <Label>Preferred Duration *</Label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                {['7', '10', '14', '21'].map((days) => (
+                {['8', '10', '13', '18-20'].map((days) => (
                   <label
                     key={days}
                     className={`relative flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
@@ -480,11 +480,9 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="">Select a range</option>
-                <option value="under-5k">Under $5,000</option>
-                <option value="5k-10k">$5,000 - $10,000</option>
-                <option value="10k-15k">$10,000 - $15,000</option>
-                <option value="15k-20k">$15,000 - $20,000</option>
-                <option value="20k+">$20,000+</option>
+                <option value="2.5k-5k">$2,500 – $5,000</option>
+                <option value="5k-7.5k">$5,000 – $7,500</option>
+                <option value="7.5k-10k">$7,500 – $10,000</option>
               </select>
               <p className="text-xs text-slate-500 mt-1">
                 This helps us recommend the right package
@@ -537,7 +535,7 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
                 className="mt-1"
               />
               <p className="text-xs text-slate-500 mt-1">
-                Optional — helps us recognize our partners
+                Optional. Helps us recognize our partners.
               </p>
             </div>
 

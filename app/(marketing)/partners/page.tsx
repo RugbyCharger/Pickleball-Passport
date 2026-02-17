@@ -112,7 +112,7 @@ export default function PartnersPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-              Why Partner With Pickleball Passport?
+              Why Partner With The Pickleball Passport?
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           </div>
@@ -167,7 +167,7 @@ export default function PartnersPage() {
                 <p className="text-[#1D2D44]/70 leading-relaxed">
                   Qualifying partners earn complimentary trips to experience the
                   program firsthand. Play in the same tournaments, stay at the same
-                  hotels, and see what your members will love — before you promote it.
+                  hotels, and see what your members will love before you promote it.
                 </p>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default function PartnersPage() {
                   </h3>
                   <p className="text-[#1D2D44]/70">
                     Create your partner account in just 2 minutes. No approval
-                    wait time — instant access to your dashboard and marketing
+                    wait time. Instant access to your dashboard and marketing
                     materials.
                   </p>
                 </div>
@@ -420,6 +420,17 @@ export default function PartnersPage() {
                   Learn More
                 </Button>
               </div>
+              <p className="mt-6 text-[#1D2D44]/60 text-sm">
+                Want to get started faster?{' '}
+                <a
+                  href="https://calendly.com/jaron-thepickleballpassport/15min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#B08D55] hover:text-[#8D7144] font-medium underline underline-offset-2 transition-colors"
+                >
+                  Book a 15-minute intro call with Jaron
+                </a>
+              </p>
             </div>
           </div>
         </div>

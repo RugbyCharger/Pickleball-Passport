@@ -64,7 +64,7 @@ export function generatePartnerReferralApplicationEmail(data: PartnerReferralApp
       </p>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
-        Exciting news! Someone you referred (<strong>${data.guestInitials}</strong>) just submitted their application to join a Pickleball Passport experience.
+        Exciting news! Someone you referred (<strong>${data.guestInitials}</strong>) just submitted their application to join The Pickleball Passport experience.
       </p>
 
       <!-- Application Details Card -->
@@ -125,7 +125,7 @@ export function generatePartnerReferralApplicationEmail(data: PartnerReferralApp
         Keep sharing your referral link to continue growing your points balance!
       </p>
     `,
-    footerText: 'You\'re receiving this email because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this email because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -133,7 +133,7 @@ export function generatePartnerReferralApplicationEmail(data: PartnerReferralApp
 
     Hi ${data.partnerName},
 
-    Exciting news! Someone you referred (${data.guestInitials}) just submitted their application to join a Pickleball Passport experience.
+    Exciting news! Someone you referred (${data.guestInitials}) just submitted their application to join The Pickleball Passport experience.
 
     APPLICATION DETAILS
     -------------------
@@ -155,8 +155,8 @@ export function generatePartnerReferralApplicationEmail(data: PartnerReferralApp
     Keep sharing your referral link to continue growing your points balance!
 
     --
-    Pickleball Passport
-    You're receiving this email because you're a valued Pickleball Passport partner.
+    The Pickleball Passport
+    You're receiving this email because you're a valued The Pickleball Passport partner.
   `);
 
   return {

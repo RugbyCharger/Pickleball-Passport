@@ -26,7 +26,7 @@ import { PricingSummary } from '@/components/booking/pricing-summary'
 import { GiftSection } from '@/components/booking/gift-section'
 
 export const metadata: Metadata = {
-  title: 'Medical Add-Ons | Pickleball Passport',
+  title: 'Medical Add-Ons | The Pickleball Passport',
   description:
     'Customize your transformation package with medical and cosmetic procedures at Thai prices.',
 }

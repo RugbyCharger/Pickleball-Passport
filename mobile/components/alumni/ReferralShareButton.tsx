@@ -18,14 +18,14 @@ export function ReferralShareButton({
   userName,
 }: ReferralShareButtonProps) {
   const shareUrl = `https://pickleballpassport.com/r/${referralCode}`;
-  const message = `Join me on an incredible Pickleball Passport trip! Use my code ${referralCode} for a special discount: ${shareUrl}`;
+  const message = `Join me on an incredible The Pickleball Passport trip! Use my code ${referralCode} for a special discount: ${shareUrl}`;
 
   const handleShare = async () => {
     try {
       const result = await Share.share({
         message,
         url: shareUrl,
-        title: 'Join Pickleball Passport',
+        title: 'Join The Pickleball Passport',
       });
 
       if (result.action === Share.dismissedAction) {

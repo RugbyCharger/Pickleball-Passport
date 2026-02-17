@@ -17,22 +17,22 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
+  title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
   description:
     'Learn about our safety standards, JCI-accredited hospitals, comprehensive travel insurance, and transparent policies for your transformation tourism experience in Thailand.',
   keywords: ['travel insurance', 'medical tourism safety', 'JCI accreditation', 'Thailand hospital credentials', 'medical tourism insurance', 'safe medical tourism'],
   openGraph: {
-    title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
+    title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
     description:
       'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
     url: 'https://pickleballpassport.com/trust-and-safety',
-    siteName: 'Pickleball Passport',
+    siteName: 'The Pickleball Passport',
     images: [
       {
         url: '/og-images/trust-safety.jpg',
         width: 1200,
         height: 630,
-        alt: 'Trust & Safety - Pickleball Passport Medical Tourism',
+        alt: 'Trust & Safety - The Pickleball Passport Medical Tourism',
       },
     ],
     locale: 'en_US',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Trust & Safety - Credentials & Policies | Pickleball Passport',
+    title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
     description:
       'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
     images: ['/og-images/trust-safety.jpg'],

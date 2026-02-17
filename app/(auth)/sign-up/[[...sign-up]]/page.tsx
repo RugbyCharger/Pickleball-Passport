@@ -19,7 +19,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="font-playfair text-4xl font-bold text-primary mb-2">
-            Join Pickleball Passport
+            Join The Pickleball Passport
           </h1>
           <p className="text-muted-foreground">
             Start your transformation journey in Thailand

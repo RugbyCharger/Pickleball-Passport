@@ -55,7 +55,7 @@ export function generateDocumentApprovalEmail(data: DocumentApprovalData): {
 
     <p>
       Great news! We've reviewed and approved your <strong>${data.documentTypeFriendly}</strong>.
-      You're one step closer to your transformation journey with Pickleball Passport!
+      You're one step closer to your transformation journey with The Pickleball Passport!
     </p>
 
     <div style="margin: 32px 0; padding: 24px; background-color: #f0fdf4; border-radius: 12px; border-left: 4px solid #059669; text-align: center;">
@@ -156,7 +156,7 @@ export function generateDocumentApprovalEmail(data: DocumentApprovalData): {
   `;
 
   const html = baseEmailTemplate({
-    title: 'Document Approved - Pickleball Passport',
+    title: 'Document Approved - The Pickleball Passport',
     content,
     preheader: `Your ${data.documentTypeFriendly} has been approved!`,
     footerText: `You received this email regarding your Pickleball Passport documentation.`,
@@ -167,6 +167,6 @@ export function generateDocumentApprovalEmail(data: DocumentApprovalData): {
   return {
     html,
     text,
-    subject: `✅ ${data.documentTypeFriendly} Approved - Pickleball Passport`,
+    subject: `✅ ${data.documentTypeFriendly} Approved - The Pickleball Passport`,
   };
 }

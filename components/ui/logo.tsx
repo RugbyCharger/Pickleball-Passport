@@ -19,7 +19,7 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
   return (
     <Image
       src="/logo.png"
-      alt="Pickleball Passport"
+      alt="The Pickleball Passport"
       width={dimension}
       height={dimension}
       className={className}
@@ -35,7 +35,7 @@ export function LogoIcon({ size = 'md', className = '' }: LogoProps) {
   return (
     <Image
       src="/logo.png"
-      alt="Pickleball Passport"
+      alt="The Pickleball Passport"
       width={dimension}
       height={dimension}
       className={className}

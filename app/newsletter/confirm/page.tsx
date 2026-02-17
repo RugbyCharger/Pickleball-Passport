@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import ConfirmClient from './confirm-client';
 
 export const metadata = {
-  title: 'Confirm Subscription | Pickleball Passport',
+  title: 'Confirm Subscription | The Pickleball Passport',
   description: 'Confirm your newsletter subscription',
 };
 

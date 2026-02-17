@@ -84,7 +84,7 @@ export function generateGuestReferralBookingEmail(data: GuestReferralBookingData
       </p>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
-        Great news! <strong>${displayName}</strong> just completed their booking for a Pickleball Passport experience using your referral code. Thank you for spreading the word!
+        Great news! <strong>${displayName}</strong> just completed their booking for The Pickleball Passport experience using your referral code. Thank you for spreading the word!
       </p>
 
       <!-- Booking Details Card -->
@@ -132,7 +132,7 @@ export function generateGuestReferralBookingEmail(data: GuestReferralBookingData
       </div>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 24px 0;">
-        Your referrals help grow our pickleball community, and we appreciate you being an ambassador for Pickleball Passport!
+        Your referrals help grow our pickleball community, and we appreciate you being an ambassador for The Pickleball Passport!
       </p>
 
       <!-- CTA Button -->
@@ -146,7 +146,7 @@ export function generateGuestReferralBookingEmail(data: GuestReferralBookingData
         Questions about your referral rewards? Reply to this email and we'll be happy to help!
       </p>
     `,
-    footerText: 'You\'re receiving this email because you\'re a Pickleball Passport alumni with an active referral code.'
+    footerText: 'You\'re receiving this email because you\'re The Pickleball Passport alumni with an active referral code.'
   });
 
   const text = generatePlainText(`
@@ -154,7 +154,7 @@ export function generateGuestReferralBookingEmail(data: GuestReferralBookingData
 
     Hi ${data.referrerName},
 
-    Great news! ${displayName} just completed their booking for a Pickleball Passport experience using your referral code. Thank you for spreading the word!
+    Great news! ${displayName} just completed their booking for The Pickleball Passport experience using your referral code. Thank you for spreading the word!
 
     BOOKING DETAILS
     ----------------
@@ -171,15 +171,15 @@ export function generateGuestReferralBookingEmail(data: GuestReferralBookingData
 
     Keep sharing your referral link to earn more points and rewards!
 
-    Your referrals help grow our pickleball community, and we appreciate you being an ambassador for Pickleball Passport!
+    Your referrals help grow our pickleball community, and we appreciate you being an ambassador for The Pickleball Passport!
 
     View Your Referral Dashboard: ${dashboardUrl}
 
     Questions about your referral rewards? Reply to this email and we'll be happy to help!
 
     --
-    Pickleball Passport
-    You're receiving this email because you're a Pickleball Passport alumni with an active referral code.
+    The Pickleball Passport
+    You're receiving this email because you're The Pickleball Passport alumni with an active referral code.
   `);
 
   return {

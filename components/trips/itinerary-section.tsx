@@ -195,51 +195,28 @@ const days: ItineraryDay[] = [
     day: 8,
     title: 'Elephants & Competition',
     city: 'Chiang Mai',
-    icon: 'sparkles',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Elephant Nature Park \u2014 ethical sanctuary founded by conservationist Lek Chailert. No riding, no chains. Feed, observe, and walk with rescued elephants.',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Free time. Optional: Doi Suthep temple hike (306 steps, panoramic views).',
-      },
-      {
-        label: 'Evening',
-        description:
-          'Chiang Mai Signature Dinner at Huan Soontaree \u2014 riverside Northern Thai with live folk music.',
-      },
-    ],
-  },
-  {
-    day: 9,
-    title: 'Tournament & Temples',
-    city: 'Chiang Mai',
     icon: 'trophy',
     slots: [
       {
         label: 'Morning',
         description:
-          'Pickleball Session 5 at BokBok \u2014 Competitive bracket tournament.',
+          'Pickleball Session 5 at BokBok. Competitive bracket play.',
       },
       {
         label: 'Afternoon',
         description:
-          'Wiang Kum Kam bicycle exploration \u2014 700-year-old Lanna ruins right outside the hotel.',
+          'Elephant Nature Park. Ethical sanctuary founded by conservationist Lek Chailert. No riding, no chains. Feed, observe, and walk with rescued elephants.',
       },
       {
         label: 'Evening',
         description:
-          'Free night. Optional: Nimmanhaemin Road galleries, Fah Lanna Spa.',
+          'Chiang Mai Signature Dinner at Huan Soontaree. Riverside Northern Thai with live folk music.',
       },
     ],
   },
   {
-    day: 10,
-    title: 'Fly to Phuket',
+    day: 9,
+    title: 'Fly to Phuket & Welcome Play',
     city: 'Phuket',
     icon: 'plane',
     slots: [
@@ -251,7 +228,30 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Check in at Sole Mio Boutique Hotel & Wellness. Wellness circuit: sauna \u2192 steam \u2192 cold room \u2192 yoga \u2192 repeat.',
+          'Arrive Phuket. Check in at Sole Mio Boutique Hotel & Wellness. Settle in and explore the property.',
+      },
+      {
+        label: 'Evening',
+        description:
+          'Pickleball Session 6 at Peak Racquet Club. Welcome session, casual open play.',
+      },
+    ],
+  },
+  {
+    day: 10,
+    title: 'Beach & Leisure Day',
+    city: 'Phuket',
+    icon: 'ship',
+    slots: [
+      {
+        label: 'Morning',
+        description:
+          'Free morning. Bang Tao Beach, hotel pool, or wellness circuit: sauna, steam, cold room, yoga.',
+      },
+      {
+        label: 'Afternoon',
+        description:
+          'Private speedboat charter. Phang Nga Bay, James Bond Island, sea cave kayaking, snorkeling, lunch on the water.',
       },
       {
         label: 'Evening',
@@ -262,29 +262,6 @@ const days: ItineraryDay[] = [
   },
   {
     day: 11,
-    title: 'Speedboat Adventure',
-    city: 'Phuket',
-    icon: 'ship',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Private speedboat charter \u2014 Phang Nga Bay. James Bond Island, sea cave kayaking, snorkeling, lunch on the water.',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Return to hotel. Bang Tao Beach free time with optional beach club access.',
-      },
-      {
-        label: 'Evening',
-        description:
-          'Free night. Optional: group yoga session at Sole Mio.',
-      },
-    ],
-  },
-  {
-    day: 12,
     title: 'Championship Day',
     city: 'Phuket',
     icon: 'trophy',
@@ -292,7 +269,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Pickleball Session 6 at Peak Racquet Park \u2014 Final championship, awards ceremony, group photo.',
+          'Pickleball Session 7 at Peak Racquet Club. Final championship, awards ceremony, group photo.',
       },
       {
         label: 'Afternoon',
@@ -302,7 +279,30 @@ const days: ItineraryDay[] = [
       {
         label: 'Evening',
         description:
-          "Phuket Closing Dinner at PRU at Trisara \u2014 Phuket's only Michelin-starred restaurant.",
+          "Phuket Closing Dinner at PRU at Trisara. Phuket's only Michelin-starred restaurant.",
+      },
+    ],
+  },
+  {
+    day: 12,
+    title: 'Free Day & Farewell',
+    city: 'Phuket',
+    icon: 'sparkles',
+    slots: [
+      {
+        label: 'Morning',
+        description:
+          'Free morning. Optional: beach, spa, shopping, or group yoga session at Sole Mio.',
+      },
+      {
+        label: 'Afternoon',
+        description:
+          'Departure preparations. Airport transfers available throughout the day.',
+      },
+      {
+        label: 'Evening',
+        description:
+          'Optional: final group dinner for those staying overnight.',
       },
     ],
   },
@@ -320,7 +320,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Note',
         description:
-          'Extend your stay if combining with dental or medical work.',
+          'Extend your stay for additional beach time or personal travel.',
       },
     ],
   },

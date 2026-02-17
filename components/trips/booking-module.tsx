@@ -1,137 +1,65 @@
 'use client';
 
 import { useState } from 'react';
+import { WaitlistModal } from '@/components/trips/waitlist-modal';
 
 interface BookingModuleProps {
-  // Future: tripId, available dates, pricing, spots remaining
+  tripName?: string;
 }
 
-export function BookingModule({}: BookingModuleProps) {
-  const [occupancy, setOccupancy] = useState<'DOUBLE' | 'SINGLE' | 'COUPLE'>('DOUBLE');
-  const [includesPickleball, setIncludesPickleball] = useState(true);
-  const [paymentPlan, setPaymentPlan] = useState<'deposit' | 'full'>('deposit');
+export function BookingModule({ tripName = 'Thailand - 13 Days / 12 Nights' }: BookingModuleProps) {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   return (
-    <div className="rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 bg-white overflow-hidden">
-      {/* Photo Carousel Placeholder */}
-      <div className="relative h-[180px] bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] rounded-t-2xl flex flex-col items-center justify-center">
-        <h3 className="font-serif text-2xl text-white font-semibold tracking-wide">
-          Thailand
-        </h3>
-        <p className="text-white/70 text-sm mt-1">
-          Bangkok &bull; Chiang Mai &bull; Phuket
-        </p>
-        {/* Dot indicators */}
-        <div className="absolute bottom-3 flex gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#B08D55]" />
-          <span className="w-2 h-2 rounded-full bg-white/30" />
-          <span className="w-2 h-2 rounded-full bg-white/30" />
-        </div>
-      </div>
-
-      {/* Form Area */}
-      <div className="p-5 space-y-4">
-        {/* Tour Dates */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#1D2D44]/50">
-            Tour Dates
-          </label>
-          <select
-            className="w-full h-11 rounded-xl border border-[#1D2D44]/15 bg-white px-3 text-sm text-[#1D2D44] focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none appearance-none"
-          >
-            <option>May 15 – 27, 2026</option>
-          </select>
-        </div>
-
-        {/* Room Occupancy */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#1D2D44]/50">
-            Room Occupancy
-          </label>
-          <select
-            value={occupancy}
-            onChange={(e) => setOccupancy(e.target.value as 'DOUBLE' | 'SINGLE' | 'COUPLE')}
-            className="w-full h-11 rounded-xl border border-[#1D2D44]/15 bg-white px-3 text-sm text-[#1D2D44] focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none appearance-none"
-          >
-            <option value="DOUBLE">Double Occupancy</option>
-            <option value="SINGLE">Single Occupancy</option>
-            <option value="COUPLE">Couple&apos;s Rate</option>
-          </select>
-        </div>
-
-        {/* Pickleball Toggle */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#1D2D44]/50">
-            Playing Pickleball?
-          </label>
-          <select
-            value={includesPickleball ? 'true' : 'false'}
-            onChange={(e) => setIncludesPickleball(e.target.value === 'true')}
-            className="w-full h-11 rounded-xl border border-[#1D2D44]/15 bg-white px-3 text-sm text-[#1D2D44] focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none appearance-none"
-          >
-            <option value="true">Yes — Full Program</option>
-            <option value="false">Travel Companion Only</option>
-          </select>
-        </div>
-
-        {/* Payment Plan Toggle */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-[#1D2D44]/50">
-            Payment Plan
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setPaymentPlan('deposit')}
-              className={`rounded-xl border px-3 py-2.5 text-left transition-all ${
-                paymentPlan === 'deposit'
-                  ? 'border-[#B08D55] bg-[#FDF8F3]'
-                  : 'border-[#1D2D44]/10 bg-white hover:border-[#1D2D44]/20'
-              }`}
-            >
-              <span className="block text-sm font-medium text-[#1D2D44]">Pay Deposit</span>
-              <span className="block text-[11px] text-[#1D2D44]/45 mt-0.5 leading-tight">
-                20% to reserve your spot
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPaymentPlan('full')}
-              className={`rounded-xl border px-3 py-2.5 text-left transition-all ${
-                paymentPlan === 'full'
-                  ? 'border-[#B08D55] bg-[#FDF8F3]'
-                  : 'border-[#1D2D44]/10 bg-white hover:border-[#1D2D44]/20'
-              }`}
-            >
-              <span className="block text-sm font-medium text-[#1D2D44]">Pay in Full</span>
-              <span className="block text-[11px] text-[#1D2D44]/45 mt-0.5 leading-tight">
-                Early booking discount (2% off)
-              </span>
-            </button>
+    <>
+      <div className="rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 bg-white overflow-hidden">
+        {/* Photo Carousel Placeholder */}
+        <div className="relative h-[180px] bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] rounded-t-2xl flex flex-col items-center justify-center">
+          <h3 className="font-serif text-2xl text-white font-semibold tracking-wide">
+            Thailand
+          </h3>
+          <p className="text-white/70 text-sm mt-1">
+            Bangkok &bull; Chiang Mai &bull; Phuket
+          </p>
+          {/* Dot indicators */}
+          <div className="absolute bottom-3 flex gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#B08D55]" />
+            <span className="w-2 h-2 rounded-full bg-white/30" />
+            <span className="w-2 h-2 rounded-full bg-white/30" />
           </div>
         </div>
 
-        {/* Price Display */}
-        <div className="pt-2 pb-1 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
-          <p className="font-serif text-2xl font-semibold text-[#1D2D44]">$3,999 <span className="text-sm font-normal text-[#1D2D44]/60">per person</span></p>
-        </div>
+        {/* Content Area */}
+        <div className="p-5 space-y-4">
+          {/* Price Display */}
+          <div className="pt-2 pb-1 text-center">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
+            <p className="font-serif text-xl font-semibold text-[#1D2D44]">Coming Soon</p>
+          </div>
 
-        {/* Urgency Element */}
-        <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#B08D55]">
-          Remaining Spots: 16 / 16
-        </p>
+          {/* Info Text */}
+          <p className="text-center text-xs text-[#1D2D44]/60 leading-relaxed">
+            Join the waitlist to be the first to know when pricing and booking open.
+          </p>
 
-        {/* CTA Button */}
-        <div className="space-y-2">
-          <a
-            href="/apply"
-            className="block w-full h-12 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider flex items-center justify-center shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
-          >
-            Book Now
-          </a>
+          {/* CTA Button */}
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
+              className="block w-full h-12 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider flex items-center justify-center shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+            >
+              Reserve Your Spot &rarr;
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      <WaitlistModal
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        tripName={tripName}
+      />
+    </>
   );
 }

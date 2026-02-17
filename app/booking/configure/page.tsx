@@ -18,7 +18,7 @@ import PackageSelector from '@/components/booking/package-selector'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
-  title: 'Select Your Package | Pickleball Passport',
+  title: 'Select Your Package | The Pickleball Passport',
   description: 'Choose your transformation package and begin your journey.',
 }
 

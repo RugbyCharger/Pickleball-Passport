@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { LogoIcon } from '@/components/ui/logo';
 
@@ -21,7 +21,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,13 +36,6 @@ export function Header() {
       return pathname === href;
     }
     return pathname.startsWith(href);
-  };
-
-  const getDashboardLink = () => {
-    const role = user?.publicMetadata?.role as string | undefined;
-    if (role === 'admin') return '/admin/dashboard';
-    if (role === 'partner') return '/partner/dashboard';
-    return '/guest/dashboard';
   };
 
   return (
@@ -69,7 +62,7 @@ export function Header() {
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="font-serif text-xl font-bold text-[#1D2D44] tracking-tight">
-                  Pickleball Passport
+                  The Pickleball Passport
                 </span>
                 <span className="text-xs text-[#B08D55] font-medium tracking-widest uppercase">
                   Play the World
@@ -100,32 +93,20 @@ export function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex lg:items-center lg:space-x-3">
-            {isSignedIn ? (
-              <Button
-                asChild
-                className="bg-[#1D2D44] hover:bg-[#002B42] text-white shadow-lg shadow-[#1D2D44]/20"
-              >
-                <Link href={getDashboardLink()}>
-                  <User className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Link>
+            {!isSignedIn && (
+              <Button asChild variant="ghost" className="text-[#1D2D44] hover:bg-[#F5E6D3]/50">
+                <Link href="/sign-in">Sign In</Link>
               </Button>
-            ) : (
-              <>
-                <Button asChild variant="ghost" className="text-[#1D2D44] hover:bg-[#F5E6D3]/50">
-                  <Link href="/sign-in">Sign In</Link>
-                </Button>
-                <Button
-                  asChild
-                  className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold shadow-lg shadow-[#B08D55]/30 transition-all hover:shadow-xl hover:shadow-[#B08D55]/40"
-                >
-                  <Link href="/apply">
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Start Your Journey
-                  </Link>
-                </Button>
-              </>
             )}
+            <Button
+              asChild
+              className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold shadow-lg shadow-[#B08D55]/30 transition-all hover:shadow-xl hover:shadow-[#B08D55]/40"
+            >
+              <Link href="/apply">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Start Your Journey
+              </Link>
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -174,38 +155,26 @@ export function Header() {
 
             {/* Mobile CTA Buttons */}
             <div className="border-t border-[#B08D55]/20 pt-4 pb-2 space-y-3">
-              {isSignedIn ? (
+              {!isSignedIn && (
                 <Button
                   asChild
-                  className="w-full bg-[#1D2D44] hover:bg-[#002B42] text-white py-6"
+                  variant="outline"
+                  className="w-full border-[#1D2D44]/30 text-[#1D2D44] hover:bg-[#F5E6D3]/50 py-6"
                 >
-                  <Link href={getDashboardLink()} onClick={() => setMobileMenuOpen(false)}>
-                    <User className="mr-2 h-5 w-5" />
-                    Go to Dashboard
+                  <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
+                    Sign In
                   </Link>
                 </Button>
-              ) : (
-                <>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full border-[#1D2D44]/30 text-[#1D2D44] hover:bg-[#F5E6D3]/50 py-6"
-                  >
-                    <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                      Sign In
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="w-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold py-6"
-                  >
-                    <Link href="/apply" onClick={() => setMobileMenuOpen(false)}>
-                      <Sparkles className="mr-2 h-5 w-5" />
-                      Start Your Journey
-                    </Link>
-                  </Button>
-                </>
               )}
+              <Button
+                asChild
+                className="w-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold py-6"
+              >
+                <Link href="/apply" onClick={() => setMobileMenuOpen(false)}>
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Start Your Journey
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

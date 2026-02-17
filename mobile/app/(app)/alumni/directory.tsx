@@ -59,7 +59,7 @@ export default function DirectoryScreen() {
       <View className="bg-purple-600 pt-4 pb-8 px-4">
         <Text className="text-white text-2xl font-bold">Alumni Directory</Text>
         <Text className="text-purple-200 mt-1">
-          Connect with fellow Pickleball Passport travelers
+          Connect with fellow The Pickleball Passport travelers
         </Text>
       </View>
 

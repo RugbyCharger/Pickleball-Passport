@@ -17,7 +17,7 @@ export function unsubscribeConfirmationEmail(email: string): {
   const content = `
     <h1>You've Been Unsubscribed</h1>
     <p>We've successfully removed <strong>${email}</strong> from our newsletter mailing list.</p>
-    <p>You will no longer receive marketing emails from Pickleball Passport.</p>
+    <p>You will no longer receive marketing emails from The Pickleball Passport.</p>
 
     <div style="background-color: #f9fafb; border-left: 4px solid #059669; padding: 16px; margin: 24px 0;">
       <p style="margin: 0; font-size: 14px; color: #4b5563;">
@@ -43,21 +43,21 @@ export function unsubscribeConfirmationEmail(email: string): {
   `;
 
   const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
-  const footerText = `This email confirms your unsubscribe request from Pickleball Passport marketing emails.`;
+  const footerText = `This email confirms your unsubscribe request from The Pickleball Passport marketing emails.`;
 
   const html = baseEmailTemplate({
     title: 'Unsubscribe Confirmation',
     content,
-    preheader: 'You have been unsubscribed from Pickleball Passport updates',
+    preheader: 'You have been unsubscribed from The Pickleball Passport updates',
     footerText: `${footerText}<br><br><a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>`,
   });
 
   const text = `
-You've Been Unsubscribed - Pickleball Passport
+You've Been Unsubscribed - The Pickleball Passport
 
 We've successfully removed ${email} from our newsletter mailing list.
 
-You will no longer receive marketing emails from Pickleball Passport.
+You will no longer receive marketing emails from The Pickleball Passport.
 
 Note: You may still receive transactional emails related to bookings or account activity if you have an active account with us.
 
@@ -77,12 +77,12 @@ Thank you for being part of our community. We hope to see you again!
 
 ${footerText}
 
-© ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+© ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
 Chiang Mai, Thailand
   `.trim();
 
   return {
-    subject: "You've been unsubscribed from Pickleball Passport",
+    subject: "You've been unsubscribed from The Pickleball Passport",
     html,
     text,
   };

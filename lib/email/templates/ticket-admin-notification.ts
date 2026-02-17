@@ -178,7 +178,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
       ? `URGENT: New support ticket from ${escapeHtml(name)} requires immediate attention`
       : `New support ticket from ${escapeHtml(name)} (${categoryLabel})`,
     footerText:
-      'This is an automated notification from the Pickleball Passport support system.',
+      'This is an automated notification from The Pickleball Passport support system.',
   })
 
   const text = generatePlainText(`
@@ -206,9 +206,9 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
 
     ---
 
-    This is an automated notification from the Pickleball Passport support system.
+    This is an automated notification from The Pickleball Passport support system.
 
-    © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+    © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
     Chiang Mai, Thailand
   `)
 

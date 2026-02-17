@@ -92,7 +92,7 @@ export default function ReferralsScreen() {
       <View className="bg-purple-600 pt-4 pb-8 px-4">
         <Text className="text-white text-2xl font-bold">Earn Rewards</Text>
         <Text className="text-purple-200 mt-1">
-          Share your love of Pickleball Passport
+          Share your love of The Pickleball Passport
         </Text>
       </View>
 

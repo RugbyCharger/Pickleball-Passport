@@ -27,7 +27,7 @@ export const TRAINING_RESOURCES: TrainingResource[] = [
   {
     id: 'gs-1',
     category: 'getting-started',
-    title: 'Welcome to Pickleball Passport',
+    title: 'Welcome to The Pickleball Passport',
     description: 'Complete onboarding guide covering the partner program, how it works, and what to expect.',
     type: 'pdf',
     url: '/partner-training/guides/welcome-to-pickleball-passport.pdf',
@@ -88,8 +88,8 @@ export const TRAINING_RESOURCES: TrainingResource[] = [
   {
     id: 'sales-1',
     category: 'sales',
-    title: 'How to Talk About Pickleball Passport',
-    description: 'Complete guide on positioning and explaining Pickleball Passport to your members.',
+    title: 'How to Talk About The Pickleball Passport',
+    description: 'Complete guide on positioning and explaining The Pickleball Passport to your members.',
     type: 'pdf',
     url: '/partner-training/guides/how-to-talk-about-pbp.pdf',
     fileSize: '1.8 MB',
@@ -107,7 +107,7 @@ export const TRAINING_RESOURCES: TrainingResource[] = [
     id: 'sales-3',
     category: 'sales',
     title: 'Email Templates for Member Outreach',
-    description: 'Ready-to-use email templates for introducing Pickleball Passport to your members.',
+    description: 'Ready-to-use email templates for introducing The Pickleball Passport to your members.',
     type: 'pdf',
     url: '/partner-training/guides/email-templates.pdf',
     fileSize: '650 KB',
@@ -122,10 +122,10 @@ export const TRAINING_RESOURCES: TrainingResource[] = [
 # Elevator Pitch Examples
 
 ## For Club Announcements (30 seconds)
-"Pickleball Passport combines your love of pickleball with world-class wellness and medical care in Thailand. It's a 7-21 day transformation journey where you play pickleball daily while receiving dental work, cosmetic procedures, or wellness treatments at a fraction of US costs. Plus, you get to experience the culture and beauty of Thailand. I'm a partner and can help you get started!"
+"The Pickleball Passport combines your love of pickleball with world-class wellness and medical care in Thailand. It's a 7-21 day transformation journey where you play pickleball daily while receiving dental work, cosmetic procedures, or wellness treatments at a fraction of US costs. Plus, you get to experience the culture and beauty of Thailand. I'm a partner and can help you get started!"
 
 ## For One-on-One Conversations
-"Have you ever thought about combining a vacation with medical or wellness treatments? Pickleball Passport does exactly that - you play pickleball every day while getting dental work, cosmetic procedures, or wellness treatments in Thailand. It's like a medical tourism trip, but specifically designed for pickleball players. I can share more details if you're interested."
+"Have you ever thought about combining a vacation with medical or wellness treatments? The Pickleball Passport does exactly that - you play pickleball every day while getting dental work, cosmetic procedures, or wellness treatments in Thailand. It's like a medical tourism trip, but specifically designed for pickleball players. I can share more details if you're interested."
     `,
   },
 

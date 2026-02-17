@@ -41,7 +41,7 @@ export function generateApplicationConfirmationEmail(
     </p>
 
     <p>
-      Thank you for applying to Pickleball Passport! We're excited to help you plan your
+      Thank you for applying to The Pickleball Passport! We're excited to help you plan your
       transformation journey to Thailand.
     </p>
 
@@ -130,10 +130,10 @@ export function generateApplicationConfirmationEmail(
   `;
 
   const html = baseEmailTemplate({
-    title: 'Application Received - Pickleball Passport',
+    title: 'Application Received - The Pickleball Passport',
     content,
     preheader: 'Your application has been received. Next step: Schedule your consultation!',
-    footerText: 'You received this email because you submitted an application to Pickleball Passport.',
+    footerText: 'You received this email because you submitted an application to The Pickleball Passport.',
   });
 
   const text = generatePlainText(content);

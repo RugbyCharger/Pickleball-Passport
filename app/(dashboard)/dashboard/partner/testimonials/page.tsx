@@ -152,7 +152,7 @@ export default function PartnerTestimonialsPage() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900">My Testimonials</h1>
             <p className="mt-1 text-slate-600">
-              Share your experience with the Pickleball Passport Partner Program
+              Share your experience with The Pickleball Passport Partner Program
             </p>
           </div>
           <Button onClick={() => setShowModal(true)} className="gap-2">
@@ -296,7 +296,7 @@ export default function PartnerTestimonialsPage() {
                     maxLength={500}
                     rows={5}
                     className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    placeholder="Share your experience with the Pickleball Passport Partner Program..."
+                    placeholder="Share your experience with The Pickleball Passport Partner Program..."
                     required
                   />
                   <p className="mt-1 text-sm text-slate-500">

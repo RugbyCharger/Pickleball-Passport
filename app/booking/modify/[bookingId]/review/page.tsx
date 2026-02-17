@@ -17,7 +17,7 @@ import { ModificationReviewClient } from './review-client'
 import { prisma } from '@/lib/db'
 
 export const metadata: Metadata = {
-  title: 'Review Modification | Pickleball Passport',
+  title: 'Review Modification | The Pickleball Passport',
   description: 'Review your booking modification before confirming changes.',
 }
 

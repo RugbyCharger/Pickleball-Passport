@@ -116,7 +116,7 @@ export function generateBookingConfirmationEmail(data: BookingConfirmationData):
 
     <p>
       Congratulations! Your booking has been confirmed and payment received. We're thrilled to
-      welcome you to Pickleball Passport for an unforgettable experience combining world-class
+      welcome you to The Pickleball Passport for an unforgettable experience combining world-class
       medical care, wellness, and pickleball in beautiful Thailand.
     </p>
 
@@ -272,10 +272,10 @@ export function generateBookingConfirmationEmail(data: BookingConfirmationData):
   `;
 
   const html = baseEmailTemplate({
-    title: 'Booking Confirmed - Pickleball Passport',
+    title: 'Booking Confirmed - The Pickleball Passport',
     content,
     preheader: `Booking ${data.bookingReference} confirmed! Your transformation journey awaits.`,
-    footerText: `You received this email because you completed a booking with Pickleball Passport.`,
+    footerText: `You received this email because you completed a booking with The Pickleball Passport.`,
   });
 
   const text = generatePlainText(content);

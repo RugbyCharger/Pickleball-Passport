@@ -15,7 +15,7 @@ export function newsletterWelcomeEmail(email: string): {
   const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
 
   const content = `
-    <h1>Welcome to Pickleball Passport!</h1>
+    <h1>Welcome to The Pickleball Passport!</h1>
     <p>You're officially part of our community! Thanks for confirming your subscription.</p>
 
     <h2 style="font-size: 20px; color: #111827; margin: 24px 0 12px 0;">What to Expect</h2>
@@ -37,17 +37,17 @@ export function newsletterWelcomeEmail(email: string): {
     </p>
   `;
 
-  const footerText = `You're receiving this email because you confirmed your subscription to Pickleball Passport updates.`;
+  const footerText = `You're receiving this email because you confirmed your subscription to The Pickleball Passport updates.`;
 
   const html = baseEmailTemplate({
-    title: 'Welcome to Pickleball Passport',
+    title: 'Welcome to The Pickleball Passport',
     content,
-    preheader: 'Welcome to the Pickleball Passport community! Here\'s what to expect.',
+    preheader: 'Welcome to The Pickleball Passport community! Here\'s what to expect.',
     footerText: `${footerText}<br><br><a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>`,
   });
 
   const text = `
-Welcome to Pickleball Passport!
+Welcome to The Pickleball Passport!
 
 You're officially part of our community! Thanks for confirming your subscription.
 
@@ -72,12 +72,12 @@ ${footerText}
 
 Unsubscribe: ${unsubscribeUrl}
 
-© ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+© ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
 Chiang Mai, Thailand
   `.trim();
 
   return {
-    subject: 'Welcome to Pickleball Passport Updates!',
+    subject: 'Welcome to The Pickleball Passport Updates!',
     html,
     text,
   };

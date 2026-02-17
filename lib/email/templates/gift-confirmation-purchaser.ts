@@ -247,7 +247,7 @@ export function generateGiftConfirmationPurchaserEmail(data: GiftConfirmationPur
     title: '🎁 Your Gift Booking is Confirmed!',
     content,
     preheader: `Your gift booking for ${data.recipientFirstName} ${data.recipientLastName} has been confirmed. Payment received: ${formatCurrency(data.totalPrice)}.`,
-    footerText: 'You received this email because you purchased a gift booking with Pickleball Passport.',
+    footerText: 'You received this email because you purchased a gift booking with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

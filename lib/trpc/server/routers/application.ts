@@ -41,7 +41,7 @@ export const applicationRouter = router({
         interests: z.array(z.string()).min(1),
 
         // Step 4: Travel Preferences
-        preferredDuration: z.enum(['7', '10', '14', '21']),
+        preferredDuration: z.enum(['8', '10', '13', '18-20']),
         preferredDates: z.string().nullable(),
         travelingAlone: z.boolean(),
         budgetRange: z.string().nullable(),

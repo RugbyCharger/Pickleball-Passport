@@ -18,7 +18,7 @@ import DurationSelector from '@/components/booking/duration-selector'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
-  title: 'Select Duration | Pickleball Passport',
+  title: 'Select Duration | The Pickleball Passport',
   description: 'Choose the duration of your transformation journey.',
 }
 

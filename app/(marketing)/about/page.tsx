@@ -101,7 +101,7 @@ export default function AboutPage() {
 
             <div className="space-y-6 text-lg text-[#1D2D44]/70 leading-relaxed">
               <p>
-                Pickleball Passport was built by two cousins who took the long way around to get here. And that&apos;s kind of the point.
+                The Pickleball Passport was built by two cousins who took the long way around to get here. And that&apos;s kind of the point.
               </p>
               <p>
                 Jaron spent seven years growing up in Saudi Arabia, then Arizona, before landing in Colorado Springs. Ryan grew up there from the start. Hockey at the outdoor rink. Snowboarding. Tennis. Pickup games of whatever was in season. Different childhoods, same wiring: competitive, outdoors, always moving.
@@ -119,10 +119,10 @@ export default function AboutPage() {
                 Jaron eventually moved to Thailand, working finance remotely. Burned out by night, but discovering pickleball during Bangkok mornings. That opened a door. Last year, they reconnected at The Launchpad, then took a holistic wellness journey through South America together. That trip was the final spark. They realized what they&apos;d built in Colorado wasn&apos;t just local impact. It was a model they could scale globally.
               </p>
               <p>
-                That&apos;s Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two guys who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
+                That&apos;s The Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two guys who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
               </p>
               <p className="font-medium text-[#1D2D44]">
-                The Launchpad was their launchpad. Pickleball Passport is how they&apos;re scaling what it taught them.
+                The Launchpad was their launchpad. The Pickleball Passport is how they&apos;re scaling what it taught them.
               </p>
             </div>
 
@@ -185,7 +185,7 @@ export default function AboutPage() {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-[#1D2D44]/70 max-w-2xl mx-auto">
-              We do things differently &mdash; and that&apos;s the point.
+              We do things differently, and that&apos;s the point.
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export default function AboutPage() {
             Ready to Play the World?
           </h2>
           <p className="text-xl text-[#1D2D44]/70 mb-10 max-w-2xl mx-auto">
-            Our flagship Thailand experience launches May 15, 2026. Be part of
+            Our flagship Thailand experiences launch May 2026. Be part of
             the first group.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

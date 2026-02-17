@@ -54,7 +54,7 @@ export default function SignIn() {
           <Text className="text-3xl font-bold text-gray-900 mb-2">
             Welcome back
           </Text>
-          <Text className="text-gray-600">Sign in to Pickleball Passport</Text>
+          <Text className="text-gray-600">Sign in to The Pickleball Passport</Text>
         </View>
 
         {error ? (

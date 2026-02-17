@@ -95,7 +95,7 @@ export default function TestimonialsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Testimonials</h1>
           <p className="text-muted-foreground">
-            Share your experience and help others discover Pickleball Passport
+            Share your experience and help others discover The Pickleball Passport
           </p>
         </div>
         {!showForm && (

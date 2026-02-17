@@ -112,7 +112,7 @@ export function BookingStatusTimeline({
       id: 'completed',
       label: 'Trip Completed',
       description: isCompleted
-        ? 'Your Pickleball Passport journey is complete!'
+        ? 'Your journey with The Pickleball Passport is complete!'
         : 'Enjoy your transformational experience',
       icon: CheckCircle,
       status: isCompleted ? 'completed' : tripConfirmed ? 'current' : 'upcoming',

@@ -77,7 +77,7 @@ export function generatePartnerReferralClickEmail(data: PartnerReferralClickData
 
       <div style="background-color: #e6f7ff; border-left: 4px solid #1890ff; padding: 16px; margin: 24px 0; border-radius: 4px;">
         <p style="margin: 0; color: #003D5C; font-size: 14px; line-height: 1.6;">
-          💡 <strong>Tip:</strong> Keep momentum going! Share your link on social media, email your club members, or post it at your facility to get more people interested in Pickleball Passport.
+          💡 <strong>Tip:</strong> Keep momentum going! Share your link on social media, email your club members, or post it at your facility to get more people interested in The Pickleball Passport.
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export function generatePartnerReferralClickEmail(data: PartnerReferralClickData
         </a>
       </div>
     `,
-    footerText: 'You\'re receiving this daily digest because you\'re a valued Pickleball Passport partner. Manage notification preferences in your partner portal.'
+    footerText: 'You\'re receiving this daily digest because you\'re a valued The Pickleball Passport partner. Manage notification preferences in your partner portal.'
   });
 
   const text = generatePlainText(`
@@ -100,12 +100,12 @@ export function generatePartnerReferralClickEmail(data: PartnerReferralClickData
     REFERRAL LINK CLICKS: ${data.clickCount} (24 hours)
     ${data.totalClicks ? `TOTAL ALL-TIME: ${data.totalClicks.toLocaleString()}` : ''}
 
-    💡 TIP: Keep momentum going! Share your link on social media, email your club members, or post it at your facility to get more people interested in Pickleball Passport.
+    💡 TIP: Keep momentum going! Share your link on social media, email your club members, or post it at your facility to get more people interested in The Pickleball Passport.
 
     View Referrals Dashboard: ${referralsUrl}
 
     --
-    Pickleball Passport
+    The Pickleball Passport
     You're receiving this daily digest because you're a valued partner.
   `);
 

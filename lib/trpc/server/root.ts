@@ -48,6 +48,7 @@ import { sosRouter } from './routers/sos'
 import { alumniRouter } from './routers/alumni'
 import { stampsRouter } from './routers/stamps'
 import { pushRouter } from './routers/push'
+import { waitlistRouter } from './routers/waitlist'
 
 export const appRouter = router({
   user: userRouter,
@@ -92,6 +93,7 @@ export const appRouter = router({
   alumni: alumniRouter,
   stamps: stampsRouter,
   push: pushRouter,
+  waitlist: waitlistRouter,
 })
 
 // Export type definition for the router

@@ -204,7 +204,7 @@ export function generateInstallmentFailureAdminEmail(
     </div>
 
     <p>
-      <strong>Pickleball Passport Admin System</strong> 🏓
+      <strong>The Pickleball Passport Admin System</strong> 🏓
     </p>
   `
 
@@ -212,7 +212,7 @@ export function generateInstallmentFailureAdminEmail(
     title: 'Installment Payment Failed - Admin Alert',
     content,
     preheader: `${data.bookingReference} - Installment ${data.installmentNumber} failed after 4 attempts`,
-    footerText: `This is an automated admin alert from Pickleball Passport.`,
+    footerText: `This is an automated admin alert from The Pickleball Passport.`,
   })
 
   const text = generatePlainText(content)

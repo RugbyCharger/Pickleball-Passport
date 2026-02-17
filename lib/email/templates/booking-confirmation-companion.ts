@@ -153,7 +153,7 @@ export function generateCompanionConfirmationEmail(data: CompanionConfirmationDa
 
     <p>
       Great news! Your companion booking has been confirmed. You'll be traveling to Thailand with
-      ${data.primaryFirstName} ${data.primaryLastName} for an unforgettable Pickleball Passport experience
+      ${data.primaryFirstName} ${data.primaryLastName} for an unforgettable The Pickleball Passport experience
       combining world-class medical care, wellness, and pickleball.
     </p>
 
@@ -296,10 +296,10 @@ export function generateCompanionConfirmationEmail(data: CompanionConfirmationDa
   `;
 
   const html = baseEmailTemplate({
-    title: 'Booking Confirmed - Companion - Pickleball Passport',
+    title: 'Booking Confirmed - Companion - The Pickleball Passport',
     content,
     preheader: `Booking ${data.bookingReference} confirmed! Traveling with ${data.primaryFirstName} ${data.primaryLastName}.`,
-    footerText: `You received this email because ${data.primaryFirstName} ${data.primaryLastName} booked a companion booking for you with Pickleball Passport.`,
+    footerText: `You received this email because ${data.primaryFirstName} ${data.primaryLastName} booked a companion booking for you with The Pickleball Passport.`,
   });
 
   const text = generatePlainText(content);

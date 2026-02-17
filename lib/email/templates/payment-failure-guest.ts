@@ -181,7 +181,7 @@ export function generatePaymentFailureEmail(data: PaymentFailureEmailData): {
   `
 
   const html = baseEmailTemplate({
-    title: 'Payment Update Required - Pickleball Passport',
+    title: 'Payment Update Required - The Pickleball Passport',
     content,
     preheader: `Action required: Payment of ${formatCurrency(data.failedAmount)} could not be processed`,
     footerText: `This is an important notification about your Pickleball Passport booking.`,

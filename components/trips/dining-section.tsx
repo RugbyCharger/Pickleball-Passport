@@ -111,7 +111,7 @@ export function DiningSection() {
       {/* Intro */}
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         Thailand has 43 Michelin-starred restaurants. We&apos;ll introduce you
-        to the best &mdash; from 200-baht street food legends to Michelin-star
+        to the best, from 200-baht street food legends to Michelin-star
         tasting menus. Five group dinners are included; optional upgrades
         available.
       </p>
@@ -137,7 +137,7 @@ export function DiningSection() {
                     {dinner.restaurant}
                   </span>
                   <span className="text-xs text-[#1D2D44]/50">
-                    &mdash; {dinner.description}
+                    - {dinner.description}
                   </span>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export function DiningSection() {
       {/* Free Night Note */}
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-          Several evenings are designated as free nights &mdash; your chance to
+          Several evenings are designated as free nights. Your chance to
           explore on your own. Your trip host will share curated recommendations
           for every city, from night markets and rooftop bars to hidden local
           spots.

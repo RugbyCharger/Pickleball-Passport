@@ -38,7 +38,7 @@ export function generateRefundConfirmationEmail(
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refund Processed - Pickleball Passport</title>
+    <title>Refund Processed - The Pickleball Passport</title>
     <style>
       body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -190,14 +190,14 @@ export function generateRefundConfirmationEmail(
           <p>🕐 Hours: Monday-Friday, 9am-5pm EST</p>
         </div>
 
-        <p>We hope to welcome you back in the future for an amazing Pickleball Passport adventure!</p>
+        <p>We hope to welcome you back in the future for an amazing The Pickleball Passport adventure!</p>
 
         <p>Best regards,<br>
         <strong>The Pickleball Passport Team</strong></p>
       </div>
 
       <div class="footer">
-        <p>Pickleball Passport - Transform Your Game, Transform Yourself</p>
+        <p>The Pickleball Passport - Transform Your Game, Transform Yourself</p>
         <p>
           <a href="https://pickleballpassport.com">Visit Our Website</a> |
           <a href="https://pickleballpassport.com/contact">Contact Us</a>

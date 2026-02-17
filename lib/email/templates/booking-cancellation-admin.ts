@@ -197,7 +197,7 @@ export function generateBookingCancellationAdminEmail(
     </div>
 
     <p>
-      <strong>Pickleball Passport Admin System</strong> 🏓
+      <strong>The Pickleball Passport Admin System</strong> 🏓
     </p>
   `;
 
@@ -205,7 +205,7 @@ export function generateBookingCancellationAdminEmail(
     title: 'Booking Cancellation - Admin Alert',
     content,
     preheader: `${data.bookingReference} - ${data.customerName} cancelled their booking`,
-    footerText: 'This is an automated admin alert from Pickleball Passport.',
+    footerText: 'This is an automated admin alert from The Pickleball Passport.',
   });
 
   const text = generatePlainText(content);

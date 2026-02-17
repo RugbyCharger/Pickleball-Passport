@@ -40,7 +40,7 @@ export default function MedicalDisclaimerPage() {
               General Information
             </h2>
             <p className="text-gray-600 mb-4">
-              Pickleball Passport provides facilitation services for medical tourism. We are not
+              The Pickleball Passport provides facilitation services for medical tourism. We are not
               a medical provider, hospital, or healthcare facility. The information provided on
               our website and through our services is for general informational purposes only
               and should not be considered medical advice.
@@ -82,7 +82,7 @@ export default function MedicalDisclaimerPage() {
             </h2>
             <p className="text-gray-600 mb-4">
               While we partner with JCI-accredited facilities and carefully vet our medical
-              partners, Pickleball Passport does not guarantee or warrant the quality, safety,
+              partners, The Pickleball Passport does not guarantee or warrant the quality, safety,
               or outcomes of any medical procedures. Each medical facility operates independently
               and is solely responsible for the care they provide.
             </p>
@@ -104,7 +104,7 @@ export default function MedicalDisclaimerPage() {
               Pickleball and other physical activities included in our programs carry inherent
               risks of injury. Participation is voluntary. You should consult with your physician
               before beginning any exercise program, especially following medical procedures.
-              Pickleball Passport is not responsible for injuries sustained during physical
+              The Pickleball Passport is not responsible for injuries sustained during physical
               activities.
             </p>
 

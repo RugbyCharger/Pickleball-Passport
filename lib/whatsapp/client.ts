@@ -130,7 +130,7 @@ export function getWebhookVerifyToken(): string | undefined {
  * @returns Result object with success status and message ID
  *
  * @example
- * const result = await sendMessage('+15551234567', 'Hello from Pickleball Passport!');
+ * const result = await sendMessage('+15551234567', 'Hello from The Pickleball Passport!');
  * if (result.success) {
  *   console.log('Message sent:', result.messageId);
  * }

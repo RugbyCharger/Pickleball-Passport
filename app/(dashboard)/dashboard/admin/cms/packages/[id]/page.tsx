@@ -612,7 +612,7 @@ export default function PackageContentEditorPage() {
                           setMetaTitle(e.target.value);
                           handleFieldChange();
                         }}
-                        placeholder="Package Name | Pickleball Passport"
+                        placeholder="Package Name | The Pickleball Passport"
                         className="mt-1"
                       />
                       <p className="text-xs text-slate-500 mt-1">

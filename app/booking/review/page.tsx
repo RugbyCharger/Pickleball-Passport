@@ -23,7 +23,7 @@ import { PaymentPlanSelector } from '@/components/booking/payment-plan-selector'
 import { ReviewPageClient } from './review-client'
 
 export const metadata: Metadata = {
-  title: 'Review Your Booking | Pickleball Passport',
+  title: 'Review Your Booking | The Pickleball Passport',
   description: 'Review your booking details before proceeding to payment.',
 }
 

@@ -138,7 +138,7 @@ export function TestimonialForm({ onSuccess }: TestimonialFormProps) {
         <TextInput
           value={content}
           onChangeText={setContent}
-          placeholder="Share how Pickleball Passport transformed your experience..."
+          placeholder="Share how The Pickleball Passport transformed your experience..."
           placeholderTextColor="#9ca3af"
           multiline
           numberOfLines={6}
@@ -231,7 +231,7 @@ export function TestimonialForm({ onSuccess }: TestimonialFormProps) {
             <Text className="text-gray-900 font-medium">Consent to Share</Text>
             <Text className="text-gray-500 text-sm mt-1">
               I agree to have my testimonial and photos shared publicly on the
-              Pickleball Passport website
+              The Pickleball Passport website
             </Text>
           </View>
           <Switch

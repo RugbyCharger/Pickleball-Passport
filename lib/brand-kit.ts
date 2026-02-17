@@ -1,5 +1,5 @@
 /**
- * Pickleball Passport - Official Brand Kit
+ * The Pickleball Passport - Official Brand Kit
  *
  * This file contains the official brand colors, typography, and design tokens
  * for The Pickleball Passport brand. These values should be used consistently

@@ -18,7 +18,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
   subject: string;
 } {
   const content = `
-    <h1>Welcome to Pickleball Passport, ${data.firstName}! 🎉</h1>
+    <h1>Welcome to The Pickleball Passport, ${data.firstName}! 🎉</h1>
 
     <p>
       We're absolutely thrilled to have you join our community! You've just taken the first step toward
@@ -28,7 +28,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
 
     <div style="margin: 32px 0; padding: 24px; background: linear-gradient(135deg, #059669 0%, #2563eb 100%); border-radius: 12px; text-align: center;">
       <p style="color: #ffffff; font-size: 18px; font-weight: bold; margin: 0 0 12px 0;">
-        🌟 Why Pickleball Passport? 🌟
+        🌟 Why The Pickleball Passport? 🌟
       </p>
       <p style="color: #ffffff; font-size: 14px; margin: 0; line-height: 22px;">
         60-70% savings on medical procedures • World-class healthcare<br>
@@ -157,7 +157,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
     </p>
 
     <p>
-      Welcome to the Pickleball Passport family! We can't wait to be part of your transformation journey.
+      Welcome to The Pickleball Passport family! We can't wait to be part of your transformation journey.
     </p>
 
     <p>
@@ -167,7 +167,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
   `;
 
   const html = baseEmailTemplate({
-    title: 'Welcome to Pickleball Passport',
+    title: 'Welcome to The Pickleball Passport',
     content,
     preheader: 'Your transformation journey starts here! Explore packages and find your perfect trip.',
   });
@@ -177,6 +177,6 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
   return {
     html,
     text,
-    subject: 'Welcome to Pickleball Passport! Your Transformation Journey Starts Here 🏓',
+    subject: 'Welcome to The Pickleball Passport! Your Transformation Journey Starts Here 🏓',
   };
 }

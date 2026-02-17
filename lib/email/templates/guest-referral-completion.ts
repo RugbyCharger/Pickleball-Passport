@@ -74,7 +74,7 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
       </p>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
-        Great news! <strong>${displayName}</strong> has just completed their Pickleball Passport trip. As a thank you for your referral, you've earned a completion bonus!
+        Great news! <strong>${displayName}</strong> has just completed their The Pickleball Passport trip. As a thank you for your referral, you've earned a completion bonus!
       </p>
 
       <!-- Trip Details Card -->
@@ -118,7 +118,7 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
       </div>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 24px 0;">
-        Thank you for being an amazing ambassador for Pickleball Passport! Your referrals help bring more pickleball enthusiasts to experience transformative trips.
+        Thank you for being an amazing ambassador for The Pickleball Passport! Your referrals help bring more pickleball enthusiasts to experience transformative trips.
       </p>
 
       <!-- CTA Button -->
@@ -132,7 +132,7 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
         Questions about your referral rewards? Reply to this email and we'll be happy to help!
       </p>
     `,
-    footerText: 'You\'re receiving this email because you\'re a Pickleball Passport alumni with an active referral code.'
+    footerText: 'You\'re receiving this email because you\'re The Pickleball Passport alumni with an active referral code.'
   });
 
   const text = generatePlainText(`
@@ -140,7 +140,7 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
 
     Hi ${data.referrerName},
 
-    Great news! ${displayName} has just completed their Pickleball Passport trip. As a thank you for your referral, you've earned a completion bonus!
+    Great news! ${displayName} has just completed their The Pickleball Passport trip. As a thank you for your referral, you've earned a completion bonus!
 
     TRIP DETAILS
     ------------
@@ -156,15 +156,15 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
 
     You now have ${newBalance} referral points. Keep sharing your referral link to earn even more!
 
-    Thank you for being an amazing ambassador for Pickleball Passport! Your referrals help bring more pickleball enthusiasts to experience transformative trips.
+    Thank you for being an amazing ambassador for The Pickleball Passport! Your referrals help bring more pickleball enthusiasts to experience transformative trips.
 
     View Your Referral Dashboard: ${dashboardUrl}
 
     Questions about your referral rewards? Reply to this email and we'll be happy to help!
 
     --
-    Pickleball Passport
-    You're receiving this email because you're a Pickleball Passport alumni with an active referral code.
+    The Pickleball Passport
+    You're receiving this email because you're The Pickleball Passport alumni with an active referral code.
   `);
 
   return {

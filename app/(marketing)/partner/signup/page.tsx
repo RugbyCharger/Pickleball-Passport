@@ -374,6 +374,21 @@ export default function PartnerSetupPage() {
           </CardContent>
         </Card>
 
+        {/* Calendly CTA */}
+        <div className="mt-8 text-center p-6 bg-[#F5E6D3]/50 rounded-xl border border-[#B08D55]/20">
+          <p className="text-[#1D2D44] font-medium mb-2">
+            Want to get started faster?
+          </p>
+          <a
+            href="https://calendly.com/jaron-thepickleballpassport/15min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#B08D55] hover:text-[#8D7144] font-semibold underline underline-offset-2 transition-colors"
+          >
+            Book a 15-minute intro call with Jaron
+          </a>
+        </div>
+
         {/* Footer Note */}
         <p className="text-sm text-gray-500 text-center mt-6">
           100% free to join. No membership fees or hidden costs. Start earning rewards from your first

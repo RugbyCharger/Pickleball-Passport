@@ -229,7 +229,7 @@ const TEMPLATE_MIGRATIONS: TemplateMigration[] = [
     slug: 'welcome',
     description: 'Welcome email for new account registrations',
     category: 'SYSTEM',
-    subjectLine: 'Welcome to Pickleball Passport! 🏓',
+    subjectLine: 'Welcome to The Pickleball Passport! 🏓',
     preheaderText: 'Your account has been created. Start exploring!',
     variables: ['firstName', 'loginUrl'],
   },
@@ -238,7 +238,7 @@ const TEMPLATE_MIGRATIONS: TemplateMigration[] = [
     slug: 'application-confirmation',
     description: 'Sent when someone submits an interest application',
     category: 'SYSTEM',
-    subjectLine: 'Application Received - Pickleball Passport',
+    subjectLine: 'Application Received - The Pickleball Passport',
     preheaderText: "We've received your application and will be in touch soon.",
     variables: ['firstName', 'applicationId', 'interests'],
   },
@@ -270,7 +270,7 @@ const TEMPLATE_MIGRATIONS: TemplateMigration[] = [
     description: 'Double opt-in confirmation for newsletter',
     category: 'SYSTEM',
     subjectLine: 'Confirm Your Newsletter Subscription',
-    preheaderText: 'One more step to get the latest Pickleball Passport news.',
+    preheaderText: 'One more step to get the latest news from The Pickleball Passport.',
     variables: ['email', 'confirmUrl'],
   },
   {
@@ -278,7 +278,7 @@ const TEMPLATE_MIGRATIONS: TemplateMigration[] = [
     slug: 'newsletter-welcome',
     description: 'Welcome email after newsletter subscription confirmed',
     category: 'MARKETING',
-    subjectLine: "You're In! Welcome to the Pickleball Passport Newsletter",
+    subjectLine: "You're In! Welcome to The Pickleball Passport Newsletter",
     preheaderText: "You'll now receive our latest updates and exclusive offers.",
     variables: ['email', 'unsubscribeUrl'],
   },
@@ -463,7 +463,7 @@ function generateDefaultHtml(template: TemplateMigration): string {
           <!-- Header -->
           <tr>
             <td style="background-color: #059669; padding: 24px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Pickleball Passport</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">The Pickleball Passport</h1>
             </td>
           </tr>
 
@@ -484,7 +484,7 @@ function generateDefaultHtml(template: TemplateMigration): string {
           <tr>
             <td style="background-color: #f9fafb; padding: 24px; text-align: center;">
               <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                &copy; 2026 Pickleball Passport. All rights reserved.
+                &copy; 2026 The Pickleball Passport. All rights reserved.
               </p>
             </td>
           </tr>
@@ -507,7 +507,7 @@ This is a placeholder template. Customize the content in the admin UI.
 Available variables: ${template.variables.join(', ')}
 
 ---
-Pickleball Passport
+The Pickleball Passport
 `;
 }
 

@@ -391,7 +391,7 @@ export default function PackageFormPage() {
                 <Input
                   value={formData.metaTitle}
                   onChange={(e) => handleChange('metaTitle', e.target.value)}
-                  placeholder="Package name - Pickleball Passport"
+                  placeholder="Package name - The Pickleball Passport"
                 />
               </div>
 

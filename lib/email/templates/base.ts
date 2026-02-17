@@ -19,7 +19,7 @@ export function baseEmailTemplate({
   title,
   content,
   preheader = '',
-  footerText = 'You received this email because you signed up for Pickleball Passport.',
+  footerText = 'You received this email because you signed up for The Pickleball Passport.',
   preferenceToken,
 }: EmailTemplateProps): string {
   return `
@@ -114,7 +114,7 @@ export function baseEmailTemplate({
           <tr>
             <td class="header">
               <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}" class="logo">
-                🏓 Pickleball Passport
+                🏓 The Pickleball Passport
               </a>
             </td>
           </tr>
@@ -148,8 +148,8 @@ export function baseEmailTemplate({
               }
 
               <p style="margin: 0; font-size: 12px;">
-                © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.<br>
-                Pickleball Passport LLC<br>
+                © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.<br>
+                The Pickleball Passport LLC<br>
                 123 Main Street, Suite 100<br>
                 Chiang Mai, Thailand 50200
               </p>

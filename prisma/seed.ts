@@ -47,7 +47,7 @@ Experience the perfect blend of competitive play and tropical relaxation in Phuk
 
 ## Perfect For
 
-Players who want to immerse themselves in pickleball while experiencing the beauty and culture of Thailand. No medical or cosmetic procedures—just pure play, pure paradise.`,
+Players who want to immerse themselves in pickleball while experiencing the beauty and culture of Thailand. No medical or cosmetic procedures. Just pure play, pure paradise.`,
       basePrice: 799900, // $7,999
       durationOptions: [7, 10, 14],
       heroImageUrl: '/images/packages/pure-play-hero.jpg',
@@ -176,7 +176,7 @@ A transformative experience focused on spiritual growth, mental wellness, and ph
 
 ## Pickleball Mindfully
 
-Play with intention, focus on the mental game, and connect deeply with fellow players. This isn't about competition—it's about joy.`,
+Play with intention, focus on the mental game, and connect deeply with fellow players. This isn't about competition. It's about joy.`,
       basePrice: 899900, // $8,999
       durationOptions: [7, 10, 14],
       heroImageUrl: '/images/packages/spiritual-journey-hero.jpg',

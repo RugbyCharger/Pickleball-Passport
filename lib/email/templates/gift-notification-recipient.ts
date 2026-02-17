@@ -236,7 +236,7 @@ export function generateGiftNotificationRecipientEmail(data: GiftNotificationRec
     title: `🎁 You've Received a Gift Trip from ${data.purchaserFirstName}!`,
     content,
     preheader: `${data.purchaserFirstName} ${data.purchaserLastName} has gifted you a ${data.duration}-day transformation trip to Thailand worth ${formatCurrency(data.totalValue)}. Accept your gift now!`,
-    footerText: `You received this email because ${data.purchaserFirstName} ${data.purchaserLastName} sent you a gift booking with Pickleball Passport.`,
+    footerText: `You received this email because ${data.purchaserFirstName} ${data.purchaserLastName} sent you a gift booking with The Pickleball Passport.`,
   });
 
   const text = generatePlainText(html);

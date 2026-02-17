@@ -43,26 +43,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
     if (!post) {
       return {
-        title: 'Post Not Found | Pickleball Passport Blog',
+        title: 'Post Not Found | The Pickleball Passport Blog',
         description: 'The blog post you are looking for could not be found.',
       };
     }
 
     const title = post.metaTitle || post.title;
-    const description = post.metaDescription || post.excerpt || `Read ${post.title} on Pickleball Passport Blog`;
+    const description = post.metaDescription || post.excerpt || `Read ${post.title} on The Pickleball Passport Blog`;
     const image = post.ogImage || post.featuredImage;
 
     return {
-      title: `${title} | Pickleball Passport Blog`,
+      title: `${title} | The Pickleball Passport Blog`,
       description,
       keywords: post.metaKeywords.length > 0 ? post.metaKeywords.join(', ') : undefined,
-      authors: [{ name: 'Pickleball Passport' }],
+      authors: [{ name: 'The Pickleball Passport' }],
       openGraph: {
         title,
         description,
         type: 'article',
         publishedTime: post.publishedAt?.toISOString(),
-        siteName: 'Pickleball Passport',
+        siteName: 'The Pickleball Passport',
         ...(image && { images: [{ url: image, width: 1200, height: 630 }] }),
         ...(post.category && { section: post.category.name }),
       },
@@ -78,8 +78,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     };
   } catch {
     return {
-      title: 'Blog Post | Pickleball Passport',
-      description: 'Read articles on Pickleball Passport Blog',
+      title: 'Blog Post | The Pickleball Passport',
+      description: 'Read articles on The Pickleball Passport Blog',
     };
   }
 }

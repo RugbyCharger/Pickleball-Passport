@@ -89,7 +89,7 @@ export function generateGiftCancellationPurchaserEmail(data: GiftCancellationPur
 
     <div style="margin: 32px 0; padding: 20px; background-color: #f0f9ff; border-radius: 8px; border-left: 4px solid #2563eb;">
       <p style="margin: 0; color: #1e40af; font-size: 14px; line-height: 1.7;">
-        Changed your mind? You can always purchase a new gift at any time. We'd love to help you share the Pickleball Passport experience with someone special.
+        Changed your mind? You can always purchase a new gift at any time. We'd love to help you share The Pickleball Passport experience with someone special.
       </p>
     </div>
 
@@ -107,7 +107,7 @@ export function generateGiftCancellationPurchaserEmail(data: GiftCancellationPur
     title: 'Gift Cancelled - Refund Processed',
     content,
     preheader: `Your gift to ${data.recipientName} has been cancelled. Full refund processed.`,
-    footerText: 'You received this email because you cancelled a gift purchase with Pickleball Passport.',
+    footerText: 'You received this email because you cancelled a gift purchase with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

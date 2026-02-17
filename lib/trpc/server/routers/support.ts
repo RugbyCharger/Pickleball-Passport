@@ -748,7 +748,7 @@ export const supportRouter = router({
 
       // Send email notification to ticket submitter (non-blocking)
       if (isEmailConfigured() && ticket.email) {
-        const adminName = reply.user?.email || 'Pickleball Passport Support';
+        const adminName = reply.user?.email || 'The Pickleball Passport Support';
 
         sendTicketReplyEmail(ticket.email, {
           name: ticket.name || 'Guest',

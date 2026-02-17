@@ -25,7 +25,7 @@ import TripSelector from '@/components/booking/trip-selector'
 import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
-  title: 'Choose Departure Date | Pickleball Passport',
+  title: 'Choose Departure Date | The Pickleball Passport',
   description: 'Select your transformation journey departure date to Thailand.',
 }
 

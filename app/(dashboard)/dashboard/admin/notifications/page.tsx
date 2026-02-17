@@ -53,8 +53,8 @@ const MESSAGE_TEMPLATES: NotificationTemplate[] = [
   {
     name: 'Welcome Message',
     type: 'GENERAL',
-    title: 'Welcome to Pickleball Passport!',
-    content: 'Thank you for joining Pickleball Passport! We\'re excited to have you as part of our community.',
+    title: 'Welcome to The Pickleball Passport!',
+    content: 'Thank you for joining The Pickleball Passport! We\'re excited to have you as part of our community.',
   },
   {
     name: 'General Announcement',

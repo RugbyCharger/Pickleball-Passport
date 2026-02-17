@@ -80,7 +80,7 @@ export default function RefundPolicyPage() {
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-              Cancellation by Pickleball Passport
+              Cancellation by The Pickleball Passport
             </h2>
             <p className="text-gray-600 mb-4">
               In rare circumstances, we may need to cancel or modify your booking due to:

@@ -20,7 +20,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import { PaymentPageClient } from './payment-client'
 
 export const metadata: Metadata = {
-  title: 'Complete Payment | Pickleball Passport',
+  title: 'Complete Payment | The Pickleball Passport',
   description: 'Securely complete your booking payment.',
 }
 

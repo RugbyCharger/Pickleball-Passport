@@ -9,17 +9,17 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog | Pickleball Passport',
+  title: 'Blog | The Pickleball Passport',
   description: 'Stories, tips, and insights from the world of pickleball wellness travel. Discover travel guides, health tips, and inspiring stories from our community.',
   openGraph: {
-    title: 'Blog | Pickleball Passport',
+    title: 'Blog | The Pickleball Passport',
     description: 'Stories, tips, and insights from the world of pickleball wellness travel.',
     type: 'website',
-    siteName: 'Pickleball Passport',
+    siteName: 'The Pickleball Passport',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Blog | Pickleball Passport',
+    title: 'Blog | The Pickleball Passport',
     description: 'Stories, tips, and insights from the world of pickleball wellness travel.',
   },
 };

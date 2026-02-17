@@ -107,7 +107,7 @@ export default function PublicPreferencesPage() {
         <h1 className="text-3xl font-bold text-gray-900">Manage Your Preferences</h1>
         <p className="text-gray-600 mt-2">Email: {email}</p>
         <p className="text-sm text-gray-500 mt-1">
-          Choose which communications you'd like to receive from Pickleball Passport.
+          Choose which communications you'd like to receive from The Pickleball Passport.
         </p>
       </div>
 
@@ -196,7 +196,7 @@ export default function PublicPreferencesPage() {
         <NotificationToggle
           id="inAppEnabled"
           label="In-App Notifications"
-          description="Notifications within the Pickleball Passport app"
+          description="Notifications within The Pickleball Passport app"
           enabled={currentPreferences.inAppEnabled}
           onChange={(value) => handleToggle('inAppEnabled', value)}
         />

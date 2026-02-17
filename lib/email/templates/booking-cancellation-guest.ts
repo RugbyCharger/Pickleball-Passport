@@ -102,7 +102,7 @@ export function generateBookingCancellationGuestEmail(
     ` : ''}
 
     <p>
-      We understand plans can change, and we hope to welcome you on a future Pickleball Passport adventure.
+      We understand plans can change, and we hope to welcome you on a future The Pickleball Passport adventure.
     </p>
 
     <p>
@@ -116,7 +116,7 @@ export function generateBookingCancellationGuestEmail(
     </p>
 
     <p style="color: #6b7280; font-size: 14px;">
-      Thank you for considering Pickleball Passport. We hope to see you on the courts soon!
+      Thank you for considering The Pickleball Passport. We hope to see you on the courts soon!
     </p>
 
     <p>

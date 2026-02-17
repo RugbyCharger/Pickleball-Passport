@@ -100,7 +100,7 @@ export default function GuestReferralsPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">My Referrals</h1>
           <p className="mt-1 text-slate-600">
-            Earn rewards by referring friends to Pickleball Passport
+            Earn rewards by referring friends to The Pickleball Passport
           </p>
         </div>
 
@@ -162,7 +162,7 @@ export default function GuestReferralsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Complete a Trip</h3>
-                    <p className="text-sm text-slate-600">Finish your first Pickleball Passport experience</p>
+                    <p className="text-sm text-slate-600">Finish your first The Pickleball Passport experience</p>
                   </div>
                 </div>
               </CardContent>

@@ -91,7 +91,7 @@ export function generateTicketCreatedEmail(data: TicketCreatedData): {
     content,
     preheader: `Your support request ${referenceNumber} has been received. We'll respond within 24 hours.`,
     footerText:
-      'You received this email because you submitted a support request to Pickleball Passport.',
+      'You received this email because you submitted a support request to The Pickleball Passport.',
   })
 
   const text = generatePlainText(`
@@ -114,9 +114,9 @@ export function generateTicketCreatedEmail(data: TicketCreatedData): {
 
     ---
 
-    You received this email because you submitted a support request to Pickleball Passport.
+    You received this email because you submitted a support request to The Pickleball Passport.
 
-    © ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+    © ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
     Chiang Mai, Thailand
   `)
 

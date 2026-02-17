@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = packageData.metaTitle || `${packageData.name} - Wellness Package | Pickleball Passport`;
+  const title = packageData.metaTitle || `${packageData.name} - Wellness Package | The Pickleball Passport`;
   const description = packageData.metaDescription || `Explore our ${packageData.name} package combining luxury wellness, medical tourism, and pickleball in Thailand.`;
   const imageUrl = packageData.heroImageUrl || '/og-images/package-default.jpg';
 
@@ -62,13 +62,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       url: `https://pickleballpassport.com/packages/${slug}`,
-      siteName: 'Pickleball Passport',
+      siteName: 'The Pickleball Passport',
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: `${packageData.name} - Pickleball Passport`,
+          alt: `${packageData.name} - The Pickleball Passport`,
         },
       ],
       locale: 'en_US',
@@ -128,7 +128,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
     image: packageData.heroImageUrl || 'https://pickleballpassport.com/og-images/package-default.jpg',
     brand: {
       '@type': 'Brand',
-      name: 'Pickleball Passport',
+      name: 'The Pickleball Passport',
     },
     offers: {
       '@type': 'Offer',

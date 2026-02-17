@@ -19,7 +19,7 @@ export function newsletterConfirmationEmail(
 
   const content = `
     <h1>Confirm Your Subscription</h1>
-    <p>Thanks for subscribing to Pickleball Passport updates!</p>
+    <p>Thanks for subscribing to The Pickleball Passport updates!</p>
     <p>We're excited to share exclusive offers, wellness tips, and amazing pickleball adventures with you.</p>
     <p>Click the button below to confirm your subscription:</p>
     <p style="text-align: center;">
@@ -34,19 +34,19 @@ export function newsletterConfirmationEmail(
     </p>
   `;
 
-  const footerText = `You received this email because someone signed up for Pickleball Passport updates with this email address. If this wasn't you, please ignore this email.`;
+  const footerText = `You received this email because someone signed up for The Pickleball Passport updates with this email address. If this wasn't you, please ignore this email.`;
 
   const html = baseEmailTemplate({
     title: 'Confirm Your Subscription',
     content,
-    preheader: 'Click to confirm your subscription to Pickleball Passport updates',
+    preheader: 'Click to confirm your subscription to The Pickleball Passport updates',
     footerText: `${footerText}<br><br><a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>`,
   });
 
   const text = `
-Confirm Your Subscription - Pickleball Passport
+Confirm Your Subscription - The Pickleball Passport
 
-Thanks for subscribing to Pickleball Passport updates!
+Thanks for subscribing to The Pickleball Passport updates!
 
 We're excited to share exclusive offers, wellness tips, and amazing pickleball adventures with you.
 
@@ -61,12 +61,12 @@ ${footerText}
 
 Unsubscribe: ${unsubscribeUrl}
 
-© ${new Date().getFullYear()} Pickleball Passport. All rights reserved.
+© ${new Date().getFullYear()} The Pickleball Passport. All rights reserved.
 Chiang Mai, Thailand
   `.trim();
 
   return {
-    subject: 'Confirm Your Subscription to Pickleball Passport',
+    subject: 'Confirm Your Subscription to The Pickleball Passport',
     html,
     text,
   };

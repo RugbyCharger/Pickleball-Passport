@@ -40,7 +40,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 // Partner agreement markdown content
-const AGREEMENT_CONTENT = `# Pickleball Passport Partner Agreement
+const AGREEMENT_CONTENT = `# The Pickleball Passport Partner Agreement
 
 Version 1.0 | Effective Date: January 2026
 
@@ -48,7 +48,7 @@ Version 1.0 | Effective Date: January 2026
 
 ## 1. Introduction
 
-This Partner Agreement ("Agreement") is entered into between Pickleball Passport LLC ("Company") and the Partner ("Partner" or "You") identified in the Partner Portal registration.
+This Partner Agreement ("Agreement") is entered into between The Pickleball Passport LLC ("Company") and the Partner ("Partner" or "You") identified in the Partner Portal registration.
 
 By signing this Agreement electronically, you agree to be bound by the terms and conditions set forth herein.
 
@@ -57,7 +57,7 @@ By signing this Agreement electronically, you agree to be bound by the terms and
 ## 2. Partner Program Overview
 
 ### 2.1 Purpose
-The Pickleball Passport Partner Program enables qualified pickleball clubs, facilities, and organizations to refer their members to Pickleball Passport retreats and earn commission-based rewards.
+The Pickleball Passport Partner Program enables qualified pickleball clubs, facilities, and organizations to refer their members to The Pickleball Passport retreats and earn commission-based rewards.
 
 ### 2.2 Eligibility
 Partners must:
@@ -71,7 +71,7 @@ Partners must:
 
 ### 3.1 Marketing and Promotion
 Partners agree to:
-- Promote Pickleball Passport services honestly and accurately
+- Promote The Pickleball Passport services honestly and accurately
 - Use only Company-approved marketing materials
 - Not make false or misleading claims about services or pricing
 - Clearly disclose the referral relationship to potential guests
@@ -103,7 +103,7 @@ A referral is qualified when:
 ### 4.3 Point Redemption
 Partners may redeem accumulated points for:
 - Direct bank transfer (minimum 5,000 points)
-- Travel credits toward Pickleball Passport retreats
+- Travel credits toward The Pickleball Passport retreats
 - Partner perks and exclusive experiences
 
 ---
@@ -111,7 +111,7 @@ Partners may redeem accumulated points for:
 ## 5. Intellectual Property
 
 ### 5.1 License Grant
-Company grants Partner a limited, non-exclusive, revocable license to use approved Pickleball Passport trademarks and marketing materials solely for promoting the Partner Program.
+Company grants Partner a limited, non-exclusive, revocable license to use approved trademarks and marketing materials of The Pickleball Passport solely for promoting the Partner Program.
 
 ### 5.2 Restrictions
 Partners shall not:

@@ -17,7 +17,7 @@ const sessions: Session[] = [
     venue: 'SukSpace',
     time: 'Morning',
     description:
-      'Assessment, warm-up, round-robin \u2014 meet the group and find your level',
+      'Assessment, warm-up, round-robin. Meet the group and find your level.',
   },
   {
     number: 2,
@@ -25,7 +25,7 @@ const sessions: Session[] = [
     venue: 'SukSpace',
     time: 'Evening',
     description:
-      'Structured doubles, skill mixing \u2014 play with different partners',
+      'Structured doubles, skill mixing. Play with different partners.',
   },
   {
     number: 3,
@@ -33,7 +33,7 @@ const sessions: Session[] = [
     venue: 'SukSpace',
     time: 'Morning',
     description:
-      'Tournament day \u2014 king of the court, competitive brackets',
+      'Tournament day. King of the court, competitive brackets.',
   },
   {
     number: 4,
@@ -41,29 +41,37 @@ const sessions: Session[] = [
     venue: 'BokBok',
     time: 'Afternoon',
     description:
-      'Skill clinics \u2014 dinking, third-shot drops, stacking strategy',
+      'Skill clinics. Dinking, third-shot drops, stacking strategy.',
   },
   {
     number: 5,
     city: 'Chiang Mai',
     venue: 'BokBok',
     time: 'Morning',
-    description: 'Competitive bracket tournament',
+    description: 'Competitive bracket tournament.',
   },
   {
     number: 6,
     city: 'Phuket',
-    venue: 'Peak Racquet Park',
+    venue: 'Peak Racquet Club',
+    time: 'Evening',
+    description:
+      'Welcome session. Casual open play at one of Phuket\'s premier facilities.',
+  },
+  {
+    number: 7,
+    city: 'Phuket',
+    venue: 'Peak Racquet Club',
     time: 'Morning',
-    description: 'Final championship, awards ceremony, group photo',
+    description: 'Final championship, awards ceremony, group photo.',
   },
 ];
 
 const statItems = [
-  { value: '6', label: 'Total Sessions' },
-  { value: '~15 hrs', label: 'Total Court Time' },
-  { value: '8\u201310 hrs', label: 'Instruction' },
-  { value: '8\u201312 hrs', label: 'Social Play' },
+  { value: '7', label: 'Total Sessions' },
+  { value: '~18 hrs', label: 'Total Court Time' },
+  { value: '10\u201312 hrs', label: 'Instruction' },
+  { value: '10\u201314 hrs', label: 'Social Play' },
 ];
 
 function getCityColor(city: string): string {
@@ -84,7 +92,7 @@ export function PickleballSection() {
     <div className="space-y-10">
       {/* Intro */}
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
-        6 sessions across 3 cities. Each session blends structured instruction
+        7 sessions across 3 cities. Each session blends structured instruction
         with social play, so you&apos;re improving your game and meeting your
         travel crew at the same time.
       </p>

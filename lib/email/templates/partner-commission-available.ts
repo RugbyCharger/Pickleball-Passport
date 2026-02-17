@@ -78,7 +78,7 @@ export function generatePartnerCommissionAvailableEmail(data: PartnerCommissionA
         </a>
       </div>
     `,
-    footerText: 'You\'re receiving this email because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this email because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -99,7 +99,7 @@ export function generatePartnerCommissionAvailableEmail(data: PartnerCommissionA
     Redeem Now: ${rewardsUrl}
 
     --
-    Pickleball Passport
+    The Pickleball Passport
   `);
 
   return { html, text, subject };

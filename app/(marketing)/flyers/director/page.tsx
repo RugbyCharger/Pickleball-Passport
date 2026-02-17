@@ -24,7 +24,7 @@ export default function DirectorFlyer() {
               <span className="italic text-emerald-600">in Club Loyalty</span>
             </h1>
             <p className="text-xl font-light text-slate-500 max-w-2xl italic">
-              "Give your members an experience that changes their lives—and your club's legacy."
+              "Give your members an experience that changes their lives, and your club's legacy."
             </p>
           </header>
 
@@ -32,7 +32,7 @@ export default function DirectorFlyer() {
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div className="space-y-8">
               <p className="text-slate-600 leading-relaxed text-lg">
-                Pickleball Passport is the world's first luxury transformation platform. 
+                The Pickleball Passport is the world's first luxury transformation platform. 
                 We partner with select Club Directors to offer their members exclusive access 
                 to curated travel experiences in Thailand that combine the sport they love with 
                 world-class wellness and medical care.
@@ -101,7 +101,7 @@ export default function DirectorFlyer() {
 
           {/* Footer Meta */}
           <footer className="flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.2em] text-slate-400">
-            <div>Pickleball Passport | Executive Relations</div>
+            <div>The Pickleball Passport | Executive Relations</div>
             <div className="mt-4 md:mt-0">[yourwebsite.com/partners] | [partners@yourwebsite.com]</div>
           </footer>
         </div>

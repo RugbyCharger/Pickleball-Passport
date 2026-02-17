@@ -107,7 +107,7 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
       </p>
 
       <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 24px;">
-        Great news! <strong>${displayName}</strong> just completed their booking for a Pickleball Passport experience. Thank you for making this connection!
+        Great news! <strong>${displayName}</strong> just completed their booking for The Pickleball Passport experience. Thank you for making this connection!
       </p>
 
       <!-- Booking Details Card -->
@@ -165,7 +165,7 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
         Questions about your partner program? Reply to this email and we'll be happy to help!
       </p>
     `,
-    footerText: 'You\'re receiving this email because you\'re a valued Pickleball Passport partner.'
+    footerText: 'You\'re receiving this email because you\'re a valued The Pickleball Passport partner.'
   });
 
   const text = generatePlainText(`
@@ -173,7 +173,7 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
 
     Hi ${data.partnerName},
 
-    Great news! ${displayName} just completed their booking for a Pickleball Passport experience. Thank you for making this connection!
+    Great news! ${displayName} just completed their booking for The Pickleball Passport experience. Thank you for making this connection!
 
     BOOKING DETAILS
     ----------------
@@ -199,8 +199,8 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
     Questions about your partner program? Reply to this email and we'll be happy to help!
 
     --
-    Pickleball Passport
-    You're receiving this email because you're a valued Pickleball Passport partner.
+    The Pickleball Passport
+    You're receiving this email because you're a valued The Pickleball Passport partner.
   `);
 
   return {

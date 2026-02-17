@@ -748,7 +748,7 @@ model Application {
   interests String[] // dental, cosmetic, wellness, spiritual, pure_play
 
   // Step 4: Travel Preferences
-  preferredDuration String // 7, 10, 14, 21 days
+  preferredDuration String // 8, 10, 13, 18-20 days
   preferredDates    String? // Rough timeframe
   travelingAlone    Boolean
   budgetRange       String? // e.g., "$10-15K"
@@ -2685,4 +2685,23 @@ model UserPassportStamp {
   @@index([userId])
   @@index([stampId])
   @@index([earnedAt])
+}
+
+// ============================================================================
+// WAITLIST (Rounds 2D-2G)
+// ============================================================================
+
+model WaitlistEntry {
+  id        String   @id @default(cuid())
+  fullName  String
+  email     String
+  phone     String?
+  trip      String   // Which trip they're interested in (auto-populated)
+  hearAbout String?  // How did you hear about us?
+  clubRef   String?  // Referred by a club/partner?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([trip])
+  @@index([createdAt])
 }

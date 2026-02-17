@@ -34,7 +34,7 @@ if (!isConfiguredFlag) {
   emailLogger.warn('SENDGRID_API_KEY is not set. Email functionality will be disabled.');
 }
 
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'hello@pickleballpassport.com';
+const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'hello@thepickleballpassport.org';
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -424,28 +424,18 @@ export async function sendTicketAdminNotification(
   const { generateTicketAdminNotificationEmail } = await import('./templates/ticket-admin-notification');
   const { html, text, subject } = generateTicketAdminNotificationEmail(data);
 
-  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@pickleballpassport.com';
-  const ccEmails = process.env.ADMIN_ALERT_CC_EMAILS?.split(',').map((e) => e.trim()).filter(Boolean) || [];
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'jaron@thepickleballpassport.org';
+  const ccEmails = process.env.ADMIN_ALERT_CC_EMAILS?.split(',').map((e) => e.trim()).filter(Boolean) || ['ryan@thepickleballpassport.org'];
 
-  // Send to primary admin
+  // Send to all admins
+  const allRecipients = [adminEmail, ...ccEmails];
   await sendEmail({
-    to: adminEmail,
+    to: allRecipients,
     subject,
     html,
     text,
     replyTo: data.email, // Set reply-to as the ticket submitter's email
   });
-
-  // Send to CC admins if configured
-  if (ccEmails.length > 0) {
-    await sendEmail({
-      to: ccEmails,
-      subject,
-      html,
-      text,
-      replyTo: data.email,
-    });
-  }
 }
 
 /**
@@ -500,8 +490,8 @@ export interface PartnerTicketNotificationData {
  * Send notification to admin when partner creates a new support ticket
  */
 export async function sendPartnerTicketNotification(data: PartnerTicketNotificationData): Promise<void> {
-  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@pickleballpassport.com';
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'jaron@thepickleballpassport.org';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.thepickleballpassport.org';
 
   const priorityColors: Record<string, string> = {
     LOW: '#22c55e',
@@ -535,7 +525,7 @@ export async function sendPartnerTicketNotification(data: PartnerTicketNotificat
         </a>
       </div>
       <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
-        <p>Pickleball Passport Partner Support</p>
+        <p>The Pickleball Passport Partner Support</p>
       </div>
     </div>
   `;
@@ -597,7 +587,7 @@ export async function sendPartnerTicketReplyNotification(data: PartnerTicketRepl
         </p>
       </div>
       <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
-        <p>Pickleball Passport Partner Support</p>
+        <p>The Pickleball Passport Partner Support</p>
       </div>
     </div>
   `;
@@ -613,12 +603,12 @@ View the conversation: ${appUrl}/dashboard/partner/support/${data.ticketId}
 
 If you have any questions, you can reply directly in the ticket portal.
 
-Pickleball Passport Partner Support
+The Pickleball Passport Partner Support
   `.trim();
 
   await sendEmail({
     to: data.partnerEmail,
-    subject: `Re: ${data.subject} - Pickleball Passport Support`,
+    subject: `Re: ${data.subject} - The Pickleball Passport Support`,
     html,
     text,
   });
@@ -646,7 +636,7 @@ export async function sendPartnerTestimonialApproved(data: PartnerTestimonialApp
         <p>Great news! Your testimonial has been reviewed and approved by our team.</p>
 
         <div style="background: white; border-radius: 8px; padding: 20px; margin: 16px 0;">
-          <p style="margin: 0;">Thank you for sharing your experience with the Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.</p>
+          <p style="margin: 0;">Thank you for sharing your experience with The Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.</p>
         </div>
 
         <a href="${appUrl}/dashboard/partner/testimonials"
@@ -659,7 +649,7 @@ export async function sendPartnerTestimonialApproved(data: PartnerTestimonialApp
         </p>
       </div>
       <div style="padding: 16px; text-align: center; color: #6b7280; font-size: 12px;">
-        <p>Pickleball Passport Partner Program</p>
+        <p>The Pickleball Passport Partner Program</p>
       </div>
     </div>
   `;
@@ -669,18 +659,18 @@ Hi ${data.partnerName},
 
 Great news! Your testimonial has been reviewed and approved by our team.
 
-Thank you for sharing your experience with the Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.
+Thank you for sharing your experience with The Pickleball Passport Partner Program. Your feedback helps other potential partners learn about the benefits of our program.
 
 View your testimonials: ${appUrl}/dashboard/partner/testimonials
 
 Your testimonial may be featured on our marketing materials and partner page.
 
-Pickleball Passport Partner Program
+The Pickleball Passport Partner Program
   `.trim();
 
   await sendEmail({
     to: data.partnerEmail,
-    subject: 'Your Testimonial Has Been Approved - Pickleball Passport',
+    subject: 'Your Testimonial Has Been Approved - The Pickleball Passport',
     html,
     text,
   });

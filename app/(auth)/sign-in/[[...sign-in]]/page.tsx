@@ -25,7 +25,7 @@ export default function SignInPage() {
             Welcome Back
           </h1>
           <p className="text-muted-foreground">
-            Sign in to access your Pickleball Passport account
+            Sign in to access your account on The Pickleball Passport
           </p>
         </div>
 

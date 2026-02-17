@@ -81,6 +81,22 @@ export const rateLimiters = {
   },
 
   /**
+   * Waitlist form: 3 requests per minute per IP
+   * Same restriction as contact form
+   */
+  waitlist: () => {
+    const client = getRedis();
+    if (!client) return null;
+
+    return new Ratelimit({
+      redis: client,
+      limiter: Ratelimit.slidingWindow(3, '1 m'),
+      prefix: 'ratelimit:waitlist',
+      analytics: true,
+    });
+  },
+
+  /**
    * General API: 60 requests per minute per IP
    * Fallback for other public endpoints
    */

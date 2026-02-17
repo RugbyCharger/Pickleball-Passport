@@ -79,7 +79,7 @@ const DEFAULT_HTML_TEMPLATE = `<!DOCTYPE html>
           <!-- Header -->
           <tr>
             <td style="background-color: #059669; padding: 24px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Pickleball Passport</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">The Pickleball Passport</h1>
             </td>
           </tr>
 
@@ -97,7 +97,7 @@ const DEFAULT_HTML_TEMPLATE = `<!DOCTYPE html>
           <tr>
             <td style="background-color: #f9fafb; padding: 24px; text-align: center;">
               <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                &copy; 2026 Pickleball Passport. All rights reserved.
+                &copy; 2026 The Pickleball Passport. All rights reserved.
               </p>
             </td>
           </tr>

@@ -134,7 +134,7 @@ function generate3DaysEmail(data: PostTripEmailData): string {
       <div style="margin: 12px 0; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
         <p style="margin: 0 0 8px 0; color: #92400e; font-weight: 600;">Stay Connected</p>
         <p style="margin: 0; color: #92400e; font-size: 14px;">
-          You're now part of the Pickleball Passport alumni community!
+          You're now part of The Pickleball Passport alumni community!
           Stay tuned for exclusive alumni events and offers.
         </p>
       </div>
@@ -147,7 +147,7 @@ function generate3DaysEmail(data: PostTripEmailData): string {
     </p>
 
     <p>
-      We're so glad you chose Pickleball Passport for your transformation journey.
+      We're so glad you chose The Pickleball Passport for your transformation journey.
       Reply to this email anytime - we love hearing from our alumni!
     </p>
 
@@ -224,7 +224,7 @@ function generate7DaysEmail(data: PostTripEmailData): string {
     </p>
 
     <p>
-      Thank you for being part of the Pickleball Passport family!
+      Thank you for being part of The Pickleball Passport family!
     </p>
 
     <p>
@@ -268,7 +268,7 @@ function generate14DaysEmail(data: PostTripEmailData): string {
 
     <div style="margin: 16px 0; padding: 24px; background-color: #eff6ff; border-radius: 12px;">
       <p style="margin: 0 0 16px 0; color: #1e40af; font-size: 16px;">
-        As a Pickleball Passport alumni, you now have access to exclusive benefits:
+        As The Pickleball Passport alumni, you now have access to exclusive benefits:
       </p>
 
       <div style="margin: 12px 0;">
@@ -339,7 +339,7 @@ function generate30DaysEmail(data: PostTripEmailData): string {
         Earn Rewards for Referrals!
       </p>
       <p style="color: #ffffff; font-size: 16px; margin: 0 0 16px 0;">
-        Know someone who'd love Pickleball Passport?
+        Know someone who'd love The Pickleball Passport?
       </p>
       <p style="color: #ffffff; font-size: 14px; margin: 0;">
         Share your referral code and earn points toward your next trip!
@@ -399,7 +399,7 @@ function generate30DaysEmail(data: PostTripEmailData): string {
     </div>
 
     <p>
-      Thanks for spreading the word about Pickleball Passport!
+      Thanks for spreading the word about The Pickleball Passport!
     </p>
 
     <p>
@@ -438,7 +438,7 @@ function generate60DaysEmail(data: PostTripEmailData): string {
       </a>
     </div>
 
-    <h2 style="color: #111827; font-size: 20px; margin: 32px 0 16px 0;">What's New at Pickleball Passport</h2>
+    <h2 style="color: #111827; font-size: 20px; margin: 32px 0 16px 0;">What's New at The Pickleball Passport</h2>
 
     <div style="margin: 16px 0;">
       <div style="margin: 12px 0; padding: 16px; background-color: #f0fdf4; border-radius: 8px;">
@@ -458,7 +458,7 @@ function generate60DaysEmail(data: PostTripEmailData): string {
       <div style="margin: 12px 0; padding: 16px; background-color: #fce7f3; border-radius: 8px;">
         <p style="margin: 0 0 8px 0; color: #9d174d; font-weight: 600;">Alumni Reunions</p>
         <p style="margin: 0; color: #9d174d; font-size: 14px;">
-          Join fellow Pickleball Passport alumni for special reunion trips with
+          Join fellow The Pickleball Passport alumni for special reunion trips with
           familiar faces and new friends!
         </p>
       </div>
@@ -531,7 +531,7 @@ export function generatePostTripEmail(
       break
     case '7_DAYS':
       content = generate7DaysEmail(data)
-      subject = `Share Your Story, ${data.firstName} - Help Others Discover Pickleball Passport`
+      subject = `Share Your Story, ${data.firstName} - Help Others Discover The Pickleball Passport`
       break
     case '14_DAYS':
       content = generate14DaysEmail(data)
@@ -539,7 +539,7 @@ export function generatePostTripEmail(
       break
     case '30_DAYS':
       content = generate30DaysEmail(data)
-      subject = `Earn Rewards: Share Pickleball Passport With Friends`
+      subject = `Earn Rewards: Share The Pickleball Passport With Friends`
       break
     case '60_DAYS':
       content = generate60DaysEmail(data)

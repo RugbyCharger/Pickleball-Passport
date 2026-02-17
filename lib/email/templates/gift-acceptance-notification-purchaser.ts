@@ -182,7 +182,7 @@ export function generateGiftAcceptanceNotificationPurchaserEmail(data: GiftAccep
     title: `🎉 ${data.recipientFirstName} Accepted Your Gift!`,
     content,
     preheader: `${data.recipientFirstName} ${data.recipientLastName} has accepted your gift booking for a trip to Thailand. Booking ${data.bookingReference} is now active.`,
-    footerText: 'You received this email because the recipient accepted your gift booking with Pickleball Passport.',
+    footerText: 'You received this email because the recipient accepted your gift booking with The Pickleball Passport.',
   });
 
   const text = generatePlainText(html);

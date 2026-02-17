@@ -125,7 +125,7 @@ export default function SignUp() {
           <Text className="text-3xl font-bold text-gray-900 mb-2">
             Create account
           </Text>
-          <Text className="text-gray-600">Join Pickleball Passport</Text>
+          <Text className="text-gray-600">Join The Pickleball Passport</Text>
         </View>
 
         {error ? (

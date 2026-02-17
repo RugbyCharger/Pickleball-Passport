@@ -238,7 +238,7 @@ export function PaymentPlanSelector() {
                   className="text-sm font-medium text-gray-900 cursor-pointer"
                 >
                   <span id="authorization-text" data-testid="authorization-text">
-                    I authorize Pickleball Passport to charge my payment method for future installments on the scheduled dates
+                    I authorize The Pickleball Passport to charge my payment method for future installments on the scheduled dates
                   </span>
                 </Label>
                 <p

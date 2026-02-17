@@ -103,10 +103,10 @@ export default function PartnerReferralLinksPage() {
   };
 
   const handleShareEmail = (link: string) => {
-    const subject = encodeURIComponent('Join Pickleball Passport');
+    const subject = encodeURIComponent('Join The Pickleball Passport');
     const body = encodeURIComponent(
       `Hi! I wanted to share this amazing opportunity with you.\n\n` +
-        `Pickleball Passport combines your love of pickleball with world-class wellness and medical care in Thailand.\n\n` +
+        `The Pickleball Passport combines your love of pickleball with world-class wellness and medical care in Thailand.\n\n` +
         `Check it out: ${link}\n\n` +
         `Use my referral code: ${profile?.referralCode || ''}`
     );
@@ -115,7 +115,7 @@ export default function PartnerReferralLinksPage() {
 
   const handleShareSMS = (link: string) => {
     const message = encodeURIComponent(
-      `Check out Pickleball Passport! ${link} Use code: ${profile?.referralCode || ''}`
+      `Check out The Pickleball Passport! ${link} Use code: ${profile?.referralCode || ''}`
     );
     window.location.href = `sms:?body=${message}`;
   };

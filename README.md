@@ -24,7 +24,7 @@ Curated pickleball travel experiences — world-class pickleball, boutique hotel
 ### Marketing Site
 - Homepage, How It Works, Pickleball overview, Partners, Contact, FAQ
 - **All Trips listing** (`/trips`) with active + coming-soon cards
-- **Thailand trip detail** (`/trips/thailand`) — 8 navigable sections: Details, Itinerary (13-day accordion), Accommodations (3 hotels), Pickleball (6 sessions), Dining, FAQ, Cancellation, Travel Insurance
+- **Thailand trip detail** (`/trips/thailand`) — 8 navigable sections: Details, Itinerary (13-day accordion), Accommodations (3 hotels), Pickleball (7 sessions), Dining, FAQ, Cancellation, Travel Insurance
 - **Booking module** — desktop sticky sidebar + mobile bottom sheet with occupancy, pickleball toggle, payment plan
 
 ### Platform

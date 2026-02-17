@@ -90,7 +90,7 @@ function generateICalContent(event: {
   const location = event.isVirtual ? 'Virtual Event' : event.location || '';
   return `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Pickleball Passport//Partner Events//EN
+PRODID:-//The Pickleball Passport//Partner Events//EN
 BEGIN:VEVENT
 UID:${event.id}@pickleballpassport.com
 DTSTAMP:${formatICalDate(new Date())}

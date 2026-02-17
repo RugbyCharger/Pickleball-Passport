@@ -15,7 +15,7 @@ import { toast } from 'sonner';
  */
 export default function TestEmailPage() {
   const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('Test Email from Pickleball Passport');
+  const [subject, setSubject] = useState('Test Email from The Pickleball Passport');
   const [message, setMessage] = useState('This is a test email to verify SendGrid integration.');
   const [bookingEmail, setBookingEmail] = useState('');
 

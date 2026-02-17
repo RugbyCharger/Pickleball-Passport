@@ -49,7 +49,7 @@ const hotels: Hotel[] = [
       'Rooftop pool with mountain views, 7th-floor Mediterranean restaurant',
       'Daily breakfast buffet (included)',
       'Free shuttle to Bang Tao Beach and Boat Avenue shopping and dining district',
-      '5 minutes from The Peak Racquet Park pickleball courts',
+      '5 minutes from Peak Racquet Club pickleball courts',
     ],
   },
 ];

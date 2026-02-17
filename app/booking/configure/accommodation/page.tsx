@@ -16,7 +16,7 @@ import { AccommodationSelector } from '@/components/booking/accommodation-select
 import { PricingSummary } from '@/components/booking/pricing-summary'
 
 export const metadata: Metadata = {
-  title: 'Select Accommodation | Pickleball Passport',
+  title: 'Select Accommodation | The Pickleball Passport',
   description: 'Choose your luxury accommodation tier for your Thailand adventure.',
 }
 

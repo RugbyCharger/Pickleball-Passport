@@ -50,9 +50,9 @@ export function TravelInsuranceSection() {
               cancellation, medical emergencies, lost baggage, and flight delays.
             </p>
             <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-              Pickleball Passport does not sell, arrange, or provide travel
+              The Pickleball Passport does not sell, arrange, or provide travel
               insurance. The providers below are suggestions based on traveler
-              reviews &mdash; please research and compare options that best suit
+              reviews. Please research and compare options that best suit
               your needs.
             </p>
           </div>

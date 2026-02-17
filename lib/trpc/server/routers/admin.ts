@@ -519,18 +519,18 @@ export const adminRouter = router({
           try {
             await sendEmail({
               to: doc.booking?.user.email || '',
-              subject: 'Document Approved - Pickleball Passport',
+              subject: 'Document Approved - The Pickleball Passport',
               text: `Hi ${guestName},\n\nGood news! Your ${doc.type
                 .toLowerCase()
                 .replace(
                   '_',
                   ' '
-                )} has been approved.\n\n${notes ? `Admin Note: ${notes}\n\n` : ''}Best regards,\nPickleball Passport Team`,
+                )} has been approved.\n\n${notes ? `Admin Note: ${notes}\n\n` : ''}Best regards,\nThe Pickleball Passport Team`,
               html: `<p>Hi ${guestName},</p><p>Good news! Your <strong>${doc.type
                 .toLowerCase()
                 .replace('_', ' ')}</strong> has been approved.</p>${
                 notes ? `<p><strong>Admin Note:</strong> ${notes}</p>` : ''
-              }<p>Best regards,<br/>Pickleball Passport Team</p>`,
+              }<p>Best regards,<br/>The Pickleball Passport Team</p>`,
             });
           } catch (error) {
             logError(emailLogger, error, 'Failed to send bulk approval email');
@@ -787,9 +787,9 @@ export const adminRouter = router({
             try {
               await sendEmail({
                 to: booking.user.email,
-                subject: `${message.title} - Pickleball Passport`,
-                text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nPickleball Passport Team`,
-                html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>Pickleball Passport Team</p>`,
+                subject: `${message.title} - The Pickleball Passport`,
+                text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nThe Pickleball Passport Team`,
+                html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>The Pickleball Passport Team</p>`,
               });
             } catch (error) {
               logError(emailLogger, error, 'Failed to send booking status update email');

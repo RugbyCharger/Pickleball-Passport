@@ -66,7 +66,7 @@ export default function NotificationSettingsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Notification Preferences</h1>
         <p className="text-gray-600 mt-2">
-          Manage how and when you receive communications from Pickleball Passport.
+          Manage how and when you receive communications from The Pickleball Passport.
         </p>
       </div>
 
@@ -154,7 +154,7 @@ export default function NotificationSettingsPage() {
         <NotificationToggle
           id="inAppEnabled"
           label="In-App Notifications"
-          description="Notifications within the Pickleball Passport app"
+          description="Notifications within The Pickleball Passport app"
           enabled={currentPreferences.inAppEnabled}
           onChange={(value) => handleToggle('inAppEnabled', value)}
         />

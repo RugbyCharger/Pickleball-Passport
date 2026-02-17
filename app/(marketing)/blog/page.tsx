@@ -100,7 +100,7 @@ export default function BlogPage() {
       <section className="bg-gradient-to-r from-[#1D2D44] to-[#005A82] text-white py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Pickleball Passport Blog
+            The Pickleball Passport Blog
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-6 max-w-3xl mx-auto">
             Stories, tips, and insights from the world of pickleball wellness travel

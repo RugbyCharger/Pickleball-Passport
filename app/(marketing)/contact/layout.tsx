@@ -1,22 +1,22 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contact Us - Pickleball Passport',
+  title: 'Contact Us - The Pickleball Passport',
   description:
-    'Get in touch with Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+    'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
   openGraph: {
-    title: 'Contact Us - Pickleball Passport',
+    title: 'Contact Us - The Pickleball Passport',
     description:
-      'Get in touch with Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+      'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
     url: 'https://thepickleballpassport.org/contact',
-    siteName: 'Pickleball Passport',
+    siteName: 'The Pickleball Passport',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Us - Pickleball Passport',
+    title: 'Contact Us - The Pickleball Passport',
     description:
-      'Get in touch with Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+      'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
   },
   alternates: {
     canonical: 'https://thepickleballpassport.org/contact',
@@ -37,13 +37,13 @@ export default function ContactLayout({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'ContactPage',
-            name: 'Contact Pickleball Passport',
+            name: 'Contact The Pickleball Passport',
             description:
-              'Contact page for Pickleball Passport - transformation tourism packages in Thailand',
+              'Contact page for The Pickleball Passport - transformation tourism packages in Thailand',
             url: 'https://thepickleballpassport.org/contact',
             mainEntity: {
               '@type': 'Organization',
-              name: 'Pickleball Passport',
+              name: 'The Pickleball Passport',
               url: 'https://thepickleballpassport.org',
               email: 'jaron@thepickleballpassport.org',
               telephone: '+1-555-123-4567',

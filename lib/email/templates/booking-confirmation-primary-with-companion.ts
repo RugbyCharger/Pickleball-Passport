@@ -163,7 +163,7 @@ export function generatePrimaryWithCompanionConfirmationEmail(data: PrimaryWithC
 
     <p>
       Congratulations! Your booking has been confirmed along with your companion ${data.companionFirstName} ${data.companionLastName}.
-      Payment has been received for both bookings. We're thrilled to welcome you both to Pickleball Passport for an
+      Payment has been received for both bookings. We're thrilled to welcome you both to The Pickleball Passport for an
       unforgettable experience combining world-class medical care, wellness, and pickleball in beautiful Thailand.
     </p>
 
@@ -352,10 +352,10 @@ export function generatePrimaryWithCompanionConfirmationEmail(data: PrimaryWithC
   `;
 
   const html = baseEmailTemplate({
-    title: 'Booking Confirmed - You + Companion - Pickleball Passport',
+    title: 'Booking Confirmed - You + Companion - The Pickleball Passport',
     content,
     preheader: `Bookings ${data.primaryBookingReference} and ${data.companionBookingReference} confirmed! Your transformation journey awaits.`,
-    footerText: `You received this email because you completed a booking with Pickleball Passport.`,
+    footerText: `You received this email because you completed a booking with The Pickleball Passport.`,
   });
 
   const text = generatePlainText(content);

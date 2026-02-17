@@ -137,7 +137,7 @@ export default async function AdminDashboardPage() {
             <p className="text-sm text-blue-800">
               The admin dashboard is currently under development. Below is a preview
               of the features that will be available to administrators to manage the
-              Pickleball Passport platform.
+              The Pickleball Passport platform.
             </p>
           </div>
         </div>

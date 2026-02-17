@@ -28,7 +28,7 @@ export default function TestimonialsPage() {
               Hear From Our Guests
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Real stories from people who have transformed their game and their smile with Pickleball Passport.
+              Real stories from people who have transformed their game and their smile with The Pickleball Passport.
             </p>
           </div>
         </div>
