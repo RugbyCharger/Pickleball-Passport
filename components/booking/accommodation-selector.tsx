@@ -41,7 +41,7 @@ const ACCOMMODATION_TIERS: TierOption[] = [
     name: 'Luxury',
     subtitle: 'Four Seasons Resort',
     price: 0,
-    description: 'Luxury 5-star resort accommodation with world-class amenities',
+    description: 'Premier 5-star resort accommodation with outstanding amenities',
     amenities: [
       'Ocean or garden view rooms',
       'Daily breakfast included',

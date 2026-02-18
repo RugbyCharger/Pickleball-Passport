@@ -164,7 +164,7 @@ export function generatePrimaryWithCompanionConfirmationEmail(data: PrimaryWithC
     <p>
       Congratulations! Your booking has been confirmed along with your companion ${data.companionFirstName} ${data.companionLastName}.
       Payment has been received for both bookings. We're thrilled to welcome you both to The Pickleball Passport for an
-      unforgettable experience combining world-class medical care, wellness, and pickleball in beautiful Thailand.
+      unforgettable experience combining exceptional medical care, wellness, and pickleball in beautiful Thailand.
     </p>
 
     <div style="margin: 32px 0; padding: 24px; background: linear-gradient(135deg, #059669 0%, #2563eb 100%); border-radius: 12px; text-align: center;">

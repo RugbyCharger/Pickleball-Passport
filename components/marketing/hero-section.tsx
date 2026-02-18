@@ -68,7 +68,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
             Our flagship Thailand experience launches May 15, 2026. Three cities. Boutique hotels.
-            World-class pickleball. Cultural immersion. The wellness reset you&apos;ve been waiting for.
+            Exceptional pickleball. Cultural immersion. The wellness reset you&apos;ve been waiting for.
           </p>
 
           {/* Tagline */}

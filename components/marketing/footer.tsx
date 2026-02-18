@@ -212,7 +212,7 @@ export function Footer() {
                 </div>
               </Link>
               <p className="text-[#7587A5] mb-8 max-w-sm text-base leading-relaxed">
-                The ultimate pickleball getaway. Curated multi-city trips with world-class courts, boutique hotels, cultural immersion, and wellness recovery.
+                The ultimate pickleball getaway. Curated multi-city trips with outstanding courts, boutique hotels, cultural immersion, and wellness recovery.
               </p>
 
               {/* Contact Info */}

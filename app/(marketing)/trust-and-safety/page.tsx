@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
     description:
-      'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
+      'High-quality medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
     url: 'https://pickleballpassport.com/trust-and-safety',
     siteName: 'The Pickleball Passport',
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
     description:
-      'World-class medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
+      'High-quality medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
     images: ['/og-images/trust-safety.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',
@@ -67,7 +67,7 @@ export default function TrustAndSafetyPage() {
               Your Safety Is Our Priority
             </h1>
             <p className="text-xl text-blue-100">
-              World-class medical credentials, comprehensive insurance, and
+              High-quality medical credentials, comprehensive insurance, and
               transparent policies ensure your transformation journey is safe,
               secure, and worry-free.
             </p>
@@ -80,7 +80,7 @@ export default function TrustAndSafetyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              World-Class Medical Credentials
+              High-Quality Medical Credentials
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Our partner hospitals maintain the highest international
@@ -194,7 +194,7 @@ export default function TrustAndSafetyPage() {
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Thailand is a global leader in medical tourism, with proven
-              safety records and world-class healthcare infrastructure.
+              safety records and exceptional healthcare infrastructure.
             </p>
           </div>
 
@@ -277,7 +277,7 @@ export default function TrustAndSafetyPage() {
               </div>
               <div className="text-sm text-gray-600">
                 Over 2.5 million medical tourists visit Thailand annually for
-                world-class healthcare at affordable prices.
+                exceptional healthcare at affordable prices.
               </div>
               <div className="text-xs text-gray-500 mt-3">
                 <a

@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = packageData.metaTitle || `${packageData.name} - Wellness Package | The Pickleball Passport`;
-  const description = packageData.metaDescription || `Explore our ${packageData.name} package combining luxury wellness, medical tourism, and pickleball in Thailand.`;
+  const description = packageData.metaDescription || `Explore our ${packageData.name} package combining premier wellness, medical tourism, and pickleball in Thailand.`;
   const imageUrl = packageData.heroImageUrl || '/og-images/package-default.jpg';
 
   return {

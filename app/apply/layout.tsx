@@ -5,11 +5,11 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Apply for Your Transformation Journey | The Pickleball Passport',
-  description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to luxury pickleball, medical tourism, and spiritual experiences.',
+  description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier pickleball, medical tourism, and spiritual experiences.',
   keywords: ['apply', 'transformation journey', 'wellness application', 'pickleball retreat', 'medical tourism application'],
   openGraph: {
     title: 'Apply for Your Transformation Journey | The Pickleball Passport',
-    description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to luxury experiences.',
+    description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier experiences.',
     url: 'https://pickleballpassport.com/apply',
     siteName: 'The Pickleball Passport',
     images: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Apply for Your Transformation Journey | The Pickleball Passport',
-    description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to luxury experiences.',
+    description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier experiences.',
     images: ['/og-images/apply.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',

@@ -78,13 +78,21 @@ export const enforceRole = (allowedRoles: string[]) =>
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
-    // Fetch user from database to check role
-    const dbUser = await ctx.db.user.findUnique({
+    // Upsert user: auto-create with GUEST role if authenticated in Clerk but missing from DB
+    // This handles the webhook race condition where Clerk auth completes before the
+    // user-creation webhook fires.
+    const dbUser = await ctx.db.user.upsert({
       where: { id: ctx.user.id },
+      update: {},
+      create: {
+        id: ctx.user.id,
+        email: ctx.user.emailAddresses[0]?.emailAddress ?? '',
+        role: 'GUEST',
+      },
       select: { role: true },
     })
 
-    if (!dbUser || !allowedRoles.includes(dbUser.role)) {
+    if (!allowedRoles.includes(dbUser.role)) {
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'You do not have permission to access this resource'
@@ -94,7 +102,7 @@ export const enforceRole = (allowedRoles: string[]) =>
     return next({
       ctx: {
         ...ctx,
-        user: ctx.user, // TypeScript now knows user is defined
+        user: ctx.user,
         role: dbUser.role,
       },
     })

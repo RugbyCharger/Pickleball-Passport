@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Premier Pickleball Travel Experiences | The Pickleball Passport',
-  description: 'Elite pickleball travel experiences in Thailand. Boutique hotels, world-class courts, cultural immersion, and unforgettable destinations. Launching May 2026.',
+  description: 'Elite pickleball travel experiences in Thailand. Boutique hotels, outstanding courts, cultural immersion, and unforgettable destinations. Launching May 2026.',
   keywords: ['pickleball', 'pickleball travel', 'Thailand', 'pickleball retreat', 'pickleball vacation', 'boutique hotels', 'cultural immersion'],
   openGraph: {
     title: 'The Pickleball Passport - Play the World',
-    description: 'Elite pickleball travel experiences. Boutique hotels, world-class courts, and cultural immersion in Thailand.',
+    description: 'Elite pickleball travel experiences. Boutique hotels, outstanding courts, and cultural immersion in Thailand.',
     url: 'https://www.thepickleballpassport.org',
     siteName: 'The Pickleball Passport',
     images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'The Pickleball Passport - Play the World',
-    description: 'Elite pickleball travel experiences. Boutique hotels, world-class courts, and cultural immersion in Thailand.',
+    description: 'Elite pickleball travel experiences. Boutique hotels, outstanding courts, and cultural immersion in Thailand.',
     images: ['/og-images/homepage.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',

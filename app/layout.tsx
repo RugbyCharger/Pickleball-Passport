@@ -39,8 +39,8 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thepickleballpassport.org'),
-  title: "The Pickleball Passport | Luxury Transformation Tourism in Thailand",
-  description: "Where Pickleball Meets World-Class Wellness and Medical Care in Thailand",
+  title: "The Pickleball Passport | Premier Transformation Tourism in Thailand",
+  description: "Where Pickleball Meets Exceptional Wellness and Medical Care in Thailand",
 };
 
 export default function RootLayout({
@@ -55,7 +55,7 @@ export default function RootLayout({
     name: 'The Pickleball Passport',
     url: 'https://thepickleballpassport.org',
     logo: 'https://thepickleballpassport.org/logo.png',
-    description: 'Luxury wellness and pickleball experiences combining medical tourism, spiritual transformation, and pickleball in Thailand.',
+    description: 'Premier wellness and pickleball experiences combining medical tourism, spiritual transformation, and pickleball in Thailand.',
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+1-512-564-8522',

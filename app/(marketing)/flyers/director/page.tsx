@@ -32,10 +32,10 @@ export default function DirectorFlyer() {
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div className="space-y-8">
               <p className="text-slate-600 leading-relaxed text-lg">
-                The Pickleball Passport is the world's first luxury transformation platform. 
-                We partner with select Club Directors to offer their members exclusive access 
-                to curated travel experiences in Thailand that combine the sport they love with 
-                world-class wellness and medical care.
+                The Pickleball Passport is the first premier transformation travel platform.
+                We partner with select Club Directors to offer their members exclusive access
+                to curated travel experiences in Thailand that combine the sport they love with
+                exceptional wellness and medical care.
               </p>
               
               <div className="space-y-6">
@@ -49,7 +49,7 @@ export default function DirectorFlyer() {
                 <div className="flex gap-4">
                   <Trophy className="w-6 h-6 text-emerald-600 shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-slate-900">Luxury Differentiation</h4>
+                    <h4 className="font-semibold text-slate-900">Premier Differentiation</h4>
                     <p className="text-sm text-slate-500">Stand out from other clubs by offering an exclusive international perk.</p>
                   </div>
                 </div>

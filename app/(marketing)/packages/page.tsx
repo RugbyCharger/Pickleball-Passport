@@ -24,12 +24,12 @@ const packages = [
     name: 'Smile & Play',
     slug: 'smile-and-play',
     duration: '7 Days',
-    description: 'Transform your smile with world-class dental work while enjoying daily pickleball sessions.',
+    description: 'Transform your smile with high-quality dental work while enjoying daily pickleball sessions.',
     highlights: [
       'Full dental assessment & treatment',
       'Daily pickleball sessions',
-      'Luxury accommodation',
-      '5-star dining experiences',
+      'Premier accommodation',
+      'Exceptional dining experiences',
     ],
     featured: true,
     icon: '😁',
@@ -73,7 +73,7 @@ const includedItems = [
   {
     icon: Star,
     title: 'Accommodation',
-    description: '4-5 star hotels or luxury resorts with recovery amenities',
+    description: '4-5 star hotels or premier resorts with recovery amenities',
   },
   {
     icon: Users,
@@ -112,8 +112,8 @@ export default function PackagesPage() {
               Transformation Packages
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Discover our curated wellness experiences that combine world-class medical care,
-              pickleball training, and luxury hospitality in beautiful Thailand.
+              Discover our curated wellness experiences that combine high-quality medical care,
+              pickleball training, and exceptional hospitality in beautiful Thailand.
             </p>
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">

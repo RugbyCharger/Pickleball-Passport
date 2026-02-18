@@ -35,7 +35,7 @@ const ACCOMMODATION_DETAILS: Record<
   LUXURY: {
     name: 'Luxury Tier',
     property: 'Four Seasons Resort',
-    description: 'Premium accommodations with world-class amenities',
+    description: 'Premium accommodations with outstanding amenities',
     price: 0,
   },
   ULTRA_LUXURY: {

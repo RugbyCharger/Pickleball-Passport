@@ -21,7 +21,7 @@ function getPackageFAQs(packageName: string): FAQItem[] {
     {
       question: 'What is included in the package price?',
       answer:
-        'The package price includes luxury accommodations, all meals, daily pickleball sessions, airport transfers, cultural excursions, and 24/7 concierge support. Medical procedures and select add-ons are additional.',
+        'The package price includes premier accommodations, all meals, daily pickleball sessions, airport transfers, cultural excursions, and 24/7 concierge support. Medical procedures and select add-ons are additional.',
     },
     {
       question: 'How do I book this package?',

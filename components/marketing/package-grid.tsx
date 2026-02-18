@@ -14,7 +14,7 @@ const pickleballPackages = [
     basePrice: 2888,
     highlights: [
       'Daily curated open play & clinics',
-      'Luxury 4-5 star accommodation',
+      'Premier 4-5 star accommodation',
       'Airport VIP fast-track & transfers',
       'Welcome dinner & cultural tour',
       'Dedicated concierge support'
@@ -30,7 +30,7 @@ const pickleballPackages = [
     highlights: [
       'Extended coast-to-coast play',
       'Multiple tournament opportunities',
-      'Island excursions & luxury stay',
+      'Island excursions & premier stay',
       'Full wellness recovery day',
       'Private pro coaching sessions'
     ],
@@ -140,7 +140,7 @@ export function PackageSection() {
           <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           <p className="mx-auto max-w-2xl text-lg text-[#1D2D44]/70 leading-relaxed">
             Join a community of enthusiasts for the trip of a lifetime. 
-            Experience daily play, luxury relaxation, and the beauty of Thailand.
+            Experience daily play, total relaxation, and the beauty of Thailand.
           </p>
         </motion.div>
 

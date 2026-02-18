@@ -201,7 +201,7 @@ export function PackageDetailClient({ packageData }: PackageDetailClientProps) {
                 </h3>
                 <ul className="space-y-2">
                   {[
-                    'Luxury accommodations',
+                    'Premier accommodations',
                     'All meals included',
                     'Daily pickleball sessions',
                     'Airport transfers',

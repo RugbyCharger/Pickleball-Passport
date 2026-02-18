@@ -106,7 +106,7 @@ export default function PartnerLandingPage() {
             </h1>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
               {landingPage.subheadline ||
-                'Combine your love of pickleball with world-class wellness and medical care. Experience a life-changing transformation in beautiful Thailand.'}
+                'Combine your love of pickleball with exceptional wellness and medical care. Experience a life-changing transformation in beautiful Thailand.'}
             </p>
 
             {/* CTA Button */}
@@ -144,7 +144,7 @@ export default function PartnerLandingPage() {
             Why Choose The Pickleball Passport?
           </h2>
           <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            Experience world-class wellness transformations while playing the sport you love.
+            Experience exceptional wellness transformations while playing the sport you love.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -154,7 +154,7 @@ export default function PartnerLandingPage() {
                 <Award className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                World-Class Care
+                High-Quality Care
               </h3>
               <p className="text-slate-600">
                 Access top-tier dental, cosmetic, and wellness treatments at a fraction of US costs.

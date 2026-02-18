@@ -139,7 +139,7 @@ export default function MedicalCostCalculator() {
             Cost Calculator
           </CardTitle>
           <p className="text-white/80 mt-2 leading-relaxed">
-            Discover how much you could save by combining world-class medical care with your Thailand vacation
+            Discover how much you could save by combining high-quality medical care with your Thailand vacation
           </p>
         </div>
 

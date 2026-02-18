@@ -34,13 +34,13 @@ async function main() {
       tagline: 'All Pickleball, All Paradise',
       description: `# The Ultimate Pickleball Paradise Experience
 
-Experience the perfect blend of competitive play and tropical relaxation in Phuket, Thailand. Pure Play is designed for pickleball enthusiasts who want to focus on the game while enjoying world-class amenities.
+Experience the perfect blend of competitive play and tropical relaxation in Phuket, Thailand. Pure Play is designed for pickleball enthusiasts who want to focus on the game while enjoying outstanding amenities.
 
 ## What's Included
 
 - **Daily Pickleball Sessions**: Morning and afternoon play with skill-matched partners
 - **Professional Coaching**: Optional clinics with certified instructors
-- **Luxury Accommodations**: Choose from 3-star to 5-star resorts
+- **Premier Accommodations**: Choose from 3-star to 5-star resorts
 - **Thai Wellness**: Daily yoga and meditation sessions
 - **Cultural Experiences**: Explore local markets, temples, and beaches
 - **All Meals Included**: Authentic Thai cuisine with dietary accommodations
@@ -57,7 +57,7 @@ Players who want to immerse themselves in pickleball while experiencing the beau
         '/images/packages/pure-play-yoga.jpg',
       ],
       metaTitle: 'Pure Play - Pickleball Paradise in Phuket, Thailand',
-      metaDescription: 'Join us for the ultimate pickleball vacation in Phuket. Daily play, luxury accommodations, and authentic Thai experiences.',
+      metaDescription: 'Join us for the ultimate pickleball vacation in Phuket. Daily play, premier accommodations, and authentic Thai experiences.',
       isActive: true,
     },
   });
@@ -69,7 +69,7 @@ Players who want to immerse themselves in pickleball while experiencing the beau
       tagline: 'Perfect Your Smile, Perfect Your Game',
       description: `# Transform Your Smile in Paradise
 
-Combine world-class dental care with pickleball and tropical relaxation. Our Smile Makeover package includes comprehensive dental treatments at 60-70% less than US prices.
+Combine high-quality dental care with pickleball and tropical relaxation. Our Smile Makeover package includes comprehensive dental treatments at 60-70% less than US prices.
 
 ## Dental Services Included
 
@@ -82,7 +82,7 @@ Combine world-class dental care with pickleball and tropical relaxation. Our Smi
 ## Plus All Pure Play Amenities
 
 - Daily pickleball sessions
-- Luxury accommodations
+- Premier accommodations
 - Wellness activities
 - Cultural experiences
 - All meals included
@@ -99,7 +99,7 @@ Our partnered dental clinics are internationally accredited with US/UK trained d
         '/images/packages/smile-makeover-results.jpg',
       ],
       metaTitle: 'Smile Makeover - Dental Tourism & Pickleball in Thailand',
-      metaDescription: 'Get a perfect smile at 60% savings while enjoying pickleball in Phuket. World-class dental care meets paradise.',
+      metaDescription: 'Get a perfect smile at 60% savings while enjoying pickleball in Phuket. High-quality dental care meets paradise.',
       isActive: true,
     },
   });
@@ -135,7 +135,7 @@ Our most comprehensive package combines cosmetic procedures, dental work, wellne
 
 ## Medical Excellence
 
-Board-certified surgeons with international training. JCI-accredited facilities with luxury recovery suites.`,
+Board-certified surgeons with international training. JCI-accredited facilities with premier recovery suites.`,
       basePrice: 1999900, // $19,999
       durationOptions: [14, 21],
       heroImageUrl: '/images/packages/total-transformation-hero.jpg',
@@ -145,7 +145,7 @@ Board-certified surgeons with international training. JCI-accredited facilities 
         '/images/packages/total-transformation-spa.jpg',
       ],
       metaTitle: 'Total Transformation - Medical Tourism & Wellness in Phuket',
-      metaDescription: 'Complete aesthetic transformation with world-class medical care, wellness therapies, and pickleball in paradise.',
+      metaDescription: 'Complete aesthetic transformation with exceptional medical care, wellness therapies, and pickleball in paradise.',
       isActive: true,
     },
   });
@@ -476,7 +476,7 @@ Play with intention, focus on the mental game, and connect deeply with fellow pl
       },
       {
         name: 'Aromatherapy Spa Package',
-        description: '3-hour luxury spa experience',
+        description: '3-hour premium spa experience',
         category: AddOnCategory.SPA,
         thPrice: 8000, // $80
         usPrice: 30000, // $300

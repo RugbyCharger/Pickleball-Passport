@@ -346,7 +346,7 @@ export default function LandingPageEditorPage() {
                 id="subheadline"
                 rows={3}
                 className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                placeholder="Combine your love of pickleball with world-class wellness and medical care"
+                placeholder="Combine your love of pickleball with exceptional wellness and medical care"
               />
             </div>
 

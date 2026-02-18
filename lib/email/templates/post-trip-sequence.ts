@@ -451,7 +451,7 @@ function generate60DaysEmail(data: PostTripEmailData): string {
       <div style="margin: 12px 0; padding: 16px; background-color: #eff6ff; border-radius: 8px;">
         <p style="margin: 0 0 8px 0; color: #1e40af; font-weight: 600;">New Partners</p>
         <p style="margin: 0; color: #1e40af; font-size: 14px;">
-          We've expanded our network of world-class medical facilities and luxury
+          We've expanded our network of exceptional medical facilities and premier
           accommodations to give you even more choices.
         </p>
       </div>

@@ -27,10 +27,10 @@ const packages = [
     name: '8-Day Pickleball Paradise',
     slug: '8-day-paradise',
     duration: '8 Days',
-    description: 'The essential Thailand pickleball experience. Perfect for players who want a week of intense play and luxury relaxation.',
+    description: 'The essential Thailand pickleball experience. Perfect for players who want a week of intense play and relaxation.',
     highlights: [
       'Daily curated open play & clinics',
-      'Luxury 4-5 star accommodation',
+      'Premier 4-5 star accommodation',
       'Airport VIP fast-track & transfers',
       'Welcome dinner & cultural tour',
       'Dedicated concierge support',
@@ -46,7 +46,7 @@ const packages = [
     highlights: [
       'Extended coast-to-coast play',
       'Multiple tournament opportunities',
-      'Island excursions & luxury stay',
+      'Island excursions & premier stay',
       'Full wellness recovery day',
       'Private pro coaching sessions',
     ],
@@ -64,18 +64,18 @@ const includedItems = [
   },
   {
     icon: Star,
-    title: 'Luxury Accommodation',
-    description: 'Stay in hand-picked 4-5 star hotels and resorts known for their comfort and amenities.',
+    title: 'Premier Stays',
+    description: 'Stay in handpicked 4-5 star hotels and resorts known for their comfort and amenities.',
   },
   {
     icon: Plane,
     title: 'Full Logistics',
-    description: 'From VIP airport pickup to daily transport, we handle every detail of your travel.',
+    description: 'From VIP airport pickup to daily transport, group logistics are handled for you.',
   },
   {
     icon: Users,
     title: 'Concierge Team',
-    description: 'Our local team is available 24/7 to ensure your trip is seamless and stress-free.',
+    description: 'Our local team is available 24/7 to ensure your trip is smooth and stress-free.',
   },
 ];
 
@@ -101,13 +101,13 @@ export default function PickleballPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4 text-[#B08D55]" />
-              World-Class Pickleball Travel
+              Exceptional Pickleball Travel
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
               Curated Pickleball Journeys
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Experience the perfect blend of competition, training, and luxury vacation in Thailand.
+              Experience the perfect blend of competition, training, and vacation in Thailand.
               We handle the logistics; you handle the dinking.
             </p>
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
@@ -117,7 +117,7 @@ export default function PickleballPage() {
               </div>
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Star className="h-5 w-5 text-[#B08D55]" />
-                <span className="text-sm">Luxury Stays</span>
+                <span className="text-sm">Premier Stays</span>
               </div>
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Sun className="h-5 w-5 text-[#B08D55]" />
@@ -236,7 +236,7 @@ export default function PickleballPage() {
                 Looking for Medical Services?
               </h2>
               <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
-                Combine your pickleball trip with world-class dental or medical care. 
+                Combine your pickleball trip with high-quality dental or medical care.
                 Save 60-70% on procedures while you enjoy your vacation.
               </p>
               <Link href="/medical-tourism">

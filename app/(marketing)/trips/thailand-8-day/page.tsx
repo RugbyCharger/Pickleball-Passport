@@ -4,7 +4,7 @@ import { Thailand8DayTripPage } from './trip-detail-page';
 export const metadata: Metadata = {
   title: '8-Day Pickleball Paradise: Bangkok & Chiang Mai | The Pickleball Passport',
   description:
-    'Experience the essential 8-day pickleball trip through Bangkok and Chiang Mai. 4 pickleball sessions, 2 boutique hotels, cultural adventures, and world-class dining. From $2,888.',
+    'Experience the essential 8-day pickleball trip through Bangkok and Chiang Mai. 4 pickleball sessions, 2 boutique hotels, cultural adventures, and outstanding dining. From $2,888.',
   keywords: [
     'pickleball trip Thailand',
     'pickleball travel',

@@ -25,7 +25,7 @@ export default function GuestFlyer() {
               <span className="italic text-emerald-600">Passport</span>
             </h1>
             <p className="text-xl md:text-2xl font-light text-slate-500 max-w-2xl mx-auto italic">
-              "A life upgrade, masterfully disguised as a luxury vacation."
+              "A life upgrade, masterfully disguised as an unforgettable vacation."
             </p>
           </header>
 
@@ -38,7 +38,7 @@ export default function GuestFlyer() {
               <p className="text-slate-600 leading-relaxed text-lg">
                 Imagine a journey where the thrill of the court meets the pinnacle of self-care. 
                 Stay in Thailand's most storied resorts, forge genuine friendships with fellow players, 
-                and invest in your well-being with world-class medical and dental care.
+                and invest in your well-being with high-quality medical and dental care.
               </p>
             </div>
             <div className="aspect-[4/5] relative overflow-hidden group">
@@ -111,7 +111,7 @@ export default function GuestFlyer() {
               </div>
               <h3 className={`${playfair.className} text-xl`}>The Transformation</h3>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Premium dental and cosmetic work at 60-70% less than US costs. World-class JCI-accredited care that funds your entire experience.
+                Premium dental and cosmetic work at 60-70% less than US costs. JCI-accredited care that funds your entire experience.
               </p>
             </div>
             <div className="space-y-4">
@@ -127,7 +127,7 @@ export default function GuestFlyer() {
               <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
                 <Shield className="w-5 h-5 text-slate-600" />
               </div>
-              <h3 className={`${playfair.className} text-xl`}>The Luxury</h3>
+              <h3 className={`${playfair.className} text-xl`}>The Experience</h3>
               <p className="text-sm text-slate-500 leading-relaxed">
                 Resort living at the Four Seasons or Aman. Every detail curated, from your private villa to the perfect cross-court dink.
               </p>

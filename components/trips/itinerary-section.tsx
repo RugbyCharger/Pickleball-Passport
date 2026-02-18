@@ -49,7 +49,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Evening',
         description:
-          'Japanese onsen session \u2014 5 mineral baths, steam, cold room. Jet lag recovery on Night 1.',
+          'Japanese onsen session: 5 mineral baths, steam, cold room. Jet lag recovery on Night 1.',
       },
     ],
   },
@@ -67,12 +67,12 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Private long-tail boat sunset cruise \u2014 Thonburi canals to Wat Arun (Temple of Dawn) lit up at dusk.',
+          'Private long-tail boat sunset cruise. Thonburi canals to Wat Arun (Temple of Dawn) lit up at dusk.',
       },
       {
         label: 'Evening',
         description:
-          'Guided Chinatown street food walk \u2014 roasted duck, mango sticky rice, pad thai, dim sum, coconut ice cream.',
+          'Guided Chinatown street food walk: roasted duck, mango sticky rice, pad thai, dim sum, coconut ice cream.',
       },
     ],
   },
@@ -85,12 +85,12 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Wat Pho guided tour \u2014 46-meter Reclining Buddha, home of Thai massage.',
+          'Wat Pho guided tour. 46-meter Reclining Buddha, home of Thai massage.',
       },
       {
         label: 'Afternoon',
         description:
-          'Pickleball Session 1 at SukSpace \u2014 Assessment, warm-up, round-robin.',
+          'Pickleball Session 1 at SukSpace. Assessment, warm-up, round-robin.',
       },
       {
         label: 'Evening',
@@ -108,7 +108,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Pickleball Session 2 at SukSpace \u2014 Structured doubles, skill mixing.',
+          'Pickleball Session 2 at SukSpace. Structured doubles, skill mixing.',
       },
       {
         label: 'Afternoon',
@@ -118,7 +118,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Evening',
         description:
-          'Pickleball Session 3 at SukSpace \u2014 Tournament day, king of the court, competitive brackets.',
+          'Pickleball Session 3 at SukSpace. Tournament day, king of the court, competitive brackets.',
       },
     ],
   },
@@ -136,12 +136,12 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Free exploration \u2014 spa, shopping, or relaxation.',
+          'Free exploration: spa, shopping, or relaxation.',
       },
       {
         label: 'Evening',
         description:
-          'Bangkok Farewell Dinner \u2014 Curated Michelin experience (S\u00fchring, Gaa, or Samrub Thai).',
+          'Bangkok Farewell Dinner. Curated Michelin experience (S\u00fchring, Gaa, or Samrub Thai).',
       },
     ],
   },
@@ -164,7 +164,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Evening',
         description:
-          'Chiang Mai Welcome Dinner at Huen Muan Jai \u2014 Michelin Bib Gourmand.',
+          'Chiang Mai Welcome Dinner at Huen Muan Jai. Michelin Bib Gourmand.',
       },
     ],
   },
@@ -177,12 +177,12 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Thai cooking class \u2014 morning market tour + cook 5\u20136 dishes at an organic farm.',
+          'Thai cooking class: morning market tour + cook 5\u20136 dishes at an organic farm.',
       },
       {
         label: 'Afternoon',
         description:
-          'Pickleball Session 4 at BokBok \u2014 Skill clinics: dinking, third-shot drops, stacking strategy.',
+          'Pickleball Session 4 at BokBok. Skill clinics: dinking, third-shot drops, stacking strategy.',
       },
       {
         label: 'Evening',

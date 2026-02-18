@@ -89,6 +89,17 @@ export function TravelInsuranceSection() {
           to maximize coverage options, including pre-existing condition waivers.
         </p>
       </div>
+
+      {/* Liability Waiver */}
+      <div className="rounded-xl border border-[#1D2D44]/10 bg-white p-5">
+        <p className="text-sm text-[#1D2D44]/80 leading-relaxed">
+          <span className="font-serif font-semibold text-[#1D2D44]">
+            Liability Waiver:
+          </span>{' '}
+          Prior to departure, all guests will complete a standard liability
+          waiver as part of the onboarding process.
+        </p>
+      </div>
     </div>
   );
 }

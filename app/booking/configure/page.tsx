@@ -143,7 +143,7 @@ export default async function PackageSelectionPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                All packages include luxury accommodation, daily pickleball
+                All packages include premier accommodation, daily pickleball
                 sessions, wellness consultations, group activities, airport
                 transfers, and 24/7 concierge support. Medical procedures are
                 customizable in the next steps.

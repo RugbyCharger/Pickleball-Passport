@@ -122,7 +122,7 @@ export const TRAINING_RESOURCES: TrainingResource[] = [
 # Elevator Pitch Examples
 
 ## For Club Announcements (30 seconds)
-"The Pickleball Passport combines your love of pickleball with world-class wellness and medical care in Thailand. It's a 7-21 day transformation journey where you play pickleball daily while receiving dental work, cosmetic procedures, or wellness treatments at a fraction of US costs. Plus, you get to experience the culture and beauty of Thailand. I'm a partner and can help you get started!"
+"The Pickleball Passport combines your love of pickleball with exceptional wellness and medical care in Thailand. It's a 7-21 day transformation journey where you play pickleball daily while receiving dental work, cosmetic procedures, or wellness treatments at a fraction of US costs. Plus, you get to experience the culture and beauty of Thailand. I'm a partner and can help you get started!"
 
 ## For One-on-One Conversations
 "Have you ever thought about combining a vacation with medical or wellness treatments? The Pickleball Passport does exactly that - you play pickleball every day while getting dental work, cosmetic procedures, or wellness treatments in Thailand. It's like a medical tourism trip, but specifically designed for pickleball players. I can share more details if you're interested."

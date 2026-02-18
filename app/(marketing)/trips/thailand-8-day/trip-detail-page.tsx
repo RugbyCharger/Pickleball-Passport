@@ -25,10 +25,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 const statItems = [
   { value: '16', label: 'Max Group Size' },
   {
-    value: '5/10',
+    value: '6/10',
     label: 'Activity Level',
     tooltip:
-      '5/10: Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
+      '6/10: Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
   { value: '5–7', label: 'Hrs. Instruction' },
   { value: '5–8', label: 'Hrs. Social Play' },
@@ -42,7 +42,7 @@ const includedItems = [
   'All private ground transportation (air-con vans, airport transfers)',
   '4 pickleball sessions with court fees, equipment, and structured programming',
   'Thai cooking class (half day with market tour)',
-  'Elephant Nature Park visit (ethical sanctuary \u2014 no riding, no chains)',
+  'Elephant Nature Park visit (ethical sanctuary, no riding, no chains)',
   'Private long-tail boat sunset cruise on the Chao Phraya River',
   'Wat Pho guided temple tour (Reclining Buddha)',
   'Guided Chinatown street food walk (all tastings included)',
@@ -103,7 +103,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Free Time',
         description:
-          'Explore Thonglor \u2014 coffee at The Commons or Roast Coffee.',
+          'Explore Thonglor. Coffee at The Commons or Roast Coffee.',
       },
       {
         label: '4:00 PM',
@@ -755,6 +755,21 @@ export function Thailand8DayTripPage() {
               Reserve Your Spot
               <ArrowRight className="w-4 h-4" />
             </button>
+          </div>
+        </section>
+
+        {/* ── BEFORE YOU GO ── */}
+        <section>
+          <div className="rounded-xl border border-[#1D2D44]/10 bg-white p-5">
+            <p className="text-sm text-[#1D2D44]/80 leading-relaxed">
+              <span className="font-serif font-semibold text-[#1D2D44]">
+                Before You Go:
+              </span>{' '}
+              Prior to departure, all guests will complete a standard liability
+              waiver as part of the onboarding process. We also strongly recommend
+              purchasing comprehensive travel insurance covering medical expenses,
+              trip cancellation, and personal liability.
+            </p>
           </div>
         </section>
 

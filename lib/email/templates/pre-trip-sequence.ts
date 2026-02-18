@@ -101,8 +101,8 @@ function generate60DaysEmail(data: PreTripEmailData): string {
 
     <p>
       <strong>60 days from now</strong>, you'll be stepping off a plane in Thailand, 
-      ready to begin an incredible transformation journey that combines world-class 
-      pickleball, rejuvenating wellness experiences, and amazing medical care – 
+      ready to begin an incredible transformation journey that combines exceptional
+      pickleball, rejuvenating wellness experiences, and amazing medical care --
       all at a fraction of US costs!
     </p>
 

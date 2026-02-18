@@ -17,9 +17,10 @@ interface WaitlistModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tripName: string;
+  isNotifyMe?: boolean;
 }
 
-export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalProps) {
+export function WaitlistModal({ open, onOpenChange, tripName, isNotifyMe = false }: WaitlistModalProps) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -78,10 +79,12 @@ export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalPro
             </div>
             <DialogHeader>
               <DialogTitle className="text-xl font-serif text-[#1D2D44]">
-                You&apos;re on the list!
+                {isNotifyMe ? 'You\u2019re on the notify list!' : 'You\u2019re on the list!'}
               </DialogTitle>
               <DialogDescription className="text-[#1D2D44]/70 text-sm leading-relaxed">
-                We&apos;ll reach out with final pricing and booking details soon.
+                {isNotifyMe
+                  ? 'We\u2019ll notify you when this destination opens!'
+                  : 'We\u2019ll reach out with final pricing and booking details soon.'}
               </DialogDescription>
             </DialogHeader>
             <Button
@@ -95,10 +98,12 @@ export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalPro
           <>
             <DialogHeader>
               <DialogTitle className="text-xl font-serif text-[#1D2D44]">
-                Reserve Your Spot
+                {isNotifyMe ? 'Get Notified' : 'Reserve Your Spot'}
               </DialogTitle>
               <DialogDescription className="text-[#1D2D44]/70 text-sm">
-                Join the waitlist and be the first to know when booking opens.
+                {isNotifyMe
+                  ? 'Be the first to know when this destination launches.'
+                  : 'Join the waitlist and be the first to know when booking opens.'}
               </DialogDescription>
             </DialogHeader>
 
@@ -133,21 +138,27 @@ export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalPro
                 />
               </div>
 
-              {/* Phone */}
-              <div className="space-y-1.5">
-                <label className={labelClasses}>Phone</label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+1 (555) 123-4567"
-                  className={inputClasses}
-                />
-              </div>
+              {!isNotifyMe && (
+                <>
+                  {/* Phone */}
+                  <div className="space-y-1.5">
+                    <label className={labelClasses}>Phone</label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                      className={inputClasses}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Preferred Trip (readonly) */}
               <div className="space-y-1.5">
-                <label className={labelClasses}>Preferred Trip</label>
+                <label className={labelClasses}>
+                  {isNotifyMe ? 'Destination' : 'Preferred Trip'}
+                </label>
                 <input
                   type="text"
                   value={tripName}
@@ -156,29 +167,33 @@ export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalPro
                 />
               </div>
 
-              {/* How did you hear about us? */}
-              <div className="space-y-1.5">
-                <label className={labelClasses}>How did you hear about us?</label>
-                <input
-                  type="text"
-                  value={hearAbout}
-                  onChange={(e) => setHearAbout(e.target.value)}
-                  placeholder="Social media, friend, podcast, etc."
-                  className={inputClasses}
-                />
-              </div>
+              {!isNotifyMe && (
+                <>
+                  {/* How did you hear about us? */}
+                  <div className="space-y-1.5">
+                    <label className={labelClasses}>How did you hear about us?</label>
+                    <input
+                      type="text"
+                      value={hearAbout}
+                      onChange={(e) => setHearAbout(e.target.value)}
+                      placeholder="Social media, friend, podcast, etc."
+                      className={inputClasses}
+                    />
+                  </div>
 
-              {/* Referred by a club or partner? */}
-              <div className="space-y-1.5">
-                <label className={labelClasses}>Referred by a club or partner?</label>
-                <input
-                  type="text"
-                  value={clubRef}
-                  onChange={(e) => setClubRef(e.target.value)}
-                  placeholder="Club or partner name"
-                  className={inputClasses}
-                />
-              </div>
+                  {/* Referred by a club or partner? */}
+                  <div className="space-y-1.5">
+                    <label className={labelClasses}>Referred by a club or partner?</label>
+                    <input
+                      type="text"
+                      value={clubRef}
+                      onChange={(e) => setClubRef(e.target.value)}
+                      placeholder="Club or partner name"
+                      className={inputClasses}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Submit */}
               <Button
@@ -191,6 +206,8 @@ export function WaitlistModal({ open, onOpenChange, tripName }: WaitlistModalPro
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Submitting...
                   </>
+                ) : isNotifyMe ? (
+                  'Notify Me'
                 ) : (
                   'Reserve Your Spot'
                 )}

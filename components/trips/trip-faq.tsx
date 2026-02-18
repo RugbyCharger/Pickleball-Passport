@@ -23,12 +23,12 @@ const faqs: FAQItem[] = [
   {
     question: 'What fitness level is required?',
     answer:
-      'Moderate. This is a 5/10 on our activity scale. Pickleball sessions are the most physically active part \u2014 all skill levels welcome, and we group by ability. Cultural activities include walking tours, boat rides, and cooking classes. Wellness days at the hotels offer pool time, spa access, and relaxation. The pace is designed to be enjoyable, not exhausting.',
+      'Moderate. This is a 6/10 on our activity scale. Pickleball sessions are the most physically active part. All skill levels welcome, and we group by ability. Cultural activities include walking tours, boat rides, and cooking classes. Wellness days at the hotels offer pool time, spa access, and relaxation. The pace is designed to be enjoyable, not exhausting.',
   },
   {
     question: 'Can you accommodate dietary restrictions?',
     answer:
-      'Yes. Thailand is excellent for dietary accommodations. Please note any allergies or restrictions on your booking form \u2014 we communicate directly with every restaurant and hotel kitchen. Vegetarian, vegan, gluten-free, and halal options are widely available.',
+      'Yes. Thailand is excellent for dietary accommodations. Please note any allergies or restrictions on your booking form. We communicate directly with every restaurant and hotel kitchen. Vegetarian, vegan, gluten-free, and halal options are widely available.',
   },
   {
     question: 'What are tipping customs in Thailand?',
@@ -43,12 +43,12 @@ const faqs: FAQItem[] = [
   {
     question: 'Can I join as a solo traveler?',
     answer:
-      'Absolutely. Many of our guests travel solo \u2014 it\u2019s one of the best ways to meet like-minded people. We offer single occupancy rooms (private room, premium rate) and double occupancy (shared room, matched with another solo traveler). You\u2019ll be part of a group of up to 16 for all activities, meals, and pickleball sessions.',
+      'Absolutely. Many of our guests travel solo. It\u2019s one of the best ways to meet like-minded people. We offer single occupancy rooms (private room, premium rate) and double occupancy (shared room, matched with another solo traveler). You\u2019ll be part of a group of up to 16 for all activities, meals, and pickleball sessions.',
   },
   {
     question: 'Can my non-playing partner/companion join?',
     answer:
-      'Yes! We offer a Travel Companion rate that includes all hotels, meals, cultural activities, adventures, and transportation \u2014 just without the pickleball sessions. Your companion experiences everything except court time.',
+      'Yes! We offer a Travel Companion rate that includes all hotels, meals, cultural activities, adventures, and transportation, just without the pickleball sessions. Your companion experiences everything except court time.',
   },
 ];
 

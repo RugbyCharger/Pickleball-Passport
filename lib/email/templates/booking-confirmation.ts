@@ -116,7 +116,7 @@ export function generateBookingConfirmationEmail(data: BookingConfirmationData):
 
     <p>
       Congratulations! Your booking has been confirmed and payment received. We're thrilled to
-      welcome you to The Pickleball Passport for an unforgettable experience combining world-class
+      welcome you to The Pickleball Passport for an unforgettable experience combining exceptional
       medical care, wellness, and pickleball in beautiful Thailand.
     </p>
 

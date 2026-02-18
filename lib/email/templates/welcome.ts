@@ -22,7 +22,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
 
     <p>
       We're absolutely thrilled to have you join our community! You've just taken the first step toward
-      an incredible transformation journey that combines world-class medical care, wellness, and pickleball
+      an incredible transformation journey that combines exceptional medical care, wellness, and pickleball
       in beautiful Thailand.
     </p>
 
@@ -31,7 +31,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
         🌟 Why The Pickleball Passport? 🌟
       </p>
       <p style="color: #ffffff; font-size: 14px; margin: 0; line-height: 22px;">
-        60-70% savings on medical procedures • World-class healthcare<br>
+        60-70% savings on medical procedures • Exceptional healthcare<br>
         Daily pickleball sessions • Cultural immersion • Small group experiences
       </p>
     </div>

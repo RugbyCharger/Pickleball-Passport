@@ -97,7 +97,7 @@ export default async function WellnessAddOnsPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                Choose from traditional Thai massage packages, luxury spa
+                Choose from traditional Thai massage packages, premium spa
                 treatments, daily yoga and meditation classes, authentic
                 cultural experiences like temple tours and cooking classes, and
                 enhanced pickleball training with certified instructors. All

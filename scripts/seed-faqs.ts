@@ -34,15 +34,15 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What is The Pickleball Passport?',
       answer: [
-        'The Pickleball Passport is a curated travel experience that combines world-class pickleball with boutique hotels, cultural immersion, and wellness in Thailand.',
-        'We handle everything \u2014 from structured court sessions and private transportation to handpicked accommodations, group dinners, and cultural excursions across three cities.',
+        'The Pickleball Passport is a curated travel experience that combines exceptional pickleball with boutique hotels, cultural immersion, and wellness in Thailand.',
+        'We coordinate everything, from structured court sessions and private transportation to handpicked accommodations, group dinners, and cultural excursions across three cities.',
       ],
       sortOrder: 1,
     },
     {
       question: 'Who is The Pickleball Passport for?',
       answer: [
-        'Pickleball enthusiasts of all skill levels who want to combine their love of the sport with an unforgettable travel experience. Whether you\'re a competitive player, a social player, or someone who just wants an incredible trip with great people \u2014 this is for you.',
+        'The Pickleball Passport is for pickleball enthusiasts of all skill levels who want to combine their love of the sport with an unforgettable travel experience. Whether you\'re a competitive player, a social player, or someone who just wants an incredible trip with great people, this is for you.',
         'Travel companions who don\'t play pickleball are also welcome. They enjoy the full trip experience (hotels, dinners, excursions, wellness) at a companion rate without the court sessions.',
       ],
       sortOrder: 2,
@@ -50,7 +50,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Where do you go?',
       answer: [
-        'Our flagship trip is a 13-day journey through Bangkok, Chiang Mai, and Phuket \u2014 three very different Thai cities that together give you the complete Thailand experience.',
+        'Our flagship trip is a 13-day journey through Bangkok, Chiang Mai, and Phuket. Three very different Thai cities that together give you the complete Thailand experience.',
         'Bangkok for energy and street food. Chiang Mai for temples and nature. Phuket for beaches and the championship finale.',
       ],
       sortOrder: 3,
@@ -84,14 +84,14 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
       question: 'How long is the trip?',
       answer: [
         'The Thailand trip is 13 days and 12 nights. You\'ll spend 5 nights in Bangkok, 4 nights in Chiang Mai, and 3 nights in Phuket.',
-        'The pace is designed to balance activity with downtime \u2014 every day has structured experiences but also free time for personal exploration.',
+        'The pace is designed to balance activity with downtime. Every day has structured experiences but also free time for personal exploration.',
       ],
       sortOrder: 3,
     },
     {
       question: 'Can I bring a non-playing companion?',
       answer: [
-        'Yes. Companions are welcome and enjoy everything except the pickleball sessions \u2014 all the hotels, dinners, excursions, wellness amenities, and cultural experiences.',
+        'Yes. Companions are welcome and enjoy everything except the pickleball sessions: all the hotels, dinners, excursions, wellness amenities, and cultural experiences.',
         'During booking, select the "Travel Companion" option for companion-specific pricing.',
       ],
       sortOrder: 4,
@@ -99,9 +99,9 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What are the hotel options?',
       answer: [
-        'Bangkok: Grande Centre Point Sukhumvit 55 (5 nights) \u2014 Thonglor neighborhood with a full Japanese onsen, sunset pool, and free BTS shuttle.',
-        'Chiang Mai: Maraya Hotel & Resort (4 nights) \u2014 18-room riverside boutique on the Ping River, surrounded by 700-year-old Lanna ruins. Free bicycles for exploring.',
-        'Phuket: Sole Mio Boutique Hotel & Wellness (3 nights) \u2014 Adults-only 5-star with sauna, steam room, cold room, yoga, and a rooftop pool. 9.4/10 guest rating.',
+        'Bangkok: Grande Centre Point Sukhumvit 55 (5 nights). Thonglor neighborhood with a full Japanese onsen, sunset pool, and free BTS shuttle.',
+        'Chiang Mai: Maraya Hotel & Resort (4 nights). 18-room riverside boutique on the Ping River, surrounded by 700-year-old Lanna ruins. Free bicycles for exploring.',
+        'Phuket: Sole Mio Boutique Hotel & Wellness (3 nights). Adults-only 5-star boutique with sauna, steam room, cold room, yoga, and a rooftop pool. 9.4/10 guest rating.',
       ],
       sortOrder: 5,
     },
@@ -110,8 +110,8 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What skill level do I need?',
       answer: [
-        'All skill levels are welcome \u2014 from beginners who\'ve only played a few times to tournament-level competitors. Sessions blend structured instruction with social play so everyone improves while having fun.',
-        'The overall activity level is a 5 out of 10. Pickleball is the most physically active part of the trip, but the pace is accessible to all fitness levels.',
+        'All skill levels are welcome, from beginners who\'ve only played a few times to tournament-level competitors. Sessions blend structured instruction with social play so everyone improves while having fun.',
+        'The overall activity level is a 6 out of 10. Pickleball is the most physically active part of the trip, but the pace is accessible to all fitness levels.',
       ],
       sortOrder: 1,
     },
@@ -152,7 +152,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What cultural experiences are on the itinerary?',
       answer: [
-        'The trip includes a private long-tail boat sunset cruise on the Chao Phraya River, a guided Wat Pho temple tour, a Chinatown street food walk, a Thai cooking class with a morning market tour, an Elephant Nature Park visit (ethical sanctuary \u2014 no riding), Wiang Kum Kam archaeological exploration by bicycle, and a private speedboat charter through Phang Nga Bay with sea cave kayaking and snorkeling.',
+        'The trip includes a private long-tail boat sunset cruise on the Chao Phraya River, a guided Wat Pho temple tour, a Chinatown street food walk, a Thai cooking class with a morning market tour, an Elephant Nature Park visit (ethical sanctuary, no riding), Wiang Kum Kam archaeological exploration by bicycle, and a private speedboat charter through Phang Nga Bay with sea cave kayaking and snorkeling.',
       ],
       sortOrder: 2,
     },
@@ -177,7 +177,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Do I need a visa for Thailand?',
       answer: [
-        'Most Western passport holders (US, UK, EU, Canada, Australia) can enter Thailand visa-free for stays up to 60 days \u2014 well beyond the 13-day trip duration.',
+        'Most Western passport holders (US, UK, EU, Canada, Australia) can enter Thailand visa-free for stays up to 60 days, well beyond the 13-day trip duration.',
         'We recommend checking the latest entry requirements for your specific nationality before booking.',
       ],
       sortOrder: 1,
@@ -185,7 +185,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Are airport transfers included?',
       answer: [
-        'Yes. All airport transfers and ground transportation are included \u2014 private air-conditioned vans in every city. A driver meets you at Bangkok arrivals on Day 1 and drops you at Phuket airport on Day 13.',
+        'Yes. All airport transfers and ground transportation are included. Private air-conditioned vans in every city. A driver meets you at Bangkok arrivals on Day 1 and drops you at Phuket airport on Day 13.',
         'Domestic flights between cities (Bangkok to Chiang Mai, Chiang Mai to Phuket) are also included.',
       ],
       sortOrder: 2,
@@ -193,7 +193,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What\'s the best time of year to visit Thailand?',
       answer: [
-        'The peak season runs from November to February when the weather is cooler and drier \u2014 ideal for outdoor pickleball and beach days in Phuket.',
+        'The peak season runs from November to February when the weather is cooler and drier. Ideal for outdoor pickleball and beach days in Phuket.',
         'Thailand is a year-round destination, though. The "green season" (June\u2013October) has occasional rain but lower prices and fewer crowds.',
       ],
       sortOrder: 3,
@@ -201,8 +201,9 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Do I need travel insurance?',
       answer: [
-        'We strongly recommend comprehensive travel insurance that covers medical expenses and trip cancellation. Travel insurance is not included in the package price.',
-        'Recommended providers include World Nomads, Allianz Travel, and SafetyWing \u2014 all offer plans that cover adventure sports and international travel.',
+        'We strongly recommend all guests purchase comprehensive travel insurance covering medical expenses, trip cancellation, and personal liability. We can provide recommendations during onboarding.',
+        'Prior to departure, all guests will complete a standard liability waiver as part of the onboarding process.',
+        'Recommended providers include World Nomads, Allianz Travel, and SafetyWing, all of which offer plans that cover adventure sports and international travel.',
       ],
       sortOrder: 4,
     },
@@ -210,7 +211,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
       question: 'What should I pack?',
       answer: [
         'Athletic wear for pickleball (moisture-wicking clothes, court shoes with non-marking soles), comfortable walking shoes for excursions, swimwear, sunscreen, and a light rain jacket.',
-        'Thailand is hot year-round (28\u201335\u00b0C / 82\u201395\u00b0F), so pack light, breathable fabrics. Temples require covered shoulders and knees \u2014 bring a sarong or light long pants.',
+        'Thailand is hot year-round (28\u201335\u00b0C / 82\u201395\u00b0F), so pack light, breathable fabrics. Temples require covered shoulders and knees. Bring a sarong or light long pants.',
       ],
       sortOrder: 5,
     },

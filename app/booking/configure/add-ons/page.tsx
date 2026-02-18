@@ -104,7 +104,7 @@ export default async function AddOnsSelectionPage() {
               <p className="mt-4 text-slate-600">
                 Yes! All medical procedures are performed at JCI-accredited
                 hospitals (the international gold standard) by board-certified
-                specialists. Thailand&apos;s medical tourism industry is world-class
+                specialists. Thailand&apos;s medical tourism industry is exceptional
                 and serves hundreds of thousands of international patients
                 annually.
               </p>
@@ -130,7 +130,7 @@ export default async function AddOnsSelectionPage() {
               <p className="mt-4 text-slate-600">
                 Lower operating costs, favorable exchange rates, and government
                 support for medical tourism allow Thai hospitals to offer
-                world-class care at 40-70% savings compared to US prices. The
+                exceptional care at 40-70% savings compared to US prices. The
                 quality is identical or better - many Thai surgeons trained in
                 the US and Europe.
               </p>

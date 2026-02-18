@@ -42,7 +42,7 @@ export default async function AccommodationSelectionPage() {
             Choose Your Accommodation
           </h1>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-            Select the luxury tier that matches your style. From world-class
+            Select the tier that matches your style. From outstanding
             resorts to private beachfront villas, we offer experiences tailored
             to your preferences.
           </p>

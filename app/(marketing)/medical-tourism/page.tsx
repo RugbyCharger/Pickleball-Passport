@@ -38,7 +38,7 @@ const infoCards = [
     icon: TreePalm,
     title: 'Recovery in Paradise',
     description:
-      'Recover at a beachfront hotel in Phuket or a riverside boutique in Chiang Mai instead of your couch at home. Thailand\u2019s warm climate, wellness culture, and affordable luxury make it an ideal recovery environment.',
+      'Recover at a beachfront hotel in Phuket or a riverside boutique in Chiang Mai instead of your couch at home. Thailand\u2019s warm climate, wellness culture, and affordable comfort make it an ideal recovery environment.',
   },
 ];
 
@@ -64,7 +64,7 @@ export default function MedicalTourismPage() {
               Medical Tourism in Thailand
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              World-Class Care at a Fraction of the Cost
+              High-Quality Care at a Fraction of the Cost
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
               Thailand is Asia&apos;s #1 medical tourism destination, with JCI-accredited
@@ -116,7 +116,7 @@ export default function MedicalTourismPage() {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
-              Thailand&apos;s medical infrastructure is world-class. Here&apos;s what makes it a top
+              Thailand&apos;s medical infrastructure is exceptional. Here&apos;s what makes it a top
               destination for international patients.
             </p>
           </div>
@@ -179,7 +179,7 @@ export default function MedicalTourismPage() {
               </h2>
               <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
                 Many of our travelers extend their stay in Thailand to take advantage of
-                world-class dental and cosmetic care at a fraction of US costs. While
+                high-quality dental and cosmetic care at a fraction of US costs. While
                 The Pickleball Passport does not arrange or manage medical procedures, we&apos;re
                 happy to help with travel logistics, like extending your hotel stay,
                 arranging airport transfers, or adjusting your itinerary to build in

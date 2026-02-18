@@ -57,18 +57,18 @@ const steps = [
 const benefits = [
   {
     icon: Trophy,
-    title: 'World-Class Pickleball',
+    title: 'Exceptional Pickleball',
     description: 'Access to premium courts, local tournaments, and certified coaching in stunning locations.',
   },
   {
     icon: Star,
-    title: 'Luxury for Less',
-    description: 'Enjoy 5-star accommodations and service for a fraction of what you would pay in the West.',
+    title: 'Premium Value',
+    description: 'Enjoy handpicked boutique hotels and service for a fraction of what you would pay in the West.',
   },
   {
     icon: Shield,
-    title: 'Seamless Logistics',
-    description: 'We handle every transfer, booking, and detail. You just show up and play.',
+    title: 'Coordinated Logistics',
+    description: 'All group transportation, flights, and scheduled activities are arranged for you. You just show up and play.',
   },
   {
     icon: MessageCircle,
@@ -128,8 +128,8 @@ export default function HowItWorksPage() {
               How It Works
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              We&apos;ve made it easy to combine your love for pickleball with a luxury vacation 
-              and optional world-class medical care.
+              We&apos;ve made it easy to combine your love for pickleball with a premier vacation
+              and optional high-quality medical care.
             </p>
           </div>
         </div>
@@ -273,7 +273,7 @@ export default function HowItWorksPage() {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
             <p className="text-lg text-white/70 max-w-3xl mx-auto">
-              We combine the thrill of international pickleball with the luxury of a curated vacation.
+              We combine the thrill of international pickleball with the best of a curated vacation.
             </p>
           </div>
 

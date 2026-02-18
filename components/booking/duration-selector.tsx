@@ -74,7 +74,7 @@ const ITINERARY_HIGHLIGHTS: SampleItinerary = {
       'Daily wellness activities (yoga, meditation)',
       'Weekend trip to Phuket or Krabi',
       'Thai cooking masterclass series',
-      'Spa day at luxury resort',
+      'Spa day at premier resort',
       'Shopping tour and cultural experiences',
       'Dental work with multiple sessions',
       'Pre-departure health assessment',

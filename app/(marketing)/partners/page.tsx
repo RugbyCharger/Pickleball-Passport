@@ -54,7 +54,7 @@ export default function PartnersPage() {
               Pickleball Club Partner Program
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              Bring World-Class Travel to Your Pickleball Community
+              Bring Exceptional Travel to Your Pickleball Community
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
               Join our partner network of pickleball clubs, leagues, and communities.

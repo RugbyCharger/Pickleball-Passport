@@ -2,7 +2,7 @@
 
 **Elite Pickleball. Unforgettable Destinations.**
 
-Curated pickleball travel experiences — world-class pickleball, boutique hotels, cultural immersion, and wellness across Thailand. Live at [www.thepickleballpassport.org](https://www.thepickleballpassport.org).
+Curated pickleball travel experiences — exceptional pickleball, boutique hotels, cultural immersion, and wellness across Thailand. Live at [www.thepickleballpassport.org](https://www.thepickleballpassport.org).
 
 ## Tech Stack
 

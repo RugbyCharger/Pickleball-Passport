@@ -17,7 +17,7 @@ const hotels: Hotel[] = [
     location: 'Thonglor, Bangkok\u2019s trendiest neighborhood',
     duration: '5 Nights',
     highlights: [
-      'Full-floor Japanese onsen and spa (Let\u2019s Relax Spa & Onsen): 5 mineral baths, steam room, cold room, tatami private rooms \u2014 the ultimate jet lag recovery on arrival night',
+      'Full-floor Japanese onsen and spa (Let\u2019s Relax Spa & Onsen): 5 mineral baths, steam room, cold room, tatami private rooms. The ultimate jet lag recovery on arrival night',
       'Outdoor sunset pool and jacuzzi with city views, modern fitness center',
       'Daily breakfast at BlueSpice Caf\u00e9 (included)',
       'Free tuk-tuk shuttle to Thong Lo BTS station every 20 minutes',
@@ -34,7 +34,7 @@ const hotels: Hotel[] = [
       'Free cooked-to-order breakfast daily (included)',
       'Outdoor pool with river and ancient pagoda views',
       'Free shuttle to downtown and Night Bazaar 3x daily',
-      'Free bicycles for exploring Wiang Kum Kam ruins \u2014 temples, crumbling walls, zero tourists',
+      'Free bicycles for exploring Wiang Kum Kam ruins: temples, crumbling walls, zero tourists',
       '5 minutes from Chiang Mai airport, 5-minute drive to BokBok Pickleball courts',
     ],
   },
