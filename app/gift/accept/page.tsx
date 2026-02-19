@@ -138,8 +138,8 @@ export default function GiftAcceptPage() {
                   <p className="font-medium mb-1">Need Help?</p>
                   <p>
                     If you believe this is an error, please contact our support team at{' '}
-                    <a href="mailto:support@pickleballpassport.com" className="underline font-medium">
-                      support@pickleballpassport.com
+                    <a href="mailto:Ryan@thepickleballpassport.org" className="underline font-medium">
+                      Ryan@thepickleballpassport.org
                     </a>
                   </p>
                 </div>

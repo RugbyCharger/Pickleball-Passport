@@ -74,10 +74,10 @@ export default function Error({
             <li>
               📧 Email:{' '}
               <a
-                href="mailto:support@pickleballpassport.com"
+                href="mailto:Ryan@thepickleballpassport.org"
                 className="text-emerald-600 hover:text-emerald-700 underline"
               >
-                support@pickleballpassport.com
+                Ryan@thepickleballpassport.org
               </a>
             </li>
             <li>

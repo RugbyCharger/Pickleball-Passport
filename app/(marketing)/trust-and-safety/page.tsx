@@ -1,54 +1,52 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Shield,
-  Award,
-  HeartPulse,
-  Phone,
+  Plane,
+  Hotel,
+  MapPin,
+  Users,
+  Car,
+  CheckCircle,
+  Clock,
   DollarSign,
   FileText,
   ExternalLink,
-  Star,
-  Clock,
-  CheckCircle,
+  AlertTriangle,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
+  title: 'Trust & Safety | The Pickleball Passport',
   description:
-    'Learn about our safety standards, JCI-accredited hospitals, comprehensive travel insurance, and transparent policies for your transformation tourism experience in Thailand.',
-  keywords: ['travel insurance', 'medical tourism safety', 'JCI accreditation', 'Thailand hospital credentials', 'medical tourism insurance', 'safe medical tourism'],
+    'Learn about our safety standards, vetted accommodations, private transport, and travel insurance recommendations for your pickleball trip to Thailand.',
+  keywords: [
+    'travel safety',
+    'Thailand travel',
+    'pickleball travel safety',
+    'group travel safety',
+    'Thailand tourism',
+  ],
   openGraph: {
-    title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
+    title: 'Trust & Safety | The Pickleball Passport',
     description:
-      'High-quality medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
-    url: 'https://pickleballpassport.com/trust-and-safety',
+      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries — how we keep you covered on every trip.',
+    url: 'https://www.thepickleballpassport.org/trust-and-safety',
     siteName: 'The Pickleball Passport',
-    images: [
-      {
-        url: '/og-images/trust-safety.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Trust & Safety - The Pickleball Passport Medical Tourism',
-      },
-    ],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Trust & Safety - Credentials & Policies | The Pickleball Passport',
+    title: 'Trust & Safety | The Pickleball Passport',
     description:
-      'High-quality medical care, comprehensive insurance, 24/7 support, and transparent policies for your safe transformation journey in Thailand.',
-    images: ['/og-images/trust-safety.jpg'],
+      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries — how we keep you covered on every trip.',
     site: '@PickleballPass',
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/trust-and-safety',
+    canonical: 'https://www.thepickleballpassport.org/trust-and-safety',
   },
   robots: {
     index: true,
@@ -67,643 +65,340 @@ export default function TrustAndSafetyPage() {
               Your Safety Is Our Priority
             </h1>
             <p className="text-xl text-blue-100">
-              High-quality medical credentials, comprehensive insurance, and
-              transparent policies ensure your transformation journey is safe,
-              secure, and worry-free.
+              Every trip is planned with your comfort and safety in mind —
+              from vetted accommodations and private transport to on-the-ground
+              trip hosts who know the destination inside and out.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Hospital Credentials Section */}
+      {/* Traveling in Thailand */}
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              High-Quality Medical Credentials
+              Traveling in Thailand
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Our partner hospitals maintain the highest international
-              standards for patient safety, quality care, and medical
-              excellence.
+              Thailand is one of the world&apos;s most visited countries — and for
+              good reason. It&apos;s safe, welcoming, and built for tourism.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* JCI Accreditation */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-center h-24 mb-4">
-                  <Award className="h-16 w-16 text-[#1D2D44]" />
-                </div>
-                <CardTitle className="text-center">
-                  JCI Accreditation
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm mb-4">
-                  Joint Commission International accreditation ensures our
-                  partner hospitals meet rigorous international patient safety
-                  and quality standards.
-                </p>
-                <div className="text-sm text-gray-500 mb-3">
-                  <strong>Renewed:</strong> 2024
-                </div>
-                <a
-                  href="https://www.jointcommissioninternational.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
-                >
-                  Verify Accreditation
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="p-6 text-center">
+              <Plane className="h-10 w-10 text-[#1D2D44] mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                World-Class Tourism Infrastructure
+              </h3>
+              <p className="text-sm text-gray-600">
+                Thailand welcomed 28+ million visitors in 2024. International
+                airports, modern highways, and a well-developed hospitality
+                industry make it one of the easiest countries to travel in
+                Southeast Asia.
+              </p>
             </Card>
 
-            {/* ISO 9001 Certification */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-center h-24 mb-4">
-                  <CheckCircle className="h-16 w-16 text-[#1D2D44]" />
-                </div>
-                <CardTitle className="text-center">
-                  ISO 9001 Certified
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm mb-4">
-                  ISO 9001 Quality Management Certification demonstrates our
-                  commitment to consistent, high-quality medical services and
-                  patient care.
-                </p>
-                <div className="text-sm text-gray-500 mb-3">
-                  <strong>Certified:</strong> 2023
-                </div>
-                <a
-                  href="https://www.iso.org/iso-9001-quality-management.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
-                >
-                  Learn More
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </CardContent>
+            <Card className="p-6 text-center">
+              <Users className="h-10 w-10 text-[#1D2D44] mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                English Is Widely Spoken
+              </h3>
+              <p className="text-sm text-gray-600">
+                In tourist areas, hotels, restaurants, and sports facilities,
+                English is commonly spoken. You won&apos;t have trouble
+                communicating in the places we take you.
+              </p>
             </Card>
 
-            {/* Thailand Ministry of Health */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-center h-24 mb-4">
-                  <Shield className="h-16 w-16 text-[#1D2D44]" />
-                </div>
-                <CardTitle className="text-center">
-                  Ministry of Health Approved
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm mb-4">
-                  Fully licensed and approved by Thailand&apos;s Ministry of Public
-                  Health for medical tourism and international patient care.
-                </p>
-                <div className="text-sm text-gray-500 mb-3">
-                  <strong>Licensed:</strong> 2024
-                </div>
-                <a
-                  href="https://www.moph.go.th/eng/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-1 text-sm font-medium"
-                >
-                  Visit MOPH
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </CardContent>
+            <Card className="p-6 text-center">
+              <Shield className="h-10 w-10 text-[#1D2D44] mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Safe for Tourists
+              </h3>
+              <p className="text-sm text-gray-600">
+                Thailand ranks as one of the safest destinations in Asia for
+                international visitors. Petty crime is low in tourist areas,
+                and the culture is famously hospitable.
+              </p>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Safety Statistics Section */}
+      {/* How We Keep You Covered */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Thailand Tourism Safety
+              How We Keep You Covered
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Thailand is a global leader in medical tourism, with proven
-              safety records and exceptional healthcare infrastructure.
+              Every detail is handled so you can focus on playing pickleball
+              and enjoying Thailand.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Medical Tourism Industry */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">
-                $1.2B+
-              </div>
-              <div className="text-gray-900 font-semibold mb-2">
-                Annual Medical Tourism Industry
-              </div>
-              <div className="text-sm text-gray-600">
-                Thailand&apos;s medical tourism generates over $1.2 billion annually,
-                demonstrating trust from millions worldwide.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                <a
-                  href="https://www.tatnews.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#1D2D44]"
-                >
-                  [Source: Tourism Authority of Thailand, 2024]
-                </a>
-              </div>
-            </Card>
-
-            {/* Patient Satisfaction */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">95%+</div>
-              <div className="text-gray-900 font-semibold mb-2">
-                Patient Satisfaction Rate
-              </div>
-              <div className="text-sm text-gray-600">
-                Over 95% of medical tourists report being satisfied or highly
-                satisfied with their care in Thailand.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                <a
-                  href="https://www.tatnews.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#1D2D44]"
-                >
-                  [Source: Tourism Authority of Thailand, 2024]
-                </a>
-              </div>
-            </Card>
-
-            {/* JCI Hospitals */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">70+</div>
-              <div className="text-gray-900 font-semibold mb-2">
-                JCI-Accredited Hospitals
-              </div>
-              <div className="text-sm text-gray-600">
-                Thailand has over 70 JCI-accredited hospitals, more than most
-                countries in the world.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                <a
-                  href="https://www.jointcommissioninternational.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#1D2D44]"
-                >
-                  [Source: JCI, 2024]
-                </a>
-              </div>
-            </Card>
-
-            {/* Medical Tourists */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">
-                2.5M+
-              </div>
-              <div className="text-gray-900 font-semibold mb-2">
-                Annual Medical Tourists
-              </div>
-              <div className="text-sm text-gray-600">
-                Over 2.5 million medical tourists visit Thailand annually for
-                exceptional healthcare at affordable prices.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                <a
-                  href="https://www.tatnews.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#1D2D44]"
-                >
-                  [Source: Tourism Authority of Thailand, 2024]
-                </a>
-              </div>
-            </Card>
-
-            {/* Safety Rating */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">A+</div>
-              <div className="text-gray-900 font-semibold mb-2">
-                Healthcare System Rating
-              </div>
-              <div className="text-sm text-gray-600">
-                Thailand&apos;s healthcare system is ranked among the best in
-                Southeast Asia by the WHO.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                <a
-                  href="https://www.who.int/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#1D2D44]"
-                >
-                  [Source: World Health Organization, 2024]
-                </a>
-              </div>
-            </Card>
-
-            {/* Success Rate */}
-            <Card className="text-center p-6">
-              <div className="text-5xl font-bold text-[#1D2D44] mb-2">98%+</div>
-              <div className="text-gray-900 font-semibold mb-2">
-                Procedure Success Rate
-              </div>
-              <div className="text-sm text-gray-600">
-                Our partner hospitals maintain a 98%+ success rate for dental
-                and cosmetic procedures.
-              </div>
-              <div className="text-xs text-gray-500 mt-3">
-                [Source: Partner Hospital Data, 2024]
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Travel Insurance Section */}
-      <section className="py-16 sm:py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Comprehensive Travel Insurance
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Every package includes comprehensive travel and medical insurance
-              to protect you throughout your journey.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            {/* Coverage Details */}
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                What's Covered
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-gray-900">
-                      Medical Complications
-                    </strong>
-                    <p className="text-sm text-gray-600">
-                      Coverage for unexpected medical complications related to
-                      your procedure, up to $1,000,000 USD.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-gray-900">Travel Delays</strong>
-                    <p className="text-sm text-gray-600">
-                      Reimbursement for flight delays, cancellations, and missed
-                      connections.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-gray-900">Trip Cancellation</strong>
-                    <p className="text-sm text-gray-600">
-                      Protection if you need to cancel your trip due to covered
-                      emergencies.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-gray-900">
-                      Emergency Evacuation
-                    </strong>
-                    <p className="text-sm text-gray-600">
-                      Full coverage for medical evacuation if needed, including
-                      air ambulance.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-gray-900">Personal Liability</strong>
-                    <p className="text-sm text-gray-600">
-                      Protection for personal liability claims during your stay.
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Insurance Provider Info */}
-            <div className="space-y-6">
-              <Card className="p-6 bg-[#1D2D44] text-white">
-                <div className="flex items-center gap-4 mb-4">
-                  <Shield className="h-12 w-12 text-[#B08D55]" />
-                  <div>
-                    <h3 className="text-xl font-semibold">
-                      International Travel Medical Insurance
-                    </h3>
-                    <p className="text-blue-100 text-sm">
-                      Underwritten by leading global insurers
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-blue-100">Coverage Limit:</span>
-                    <span className="font-semibold">Up to $1,000,000 USD</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-100">Deductible:</span>
-                    <span className="font-semibold">$0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-100">Emergency Support:</span>
-                    <span className="font-semibold">24/7 Hotline</span>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Policy Documents
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <Car className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Private Transport
                 </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Review the full insurance policy details, terms, and
-                  conditions.
+                <p className="text-sm text-gray-600">
+                  Air-conditioned vans and private vehicles for all group
+                  transfers — no haggling with taxis or navigating public
+                  transit.
                 </p>
-                <a
-                  href="/insurance-policy.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1D2D44]"
-                >
-                  <FileText className="h-4 w-4 mr-2" />
-                  Download Full Policy (PDF)
-                </a>
-              </Card>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <Hotel className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Vetted Hotels
+                </h3>
+                <p className="text-sm text-gray-600">
+                  We stay at hand-picked, quality hotels in safe, central
+                  locations. Every property is personally vetted by our team.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <Users className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  On-the-Ground Trip Host
+                </h3>
+                <p className="text-sm text-gray-600">
+                  A dedicated trip host travels with the group from start to
+                  finish — your point person for anything you need.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <Plane className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Airport Transfers
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Arrival and departure airport transfers are included. We meet
+                  you at the airport so you never have to figure out ground
+                  transportation on your own.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <MapPin className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Curated Itinerary
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Every day is planned — courts booked, excursions arranged,
+                  restaurants scouted. You show up, we handle the rest.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-xl">
+              <Clock className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Pre-Trip Support
+                </h3>
+                <p className="text-sm text-gray-600">
+                  From visa guidance to packing tips, we provide everything you
+                  need to feel prepared before you leave home.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Emergency Support Section */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-                24/7 Support &amp; Medical Liaison
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              You're never alone. Our dedicated concierge team and medical
-              liaisons are available around the clock.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Support Services */}
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                How We Support You
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <Clock className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      24/7 Concierge Service
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Round-the-clock support for any questions, concerns, or
-                      emergencies during your stay.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <HeartPulse className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      Medical Liaison
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      English-speaking medical coordinators translate, advocate,
-                      and coordinate all your medical care.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Phone className="h-6 w-6 text-[#1D2D44] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">
-                      Immediate Response
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Guaranteed response within 15 minutes for emergency calls,
-                      24/7.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Emergency Contact Card */}
-            <Card className="p-6 bg-gradient-to-br from-emerald-50 to-blue-50">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                Emergency Contact Information
-              </h3>
-              <div className="space-y-4">
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="text-sm text-gray-600 mb-1">
-                    Thailand (Local)
-                  </div>
-                  <a
-                    href="tel:+66023334444"
-                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
-                  >
-                    +66 (0) 2-333-4444
-                  </a>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="text-sm text-gray-600 mb-1">
-                    US Toll-Free (International)
-                  </div>
-                  <a
-                    href="tel:+18005554444"
-                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
-                  >
-                    +1 (800) 555-4444
-                  </a>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="text-sm text-gray-600 mb-1">WhatsApp</div>
-                  <a
-                    href="https://wa.me/66812345678"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-2xl font-bold text-[#1D2D44] hover:text-[#B08D55]"
-                  >
-                    +66 81-234-5678
-                  </a>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="text-sm text-gray-600 mb-1">Email</div>
-                  <a
-                    href="mailto:support@pickleballpassport.com"
-                    className="text-lg font-bold text-[#1D2D44] hover:text-[#B08D55] break-all"
-                  >
-                    support@pickleballpassport.com
-                  </a>
-                </div>
-              </div>
-              <div className="mt-6 p-4 bg-emerald-100 rounded-lg">
-                <p className="text-sm text-emerald-900 font-medium">
-                  <strong>Response Time Guarantee:</strong> All emergency calls
-                  are answered within 15 minutes, 24 hours a day, 7 days a week.
-                </p>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Transparency Section */}
+      {/* Pickleball Courts & Venues */}
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Transparent Pricing & Refunds
+              Pickleball Courts &amp; Venues
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              No surprises, no hidden fees. What you see is what you pay.
+              We play at the best pickleball facilities in each city —
+              purpose-built courts with quality surfaces, proper lighting,
+              and a great atmosphere.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Sample Pricing Breakdown */}
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                Sample Pricing Breakdown
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-700">Package Base Price</span>
-                  <span className="font-semibold text-gray-900">$8,500</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="overflow-hidden">
+              <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-6 text-white">
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
+                  Bangkok
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-700">
-                    Accommodation Upgrade (Deluxe)
-                  </span>
-                  <span className="font-semibold text-gray-900">+$1,200</span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-700">Add-ons (Spa & Tours)</span>
-                  <span className="font-semibold text-gray-900">+$450</span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-700">Travel Insurance</span>
-                  <span className="font-semibold text-emerald-600">
-                    Included
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-700">Medical Liaison</span>
-                  <span className="font-semibold text-emerald-600">
-                    Included
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-4 bg-[#1D2D44] text-white rounded-lg px-4 mt-4">
-                  <span className="text-lg font-semibold">Total Price</span>
-                  <span className="text-2xl font-bold">$10,150</span>
-                </div>
+                <h3 className="text-xl font-bold">SukSpace</h3>
               </div>
-              <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
-                <p className="text-sm text-emerald-900 font-medium">
-                  <strong>No Hidden Fees Guarantee:</strong> The price you see
-                  is the final price. No surprise charges.
+              <CardContent className="p-6">
+                <p className="text-sm text-gray-600">
+                  Bangkok&apos;s premier indoor pickleball facility. Climate-controlled
+                  courts, pro-shop, and a social lounge — the home base for
+                  Bangkok&apos;s growing pickleball community.
                 </p>
-              </div>
+              </CardContent>
             </Card>
 
-            {/* Refund Policy Summary */}
-            <div className="space-y-6">
-              <Card className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  What's Included in Every Package
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>All medical procedures and consultations</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Accommodation (7-14 nights)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Airport transfers and local transport</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Travel insurance (up to $1M coverage)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>24/7 concierge and medical liaison</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Post-procedure follow-up care</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Welcome package and city guide</span>
-                  </li>
-                </ul>
-              </Card>
-
-              <Card className="p-6 bg-blue-50">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Calculate Your Savings
-                </h3>
-                <p className="text-sm text-gray-700 mb-4">
-                  Use our interactive cost calculator to see how much you'll
-                  save compared to US prices.
+            <Card className="overflow-hidden">
+              <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-6 text-white">
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
+                  Chiang Mai
+                </div>
+                <h3 className="text-xl font-bold">BokBok Pickleball</h3>
+              </div>
+              <CardContent className="p-6">
+                <p className="text-sm text-gray-600">
+                  Chiang Mai&apos;s dedicated outdoor pickleball venue set against a
+                  mountain backdrop. Multiple courts, evening lighting, and a
+                  friendly local community.
                 </p>
-                <Link href="/#calculator">
-                  <Button className="w-full bg-[#1D2D44] hover:bg-[#B08D55] text-white">
-                    <DollarSign className="h-4 w-4 mr-2" />
-                    Go to Cost Calculator
-                  </Button>
-                </Link>
-              </Card>
-            </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden">
+              <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-6 text-white">
+                <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
+                  Phuket
+                </div>
+                <h3 className="text-xl font-bold">The Peak Pickleball</h3>
+              </div>
+              <CardContent className="p-6">
+                <p className="text-sm text-gray-600">
+                  Phuket&apos;s top pickleball destination with well-maintained
+                  outdoor courts, ocean breezes, and a vibrant mix of local
+                  and international players.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Cancellation Policy Section */}
+      {/* Travel Insurance */}
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
+                Travel Insurance
+              </h2>
+            </div>
+
+            <Card className="p-6 bg-blue-50 border-blue-200">
+              <div className="flex items-start gap-4">
+                <Shield className="h-8 w-8 text-[#1D2D44] flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    We Strongly Recommend Travel Insurance
+                  </h3>
+                  <p className="text-sm text-gray-700 mb-4">
+                    Travel insurance is not included in our trip packages. We
+                    strongly recommend purchasing your own travel insurance policy
+                    before departure. A good policy should cover:
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-4">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Trip cancellation and interruption</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Emergency medical coverage abroad</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Emergency medical evacuation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Lost or delayed baggage</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Sports and adventure activity coverage</span>
+                    </li>
+                  </ul>
+                  <p className="text-xs text-gray-500">
+                    We&apos;re working on a preferred insurance partner recommendation.
+                    In the meantime, popular options include World Nomads,
+                    Allianz Travel, and Safety Wing.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Wellness & Medical Tourism (Informational) */}
+      <section className="py-16 sm:py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
+                Wellness &amp; Medical Tourism
+              </h2>
+            </div>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <AlertTriangle className="h-6 w-6 text-[#B08D55] flex-shrink-0 mt-1" />
+                <div>
+                  <p className="text-sm text-gray-700 mb-4">
+                    Thailand is a globally recognized destination for wellness
+                    and medical tourism. Many of our travelers choose to
+                    explore Thailand&apos;s world-class spas, wellness retreats,
+                    dental clinics, and medical facilities before or after
+                    their pickleball trip.
+                  </p>
+                  <p className="text-sm text-gray-700 mb-4">
+                    While we can point you in the right direction, The Pickleball
+                    Passport does not arrange, coordinate, or take responsibility
+                    for any medical or wellness services. Any medical or wellness
+                    appointments are between you and the provider.
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    For more information, visit our{' '}
+                    <Link
+                      href="/medical-tourism"
+                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
+                    >
+                      Wellness &amp; Medical Tourism
+                    </Link>{' '}
+                    page.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Cancellation & Rescheduling Policy (kept from original) */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Cancellation & Rescheduling Policy
+              Cancellation &amp; Rescheduling Policy
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              We understand plans change. Here's our clear, fair cancellation
+              We understand plans change. Here&apos;s our clear, fair cancellation
               and rescheduling policy.
             </p>
           </div>
@@ -738,7 +433,7 @@ export default function TrustAndSafetyPage() {
                 <div className="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg">
                   <div className="flex-shrink-0 w-24 text-center">
                     <div className="text-2xl font-bold text-yellow-700">
-                      14-30 days
+                      14–30 days
                     </div>
                     <div className="text-xs text-yellow-600">
                       before departure
@@ -749,7 +444,7 @@ export default function TrustAndSafetyPage() {
                       50% Refund
                     </div>
                     <p className="text-sm text-gray-600">
-                      Cancel 14-30 days before your departure date and receive
+                      Cancel 14–30 days before your departure date and receive
                       a 50% refund of your package price.
                     </p>
                   </div>
@@ -831,7 +526,7 @@ export default function TrustAndSafetyPage() {
             {/* Force Majeure */}
             <Card className="p-6 bg-blue-50">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Medical Emergency & Force Majeure Exceptions
+                Medical Emergency &amp; Force Majeure Exceptions
               </h3>
               <p className="text-sm text-gray-700 mb-3">
                 We understand that unexpected events happen. The following
@@ -839,154 +534,48 @@ export default function TrustAndSafetyPage() {
               </p>
               <ul className="text-sm text-gray-700 space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
+                  <span className="text-blue-600">&bull;</span>
                   <span>
                     Documented medical emergency (yourself or immediate family)
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
+                  <span className="text-blue-600">&bull;</span>
                   <span>Natural disasters affecting travel</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
+                  <span className="text-blue-600">&bull;</span>
                   <span>
                     Government-issued travel bans or restrictions
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
+                  <span className="text-blue-600">&bull;</span>
                   <span>Death in immediate family</span>
                 </li>
               </ul>
               <p className="text-xs text-gray-600 mt-4">
-                Documentation required for all force majeure claims. Contact
-                support@pickleballpassport.com for assistance.
+                Documentation required for all force majeure claims. Contact{' '}
+                <a
+                  href="mailto:Ryan@thepickleballpassport.org"
+                  className="text-[#1D2D44] hover:text-[#B08D55] underline"
+                >
+                  Ryan@thepickleballpassport.org
+                </a>{' '}
+                for assistance.
               </p>
             </Card>
 
             <div className="mt-6 text-center">
-              <a
-                href="/terms-and-conditions.pdf"
+              <Link
+                href="/refund-policy"
                 className="text-[#1D2D44] hover:text-[#B08D55] inline-flex items-center gap-2 font-medium"
               >
                 <FileText className="h-5 w-5" />
-                View Full Terms & Conditions (PDF)
+                View Full Refund Policy
                 <ExternalLink className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-16 sm:py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Hear from Our Guests
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Real experiences from travelers who trusted us with their
-              transformation journey.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Testimonial 1 */}
-            <Card className="p-6">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
-                  />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-4 italic">
-                "I was nervous about getting dental work done overseas, but the
-                JCI accreditation and 24/7 support put my mind at ease. The
-                hospital was cleaner than any I've seen in the US!"
-              </p>
-              <div className="flex items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-gray-900">Sarah M.</div>
-                  <div className="text-sm text-gray-600">
-                    Seattle, WA • Age 52
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    Smile Makeover Package • December 2024
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Testimonial 2 */}
-            <Card className="p-6">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
-                  />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-4 italic">
-                "The transparency around pricing and insurance was incredible.
-                No hidden fees, no surprises. Everything was exactly as promised
-                in my quote."
-              </p>
-              <div className="flex items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-gray-900">Michael T.</div>
-                  <div className="text-sm text-gray-600">
-                    Austin, TX • Age 47
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    Complete Transformation • November 2024
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Testimonial 3 */}
-            <Card className="p-6">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-5 w-5 fill-[#B08D55] text-[#B08D55]"
-                  />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-4 italic">
-                "Having a medical liaison who spoke English was a game-changer.
-                She was there for every appointment and made sure I understood
-                everything. I felt completely safe."
-              </p>
-              <div className="flex items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-gray-900">Linda P.</div>
-                  <div className="text-sm text-gray-600">
-                    Denver, CO • Age 61
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    Dental & Wellness Package • October 2024
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/testimonials">
-              <Button
-                variant="outline"
-                className="border-[#1D2D44] text-[#1D2D44] hover:bg-[#1D2D44] hover:text-white"
-              >
-                Read More Testimonials
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
@@ -995,19 +584,18 @@ export default function TrustAndSafetyPage() {
       <section className="py-16 sm:py-20 bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
-            Ready to Begin Your Transformation?
+            Ready to Play?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join hundreds of satisfied guests who trusted us with their journey
-            to a better smile and healthier life.
+            Browse our upcoming trips and reserve your spot.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/apply">
+            <Link href="/trips">
               <Button
                 size="lg"
                 className="bg-[#B08D55] hover:bg-[#C19B2B] text-gray-900 px-8 py-6 text-lg w-full sm:w-auto font-semibold"
               >
-                Apply Now
+                View Upcoming Trips
               </Button>
             </Link>
             <Link href="/contact">
@@ -1020,9 +608,6 @@ export default function TrustAndSafetyPage() {
               </Button>
             </Link>
           </div>
-          <p className="text-sm text-blue-200 mt-6">
-            Have questions? Our team is here to help 24/7
-          </p>
         </div>
       </section>
     </main>

@@ -185,7 +185,7 @@ export function generateRefundConfirmationEmail(
 
         <div class="support-box">
           <p><strong>Customer Support</strong></p>
-          <p>📧 Email: <a href="mailto:support@pickleballpassport.com">support@pickleballpassport.com</a></p>
+          <p>📧 Email: <a href="mailto:Ryan@thepickleballpassport.org">Ryan@thepickleballpassport.org</a></p>
           <p>📞 Phone: +1 (555) 123-4567</p>
           <p>🕐 Hours: Monday-Friday, 9am-5pm EST</p>
         </div>

@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
+import Script from 'next/script';
 
 /**
  * Application Success Page
@@ -34,7 +35,7 @@ export default function ApplicationSuccessPage() {
 
           {/* Success Message */}
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Application Received! 🎉
+            Application Received!
           </h1>
           <p className="text-lg text-slate-600 mb-8">
             Thank you for applying to The Pickleball Passport. We&apos;ve received your application
@@ -43,16 +44,16 @@ export default function ApplicationSuccessPage() {
 
           {/* Next Steps */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8 text-left">
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">What's Next?</h2>
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">What&apos;s Next?</h2>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
                   1
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">Schedule Your Video Consultation</p>
+                  <p className="font-semibold text-slate-900">Book a Consultation Call</p>
                   <p className="text-sm text-slate-600">
-                    Book a 30-minute call with our team to discuss your transformation goals and answer any questions.
+                    Schedule a quick 15-minute call with our team to discuss your trip, answer questions, and get you booked.
                   </p>
                 </div>
               </div>
@@ -61,9 +62,9 @@ export default function ApplicationSuccessPage() {
                   2
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">Receive Your Custom Package Recommendation</p>
+                  <p className="font-semibold text-slate-900">Receive Your Trip Details</p>
                   <p className="text-sm text-slate-600">
-                    We&apos;ll create a personalized itinerary based on your interests and goals.
+                    We&apos;ll follow up with your trip details, itinerary highlights, and next steps for booking.
                   </p>
                 </div>
               </div>
@@ -81,24 +82,27 @@ export default function ApplicationSuccessPage() {
             </div>
           </div>
 
-          {/* Calendly Embed Placeholder */}
-          <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg p-12 mb-8">
-            <p className="text-slate-600 mb-4">
-              📅 <strong>Schedule your consultation below</strong>
-            </p>
-            <p className="text-sm text-slate-500 mb-4">
-              Calendly widget will be embedded here in production
-            </p>
-            <div className="text-xs text-slate-400">
-              Integration: Add Calendly script to enable inline scheduling
-            </div>
+          {/* Calendly Embed */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">
+              Schedule a Consultation Call
+            </h2>
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/jaron-thepickleballpassport/15min"
+              style={{ minWidth: '280px', height: '630px' }}
+            />
+            <Script
+              src="https://assets.calendly.com/assets/external/widget.js"
+              strategy="lazyOnload"
+            />
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/packages">
+            <Link href="/trips">
               <Button variant="outline" size="lg">
-                Explore Packages
+                Explore Trips
               </Button>
             </Link>
             <Link href="/dashboard">
@@ -112,12 +116,12 @@ export default function ApplicationSuccessPage() {
           <div className="mt-8 pt-8 border-t border-slate-200">
             <p className="text-sm text-slate-600">
               Questions? Email us at{' '}
-              <a href="mailto:hello@pickleballpassport.com" className="text-emerald-600 hover:underline">
-                hello@pickleballpassport.com
+              <a href="mailto:Ryan@thepickleballpassport.org" className="text-emerald-600 hover:underline">
+                Ryan@thepickleballpassport.org
               </a>{' '}
               or call{' '}
-              <a href="tel:+16192555555" className="text-emerald-600 hover:underline">
-                +1 (619) 255-5555
+              <a href="tel:+15125648522" className="text-emerald-600 hover:underline">
+                +1 (512) 564-8522
               </a>
             </p>
           </div>

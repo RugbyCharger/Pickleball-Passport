@@ -374,7 +374,7 @@ export default function SupportPage() {
           </div>
           <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
           <p className="text-sm text-gray-600 mb-3">
-            hello@pickleballpassport.com
+            Ryan@thepickleballpassport.org
           </p>
           <p className="text-xs text-gray-500">Response within 24 hours</p>
         </div>

@@ -1,7 +1,7 @@
 /**
  * Contact Admin Notification Email Template
  *
- * Sent to admin (hello@pickleballpassport.com) when a new contact form is submitted.
+ * Sent to admin (Ryan@thepickleballpassport.org) when a new contact form is submitted.
  */
 
 import { baseEmailTemplate, generatePlainText } from './base'

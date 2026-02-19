@@ -95,7 +95,7 @@ All payments are processed securely through Stripe. Your payment information is 
 
 ### Cancellation by Guest
 
-Cancellations must be submitted in writing to support@pickleballpassport.com. Refunds are calculated as follows:
+Cancellations must be submitted in writing to Ryan@thepickleballpassport.org. Refunds are calculated as follows:
 
 | Cancellation Timing | Refund Amount |
 |---------------------|---------------|
@@ -335,9 +335,9 @@ Pickleball Passport
 Legal Department
 [Address to be added]
 
-**Phone:** +1 (800) 555-4444
+**Phone:** +1 (512) 564-8522
 
-**Customer Support:** support@pickleballpassport.com
+**Customer Support:** Ryan@thepickleballpassport.org
 
 ---
 

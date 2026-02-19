@@ -120,7 +120,7 @@ export function generateApplicationConfirmationEmail(
 
     <p>
       If you have any questions in the meantime, feel free to reply to this email or
-      call us at <a href="tel:+16192555555" style="color: #059669; text-decoration: none;">+1 (619) 255-5555</a>.
+      call us at <a href="tel:+15125648522" style="color: #059669; text-decoration: none;">+1 (512) 564-8522</a>.
     </p>
 
     <p>

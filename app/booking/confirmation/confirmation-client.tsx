@@ -435,7 +435,7 @@ export function BookingConfirmationClient({ bookingReference }: BookingConfirmat
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-600">
             Questions?{' '}
-            <a href="mailto:support@pickleballpassport.com" className="text-emerald-600 hover:underline font-medium">
+            <a href="mailto:Ryan@thepickleballpassport.org" className="text-emerald-600 hover:underline font-medium">
               Contact our support team
             </a>
           </p>

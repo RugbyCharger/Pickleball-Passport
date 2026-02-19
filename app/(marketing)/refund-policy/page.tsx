@@ -146,7 +146,7 @@ export default function RefundPolicyPage() {
               To request a refund or discuss your options:
             </p>
             <ol className="list-decimal pl-6 text-gray-600 mb-4 space-y-2">
-              <li>Email us at <a href="mailto:support@pickleballpassport.com" className="text-[#1D2D44] hover:underline">support@pickleballpassport.com</a></li>
+              <li>Email us at <a href="mailto:Ryan@thepickleballpassport.org" className="text-[#1D2D44] hover:underline">Ryan@thepickleballpassport.org</a></li>
               <li>Include your booking confirmation number</li>
               <li>Explain your reason for cancellation</li>
               <li>Our team will respond within 2 business days</li>
@@ -160,8 +160,8 @@ export default function RefundPolicyPage() {
             </h2>
             <p className="text-gray-600 mb-4">
               Questions about our refund policy? Contact our support team at{' '}
-              <a href="mailto:support@pickleballpassport.com" className="text-[#1D2D44] hover:underline">
-                support@pickleballpassport.com
+              <a href="mailto:Ryan@thepickleballpassport.org" className="text-[#1D2D44] hover:underline">
+                Ryan@thepickleballpassport.org
               </a>{' '}
               or call +1 (234) 567-890.
             </p>

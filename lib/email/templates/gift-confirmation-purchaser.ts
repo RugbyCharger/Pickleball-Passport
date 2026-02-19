@@ -231,7 +231,7 @@ export function generateGiftConfirmationPurchaserEmail(data: GiftConfirmationPur
 
     <p style="color: #6b7280; font-size: 14px; margin: 32px 0 0 0;">
       You can track the status of your gift booking in your dashboard. If you have any questions or need to make changes,
-      please contact our support team at <a href="mailto:support@pickleballpassport.com" style="color: #2563eb;">support@pickleballpassport.com</a>.
+      please contact our support team at <a href="mailto:Ryan@thepickleballpassport.org" style="color: #2563eb;">Ryan@thepickleballpassport.org</a>.
     </p>
 
     <p style="color: #6b7280; font-size: 14px; margin: 16px 0 0 0;">

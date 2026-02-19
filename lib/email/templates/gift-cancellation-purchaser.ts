@@ -95,7 +95,7 @@ export function generateGiftCancellationPurchaserEmail(data: GiftCancellationPur
 
     <p style="color: #6b7280; font-size: 14px; margin: 32px 0 0 0;">
       If you have any questions about your refund, please contact our support team at
-      <a href="mailto:support@pickleballpassport.com" style="color: #2563eb;">support@pickleballpassport.com</a>.
+      <a href="mailto:Ryan@thepickleballpassport.org" style="color: #2563eb;">Ryan@thepickleballpassport.org</a>.
     </p>
 
     <p style="color: #111827; font-weight: 600; margin: 24px 0 0 0;">

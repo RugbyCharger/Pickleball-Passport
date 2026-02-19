@@ -146,8 +146,8 @@ export async function generateReceipt(
 
       // Company details
       companyName: 'The Pickleball Passport',
-      companyEmail: 'hello@pickleballpassport.com',
-      companyWebsite: 'www.pickleballpassport.com',
+      companyEmail: 'Ryan@thepickleballpassport.org',
+      companyWebsite: 'www.thepickleballpassport.org',
     };
 
     // 6. Generate PDF buffer

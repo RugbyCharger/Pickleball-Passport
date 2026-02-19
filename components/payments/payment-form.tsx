@@ -191,7 +191,7 @@ export function PaymentForm({
                   </button>
                   {retryCount > 2 && (
                     <a
-                      href="mailto:support@pickleballpassport.com"
+                      href="mailto:Ryan@thepickleballpassport.org"
                       className="flex items-center gap-2 rounded-md border border-red-300 bg-white px-4 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50"
                     >
                       Contact Support
