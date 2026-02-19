@@ -1,18 +1,18 @@
 ---
 title: Terms of Service
 lastUpdated: 2026-01-03
-description: Review Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.
+description: Review The Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.
 ---
 
 ## Acceptance of Terms
 
-By accessing or using the Pickleball Passport website, mobile applications, or any services provided by Pickleball Passport ("we," "us," or "our"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services.
+By accessing or using the The Pickleball Passport website, mobile applications, or any services provided by The Pickleball Passport ("we," "us," or "our"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services.
 
-These Terms constitute a legally binding agreement between you and Pickleball Passport. We reserve the right to modify these Terms at any time. Your continued use of our Services after any changes constitutes acceptance of the modified Terms.
+These Terms constitute a legally binding agreement between you and The Pickleball Passport. We reserve the right to modify these Terms at any time. Your continued use of our Services after any changes constitutes acceptance of the modified Terms.
 
 ## Services Description
 
-Pickleball Passport provides transformation tourism services that combine pickleball experiences with dental tourism in Thailand. Our services include:
+The Pickleball Passport provides transformation tourism services that combine pickleball experiences with dental tourism in Thailand. Our services include:
 
 - **All-Inclusive Packages:** Dental procedures, accommodations, activities, and local transportation
 - **Dental Coordination:** Arrangements with JCI-accredited partner hospitals and clinics
@@ -106,7 +106,7 @@ Cancellations must be submitted in writing to Ryan@thepickleballpassport.org. Re
 
 **Note:** The 25% deposit is non-refundable in all cases except for cancellations due to documented medical emergencies or force majeure events.
 
-### Cancellation by Pickleball Passport
+### Cancellation by The Pickleball Passport
 
 We reserve the right to cancel bookings due to:
 
@@ -149,7 +149,7 @@ If medical clearance is not obtained or a pre-travel health issue arises, we wil
 
 ### Not a Healthcare Provider
 
-Pickleball Passport is a travel coordination company, not a healthcare provider. We:
+The Pickleball Passport is a travel coordination company, not a healthcare provider. We:
 
 - Do not provide medical advice or diagnoses
 - Do not guarantee medical outcomes
@@ -218,7 +218,7 @@ You must comply with all health requirements for entry to Thailand, including:
 
 ### Limitation of Liability
 
-To the maximum extent permitted by law, Pickleball Passport and its officers, directors, employees, and agents shall not be liable for:
+To the maximum extent permitted by law, The Pickleball Passport and its officers, directors, employees, and agents shall not be liable for:
 
 - Medical complications or unsatisfactory results
 - Personal injury or property damage during your trip
@@ -231,7 +231,7 @@ Our total liability for any claim shall not exceed the amount you paid for the s
 
 ### Assumption of Risk
 
-By booking with Pickleball Passport, you acknowledge and accept the inherent risks of:
+By booking with The Pickleball Passport, you acknowledge and accept the inherent risks of:
 
 - International travel
 - Medical and dental procedures abroad
@@ -250,7 +250,7 @@ We are not responsible for the acts or omissions of:
 
 ## Indemnification
 
-You agree to indemnify, defend, and hold harmless Pickleball Passport, its affiliates, and their respective officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from:
+You agree to indemnify, defend, and hold harmless The Pickleball Passport, its affiliates, and their respective officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from:
 
 - Your violation of these Terms
 - Your use of our Services
@@ -262,7 +262,7 @@ You agree to indemnify, defend, and hold harmless Pickleball Passport, its affil
 
 ### Our Content
 
-All content on our website and applications, including text, graphics, logos, images, and software, is the property of Pickleball Passport or its licensors and is protected by intellectual property laws.
+All content on our website and applications, including text, graphics, logos, images, and software, is the property of The Pickleball Passport or its licensors and is protected by intellectual property laws.
 
 You may not:
 
@@ -273,13 +273,13 @@ You may not:
 
 ### User Content
 
-By submitting reviews, photos, or other content, you grant Pickleball Passport a non-exclusive, royalty-free, worldwide license to use, reproduce, and display such content for marketing and promotional purposes.
+By submitting reviews, photos, or other content, you grant The Pickleball Passport a non-exclusive, royalty-free, worldwide license to use, reproduce, and display such content for marketing and promotional purposes.
 
 ## Dispute Resolution
 
 ### Informal Resolution
 
-Before initiating formal proceedings, you agree to contact us at legal@pickleballpassport.com to attempt informal resolution. We will endeavor to resolve disputes within 30 days.
+Before initiating formal proceedings, you agree to contact us at ryan@thepickleballpassport.org to attempt informal resolution. We will endeavor to resolve disputes within 30 days.
 
 ### Binding Arbitration
 
@@ -312,7 +312,7 @@ If any provision of these Terms is found to be unenforceable, the remaining prov
 
 ## Entire Agreement
 
-These Terms, together with our Privacy Policy and any booking confirmations, constitute the entire agreement between you and Pickleball Passport regarding your use of our Services. Any prior agreements or communications are superseded.
+These Terms, together with our Privacy Policy and any booking confirmations, constitute the entire agreement between you and The Pickleball Passport regarding your use of our Services. Any prior agreements or communications are superseded.
 
 ## Changes to Terms
 
@@ -328,10 +328,10 @@ Your continued use of our Services after changes constitutes acceptance of the m
 
 For questions about these Terms of Service, please contact us:
 
-**Email:** legal@pickleballpassport.com
+**Email:** ryan@thepickleballpassport.org
 
 **Mail:**
-Pickleball Passport
+The Pickleball Passport
 Legal Department
 [Address to be added]
 
@@ -341,4 +341,4 @@ Legal Department
 
 ---
 
-*These Terms of Service are provided as a template and should be reviewed by legal counsel before use. Pickleball Passport recommends consulting with a licensed attorney to ensure compliance with applicable laws and regulations.*
+*These Terms of Service are provided as a template and should be reviewed by legal counsel before use. The Pickleball Passport recommends consulting with a licensed attorney to ensure compliance with applicable laws and regulations.*

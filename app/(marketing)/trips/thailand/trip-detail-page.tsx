@@ -54,7 +54,7 @@ export function TripDetailPage() {
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
-                6 Pickleball Sessions
+                7 Pickleball Sessions
               </div>
             </div>
           </div>

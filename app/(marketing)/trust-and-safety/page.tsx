@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trust & Safety | The Pickleball Passport',
     description:
-      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries — how we keep you covered on every trip.',
+      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries. How we keep you covered on every trip.',
     url: 'https://www.thepickleballpassport.org/trust-and-safety',
     siteName: 'The Pickleball Passport',
     locale: 'en_US',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Trust & Safety | The Pickleball Passport',
     description:
-      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries — how we keep you covered on every trip.',
+      'Vetted hotels, private transport, on-the-ground trip hosts, and curated itineraries. How we keep you covered on every trip.',
     site: '@PickleballPass',
     creator: '@PickleballPass',
   },
@@ -65,8 +65,8 @@ export default function TrustAndSafetyPage() {
               Your Safety Is Our Priority
             </h1>
             <p className="text-xl text-blue-100">
-              Every trip is planned with your comfort and safety in mind —
-              from vetted accommodations and private transport to on-the-ground
+              Every trip is planned with your comfort and safety in mind.
+              From vetted accommodations and private transport to on-the-ground
               trip hosts who know the destination inside and out.
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function TrustAndSafetyPage() {
               Traveling in Thailand
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Thailand is one of the world&apos;s most visited countries — and for
+              Thailand is one of the world&apos;s most visited countries, and for
               good reason. It&apos;s safe, welcoming, and built for tourism.
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function TrustAndSafetyPage() {
                 </h3>
                 <p className="text-sm text-gray-600">
                   Air-conditioned vans and private vehicles for all group
-                  transfers — no haggling with taxis or navigating public
+                  transfers. No haggling with taxis or navigating public
                   transit.
                 </p>
               </div>
@@ -176,7 +176,7 @@ export default function TrustAndSafetyPage() {
                 </h3>
                 <p className="text-sm text-gray-600">
                   A dedicated trip host travels with the group from start to
-                  finish — your point person for anything you need.
+                  finish. Your point person for anything you need.
                 </p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function TrustAndSafetyPage() {
                   Curated Itinerary
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Every day is planned — courts booked, excursions arranged,
+                  Every day is planned. Courts booked, excursions arranged,
                   restaurants scouted. You show up, we handle the rest.
                 </p>
               </div>
@@ -232,8 +232,7 @@ export default function TrustAndSafetyPage() {
               Pickleball Courts &amp; Venues
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              We play at the best pickleball facilities in each city —
-              purpose-built courts with quality surfaces, proper lighting,
+              We play at the best pickleball facilities in each city. Purpose-built courts with quality surfaces, proper lighting,
               and a great atmosphere.
             </p>
           </div>

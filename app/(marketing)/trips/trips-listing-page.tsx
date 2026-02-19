@@ -60,22 +60,22 @@ const upcoming13DayDates: UpcomingDate[] = [
 const comingSoonDestinations = [
   {
     destination: 'BALI',
-    subtitle: 'Ubud \u2022 Seminyak \u2022 Uluwatu',
+    subtitle: 'Ubud • Seminyak • Uluwatu',
     imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80',
   },
   {
     destination: 'VIETNAM',
-    subtitle: 'Ho Chi Minh City \u2022 Hoi An \u2022 Da Nang',
+    subtitle: 'Ho Chi Minh City • Hoi An • Da Nang',
     imageUrl: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
   },
   {
     destination: 'JAPAN',
-    subtitle: 'Tokyo \u2022 Kyoto \u2022 Osaka',
+    subtitle: 'Tokyo • Kyoto • Osaka',
     imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80',
   },
   {
     destination: 'MALAYSIA',
-    subtitle: 'Kuala Lumpur \u2022 Langkawi \u2022 Penang',
+    subtitle: 'Kuala Lumpur • Langkawi • Penang',
     imageUrl: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80',
   },
 ];
@@ -429,8 +429,8 @@ export function TripsListingPage() {
             </h1>
             <p className="text-lg sm:text-xl text-white/80 leading-relaxed">
               Explore our curated lineup of international pickleball travel experiences.
-              Each trip blends competitive play, cultural immersion, and wellness —
-              designed for players who want more than just a vacation.
+              Each trip blends competitive play, cultural immersion, and wellness.
+              Designed for players who want more than just a vacation.
             </p>
           </div>
         </div>
@@ -459,7 +459,7 @@ export function TripsListingPage() {
             <LiveTripCard
               duration="8day"
               dateRange="May 6–13, 2026"
-              cities="Bangkok \u2022 Chiang Mai"
+              cities="Bangkok • Chiang Mai"
               price="From $2,888/person"
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
               stripeKey="8day"
@@ -469,7 +469,7 @@ export function TripsListingPage() {
             <LiveTripCard
               duration="13day"
               dateRange="May 15–27, 2026"
-              cities="Bangkok \u2022 Chiang Mai \u2022 Phuket"
+              cities="Bangkok • Chiang Mai • Phuket"
               price="From $4,250/person"
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
               stripeKey="13day"
@@ -478,7 +478,7 @@ export function TripsListingPage() {
             {/* Card 3 — UPCOMING 8-Day */}
             <UpcomingTripCard
               durationLabel="8 Days / 7 Nights"
-              cities="Bangkok \u2022 Chiang Mai"
+              cities="Bangkok • Chiang Mai"
               imageUrl="https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800&q=80"
               dates={upcoming8DayDates}
               onReserve={openWaitlist}
@@ -487,7 +487,7 @@ export function TripsListingPage() {
             {/* Card 4 — UPCOMING 13-Day */}
             <UpcomingTripCard
               durationLabel="13 Days / 12 Nights"
-              cities="Bangkok \u2022 Chiang Mai \u2022 Phuket"
+              cities="Bangkok • Chiang Mai • Phuket"
               imageUrl="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80"
               dates={upcoming13DayDates}
               onReserve={openWaitlist}

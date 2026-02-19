@@ -37,7 +37,7 @@ const navigation = {
   social: [
     {
       name: 'Facebook',
-      href: '#',
+      href: 'https://www.facebook.com/share/1CS1Rar7iR/?mibextid=wwXIfr',
       icon: Facebook,
     },
     {

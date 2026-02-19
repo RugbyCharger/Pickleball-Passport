@@ -1,144 +1,85 @@
 ---
 title: Privacy Policy
-lastUpdated: 2026-01-03
-description: Learn how Pickleball Passport protects your privacy and handles your personal data. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.
+lastUpdated: 2026-02-19
+description: Learn how Pickleball Passport protects your privacy and handles your personal data when you use our website and travel coordination services.
 ---
 
-## Introduction
+Pickleball Passport ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and protect your personal information when you use our website (thepickleballpassport.org) and our travel coordination services.
 
-This Privacy Policy describes how Pickleball Passport ("we," "us," or "our") collects, uses, shares, and protects your personal information when you use our website, services, and applications (collectively, the "Services"). By using our Services, you agree to the collection and use of information in accordance with this policy.
+## Services Description
 
-We are committed to protecting your privacy and ensuring the security of your personal data. This policy applies to all users of our Services, including guests booking transformation tourism packages, partners participating in our referral program, and visitors to our website.
+Pickleball Passport provides transformation tourism services that combine pickleball experiences with curated travel in Thailand. Our services include:
+
+- **All-Inclusive Travel Packages:** Accommodations, group activities, cultural excursions, and local transportation
+- **Pickleball Experiences:** Court reservations, organized play sessions, coaching clinics, and equipment access
+- **Travel Support:** Airport transfers, travel coordination, and concierge services
+- **Wellness & Cultural Activities:** Spa experiences, cooking classes, guided excursions, and wellness programming
+- **Partner Program:** Referral and affiliate opportunities for pickleball enthusiasts
 
 ## Information We Collect
 
 ### Personal Information
 
-We collect personal information that you voluntarily provide to us when you:
+When you book a trip, create an account, or contact us, we may collect:
 
-- Create an account or register for our Services
-- Book a transformation tourism package
-- Apply to become a partner
-- Subscribe to our newsletter
-- Contact us through our contact form
-- Participate in surveys or promotions
+- Name, email address, and phone number
+- Passport information and travel documents
+- Emergency contact information
+- Dietary restrictions or allergies (for meal planning)
+- Pickleball skill level and playing preferences
+- Payment and billing information
 
-This information may include:
+### Health & Fitness Information
 
-- **Identity Data:** Full name, date of birth, gender, nationality
-- **Contact Data:** Email address, phone number, mailing address
-- **Profile Data:** Username, password, preferences, feedback
-- **Financial Data:** Payment card details, billing address, transaction history
-- **Medical Data:** Health information relevant to your procedures (dental history, medical conditions, allergies, medications)
-- **Travel Data:** Passport details, visa information, travel preferences
+To ensure a safe and enjoyable trip experience, we may ask you to provide basic health information such as:
 
-### Medical Information
-
-Due to the nature of our medical tourism services, we collect sensitive health information including:
-
+- Physical activity limitations or mobility considerations
+- Relevant medical conditions that may affect travel or physical activity (e.g., heart conditions, joint issues)
 - Current medications and allergies
-- Pre-existing medical conditions
-- Dental and medical history
-- Procedure preferences and requirements
-- Post-procedure recovery information
 
-This medical information is collected with your explicit consent and is used solely for coordinating your medical procedures with our partner hospitals and healthcare providers.
+**This information is collected with your consent and is used solely for trip planning and safety purposes. We are not a healthcare provider and do not use this information for medical purposes.**
 
-### Automatically Collected Data
+### Automatically Collected Information
 
-When you visit our website, we automatically collect certain information, including:
+When you visit our website, we may automatically collect:
 
-- **Device Information:** IP address, browser type, operating system, device identifiers
-- **Usage Data:** Pages visited, time spent on pages, click patterns, referral sources
-- **Location Data:** General geographic location based on IP address
+- IP address and browser type
+- Pages visited and time spent on each page
+- Referring website and search terms
+- Device information and operating system
 
 ## How We Use Your Information
 
-We use your personal information for the following purposes:
+We use the information we collect to:
 
-### Service Delivery
-- Processing bookings and managing your trip itinerary
-- Coordinating medical procedures with partner hospitals
-- Arranging accommodation, transportation, and activities
-- Communicating important trip information
+- Process and manage your trip bookings
+- Coordinate travel logistics with our local partners (hotels, venues, transportation)
+- Organize pickleball sessions and group activities
+- Communicate trip details, updates, and important information
+- Process payments and manage billing
+- Send marketing communications (with your consent)
+- Improve our website and services
+- Comply with legal obligations
 
-### Communication
-- Sending booking confirmations and trip updates
-- Responding to inquiries and support requests
-- Sending marketing communications (with your consent)
-- Providing post-trip follow-up care information
+## How We Share Your Information
 
-### Legal and Compliance
-- Complying with legal obligations
-- Protecting against fraud and unauthorized transactions
-- Enforcing our terms of service
-- Protecting the rights and safety of users
+We do not sell your personal information. We may share your information with:
 
-### Analytics and Improvement
-- Analyzing usage patterns to improve our Services
-- Conducting market research and customer surveys
-- Developing new features and services
+### Travel & Activity Partners
 
-## Cookies and Tracking Technologies
+We share relevant booking and travel information with our local partners in Thailand to coordinate your trip. These partners include hotels, pickleball venues, transportation providers, restaurants, and activity operators. This sharing is limited to the information necessary to fulfill your booking.
 
-### Types of Cookies We Use
+### Payment Processors
 
-**Essential Cookies:** Required for the website to function properly. These cannot be disabled.
+We use third-party payment processors to handle transactions securely. We do not store your full credit card details on our servers.
 
-| Cookie | Purpose | Duration |
-|--------|---------|----------|
-| session_id | User session management | Session |
-| csrf_token | Security protection | Session |
-| auth_token | Authentication status | 30 days |
+### Service Providers
 
-**Analytics Cookies:** Help us understand how visitors interact with our website.
+We may share information with service providers who help us operate our business, such as email platforms, analytics tools, and customer support software. These providers are contractually obligated to protect your data.
 
-| Cookie | Purpose | Duration |
-|--------|---------|----------|
-| _ga | Google Analytics visitor tracking | 2 years |
-| _gid | Google Analytics session tracking | 24 hours |
-| _gat | Google Analytics rate limiting | 1 minute |
+### Legal Requirements
 
-**Marketing Cookies:** Used to deliver relevant advertisements.
-
-| Cookie | Purpose | Duration |
-|--------|---------|----------|
-| _fbp | Facebook Pixel tracking | 3 months |
-
-### Managing Cookie Preferences
-
-You can manage cookie preferences through your browser settings. Note that disabling certain cookies may affect website functionality.
-
-- **Chrome:** Settings > Privacy and Security > Cookies
-- **Firefox:** Options > Privacy & Security > Cookies
-- **Safari:** Preferences > Privacy > Cookies
-
-## Third-Party Services
-
-We share your information with the following third-party service providers:
-
-### Payment Processing
-**Stripe** handles all payment transactions. Your payment information is processed directly by Stripe and is not stored on our servers.
-- [Stripe Privacy Policy](https://stripe.com/privacy)
-
-### Email Communications
-**SendGrid** manages our email communications, including booking confirmations and newsletters.
-- [SendGrid Privacy Policy](https://sendgrid.com/policies/privacy/)
-
-### Authentication
-**Clerk** provides secure user authentication services for account management.
-- [Clerk Privacy Policy](https://clerk.com/legal/privacy)
-
-### Analytics
-**Google Analytics** helps us understand website usage and improve our Services.
-- [Google Privacy Policy](https://policies.google.com/privacy)
-
-### Spam Protection
-**Google reCAPTCHA** protects our forms from spam and abuse.
-- [Google reCAPTCHA Terms](https://policies.google.com/privacy)
-
-### Medical Partners
-We share relevant medical information with our JCI-accredited partner hospitals in Thailand to coordinate your procedures. This sharing is done with your explicit consent and in accordance with applicable healthcare privacy laws.
+We may disclose your information when required by law, court order, or governmental authority, or when necessary to protect the rights, property, or safety of Pickleball Passport, our guests, or others.
 
 ## Data Retention
 
@@ -148,75 +89,53 @@ We retain your personal information for as long as necessary to fulfill the purp
 |-----------|------------------|
 | Account Information | Duration of account + 7 years |
 | Booking Records | 10 years (legal requirement) |
-| Medical Records | 10 years after last procedure |
 | Payment Records | 7 years (financial regulations) |
+| Health & Fitness Information | Duration of trip + 1 year |
 | Marketing Preferences | Until withdrawal of consent |
 | Website Analytics | 26 months |
 
 ## Your Rights
 
-### GDPR Rights (EU Residents)
+Depending on your location, you may have the right to:
 
-If you are a resident of the European Union, you have the following rights:
+- Access the personal information we hold about you
+- Request correction of inaccurate information
+- Request deletion of your personal data
+- Opt out of marketing communications
+- Withdraw consent for data processing
+- Request a portable copy of your data
 
-- **Right to Access:** Request a copy of your personal data
-- **Right to Rectification:** Request correction of inaccurate data
-- **Right to Erasure:** Request deletion of your personal data ("right to be forgotten")
-- **Right to Restriction:** Request restriction of processing
-- **Right to Data Portability:** Receive your data in a portable format
-- **Right to Object:** Object to processing based on legitimate interests
-- **Right to Withdraw Consent:** Withdraw consent at any time
+To exercise any of these rights, please contact us using the information below.
 
-To exercise these rights, contact us at privacy@pickleballpassport.com.
+## Cookies & Tracking Technologies
 
-**Legal Basis for Processing:**
-- **Consent:** Marketing communications, medical data processing
-- **Contract:** Booking and service delivery
-- **Legitimate Interest:** Analytics, fraud prevention, service improvement
+Our website uses cookies and similar tracking technologies to improve your browsing experience and analyze website traffic. You can manage your cookie preferences through your browser settings. We use:
 
-### CCPA Rights (California Residents)
-
-If you are a California resident, you have the following rights under the California Consumer Privacy Act:
-
-- **Right to Know:** Request disclosure of personal information collected, used, and shared
-- **Right to Delete:** Request deletion of your personal information
-- **Right to Opt-Out:** Opt-out of the sale of your personal information
-- **Right to Non-Discrimination:** Receive equal service regardless of exercising privacy rights
-
-**Notice of Collection:** We collect the categories of personal information listed in the "Information We Collect" section above.
-
-**Sale of Personal Information:** We do not sell your personal information to third parties.
-
-To exercise your CCPA rights, contact us at privacy@pickleballpassport.com or call +1 (800) 555-4444.
+- **Essential cookies:** Required for website functionality
+- **Analytics cookies:** Help us understand how visitors interact with our site
+- **Marketing cookies:** Used to deliver relevant advertisements (with your consent)
 
 ## Data Security
 
-We implement appropriate technical and organizational measures to protect your personal information:
+We implement appropriate technical and organizational measures to protect your personal information, including encrypted data transmission (SSL/TLS), secure payment processing through PCI-compliant providers, restricted access to personal data on a need-to-know basis, and regular security reviews of our systems and processes.
 
-- **Encryption:** All data transmitted using TLS 1.3 encryption
-- **Access Controls:** Role-based access to sensitive information
-- **Regular Audits:** Periodic security assessments and penetration testing
-- **Employee Training:** Staff trained on data protection practices
-- **Incident Response:** Documented procedures for data breach response
+While we take reasonable steps to protect your information, no method of transmission over the internet is 100% secure. We encourage you to take steps to protect your own personal information as well.
 
 ## International Data Transfers
 
-Your personal information may be transferred to and processed in countries outside your country of residence, including:
+As a travel coordination company operating trips in Thailand, your personal information may be transferred to and processed in Thailand and other countries where our service providers operate. By booking a trip with us, you consent to this transfer. We take steps to ensure your data is protected in accordance with this policy regardless of where it is processed.
 
-- **United States:** Where our primary servers and service providers are located
-- **Thailand:** Where our partner hospitals and local operations are based
+## Third-Party Links
 
-For transfers from the EU, we rely on:
-- Standard Contractual Clauses approved by the European Commission
-- Consent for specific transfers (e.g., medical data to Thai hospitals)
+Our website may contain links to third-party websites, including partner hotels, pickleball venues, and informational resources. We are not responsible for the privacy practices of these external sites. We encourage you to review their privacy policies before providing any personal information.
 
 ## Children's Privacy
 
-Our Services are not intended for individuals under 18 years of age. We do not knowingly collect personal information from children. If you believe we have collected information from a minor, please contact us immediately at privacy@pickleballpassport.com.
+Our services are designed for adults. We do not knowingly collect personal information from children under the age of 18. If we become aware that we have collected information from a child, we will take steps to delete it promptly.
 
 ## Changes to This Policy
 
-We may update this Privacy Policy from time to time. We will notify you of any material changes by:
+We may update this Privacy Policy from time to time. We will notify you of significant changes by:
 
 - Posting the updated policy on our website
 - Sending an email notification to registered users
@@ -228,15 +147,10 @@ The "Last Updated" date at the top of this policy indicates when the latest chan
 
 If you have questions about this Privacy Policy or wish to exercise your privacy rights, please contact us:
 
-**Email:** privacy@pickleballpassport.com
+**Email:** ryan@thepickleballpassport.org
 
 **Mail:**
 Pickleball Passport
-Privacy Team
 [Address to be added]
 
-**Phone:** +1 (800) 555-4444
-
-**Response Time:** We aim to respond to all privacy inquiries within 30 days.
-
-For EU residents, you also have the right to lodge a complaint with your local data protection authority.
+**Phone:** [Phone number to be added]
