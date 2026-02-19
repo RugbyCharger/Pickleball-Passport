@@ -167,7 +167,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl md:text-2xl text-white/80 mb-4 max-w-2xl mx-auto">
-            Have questions about your transformation journey? Our team is here to help.
+            Have questions about our trips? Our team is here to help.
           </p>
           <div className="flex items-center justify-center gap-2 text-[#B08D55]">
             <Sun className="w-5 h-5" />

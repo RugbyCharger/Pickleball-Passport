@@ -50,7 +50,7 @@ export default function ContactError({
             Get in Touch
           </h1>
           <p className="text-xl md:text-2xl text-white/80 mb-4 max-w-2xl mx-auto">
-            Have questions about your transformation journey? Our team is here to help.
+            Have questions about our trips? Our team is here to help.
           </p>
         </div>
       </section>
