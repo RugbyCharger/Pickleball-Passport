@@ -1,7 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
-import { authLogger } from '@/lib/logger'
 import { checkRateLimit, getIpAddress, getRateLimitHeaders } from '@/lib/rate-limit'
 import { validateOrigin, isMutationMethod } from '@/lib/security/origin-validation'
 
@@ -9,16 +7,6 @@ import { validateOrigin, isMutationMethod } from '@/lib/security/origin-validati
 const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)', '/api/admin(.*)'])
 const isAdminApiRoute = createRouteMatcher(['/api/admin(.*)'])
 const isDashboardRoute = createRouteMatcher(['/dashboard(.*)'])
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/packages(.*)',
-  '/about(.*)',
-  '/contact(.*)',
-  '/apply(.*)',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-  '/api/webhooks(.*)', // Webhooks handle their own auth
-])
 
 // Webhook and cron routes exempt from rate limiting (they use signature verification)
 const isWebhookRoute = createRouteMatcher([
@@ -40,14 +28,6 @@ export default clerkMiddleware(async (auth, request) => {
   const globalLimit = await checkRateLimit('global', ip)
 
   if (globalLimit && !globalLimit.success) {
-    authLogger.warn(
-      {
-        ip,
-        path: request.nextUrl.pathname,
-        userAgent: request.headers.get('user-agent'),
-      },
-      'Global rate limit exceeded'
-    )
     return new NextResponse(
       JSON.stringify({ error: 'Too Many Requests', message: 'Rate limit exceeded' }),
       {
@@ -61,19 +41,7 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   // CSRF Protection: Origin validation for mutation requests
-  // Note: Webhooks already exempted above (they use signature verification)
-  // Note: Bearer token requests are CSRF-immune (mobile app) - handled in validateOrigin
   if (isMutationMethod(request.method) && !validateOrigin(request)) {
-    authLogger.warn(
-      {
-        origin: request.headers.get('origin'),
-        path: request.nextUrl.pathname,
-        method: request.method,
-        ip,
-      },
-      'CSRF: Invalid origin for mutation request'
-    )
-
     return new NextResponse(
       JSON.stringify({
         error: 'Forbidden',
@@ -86,69 +54,36 @@ export default clerkMiddleware(async (auth, request) => {
     )
   }
 
-  // Admin routes: require authentication AND admin role from database
-  // SEC-01: All admin routes check database role, API routes return 403
+  // Admin routes: require authentication, then check role via Clerk metadata
+  // Note: Database role check moved to tRPC adminProcedure (Prisma can't run in Edge Runtime)
   if (isAdminRoute(request)) {
-    const { userId } = await auth()
+    const { userId, sessionClaims } = await auth()
 
-    // Not authenticated
     if (!userId) {
-      // API routes: return 401 JSON
       if (isAdminApiRoute(request)) {
-        authLogger.warn(
-          {
-            path: request.nextUrl.pathname,
-            userAgent: request.headers.get('user-agent'),
-            ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-          },
-          'Unauthenticated admin API access attempt'
-        )
         return NextResponse.json(
           { error: 'Unauthorized', message: 'Authentication required' },
           { status: 401 }
         )
       }
-
-      // Page routes: redirect to sign-in
       const signInUrl = new URL('/sign-in', request.url)
       signInUrl.searchParams.set('redirect_url', request.url)
       return NextResponse.redirect(signInUrl)
     }
 
-    // Check database role for admin access
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true },
-    })
-
-    const isAdmin = user?.role === 'ADMIN'
-
-    if (!isAdmin) {
-      // Log unauthorized access attempt
-      authLogger.warn(
-        {
-          userId,
-          role: user?.role || 'UNKNOWN',
-          path: request.nextUrl.pathname,
-          userAgent: request.headers.get('user-agent'),
-          ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        },
-        'Unauthorized admin access attempt'
-      )
-
-      // API routes: return 403 JSON
+    // Check Clerk metadata for admin role (lightweight, no DB call)
+    // The authoritative DB role check happens in tRPC adminProcedure
+    const role = (sessionClaims?.metadata as Record<string, unknown>)?.role
+    if (role !== 'ADMIN') {
       if (isAdminApiRoute(request)) {
         return NextResponse.json(
           { error: 'Forbidden', message: 'Admin access required' },
           { status: 403 }
         )
       }
-
-      // Page routes: redirect to dashboard
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
-    // Admin user -> allow access
     return NextResponse.next()
   }
 
@@ -156,14 +91,12 @@ export default clerkMiddleware(async (auth, request) => {
   if (isDashboardRoute(request)) {
     const { userId } = await auth()
 
-    // Not authenticated -> redirect to sign-in
     if (!userId) {
       const signInUrl = new URL('/sign-in', request.url)
       signInUrl.searchParams.set('redirect_url', request.url)
       return NextResponse.redirect(signInUrl)
     }
 
-    // Authenticated -> allow access
     return NextResponse.next()
   }
 
