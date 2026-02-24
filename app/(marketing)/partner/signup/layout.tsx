@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Become a Partner | The Pickleball Passport',
     description: 'Sign up to become a partner and start earning rewards for referring members to transformational wellness experiences.',
-    url: 'https://pickleballpassport.com/partner/signup',
+    url: 'https://thepickleballpassport.org/partner/signup',
     siteName: 'The Pickleball Passport',
     images: [
       {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/partner/signup',
+    canonical: 'https://thepickleballpassport.org/partner/signup',
   },
   robots: {
     index: true,

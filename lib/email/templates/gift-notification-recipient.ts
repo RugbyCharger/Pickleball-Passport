@@ -69,7 +69,7 @@ export function generateGiftNotificationRecipientEmail(data: GiftNotificationRec
   text: string;
   subject: string;
 } {
-  const packageUrl = data.packageUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages`;
+  const packageUrl = data.packageUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages`;
 
   // Build gift message section
   const giftMessageHtml = data.giftMessage

@@ -67,7 +67,7 @@ export function generatePartnerReferralBookingEmail(data: PartnerReferralBooking
   text: string;
   subject: string;
 } {
-  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/partners/dashboard`;
+  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/partners/dashboard`;
 
   const displayName = data.guestName || data.guestInitials || 'Your referral';
   const tripStart = formatDate(data.tripDates.start);

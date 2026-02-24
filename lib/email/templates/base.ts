@@ -113,7 +113,7 @@ export function baseEmailTemplate({
           <!-- Header -->
           <tr>
             <td class="header">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}" class="logo">
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}" class="logo">
                 🏓 The Pickleball Passport
               </a>
             </td>
@@ -135,11 +135,11 @@ export function baseEmailTemplate({
                 preferenceToken
                   ? `
               <p style="margin: 0 0 16px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/preferences?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/preferences?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
                   Manage Preferences
                 </a>
                 |
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/unsubscribe?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/unsubscribe?token=${preferenceToken}" style="color: #059669; text-decoration: none;">
                   Unsubscribe
                 </a>
               </p>

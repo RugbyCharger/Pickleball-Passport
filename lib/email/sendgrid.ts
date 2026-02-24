@@ -106,7 +106,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
   // Add List-Unsubscribe header for marketing emails
   const headers: Record<string, string> = {};
   if (options.isMarketing && preferenceToken) {
-    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/unsubscribe?token=${preferenceToken}`;
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/unsubscribe?token=${preferenceToken}`;
     headers['List-Unsubscribe'] = `<${unsubscribeUrl}>`;
     headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
   }
@@ -561,7 +561,7 @@ export interface PartnerTicketReplyNotificationData {
  * Send notification to partner when admin replies to their support ticket
  */
 export async function sendPartnerTicketReplyNotification(data: PartnerTicketReplyNotificationData): Promise<void> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -623,7 +623,7 @@ export interface PartnerTestimonialApprovedData {
  * Send notification to partner when their testimonial is approved
  */
 export async function sendPartnerTestimonialApproved(data: PartnerTestimonialApprovedData): Promise<void> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

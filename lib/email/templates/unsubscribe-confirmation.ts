@@ -11,8 +11,8 @@ export function unsubscribeConfirmationEmail(email: string): {
   html: string;
   text: string;
 } {
-  const resubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}#newsletter`;
-  const contactUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/contact`;
+  const resubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}#newsletter`;
+  const contactUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/contact`;
 
   const content = `
     <h1>You've Been Unsubscribed</h1>
@@ -42,7 +42,7 @@ export function unsubscribeConfirmationEmail(email: string): {
     </p>
   `;
 
-  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
+  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
   const footerText = `This email confirms your unsubscribe request from The Pickleball Passport marketing emails.`;
 
   const html = baseEmailTemplate({

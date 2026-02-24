@@ -18,8 +18,8 @@ export const ALLOWED_ORIGINS = {
     'https://thepickleballpassport.org',
     'https://www.thepickleballpassport.org',
   ],
-  // Vercel preview deployments
-  preview: /^https:\/\/.*\.vercel\.app$/,
+  // Vercel preview deployments — scoped to this project only
+  preview: /^https:\/\/pickleball-passport-.*\.vercel\.app$/,
   // Local development
   development: [
     'http://localhost:3000',
@@ -90,9 +90,8 @@ export function validateOrigin(request: NextRequest): boolean {
       return true;
     }
 
-    // No Origin, no valid Referer, not JSON - suspicious, but log and allow
-    // (tRPC will catch non-JSON anyway)
-    return true;
+    // No Origin, no valid Referer, not JSON — deny as suspicious
+    return false;
   }
 
   // Check against allowed origins

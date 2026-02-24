@@ -326,7 +326,7 @@ async function handleSentTransition(
 ): Promise<void> {
   const purchaserInfo = await getPurchaserInfo(booking.giftPurchaserId!)
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'
   const acceptanceUrl = `${baseUrl}/gift/accept?token=${booking.giftAcceptanceToken}`
 
   const emailData: GiftNotificationRecipientData = {
@@ -392,7 +392,7 @@ async function handleAcceptedTransition(
       tripEndDate: booking.trip?.endDate?.toISOString(),
       destination: booking.trip?.destination || 'Chiang Mai, Thailand',
       needsDateSelection: !booking.trip?.startDate,
-      portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+      portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
     }
 
     const { subject, html, text } =
@@ -416,7 +416,7 @@ async function handleAcceptedTransition(
         duration: booking.duration,
         accommodationTier: booking.accommodationTier,
         acceptedAt: new Date().toISOString(),
-        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
       }
 
       const { subject, html, text } =

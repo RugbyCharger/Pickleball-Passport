@@ -105,7 +105,7 @@ export function generateApplicationConfirmationEmail(
         💡 While You Wait...
       </p>
       <ul style="margin: 8px 0; padding-left: 20px; color: #1e3a8a; font-size: 14px;">
-        <li style="margin: 4px 0;">Browse our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages" style="color: #2563eb; text-decoration: underline;">transformation packages</a></li>
+        <li style="margin: 4px 0;">Browse our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages" style="color: #2563eb; text-decoration: underline;">transformation packages</a></li>
         <li style="margin: 4px 0;">Watch video testimonials from past guests</li>
         <li style="margin: 4px 0;">Start a wishlist of add-ons you're interested in</li>
         <li style="margin: 4px 0;">Check that your passport is valid for at least 6 months</li>
@@ -113,7 +113,7 @@ export function generateApplicationConfirmationEmail(
     </div>
 
     <p style="text-align: center; margin: 32px 0;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard" class="button">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard" class="button">
         View Your Application
       </a>
     </p>

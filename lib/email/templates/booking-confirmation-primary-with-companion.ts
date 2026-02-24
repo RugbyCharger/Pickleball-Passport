@@ -91,7 +91,7 @@ export function generatePrimaryWithCompanionConfirmationEmail(data: PrimaryWithC
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   // Build primary guest add-ons
   const primaryAddOnsHtml = data.primaryAddOns && data.primaryAddOns.length > 0

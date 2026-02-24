@@ -44,7 +44,7 @@ export function generateDocumentApprovalEmail(data: DocumentApprovalData): {
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/documents`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/documents`;
 
   const content = `
     <h1>Document Approved! ✅</h1>

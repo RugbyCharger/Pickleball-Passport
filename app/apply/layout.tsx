@@ -1,8 +1,5 @@
 import type { Metadata } from 'next';
 
-// Prevent static generation - wrapped by ClerkProvider
-export const dynamic = 'force-dynamic'
-
 export const metadata: Metadata = {
   title: 'Apply for Your Transformation Journey | The Pickleball Passport',
   description: 'Start your pickleball adventure in Thailand. Apply now for exclusive access to premier pickleball trips, wellness, and cultural experiences.',
@@ -10,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Apply for Your Transformation Journey | The Pickleball Passport',
     description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier experiences.',
-    url: 'https://pickleballpassport.com/apply',
+    url: 'https://thepickleballpassport.org/apply',
     siteName: 'The Pickleball Passport',
     images: [
       {
@@ -32,7 +29,7 @@ export const metadata: Metadata = {
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/apply',
+    canonical: 'https://thepickleballpassport.org/apply',
   },
   robots: {
     index: true,

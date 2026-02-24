@@ -70,8 +70,8 @@ export function generatePartnerTierChangeEmail(data: PartnerTierChangeData): {
   text: string;
   subject: string;
 } {
-  const tiersUrl = data.tiersUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/partners/tiers`;
-  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/partners/dashboard`;
+  const tiersUrl = data.tiersUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/partners/tiers`;
+  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/partners/dashboard`;
 
   const newTierDisplay = getTierDisplayName(data.newTier);
   const tierColor = getTierColor(data.newTier);

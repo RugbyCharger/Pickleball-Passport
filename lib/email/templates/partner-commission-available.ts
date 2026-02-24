@@ -30,7 +30,7 @@ export function generatePartnerCommissionAvailableEmail(data: PartnerCommissionA
   text: string;
   subject: string;
 } {
-  const rewardsUrl = data.rewardsUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/partners/rewards`;
+  const rewardsUrl = data.rewardsUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/partners/rewards`;
   const balance = formatPoints(data.availableBalance);
   const cashValue = data.cashValue ? formatCurrency(data.cashValue) : null;
 

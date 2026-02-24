@@ -34,8 +34,8 @@ export function generateTicketCreatedEmail(data: TicketCreatedData): {
     .toLowerCase()
     .replace(/\b\w/g, (l) => l.toUpperCase())
 
-  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/support/status`
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/support`
+  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/support/status`
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/support`
 
   // Show different tracking info based on source
   const trackingSection =

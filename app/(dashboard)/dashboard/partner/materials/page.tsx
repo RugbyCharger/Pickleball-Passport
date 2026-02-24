@@ -65,7 +65,7 @@ export default function PartnerMaterialsPage() {
   };
 
   const generateSocialCaption = (material: MarketingMaterial): string => {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org';
     return `🏓 Excited to share The Pickleball Passport with our club members!
 
 ${material.description}

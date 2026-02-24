@@ -42,7 +42,7 @@ const cspDirectives = {
   'script-src': [
     "'self'",
     "'unsafe-inline'", // Required for Next.js, Clerk widget
-    "'unsafe-eval'", // Required for some Next.js features in dev
+    ...(process.env.NODE_ENV === 'development' ? ["'unsafe-eval'"] : []), // Only in dev
     ...CLERK_DOMAINS,
     ...STRIPE_DOMAINS,
     ...GOOGLE_DOMAINS,
@@ -129,10 +129,12 @@ const cspHeader = buildCsp(cspDirectives);
 // Security headers to apply to all routes
 const securityHeaders = [
   {
-    // CSP in Report-Only mode for initial deployment
-    // TODO: After validation period, switch to 'Content-Security-Policy'
-    key: 'Content-Security-Policy-Report-Only',
+    key: 'Content-Security-Policy',
     value: cspHeader,
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
     // Prevent clickjacking
@@ -159,10 +161,15 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.supabase.co' },
+      { protocol: 'https', hostname: 'img.clerk.com' },
+      { protocol: 'https', hostname: 'image.mux.com' },
+      { protocol: 'https', hostname: '*.googleusercontent.com' },
+    ],
   },
   async headers() {
     return [

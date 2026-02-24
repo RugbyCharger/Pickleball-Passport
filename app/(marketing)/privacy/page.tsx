@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     title: 'Privacy Policy | The Pickleball Passport',
     description:
       'Learn how The Pickleball Passport protects your privacy. Our policy covers GDPR, CCPA compliance, data collection, cookies, and third-party services.',
-    url: 'https://pickleballpassport.com/privacy',
+    url: 'https://thepickleballpassport.org/privacy',
     siteName: 'The Pickleball Passport',
     locale: 'en_US',
     type: 'website',
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/privacy',
+    canonical: 'https://thepickleballpassport.org/privacy',
   },
   robots: {
     index: true,

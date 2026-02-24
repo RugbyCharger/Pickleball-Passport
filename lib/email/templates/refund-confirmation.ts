@@ -199,8 +199,8 @@ export function generateRefundConfirmationEmail(
       <div class="footer">
         <p>The Pickleball Passport - Transform Your Game, Transform Yourself</p>
         <p>
-          <a href="https://pickleballpassport.com">Visit Our Website</a> |
-          <a href="https://pickleballpassport.com/contact">Contact Us</a>
+          <a href="https://thepickleballpassport.org">Visit Our Website</a> |
+          <a href="https://thepickleballpassport.org/contact">Contact Us</a>
         </p>
         <p style="font-size: 12px; color: #9CA3AF; margin-top: 15px;">
           This email was sent regarding your booking ${

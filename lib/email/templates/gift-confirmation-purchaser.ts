@@ -71,7 +71,7 @@ export function generateGiftConfirmationPurchaserEmail(data: GiftConfirmationPur
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   // Build add-ons list HTML
   const addOnsHtml = data.addOns && data.addOns.length > 0

@@ -7,9 +7,6 @@
  * - Mobile responsive design
  */
 
-// Prevent static generation - requires auth
-export const dynamic = 'force-dynamic'
-
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'

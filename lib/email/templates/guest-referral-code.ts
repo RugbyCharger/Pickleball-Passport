@@ -24,7 +24,7 @@ export function generateGuestReferralCodeEmail(data: GuestReferralCodeData): {
   text: string;
   subject: string;
 } {
-  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/referrals`;
+  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/referrals`;
 
   const subject = `Your Referral Code is Ready - Start Earning Rewards!`;
 

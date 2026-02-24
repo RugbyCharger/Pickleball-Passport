@@ -207,7 +207,7 @@ export const userRouter = router({
       return { hasCode: false, referralCode: null, shareableLink: null, pointsBalance: 0 }
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'
     const shareableLink = user.referralCode
       ? `${baseUrl}/r/${user.referralCode}`
       : null
@@ -386,7 +386,7 @@ export const userRouter = router({
     // Send email notification with new referral code
     if (updatedUser.email && updatedUser.guestProfile?.firstName) {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'
         const emailData = generateGuestReferralCodeEmail({
           guestName: updatedUser.guestProfile.firstName,
           referralCode: referralCode,

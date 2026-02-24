@@ -47,7 +47,7 @@ export function generateDocumentRejectionEmail(data: DocumentRejectionData): {
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/documents`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/documents`;
 
   const content = `
     <h1>Document Update Required 📄</h1>

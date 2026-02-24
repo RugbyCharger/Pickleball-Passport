@@ -92,7 +92,7 @@ function generateICalContent(event: {
 VERSION:2.0
 PRODID:-//The Pickleball Passport//Partner Events//EN
 BEGIN:VEVENT
-UID:${event.id}@pickleballpassport.com
+UID:${event.id}@thepickleballpassport.org
 DTSTAMP:${formatICalDate(new Date())}
 DTSTART:${formatICalDate(event.startDate)}
 DTEND:${formatICalDate(event.endDate)}

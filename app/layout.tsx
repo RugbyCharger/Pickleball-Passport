@@ -5,9 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-// Prevent static generation - ClerkProvider requires valid keys during build
-// Remove this once proper build-time environment variables are configured
-export const dynamic = 'force-dynamic'
+// ClerkProvider works with static pages when NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+// is available as a build env var. No force-dynamic needed.
 import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
 import { Footer } from "@/components/marketing/footer";

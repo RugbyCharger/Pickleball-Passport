@@ -148,10 +148,10 @@ export function PackageFAQ({ packageName }: PackageFAQProps) {
         <p className="text-sm text-emerald-700">
           Email us at{' '}
           <a
-            href="mailto:info@pickleballpassport.com"
+            href="mailto:info@thepickleballpassport.org"
             className="font-medium underline"
           >
-            info@pickleballpassport.com
+            info@thepickleballpassport.org
           </a>{' '}
           or schedule a free consultation call
         </p>

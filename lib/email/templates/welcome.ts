@@ -96,7 +96,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
     </div>
 
     <p style="text-align: center; margin: 32px 0;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages" class="button">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages" class="button">
         Explore Packages
       </a>
     </p>
@@ -119,22 +119,22 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
       </p>
       <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px;">
         <li style="margin: 8px 0;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages" style="color: #059669; text-decoration: none;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages" style="color: #059669; text-decoration: none;">
             Browse Transformation Packages
           </a>
         </li>
         <li style="margin: 8px 0;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/trips" style="color: #059669; text-decoration: none;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/trips" style="color: #059669; text-decoration: none;">
             View Upcoming Trip Dates
           </a>
         </li>
         <li style="margin: 8px 0;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/about" style="color: #059669; text-decoration: none;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/about" style="color: #059669; text-decoration: none;">
             Read Guest Testimonials
           </a>
         </li>
         <li style="margin: 8px 0;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/faq" style="color: #059669; text-decoration: none;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/faq" style="color: #059669; text-decoration: none;">
             Frequently Asked Questions
           </a>
         </li>

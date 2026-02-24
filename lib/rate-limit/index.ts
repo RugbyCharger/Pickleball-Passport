@@ -235,12 +235,20 @@ export async function checkRateLimit(
   const limiter = rateLimiters[limiterType]();
 
   if (!limiter) {
-    // Rate limiting not configured - allow request but log warning
+    // Rate limiting not configured — fail closed in production
     if (process.env.NODE_ENV === 'production') {
       console.warn(
         `Rate limiting not configured for ${limiterType}. ` +
           'Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.'
       );
+      // Return a restrictive fallback: allow 1 request then block
+      // This prevents abuse while surfacing the misconfiguration
+      return {
+        success: true,
+        limit: 1,
+        remaining: 0,
+        reset: Date.now() + 60_000,
+      };
     }
     return null;
   }
@@ -255,8 +263,16 @@ export async function checkRateLimit(
       reset: result.reset,
     };
   } catch (error) {
-    // If rate limiting fails, log error but allow request
+    // If rate limiting fails in production, fail closed — deny the request
     console.error(`Rate limit check failed for ${limiterType}:`, error);
+    if (process.env.NODE_ENV === 'production') {
+      return {
+        success: false,
+        limit: 0,
+        remaining: 0,
+        reset: Date.now() + 60_000,
+      };
+    }
     return null;
   }
 }

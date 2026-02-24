@@ -36,22 +36,10 @@ import { generateGuestReferralBookingEmail } from '@/lib/email/templates/guest-r
 
 const REFERRAL_COOKIE_NAME = 'referral_code'
 
-// Lazy-initialize Stripe client to avoid build-time errors
-let stripeClient: Stripe | null = null
+import { getStripeServer } from '@/lib/stripe/server'
 
-function getStripe(): Stripe {
-  if (!stripeClient) {
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-    if (!stripeSecretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured')
-    }
-    stripeClient = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-12-15.clover',
-      timeout: 10000, // E4-S6: 10 second timeout for Stripe API calls
-    })
-  }
-  return stripeClient
-}
+// Use canonical singleton from server.ts
+const getStripe = getStripeServer
 
 /**
  * Input schema for creating a payment intent
@@ -500,7 +488,7 @@ export const bookingRouter = router({
           },
         })
 
-        // 17. Create payment record (first installment or full amount)
+        // 17. Create payment record
         await ctx.db.payment.create({
           data: {
             bookingId: booking.id,
@@ -512,31 +500,9 @@ export const bookingRouter = router({
           },
         })
 
-        // 18. Create partner referral record if applicable
-        if (referredByPartnerId) {
-          // Calculate points earned: 100 points per $1,000
-          // Min: 500 points, Max: 2,000 points
-          const basePoints = Math.floor(totalPrice / 100000) * 100 // $1,000 = 100k cents
-          const pointsEarned = Math.min(Math.max(basePoints, 500), 2000)
-
-          await ctx.db.partnerReferral.create({
-            data: {
-              partnerId: referredByPartnerId,
-              bookingId: booking.id,
-              pointsEarned,
-            },
-          })
-
-          // Update partner points
-          await ctx.db.partnerProfile.update({
-            where: { id: referredByPartnerId },
-            data: {
-              passportPoints: {
-                increment: pointsEarned,
-              },
-            },
-          })
-        }
+        // Note: Partner referral + points are awarded in the Stripe webhook
+        // (payment_intent.succeeded) to ensure payment actually completed.
+        // The partnerId is stored in booking.referredBy for the webhook to use.
 
         // 19. Epic 10 - US-003: Create guest referral record if applicable
         if (guestReferrerUserId && guestReferralCode) {
@@ -2758,7 +2724,7 @@ export const bookingRouter = router({
           giftMessage: giftMessage || undefined,
           deliveryDate: giftDeliveryDate,
           isScheduled: !!giftDeliveryDate,
-          portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+          portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
         }
 
         const purchaserEmailTemplate = generateGiftConfirmationPurchaserEmail(purchaserConfirmationData)
@@ -2777,8 +2743,8 @@ export const bookingRouter = router({
       // If immediate delivery, send gift notification to recipient and update status to SENT
       if (!giftDeliveryDate) {
         try {
-          const acceptanceUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/gift/accept?token=${giftAcceptanceToken}`
-          const packageUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages/${pkg.slug || ''}`
+          const acceptanceUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/gift/accept?token=${giftAcceptanceToken}`
+          const packageUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages/${pkg.slug || ''}`
 
           const recipientNotificationData = {
             recipientFirstName: giftRecipient.firstName,

@@ -49,7 +49,7 @@ export function generateGiftAcceptanceConfirmationRecipientEmail(data: GiftAccep
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   // Build trip dates section or next steps
   const tripDatesHtml = data.tripStartDate && data.tripEndDate

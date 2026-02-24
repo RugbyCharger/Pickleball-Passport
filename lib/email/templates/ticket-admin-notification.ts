@@ -68,7 +68,7 @@ export function generateTicketAdminNotificationEmail(data: TicketAdminNotificati
     timeZoneName: 'short',
   })
 
-  const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/admin/support`
+  const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/admin/support`
 
   const urgentBanner = isUrgent
     ? `

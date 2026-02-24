@@ -24,7 +24,7 @@ export function generatePartnerReferralClickEmail(data: PartnerReferralClickData
   text: string;
   subject: string;
 } {
-  const referralsUrl = data.referralsUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/partners/referrals`;
+  const referralsUrl = data.referralsUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/partners/referrals`;
 
   const subject = data.clickCount === 1
     ? `🔗 Someone clicked your referral link!`

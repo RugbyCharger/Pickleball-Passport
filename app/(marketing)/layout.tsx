@@ -11,9 +11,6 @@
  * which requires valid keys during build-time prerendering.
  */
 
-// Prevent static generation - ClerkProvider in root layout requires valid keys
-export const dynamic = 'force-dynamic'
-
 export default function MarketingLayout({
   children,
 }: {

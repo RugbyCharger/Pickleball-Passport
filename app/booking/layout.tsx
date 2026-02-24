@@ -11,9 +11,6 @@
  * Prevents static generation since these routes use Clerk for auth
  */
 
-// Prevent static generation - requires auth
-export const dynamic = 'force-dynamic'
-
 export default function BookingLayout({
   children,
 }: {

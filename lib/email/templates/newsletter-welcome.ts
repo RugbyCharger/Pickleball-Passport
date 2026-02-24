@@ -11,8 +11,8 @@ export function newsletterWelcomeEmail(email: string): {
   html: string;
   text: string;
 } {
-  const homeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}`;
-  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
+  const homeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}`;
+  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
 
   const content = `
     <h1>Welcome to The Pickleball Passport!</h1>

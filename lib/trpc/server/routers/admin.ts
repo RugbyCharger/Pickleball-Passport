@@ -726,11 +726,28 @@ export const adminRouter = router({
           });
         }
 
-        // Update booking status
-        const updatedBooking = await ctx.db.booking.update({
-          where: { id: bookingId },
-          data: { status },
-        });
+        // Update booking status — use transaction when cancelling a confirmed booking
+        // to atomically decrement trip capacity
+        const shouldDecrementCapacity = status === 'CANCELLED' &&
+          booking.status === 'CONFIRMED' &&
+          booking.tripId;
+
+        const updatedBooking = shouldDecrementCapacity
+          ? await ctx.db.$transaction(async (tx) => {
+              const updated = await tx.booking.update({
+                where: { id: bookingId },
+                data: { status },
+              });
+              await tx.trip.update({
+                where: { id: booking.tripId! },
+                data: { currentBookings: { decrement: 1 } },
+              });
+              return updated;
+            })
+          : await ctx.db.booking.update({
+              where: { id: bookingId },
+              data: { status },
+            });
 
         // Create notification for user
         const guestName = booking.user.guestProfile
@@ -788,8 +805,8 @@ export const adminRouter = router({
               await sendEmail({
                 to: booking.user.email,
                 subject: `${message.title} - The Pickleball Passport`,
-                text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://pickleballpassport.com/dashboard/bookings/${booking.id}\n\nBest regards,\nThe Pickleball Passport Team`,
-                html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://pickleballpassport.com/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>The Pickleball Passport Team</p>`,
+                text: `Hi ${guestName},\n\n${message.content}\n\nBooking Reference: ${booking.bookingReference}\n\nView details: https://thepickleballpassport.org/dashboard/bookings/${booking.id}\n\nBest regards,\nThe Pickleball Passport Team`,
+                html: `<p>Hi ${guestName},</p><p>${message.content}</p><p><strong>Booking Reference:</strong> ${booking.bookingReference}</p><p><a href="https://thepickleballpassport.org/dashboard/bookings/${booking.id}">View booking details</a></p><p>Best regards,<br/>The Pickleball Passport Team</p>`,
               });
             } catch (error) {
               logError(emailLogger, error, 'Failed to send booking status update email');

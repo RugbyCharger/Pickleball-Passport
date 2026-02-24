@@ -7,23 +7,10 @@
 
 import Stripe from 'stripe'
 import { stripeLogger, logError } from '@/lib/logger'
+import { getStripeServer } from '@/lib/stripe/server'
 
-// Lazy-initialize Stripe client to avoid build-time errors
-let stripeClient: Stripe | null = null
-
-function getStripeClient(): Stripe {
-  if (!stripeClient) {
-    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-    if (!stripeSecretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not set')
-    }
-    stripeClient = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-12-15.clover',
-      typescript: true,
-    })
-  }
-  return stripeClient
-}
+// Use canonical singleton from server.ts
+const getStripeClient = getStripeServer
 
 export interface CreateCustomerInput {
   email: string

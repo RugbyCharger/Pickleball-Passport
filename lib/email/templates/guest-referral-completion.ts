@@ -55,7 +55,7 @@ export function generateGuestReferralCompletionEmail(data: GuestReferralCompleti
   text: string;
   subject: string;
 } {
-  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/referrals`;
+  const dashboardUrl = data.dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/referrals`;
 
   const displayName = data.guestName || data.guestInitials || 'Your referral';
   const tripStart = formatDate(data.tripDates.start);

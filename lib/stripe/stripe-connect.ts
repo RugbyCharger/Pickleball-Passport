@@ -13,20 +13,10 @@
 
 import Stripe from 'stripe';
 import { stripeLogger, logError } from '@/lib/logger';
+import { getStripeServer } from '@/lib/stripe/server';
 
-// Initialize Stripe client
-const getStripeClient = () => {
-  const apiKey = process.env.STRIPE_SECRET_KEY;
-
-  if (!apiKey) {
-    throw new Error('STRIPE_SECRET_KEY is not configured');
-  }
-
-  return new Stripe(apiKey, {
-    apiVersion: '2025-12-15.clover',
-    typescript: true,
-  });
-};
+// Use canonical singleton from server.ts
+const getStripeClient = getStripeServer;
 
 // Lazy initialization
 let stripe: Stripe | null = null;

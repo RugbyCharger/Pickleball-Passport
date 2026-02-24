@@ -137,7 +137,7 @@ describe('Guest Referral Code Email Template', () => {
   const mockData: GuestReferralCodeData = {
     guestName: 'Susan',
     referralCode: 'SUSAN-2026',
-    shareableLink: 'https://pickleballpassport.com/r/SUSAN-2026',
+    shareableLink: 'https://thepickleballpassport.org/r/SUSAN-2026',
   };
 
   it('should generate email with correct subject', () => {
@@ -162,7 +162,7 @@ describe('Guest Referral Code Email Template', () => {
   it('should include shareable link', () => {
     const { html } = generateGuestReferralCodeEmail(mockData);
 
-    expect(html).toContain('https://pickleballpassport.com/r/SUSAN-2026');
+    expect(html).toContain('https://thepickleballpassport.org/r/SUSAN-2026');
   });
 
   it('should include how it works section', () => {
@@ -194,7 +194,7 @@ describe('Guest Referral Code Email Template', () => {
 
     expect(text).toContain('Susan');
     expect(text).toContain('SUSAN-2026');
-    expect(text).toContain('https://pickleballpassport.com/r/SUSAN-2026');
+    expect(text).toContain('https://thepickleballpassport.org/r/SUSAN-2026');
   });
 
   it('should use custom dashboard URL when provided', () => {

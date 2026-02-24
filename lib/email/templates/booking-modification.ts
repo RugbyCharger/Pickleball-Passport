@@ -65,7 +65,7 @@ export function generateBookingModificationEmail(data: BookingModificationData):
   text: string
   subject: string
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/bookings`
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/bookings`
 
   // Build added add-ons section
   const addedAddOnsHtml = data.addedAddOns.length > 0

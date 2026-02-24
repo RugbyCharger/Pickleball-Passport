@@ -29,8 +29,8 @@ export function generateTicketReplyEmail(data: TicketReplyData): {
 
   const subject = `Re: ${originalSubject} - ${referenceNumber}`
 
-  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/support/status`
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/support`
+  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/support/status`
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/support`
 
   // Show different tracking info based on source
   const viewTicketSection =

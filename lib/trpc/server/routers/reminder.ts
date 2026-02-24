@@ -220,7 +220,7 @@ export const reminderRouter = router({
           name: ba.addOn.name,
           quantity: ba.quantity,
         })),
-        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
       })
 
       // Send email
@@ -337,7 +337,7 @@ export const reminderRouter = router({
               name: ba.addOn.name,
               quantity: ba.quantity,
             })),
-            portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+            portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
           })
 
           await sendEmail({

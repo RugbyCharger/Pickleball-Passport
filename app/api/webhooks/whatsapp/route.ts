@@ -13,6 +13,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac } from 'crypto';
 import { createLogger, logError } from '@/lib/logger';
 import { prisma } from '@/lib/db';
 import { getWebhookVerifyToken } from '@/lib/whatsapp/client';
@@ -208,10 +209,32 @@ export async function POST(req: NextRequest) {
   const startTime = Date.now();
 
   try {
+    // Verify X-Hub-Signature-256 from Meta to prevent forged events
+    const appSecret = process.env.WHATSAPP_APP_SECRET;
+    const signature = req.headers.get('x-hub-signature-256');
+    const rawBody = await req.text();
+
+    if (appSecret) {
+      if (!signature) {
+        webhookLogger.warn('Missing X-Hub-Signature-256 header');
+        return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
+      }
+
+      const expectedSignature = 'sha256=' +
+        createHmac('sha256', appSecret).update(rawBody).digest('hex');
+
+      if (signature !== expectedSignature) {
+        webhookLogger.warn('Invalid X-Hub-Signature-256 — possible forged event');
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      }
+    } else if (process.env.NODE_ENV === 'production') {
+      webhookLogger.error('WHATSAPP_APP_SECRET not configured — webhook signature verification disabled');
+    }
+
     // Parse the request body
     let payload: WhatsAppWebhookPayload;
     try {
-      payload = await req.json();
+      payload = JSON.parse(rawBody);
     } catch {
       webhookLogger.warn('Failed to parse webhook payload');
       // Still return 200 to prevent Meta from retrying invalid payloads

@@ -684,7 +684,7 @@ export const giftRouter = router({
       }
 
       // 6. SEND NOTIFICATION EMAIL
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'
       const acceptanceUrl = `${baseUrl}/gift/accept?token=${booking.giftAcceptanceToken}`
 
       const emailData: GiftNotificationRecipientData = {

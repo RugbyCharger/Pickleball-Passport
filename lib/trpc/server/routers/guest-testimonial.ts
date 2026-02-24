@@ -597,7 +597,7 @@ export const guestTestimonialRouter = router({
       });
 
       // Send edit request email to guest
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com';
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org';
 
       try {
         await sendEmail({

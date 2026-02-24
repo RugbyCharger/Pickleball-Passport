@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Partner Program - Earn Rewards | The Pickleball Passport',
     description: 'Join our partner network and earn rewards, free trips, and exclusive benefits while helping your members live their best lives.',
-    url: 'https://pickleballpassport.com/partners',
+    url: 'https://thepickleballpassport.org/partners',
     siteName: 'The Pickleball Passport',
     images: [
       {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/partners',
+    canonical: 'https://thepickleballpassport.org/partners',
   },
   robots: {
     index: true,

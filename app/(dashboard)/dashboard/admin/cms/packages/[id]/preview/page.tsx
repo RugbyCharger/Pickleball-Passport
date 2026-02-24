@@ -300,7 +300,7 @@ export default function PackageContentPreviewPage() {
               {packageData.metaTitle || packageData.name}
             </p>
             <p className="text-sm text-emerald-700 mt-1">
-              https://pickleballpassport.com/packages/{packageData.slug}
+              https://thepickleballpassport.org/packages/{packageData.slug}
             </p>
             <p className="text-sm text-slate-600 mt-2 line-clamp-2">
               {packageData.metaDescription || packageData.tagline || packageData.description?.substring(0, 160)}

@@ -14,8 +14,8 @@ export function newsletterConfirmationEmail(
   html: string;
   text: string;
 } {
-  const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/confirm?token=${confirmToken}`;
-  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
+  const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/newsletter/confirm?token=${confirmToken}`;
+  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
 
   const content = `
     <h1>Confirm Your Subscription</h1>

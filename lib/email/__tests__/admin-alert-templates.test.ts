@@ -38,7 +38,7 @@ describe('Admin Alert Email Templates', () => {
       refundAmount: 250000, // $2,500
       refundStatus: 'pending',
       daysUntilTrip: 45,
-      bookingAdminUrl: 'https://app.pickleballpassport.com/admin/bookings/bk_test123',
+      bookingAdminUrl: 'https://app.thepickleballpassport.org/admin/bookings/bk_test123',
     }
 
     it('should generate HTML content with all data fields', () => {
@@ -65,7 +65,7 @@ describe('Admin Alert Email Templates', () => {
       expect(html).toContain('45 days')
 
       // HTML includes admin action link
-      expect(html).toContain('https://app.pickleballpassport.com/admin/bookings/bk_test123')
+      expect(html).toContain('https://app.thepickleballpassport.org/admin/bookings/bk_test123')
 
       // Text version exists and contains key info
       expect(text).toContain('Jane Smith')
@@ -86,7 +86,7 @@ describe('Admin Alert Email Templates', () => {
         refundAmount: 180000,
         refundStatus: 'completed',
         daysUntilTrip: 30,
-        bookingAdminUrl: 'https://app.pickleballpassport.com/admin/bookings/bk_test456',
+        bookingAdminUrl: 'https://app.thepickleballpassport.org/admin/bookings/bk_test456',
       }
 
       const { html, text, subject } = generateBookingCancellationAdminEmail(minimalData)
@@ -123,7 +123,7 @@ describe('Admin Alert Email Templates', () => {
       addOns: ['Private Villa Upgrade', 'Golf Package', 'Spa Day'],
       totalBookingValue: 850000, // $8,500
       paymentMethod: 'full_payment',
-      bookingAdminUrl: 'https://app.pickleballpassport.com/admin/bookings/bk_test789',
+      bookingAdminUrl: 'https://app.thepickleballpassport.org/admin/bookings/bk_test789',
     }
 
     it('should generate HTML content with all data fields', () => {

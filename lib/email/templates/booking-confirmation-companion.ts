@@ -81,8 +81,8 @@ export function generateCompanionConfirmationEmail(data: CompanionConfirmationDa
   text: string;
   subject: string;
 } {
-  const createAccountUrl = data.createAccountUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/sign-up?email=${encodeURIComponent(data.email)}`;
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const createAccountUrl = data.createAccountUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/sign-up?email=${encodeURIComponent(data.email)}`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   // Build add-ons list HTML
   const addOnsHtml = data.addOns && data.addOns.length > 0

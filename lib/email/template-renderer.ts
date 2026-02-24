@@ -54,8 +54,8 @@ export const defaultSampleData: Record<string, TemplateVariables> = {
   SYSTEM: {
     userName: 'John Doe',
     userEmail: 'john@example.com',
-    verificationLink: 'https://pickleballpassport.com/verify?token=abc123',
-    resetLink: 'https://pickleballpassport.com/reset?token=xyz789',
+    verificationLink: 'https://thepickleballpassport.org/verify?token=abc123',
+    resetLink: 'https://thepickleballpassport.org/reset?token=xyz789',
   },
   PARTNER: {
     partnerName: 'Jennifer Smith',

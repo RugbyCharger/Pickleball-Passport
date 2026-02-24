@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title,
       description,
-      url: `https://pickleballpassport.com/packages/${slug}`,
+      url: `https://thepickleballpassport.org/packages/${slug}`,
       siteName: 'The Pickleball Passport',
       images: [
         {
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       creator: '@PickleballPass',
     },
     alternates: {
-      canonical: `https://pickleballpassport.com/packages/${slug}`,
+      canonical: `https://thepickleballpassport.org/packages/${slug}`,
     },
     robots: {
       index: true,
@@ -125,7 +125,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
     '@type': 'Product',
     name: packageData.name,
     description: packageData.description,
-    image: packageData.heroImageUrl || 'https://pickleballpassport.com/og-images/package-default.jpg',
+    image: packageData.heroImageUrl || 'https://thepickleballpassport.org/og-images/package-default.jpg',
     brand: {
       '@type': 'Brand',
       name: 'The Pickleball Passport',
@@ -135,7 +135,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
       priceCurrency: 'USD',
       price: '5000',
       availability: 'https://schema.org/InStock',
-      url: `https://pickleballpassport.com/packages/${slug}`,
+      url: `https://thepickleballpassport.org/packages/${slug}`,
     },
     aggregateRating: {
       '@type': 'AggregateRating',

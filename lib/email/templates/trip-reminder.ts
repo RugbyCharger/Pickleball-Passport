@@ -71,7 +71,7 @@ export function generateTripReminderEmail(data: TripReminderData): {
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   // Determine urgency level
   const isUrgent = data.daysUntilTrip <= 1;

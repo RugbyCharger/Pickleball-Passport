@@ -9,7 +9,7 @@
  * Updates user notification preferences to honor unsubscribe requests
  * and maintain compliance with CAN-SPAM/GDPR requirements.
  *
- * Webhook URL: https://pickleballpassport.com/api/webhooks/sendgrid/events
+ * Webhook URL: https://thepickleballpassport.org/api/webhooks/sendgrid/events
  *
  * Configure in SendGrid Dashboard:
  * Settings -> Mail Settings -> Event Webhook

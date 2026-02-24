@@ -38,7 +38,7 @@ export function generateContactConfirmationEmail(
 
     <p>In the meantime, feel free to explore our transformation tourism packages and see what The Pickleball Passport has to offer.</p>
 
-    <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages" class="button" style="background-color: #003D5C;">
+    <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages" class="button" style="background-color: #003D5C;">
       Browse Packages
     </a>
 
@@ -66,7 +66,7 @@ export function generateContactConfirmationEmail(
 
     In the meantime, feel free to explore our transformation tourism packages and see what The Pickleball Passport has to offer.
 
-    Browse Packages: ${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/packages
+    Browse Packages: ${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/packages
 
     Questions? Reply to this email or call us at +1 (555) 123-4567 during office hours (Monday-Friday, 9am-6pm EST).
 

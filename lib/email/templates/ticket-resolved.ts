@@ -27,9 +27,9 @@ export function generateTicketResolvedEmail(data: TicketResolvedData): {
 
   const subject = `Your Support Request Has Been Resolved - ${referenceNumber}`
 
-  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/support/status`
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard/support`
-  const contactUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/contact`
+  const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/support/status`
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard/support`
+  const contactUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/contact`
 
   // Show different tracking info based on source
   const viewTicketSection =

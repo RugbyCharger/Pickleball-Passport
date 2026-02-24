@@ -63,7 +63,7 @@ export function generateGiftAcceptanceNotificationPurchaserEmail(data: GiftAccep
   text: string;
   subject: string;
 } {
-  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`;
+  const portalUrl = data.portalUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`;
 
   const content = `
     <div style="text-align: center; margin: 0 0 32px 0;">

@@ -226,7 +226,7 @@ async function processOneMilestone(
         destination: booking.trip!.destination,
         startDate: formatDate(booking.trip!.startDate),
         endDate: formatDate(booking.trip!.endDate),
-        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pickleballpassport.com'}/dashboard`,
+        portalUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://thepickleballpassport.org'}/dashboard`,
         accommodationTier: booking.accommodationTier,
       };
 
