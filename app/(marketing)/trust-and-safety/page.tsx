@@ -345,13 +345,13 @@ export default function TrustAndSafetyPage() {
         </div>
       </section>
 
-      {/* Wellness & Medical Tourism (Informational) */}
+      {/* Wellness & Spa */}
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-                Wellness &amp; Medical Tourism
+                Wellness &amp; Recovery
               </h2>
             </div>
 
@@ -361,26 +361,15 @@ export default function TrustAndSafetyPage() {
                 <div>
                   <p className="text-sm text-gray-700 mb-4">
                     Thailand is a globally recognized destination for wellness
-                    and medical tourism. Many of our travelers choose to
-                    explore Thailand&apos;s world-class spas, wellness retreats,
-                    dental clinics, and medical facilities before or after
-                    their pickleball trip.
+                    and relaxation. Our trips include access to world-class
+                    spas, Thai massage, yoga sessions, and wellness retreats
+                    to help you recover and recharge between games.
                   </p>
-                  <p className="text-sm text-gray-700 mb-4">
-                    While we can point you in the right direction, The Pickleball
-                    Passport does not arrange, coordinate, or take responsibility
-                    for any medical or wellness services. Any medical or wellness
-                    appointments are between you and the provider.
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    For more information, visit our{' '}
-                    <Link
-                      href="/medical-tourism"
-                      className="text-[#1D2D44] hover:text-[#B08D55] underline"
-                    >
-                      Wellness &amp; Medical Tourism
-                    </Link>{' '}
-                    page.
+                  <p className="text-sm text-gray-700">
+                    All wellness activities included in our trips are vetted
+                    by our team. If you choose to book additional services
+                    independently, those arrangements are between you and the
+                    provider.
                   </p>
                 </div>
               </div>

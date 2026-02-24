@@ -40,7 +40,7 @@ export function TestimonialSection() {
           <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
           <p className="text-lg text-white/80 leading-relaxed">
             Hear from guests who combined pickleball paradise with life-changing
-            medical tourism experiences in Thailand.
+            wellness and travel experiences in Thailand.
           </p>
         </div>
 

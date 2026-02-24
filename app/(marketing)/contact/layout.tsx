@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Contact Us - The Pickleball Passport',
   description:
-    'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+    'Get in touch with The Pickleball Passport. Have questions about our pickleball travel packages in Thailand? We\'re here to help.',
   openGraph: {
     title: 'Contact Us - The Pickleball Passport',
     description:
-      'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+      'Get in touch with The Pickleball Passport. Have questions about our pickleball travel packages in Thailand? We\'re here to help.',
     url: 'https://thepickleballpassport.org/contact',
     siteName: 'The Pickleball Passport',
     type: 'website',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Contact Us - The Pickleball Passport',
     description:
-      'Get in touch with The Pickleball Passport. Have questions about our transformation tourism packages in Thailand? We\'re here to help.',
+      'Get in touch with The Pickleball Passport. Have questions about our pickleball travel packages in Thailand? We\'re here to help.',
   },
   alternates: {
     canonical: 'https://thepickleballpassport.org/contact',
@@ -39,7 +39,7 @@ export default function ContactLayout({
             '@type': 'ContactPage',
             name: 'Contact The Pickleball Passport',
             description:
-              'Contact page for The Pickleball Passport - transformation tourism packages in Thailand',
+              'Contact page for The Pickleball Passport - pickleball travel packages in Thailand',
             url: 'https://thepickleballpassport.org/contact',
             mainEntity: {
               '@type': 'Organization',

@@ -236,7 +236,7 @@ export default function MedicalAddOnsSelector({
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-slate-900">
-            Available Medical Procedures
+            Available Add-Ons
           </h3>
           {activeAddOns.length > 0 && (
             <button
@@ -303,8 +303,8 @@ export default function MedicalAddOnsSelector({
       {/* Trust Indicator */}
       <div className="rounded-lg bg-emerald-50 p-6 text-center">
         <p className="text-sm font-medium text-emerald-900">
-          🏥 All procedures performed at JCI-accredited hospitals by
-          board-certified specialists
+          All add-ons are delivered by vetted local partners and included in
+          your trip itinerary
         </p>
       </div>
 

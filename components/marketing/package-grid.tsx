@@ -157,14 +157,14 @@ export function PackageSection() {
         >
           <div className="bg-gradient-to-br from-[#F5E6D3]/50 to-white rounded-2xl p-8 border border-[#B08D55]/20 shadow-xl shadow-[#1D2D44]/5 max-w-2xl mx-auto">
             <p className="mb-6 text-[#1D2D44]/70 text-lg">
-              Want to add medical treatments to your trip?
+              Want to customize your trip even further?
             </p>
             <Link
-              href="/medical-tourism"
+              href="/contact"
               className="inline-flex items-center gap-2 rounded-xl border-2 border-[#1D2D44] px-8 py-4 font-semibold text-[#1D2D44] transition-all hover:bg-[#1D2D44] hover:text-white"
             >
               <Sparkles className="h-5 w-5" />
-              <span>Explore Medical Tourism Options</span>
+              <span>Get in Touch</span>
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

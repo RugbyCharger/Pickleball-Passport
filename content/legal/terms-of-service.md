@@ -12,15 +12,14 @@ These Terms constitute a legally binding agreement between you and The Picklebal
 
 ## Services Description
 
-The Pickleball Passport provides transformation tourism services that combine pickleball experiences with dental tourism in Thailand. Our services include:
+The Pickleball Passport provides curated group travel experiences that combine pickleball with cultural immersion in Thailand. Our services include:
 
-- **All-Inclusive Packages:** Dental procedures, accommodations, activities, and local transportation
-- **Dental Coordination:** Arrangements with JCI-accredited partner hospitals and clinics
-- **Travel Support:** Airport transfers, travel coordination, and concierge services
-- **Pickleball Experiences:** Court reservations, local games, and equipment access
-- **Partner Program:** Referral and affiliate opportunities for pickleball enthusiasts
+- **All-Inclusive Packages:** Accommodations, activities, group meals, and local transportation
+- **Travel Coordination:** Airport transfers, domestic flights, travel logistics, and concierge services
+- **Pickleball Experiences:** Court reservations, structured play sessions, coaching, and equipment access
+- **Cultural Excursions:** Temple tours, cooking classes, street food walks, and adventure activities
 
-Our services are provided in partnership with licensed medical facilities, hotels, and travel providers in Thailand. We act as a facilitator and coordinator, not as a healthcare provider.
+Our services are provided in partnership with hotels, activity providers, and local travel operators in Thailand. We act as a travel facilitator and coordinator.
 
 ## User Accounts
 
@@ -49,7 +48,7 @@ We reserve the right to suspend or terminate accounts that:
 
 All prices are displayed in US Dollars (USD) unless otherwise specified. Prices include:
 
-- Dental procedures as specified in the package
+- Cultural excursions and group activities as specified in the itinerary
 - Accommodation for the duration of your stay
 - Airport transfers and local transportation
 - Pickleball court access and activities
@@ -67,7 +66,7 @@ Prices do not include:
 
 A non-refundable deposit of **25%** of the total package price is required to confirm your booking. This deposit:
 
-- Secures your reservation and medical appointments
+- Secures your reservation and trip accommodations
 - Is applied toward the total package price
 - Is non-refundable except as outlined in the Cancellation Policy
 - Must be paid within 7 days of booking confirmation
@@ -113,7 +112,6 @@ We reserve the right to cancel bookings due to:
 - Insufficient enrollment for group packages
 - Safety or security concerns at the destination
 - Natural disasters or force majeure events
-- Medical facility unavailability
 
 In such cases, guests will receive a **full refund** including the deposit, or the option to reschedule without penalty.
 
@@ -136,52 +134,6 @@ You may request to reschedule your trip under the following terms:
 | Reschedule within 30 days of departure | Subject to availability; may incur additional costs |
 
 Rescheduled trips must be completed within **12 months** of the original departure date. Failure to complete the trip within this period will result in forfeiture of all payments.
-
-### Medical Rescheduling
-
-If medical clearance is not obtained or a pre-travel health issue arises, we will work with you to reschedule at no additional charge, subject to:
-
-- Documentation from a licensed physician
-- Notification at least 7 days before departure
-- Availability of partner facilities
-
-## Medical Disclaimers
-
-### Not a Healthcare Provider
-
-The Pickleball Passport is a travel coordination company, not a healthcare provider. We:
-
-- Do not provide medical advice or diagnoses
-- Do not guarantee medical outcomes
-- Do not assume liability for medical procedures
-- Facilitate connections with licensed medical facilities
-
-### Medical Consultations
-
-Before booking, you should:
-
-- Consult with your personal physician about travel fitness
-- Disclose all relevant medical conditions
-- Obtain necessary clearances for travel and procedures
-- Discuss procedure options with our partner dentists
-
-### Procedure Risks
-
-All medical and dental procedures carry inherent risks. You acknowledge that:
-
-- Results may vary from expectations
-- Complications can occur despite proper care
-- Follow-up care may be required after returning home
-- You are responsible for understanding procedure risks
-
-### Medical Documentation
-
-You agree to:
-
-- Provide accurate and complete medical history
-- Disclose all medications, allergies, and conditions
-- Follow pre-procedure and post-procedure instructions
-- Arrange for follow-up care with your local healthcare provider
 
 ## Travel Responsibilities
 
@@ -220,7 +172,7 @@ You must comply with all health requirements for entry to Thailand, including:
 
 To the maximum extent permitted by law, The Pickleball Passport and its officers, directors, employees, and agents shall not be liable for:
 
-- Medical complications or unsatisfactory results
+- Personal illness or pre-existing health conditions
 - Personal injury or property damage during your trip
 - Flight delays, cancellations, or travel disruptions
 - Acts of third-party service providers
@@ -234,7 +186,7 @@ Our total liability for any claim shall not exceed the amount you paid for the s
 By booking with The Pickleball Passport, you acknowledge and accept the inherent risks of:
 
 - International travel
-- Medical and dental procedures abroad
+- Wellness and recovery activities
 - Participation in physical activities (pickleball, tours)
 - Dietary and environmental changes
 
@@ -245,7 +197,7 @@ We are not responsible for the acts or omissions of:
 - Airlines and transportation providers
 - Hotels and accommodation providers
 - Restaurants and entertainment venues
-- Medical facilities and healthcare providers
+- Wellness and spa providers
 - Tour operators and activity providers
 
 ## Indemnification
@@ -254,7 +206,7 @@ You agree to indemnify, defend, and hold harmless The Pickleball Passport, its a
 
 - Your violation of these Terms
 - Your use of our Services
-- Your travel or medical procedures
+- Your travel activities
 - False or misleading information you provide
 - Your violation of any third-party rights
 

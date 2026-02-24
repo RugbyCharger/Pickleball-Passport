@@ -228,7 +228,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Is there a deposit option?',
       answer: [
-        'Yes. You can secure your spot with a 20% deposit. The remaining 80% is due 30 days before departure.',
+        'Yes. You can secure your spot with a 25% deposit. The remaining 75% is due 30 days before departure.',
         'Alternatively, you can pay in full at the time of booking and receive a 2% early booking discount.',
       ],
       sortOrder: 2,

@@ -86,7 +86,7 @@ export default function RefundPolicyPage() {
               In rare circumstances, we may need to cancel or modify your booking due to:
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li>Medical facility unavailability</li>
+              <li>Venue or activity provider unavailability</li>
               <li>Government travel advisories or restrictions</li>
               <li>Natural disasters or force majeure events</li>
               <li>Minimum guest count not met for group experiences</li>
@@ -100,16 +100,16 @@ export default function RefundPolicyPage() {
             </ul>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-              Medical Procedure Refunds
+              Add-On &amp; Activity Refunds
             </h2>
             <p className="text-gray-600 mb-4">
-              Medical procedures have specific refund terms:
+              Add-on activities and services have specific refund terms:
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li>Procedure deposits paid directly to medical facilities may have separate refund policies</li>
-              <li>If a procedure is deemed medically inadvisable after consultation, medical fees will be refunded</li>
-              <li>No refunds for procedures already performed</li>
-              <li>Additional procedures requested during your stay are non-refundable once performed</li>
+              <li>Deposits paid directly to third-party providers may have separate refund policies</li>
+              <li>If an activity is cancelled due to weather or availability, fees will be refunded</li>
+              <li>No refunds for activities and services already delivered</li>
+              <li>Additional services requested during your stay are non-refundable once delivered</li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">

@@ -146,8 +146,8 @@ export default async function TripSelectionPage() {
                 Your trip includes accommodations for the full duration, all meals,
                 daily pickleball sessions, airport transfers, and access to resort amenities.
                 The start date is when you arrive in Thailand, and the end date is when you depart.
-                Medical procedures and add-ons are scheduled throughout your stay based on
-                recovery timelines.
+                Activities and add-ons are scheduled throughout your stay based on
+                availability and your preferences.
               </p>
             </details>
 
@@ -170,7 +170,7 @@ export default async function TripSelectionPage() {
               </summary>
               <p className="mt-4 text-slate-600">
                 We limit each trip to a maximum of 12 guests to ensure personalized attention,
-                quality medical care, and an intimate group experience. This allows our team to
+                quality experiences, and an intimate group atmosphere. This allows our team to
                 focus on each guest's transformation journey while fostering meaningful
                 connections with fellow travelers.
               </p>

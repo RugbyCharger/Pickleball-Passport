@@ -38,7 +38,7 @@ export default function GuestFlyer() {
               <p className="text-slate-600 leading-relaxed text-lg">
                 Imagine a journey where the thrill of the court meets the pinnacle of self-care. 
                 Stay in Thailand's most storied resorts, forge genuine friendships with fellow players, 
-                and invest in your well-being with high-quality medical and dental care.
+                and invest in your well-being with world-class wellness and unforgettable experiences.
               </p>
             </div>
             <div className="aspect-[4/5] relative overflow-hidden group">
@@ -109,9 +109,9 @@ export default function GuestFlyer() {
               <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-emerald-600" />
               </div>
-              <h3 className={`${playfair.className} text-xl`}>The Transformation</h3>
+              <h3 className={`${playfair.className} text-xl`}>The Wellness</h3>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Premium dental and cosmetic work at 60-70% less than US costs. JCI-accredited care that funds your entire experience.
+                Spa treatments, yoga, Thai massage, and holistic wellness woven into every day of your trip.
               </p>
             </div>
             <div className="space-y-4">

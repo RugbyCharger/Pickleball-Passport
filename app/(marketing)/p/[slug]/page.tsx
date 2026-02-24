@@ -106,7 +106,7 @@ export default function PartnerLandingPage() {
             </h1>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
               {landingPage.subheadline ||
-                'Combine your love of pickleball with exceptional wellness and medical care. Experience a life-changing transformation in beautiful Thailand.'}
+                'Experience exceptional pickleball, wellness, and adventure in beautiful Thailand.'}
             </p>
 
             {/* CTA Button */}
@@ -148,16 +148,16 @@ export default function PartnerLandingPage() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Wellness & Medical Care */}
+            {/* Wellness & Relaxation */}
             <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
               <div className="mb-4 rounded-full bg-emerald-100 p-3 w-fit">
                 <Award className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                High-Quality Care
+                World-Class Wellness
               </h3>
               <p className="text-slate-600">
-                Access top-tier dental, cosmetic, and wellness treatments at a fraction of US costs.
+                Spa treatments, Thai massage, yoga, and wellness activities woven into every trip.
               </p>
             </div>
 

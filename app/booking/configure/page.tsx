@@ -78,10 +78,10 @@ export default async function PackageSelectionPage() {
             </div>
             <div className="text-center">
               <div className="mb-2 text-3xl font-bold text-emerald-600">
-                JCI
+                12
               </div>
               <div className="text-sm text-slate-600">
-                Accredited Hospitals
+                Guests Per Trip
               </div>
             </div>
             <div className="text-center">
@@ -119,8 +119,8 @@ export default async function PackageSelectionPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                Absolutely! You&apos;ll be able to add medical procedures, wellness
-                treatments, and customize your accommodation in the next steps.
+                Absolutely! You&apos;ll be able to add wellness treatments,
+                excursions, and customize your accommodation in the next steps.
                 You can also modify your booking up to 30 days before departure.
               </p>
             </details>
@@ -144,8 +144,8 @@ export default async function PackageSelectionPage() {
               </summary>
               <p className="mt-4 text-slate-600">
                 All packages include premier accommodation, daily pickleball
-                sessions, wellness consultations, group activities, airport
-                transfers, and 24/7 concierge support. Medical procedures are
+                sessions, wellness activities, group excursions, airport
+                transfers, and 24/7 concierge support. Additional add-ons are
                 customizable in the next steps.
               </p>
             </details>

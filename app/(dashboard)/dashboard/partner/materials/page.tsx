@@ -70,7 +70,7 @@ export default function PartnerMaterialsPage() {
 
 ${material.description}
 
-Transform your game while experiencing exceptional wellness and medical care in beautiful Thailand. Perfect for pickleball players looking for their next adventure!
+Transform your game while experiencing exceptional wellness and adventure in beautiful Thailand. Perfect for pickleball players looking for their next trip!
 
 Learn more: ${baseUrl}
 

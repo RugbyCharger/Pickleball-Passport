@@ -84,7 +84,7 @@ const STATUS_CONFIG: Record<
 const CATEGORY_OPTIONS: { value: TicketCategory; label: string }[] = [
   { value: 'GENERAL_INQUIRY', label: 'General Inquiry' },
   { value: 'BOOKING_QUESTION', label: 'Booking Question' },
-  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Medical/Wellness Question' },
+  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Trip Question' },
   { value: 'PAYMENT_ISSUE', label: 'Payment Issue' },
   { value: 'PARTNERSHIP_INQUIRY', label: 'Partnership Inquiry' },
   { value: 'OTHER', label: 'Other' },
@@ -109,12 +109,12 @@ const FAQ_ITEMS = [
   {
     question: 'What is included in my package?',
     answer:
-      'Each package includes accommodation, pickleball activities, medical consultations (if applicable), ground transportation in Thailand, and most meals. Specific inclusions vary by package tier (Luxury, Ultra-Luxury, or Villa). International flights and personal expenses are not included.',
+      'Each package includes accommodation, pickleball activities, wellness experiences, ground transportation in Thailand, and most meals. Specific inclusions vary by package tier. International flights and personal expenses are not included.',
   },
   {
-    question: 'How do I prepare for medical procedures?',
+    question: 'How do I prepare for my trip?',
     answer:
-      'Once your booking is confirmed, our medical team will contact you with specific pre-procedure instructions. This typically includes completing a medical questionnaire, providing recent lab results if needed, and following specific dietary or medication guidelines before your arrival.',
+      'Once your booking is confirmed, our team will contact you with specific pre-trip instructions. This typically includes completing a health questionnaire, providing passport details, and following our packing and travel guidelines before your arrival.',
   },
   {
     question: 'What happens if I need to cancel my trip?',

@@ -61,14 +61,13 @@ export const metadata: Metadata = {
     'booking policy',
     'cancellation policy',
     'refund policy',
-    'medical tourism terms',
     'The Pickleball Passport terms',
   ],
   openGraph: {
     title: 'Terms of Service | The Pickleball Passport',
     description:
       "Review The Pickleball Passport's terms of service including booking policies, cancellation terms, liability disclaimers, and dispute resolution.",
-    url: 'https://pickleballpassport.com/terms',
+    url: 'https://www.thepickleballpassport.org/terms',
     siteName: 'The Pickleball Passport',
     locale: 'en_US',
     type: 'website',
@@ -82,7 +81,7 @@ export const metadata: Metadata = {
     creator: '@PickleballPass',
   },
   alternates: {
-    canonical: 'https://pickleballpassport.com/terms',
+    canonical: 'https://www.thepickleballpassport.org/terms',
   },
   robots: {
     index: true,

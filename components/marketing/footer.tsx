@@ -17,14 +17,12 @@ import { LogoIcon } from '@/components/ui/logo';
 const navigation = {
   explore: [
     { name: 'Trips', href: '/trips' },
-    { name: 'How It Works', href: '/how-it-works' },
     { name: 'About Us', href: '/about' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Apply Now', href: '/apply' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
-    { name: 'Partner Program', href: '/partners' },
     { name: 'Contact', href: '/contact' },
     { name: 'FAQ', href: '/faq' },
   ],

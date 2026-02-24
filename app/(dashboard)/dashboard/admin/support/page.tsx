@@ -768,7 +768,7 @@ export default function AdminSupportPage() {
               <option value="ALL">All Categories</option>
               <option value="GENERAL_INQUIRY">General Inquiry</option>
               <option value="BOOKING_QUESTION">Booking Question</option>
-              <option value="MEDICAL_WELLNESS_QUESTION">Medical/Wellness</option>
+              <option value="MEDICAL_WELLNESS_QUESTION">Trip Question</option>
               <option value="PAYMENT_ISSUE">Payment Issue</option>
               <option value="PARTNERSHIP_INQUIRY">Partnership</option>
               <option value="OTHER">Other</option>

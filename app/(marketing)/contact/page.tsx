@@ -38,7 +38,7 @@ const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/
 const categoryOptions = [
   { value: 'GENERAL_INQUIRY', label: 'General Inquiry' },
   { value: 'BOOKING_QUESTION', label: 'Booking Question' },
-  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Medical/Wellness Question' },
+  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Trip Question' },
   { value: 'PAYMENT_ISSUE', label: 'Payment Issue' },
   { value: 'PARTNERSHIP_INQUIRY', label: 'Partnership Inquiry' },
   { value: 'OTHER', label: 'Other' },

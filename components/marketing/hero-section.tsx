@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Sun, Star, Trophy, Palmtree } from 'lucide-react';
+import { ArrowRight, Sparkles, Sun, Palmtree } from 'lucide-react';
 import { PickleballIcon } from '@/components/ui/logo';
 
 export function HeroSection() {
@@ -95,7 +95,7 @@ export function HeroSection() {
           {/* Trust Indicators */}
           <div className="w-full max-w-4xl mt-16">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 gap-8">
                 <div className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors overflow-hidden">
                     <PickleballIcon size="lg" />
@@ -110,22 +110,6 @@ export function HeroSection() {
                   </div>
                   <div className="text-3xl font-bold text-white">4-5 Star</div>
                   <div className="text-sm text-white/60 mt-1">Boutique Hotels</div>
-                </div>
-
-                <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <Star className="w-6 h-6 text-[#B08D55]" />
-                  </div>
-                  <div className="text-3xl font-bold text-white">4.9</div>
-                  <div className="text-sm text-white/60 mt-1">Average Rating</div>
-                </div>
-
-                <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <Trophy className="w-6 h-6 text-[#B08D55]" />
-                  </div>
-                  <div className="text-3xl font-bold text-white">#1</div>
-                  <div className="text-sm text-white/60 mt-1">Pickleball Tours</div>
                 </div>
               </div>
             </div>

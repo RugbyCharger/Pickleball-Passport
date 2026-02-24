@@ -360,8 +360,8 @@ export function ApplicationForm({ onSuccess }: ApplicationFormProps) {
 
             <div className="space-y-3">
               {[
-                { value: 'dental', label: 'Dental', description: 'Veneers, whitening, implants' },
-                { value: 'cosmetic', label: 'Cosmetic', description: 'Botox, fillers, skincare' },
+                { value: 'culture', label: 'Culture', description: 'Temples, markets, cooking classes' },
+                { value: 'adventure', label: 'Adventure', description: 'Island trips, water sports, excursions' },
                 { value: 'wellness', label: 'Wellness', description: 'Spa, massage, meditation' },
                 { value: 'spiritual', label: 'Spiritual', description: 'Temples, mindfulness, yoga' },
                 { value: 'pure_play', label: 'Pure Play', description: 'Just pickleball and fun!' },

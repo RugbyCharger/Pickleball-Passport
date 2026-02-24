@@ -158,7 +158,7 @@ export default function EmailPreviewPage() {
           firstName: 'Sarah',
           email: 'sarah@example.com',
           applicationId: 'APP-87654',
-          interests: ['dental', 'wellness', 'pickleball'],
+          interests: ['travel', 'wellness', 'pickleball'],
           preferredDuration: '10-14',
         });
 

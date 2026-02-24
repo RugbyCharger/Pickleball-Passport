@@ -223,7 +223,7 @@ export default function PickleballPage() {
         </div>
       </section>
 
-      {/* Custom/Medical CTA */}
+      {/* Custom Trip CTA */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-[#F5E6D3] to-[#FDF8F3]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-3xl shadow-xl shadow-[#1D2D44]/10 p-10 md:p-14 border border-[#B08D55]/20 relative overflow-hidden">
@@ -233,19 +233,19 @@ export default function PickleballPage() {
                 <Utensils className="w-8 h-8 text-[#1D2D44]" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
-                Looking for Medical Services?
+                Need Something Custom?
               </h2>
               <p className="text-lg text-[#1D2D44]/70 mb-8 max-w-2xl mx-auto">
-                Combine your pickleball trip with high-quality dental or medical care.
-                Save 60-70% on procedures while you enjoy your vacation.
+                Want to bring your own group, extend your stay, or build a custom itinerary?
+                Our team will work with you to create the perfect trip.
               </p>
-              <Link href="/medical-tourism">
+              <Link href="/contact">
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold px-10 py-7 text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Explore Medical Tourism
+                  Get in Touch
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>

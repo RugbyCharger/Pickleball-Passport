@@ -8,12 +8,13 @@ import { validateOrigin, isMutationMethod } from '@/lib/security/origin-validati
 // Route matchers for different protection levels
 const isAdminRoute = createRouteMatcher(['/dashboard/admin(.*)', '/api/admin(.*)'])
 const isAdminApiRoute = createRouteMatcher(['/api/admin(.*)'])
-const isDashboardRoute = createRouteMatcher(['/dashboard(.*)', '/apply(.*)'])
+const isDashboardRoute = createRouteMatcher(['/dashboard(.*)'])
 const isPublicRoute = createRouteMatcher([
   '/',
   '/packages(.*)',
   '/about(.*)',
   '/contact(.*)',
+  '/apply(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/api/webhooks(.*)', // Webhooks handle their own auth

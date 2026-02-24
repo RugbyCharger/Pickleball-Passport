@@ -51,13 +51,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = packageData.metaTitle || `${packageData.name} - Wellness Package | The Pickleball Passport`;
-  const description = packageData.metaDescription || `Explore our ${packageData.name} package combining premier wellness, medical tourism, and pickleball in Thailand.`;
+  const description = packageData.metaDescription || `Explore our ${packageData.name} package combining premier wellness, pickleball, and adventure in Thailand.`;
   const imageUrl = packageData.heroImageUrl || '/og-images/package-default.jpg';
 
   return {
     title,
     description,
-    keywords: ['pickleball package', 'wellness retreat', 'medical tourism Thailand', packageData.name, 'transformation package'],
+    keywords: ['pickleball package', 'wellness retreat', 'Thailand travel', packageData.name, 'pickleball trip'],
     openGraph: {
       title,
       description,

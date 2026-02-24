@@ -21,7 +21,7 @@ function getPackageFAQs(packageName: string): FAQItem[] {
     {
       question: 'What is included in the package price?',
       answer:
-        'The package price includes premier accommodations, all meals, daily pickleball sessions, airport transfers, cultural excursions, and 24/7 concierge support. Medical procedures and select add-ons are additional.',
+        'The package price includes premier accommodations, all meals, daily pickleball sessions, airport transfers, cultural excursions, and 24/7 concierge support. Select wellness add-ons and upgrades are available at additional cost.',
     },
     {
       question: 'How do I book this package?',
@@ -52,28 +52,28 @@ function getPackageFAQs(packageName: string): FAQItem[] {
 
   // Add package-specific FAQs
   const packageSpecificFAQs: Record<string, FAQItem[]> = {
-    'Smile Makeover': [
+    'Play & Explore': [
       {
-        question: 'How much do dental procedures cost?',
+        question: 'What excursions are included?',
         answer:
-          'Dental work in Thailand costs 60-70% less than in the US. For example, porcelain veneers are $450/tooth (vs $1,500 in US), and dental implants are $1,200 (vs $4,000 in US). We provide detailed pricing during your consultation.',
+          'Each trip includes curated cultural excursions such as temple visits, local market tours, Thai cooking classes, and island day trips. The exact activities vary by destination and trip duration.',
       },
       {
-        question: 'How do I choose my dentist?',
+        question: 'What wellness activities are available?',
         answer:
-          'We partner with JCI-accredited dental clinics in Phuket with US/UK-trained dentists. During your video consultation, we will show you clinic credentials, dentist profiles, and before/after photos to help you choose.',
+          'Our trips include spa treatments, Thai massage, yoga sessions, and other wellness activities. You can also add private coaching, extra excursions, and other upgrades during booking.',
       },
     ],
-    'Total Transformation': [
+    'Total Wellness': [
       {
-        question: 'What cosmetic procedures are available?',
+        question: 'What wellness treatments are included?',
         answer:
-          'We offer a full range including Botox, fillers, laser treatments, facelifts, liposuction, tummy tucks, Brazilian butt lifts, and hair transplants. All procedures are performed by board-certified surgeons in JCI-accredited hospitals.',
+          'Each trip includes daily wellness offerings such as yoga, meditation, Thai massage, and spa treatments. We partner with top-rated wellness venues at each destination.',
       },
       {
-        question: 'How long is the recovery time?',
+        question: 'Can I customize my wellness activities?',
         answer:
-          'Recovery varies by procedure. Minor treatments like Botox require minimal downtime. Surgical procedures typically need 7-14 days before you can resume light pickleball. We provide personalized post-op care and adjust activities accordingly.',
+          'Yes! You can choose from a menu of wellness add-ons during booking, or work with our team to build a custom itinerary that matches your goals.',
       },
     ],
     'Spiritual Journey': [

@@ -84,15 +84,15 @@ export const INSTALLMENT_CONFIG = {
 } as const
 
 /**
- * 20% deposit payment plan configuration
+ * 25% deposit payment plan configuration
  * Used for trip-page bookings (e.g., Thailand trip)
  */
-export const DEPOSIT_20_CONFIG = {
-  /** Deposit percentage (20%) */
-  DEPOSIT_PERCENTAGE: 0.20,
+export const DEPOSIT_25_CONFIG = {
+  /** Deposit percentage (25%) */
+  DEPOSIT_PERCENTAGE: 0.25,
 
-  /** Remainder percentage (80%) */
-  REMAINDER_PERCENTAGE: 0.80,
+  /** Remainder percentage (75%) */
+  REMAINDER_PERCENTAGE: 0.75,
 
   /** Days before trip that remainder is due */
   REMAINDER_DUE_DAYS_BEFORE_TRIP: 30,

@@ -55,9 +55,9 @@ const ITINERARY_HIGHLIGHTS: SampleItinerary = {
   10: {
     description: 'Ideal balance of transformation and relaxation',
     highlights: [
-      'Comprehensive medical consultations',
+      'Comprehensive wellness consultations',
       '5 days of pickleball with pro coaching',
-      'Medical procedures with optimal recovery time',
+      'Spa and wellness treatments',
       'Thai massage and wellness treatments',
       'Day trip to Ayutthaya historical park',
       'Cooking class and market tour',
@@ -68,32 +68,32 @@ const ITINERARY_HIGHLIGHTS: SampleItinerary = {
   14: {
     description: 'Our most popular package - full transformation experience',
     highlights: [
-      'Extended medical consultation and planning',
+      'Extended wellness program and planning',
       '7 days of intensive pickleball training',
-      'Multiple procedures with full recovery',
+      'Multiple excursions and cultural activities',
       'Daily wellness activities (yoga, meditation)',
       'Weekend trip to Phuket or Krabi',
       'Thai cooking masterclass series',
       'Spa day at premier resort',
       'Shopping tour and cultural experiences',
-      'Dental work with multiple sessions',
-      'Pre-departure health assessment',
+      'Extended spa and wellness sessions',
+      'Pre-departure trip preparation',
     ],
   },
   21: {
     description: 'Ultimate transformation journey with maximum results',
     highlights: [
-      'Comprehensive health optimization program',
+      'Comprehensive wellness optimization program',
       '10+ days of pickleball with tournament play',
-      'Multiple complex procedures with full healing',
+      'Deep cultural immersion experiences',
       'Advanced wellness program (detox, nutrition)',
       '3-day island retreat to Koh Samui',
       'Professional photography session',
       'Multiple cultural and adventure activities',
-      'Extended dental and cosmetic work',
+      'Extended wellness and spa treatments',
       'Personalized fitness and nutrition plan',
       'Alumni network introduction',
-      'Follow-up medical assessments',
+      'Post-trip follow-up and community access',
       'Graduation ceremony and celebration',
     ],
   },
@@ -271,7 +271,7 @@ export default function DurationSelector() {
 
           <p className="mt-4 text-xs text-slate-500">
             * Sample itinerary - actual activities may vary based on your
-            selected add-ons and medical procedures.
+            selected add-ons and activities.
           </p>
         </div>
       )}

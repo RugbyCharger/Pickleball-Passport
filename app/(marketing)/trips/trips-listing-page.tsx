@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
 import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
 
@@ -77,6 +77,39 @@ const comingSoonDestinations = [
     destination: 'MALAYSIA',
     subtitle: 'Kuala Lumpur • Langkawi • Penang',
     imageUrl: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80',
+  },
+];
+
+/* ─────────────────────── JOURNEY STEPS ─────────────────────── */
+
+const journeySteps = [
+  {
+    number: 1,
+    title: 'Choose Your Trip',
+    description: 'Pick the experience that fits your schedule: our 8-day essential or 13-day ultimate Thailand tour.',
+    icon: Sparkles,
+    gradient: 'from-[#1D2D44] to-[#7587A5]',
+  },
+  {
+    number: 2,
+    title: 'Apply & Plan',
+    description: 'Submit a quick application. Our team will reach out to answer questions and help you prepare for the trip.',
+    icon: Calendar,
+    gradient: 'from-[#B08D55] to-[#CFB78D]',
+  },
+  {
+    number: 3,
+    title: 'Travel & Play',
+    description: 'Arrive in Thailand where our on-the-ground team handles everything. Boutique hotels, daily pickleball, and cultural immersion.',
+    icon: Plane,
+    gradient: 'from-[#2D5A3D] to-[#3D7A52]',
+  },
+  {
+    number: 4,
+    title: 'Return Renewed',
+    description: 'Head home with improved skills, new friendships, and unforgettable memories from across Thailand.',
+    icon: Heart,
+    gradient: 'from-[#E07A5F] to-[#F09B8A]',
   },
 ];
 
@@ -492,6 +525,51 @@ export function TripsListingPage() {
               dates={upcoming13DayDates}
               onReserve={openWaitlist}
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Your Journey in 4 Simple Steps */}
+      <section className="py-12 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-4">
+              Your Journey in 4 Simple Steps
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] mx-auto mb-6 rounded-full" />
+            <p className="text-lg text-[#1D2D44]/70 max-w-3xl mx-auto">
+              From initial consultation to your return home, we handle every detail so you can focus on playing and relaxing.
+            </p>
+          </div>
+
+          <div className="relative">
+            {/* Connection line */}
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#1D2D44] via-[#B08D55] to-[#2D5A3D] -translate-y-1/2 z-0" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {journeySteps.map((step) => (
+                <div key={step.number} className="relative z-10 group">
+                  <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 text-center transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 border border-[#B08D55]/10 h-full">
+                    {/* Step number badge */}
+                    <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center shadow-lg`}>
+                      <span className="text-2xl font-bold text-white">{step.number}</span>
+                    </div>
+
+                    {/* Icon */}
+                    <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[#F5E6D3] flex items-center justify-center">
+                      <step.icon className="h-7 w-7 text-[#1D2D44]" />
+                    </div>
+
+                    <h3 className="text-xl font-serif font-bold text-[#1D2D44] mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-[#1D2D44]/70 leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

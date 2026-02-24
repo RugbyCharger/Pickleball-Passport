@@ -5,8 +5,8 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Apply for Your Transformation Journey | The Pickleball Passport',
-  description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier pickleball, medical tourism, and spiritual experiences.',
-  keywords: ['apply', 'transformation journey', 'wellness application', 'pickleball retreat', 'medical tourism application'],
+  description: 'Start your pickleball adventure in Thailand. Apply now for exclusive access to premier pickleball trips, wellness, and cultural experiences.',
+  keywords: ['apply', 'pickleball trip', 'wellness application', 'pickleball retreat', 'Thailand travel'],
   openGraph: {
     title: 'Apply for Your Transformation Journey | The Pickleball Passport',
     description: 'Start your wellness transformation in Thailand. Apply now for exclusive access to premier experiences.',

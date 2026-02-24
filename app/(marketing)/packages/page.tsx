@@ -21,13 +21,13 @@ import {
 
 const packages = [
   {
-    name: 'Smile & Play',
-    slug: 'smile-and-play',
+    name: 'Play & Explore',
+    slug: 'play-and-explore',
     duration: '7 Days',
-    description: 'Transform your smile with high-quality dental work while enjoying daily pickleball sessions.',
+    description: 'The essential Thailand pickleball experience with daily play, cultural excursions, and premier stays.',
     highlights: [
-      'Full dental assessment & treatment',
       'Daily pickleball sessions',
+      'Cultural excursions & local tours',
       'Premier accommodation',
       'Exceptional dining experiences',
     ],
@@ -67,8 +67,8 @@ const packages = [
 const includedItems = [
   {
     icon: Shield,
-    title: 'Medical Care',
-    description: 'JCI-accredited facilities with internationally trained specialists',
+    title: 'Vetted Partners',
+    description: 'Hand-picked local venues, hotels, and activity providers you can trust',
   },
   {
     icon: Star,
@@ -112,13 +112,13 @@ export default function PackagesPage() {
               Transformation Packages
             </h1>
             <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Discover our curated wellness experiences that combine high-quality medical care,
-              pickleball training, and exceptional hospitality in beautiful Thailand.
+              Discover our curated experiences that combine world-class pickleball,
+              wellness, and exceptional hospitality in beautiful Thailand.
             </p>
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Star className="h-5 w-5 text-[#B08D55]" />
-                <span className="text-sm">JCI Accredited</span>
+                <span className="text-sm">Vetted Partners</span>
               </div>
               <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <Heart className="h-5 w-5 text-[#B08D55]" />

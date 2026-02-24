@@ -106,7 +106,7 @@ export default function PartnerReferralLinksPage() {
     const subject = encodeURIComponent('Join The Pickleball Passport');
     const body = encodeURIComponent(
       `Hi! I wanted to share this amazing opportunity with you.\n\n` +
-        `The Pickleball Passport combines your love of pickleball with exceptional wellness and medical care in Thailand.\n\n` +
+        `The Pickleball Passport combines your love of pickleball with exceptional wellness and adventure in Thailand.\n\n` +
         `Check it out: ${link}\n\n` +
         `Use my referral code: ${profile?.referralCode || ''}`
     );

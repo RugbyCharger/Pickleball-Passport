@@ -115,8 +115,8 @@ export default async function DurationSelectionPage() {
             Our pricing scales with duration to reflect the comprehensive care
             and activities included. The 14-day package is our baseline, with
             shorter trips optimized for efficiency and longer trips offering
-            extended benefits. All medical procedures, accommodations, and
-            activities are included in the price.
+            extended benefits. All accommodations, wellness activities, and
+            excursions are included in the price.
           </p>
         </div>
       </div>

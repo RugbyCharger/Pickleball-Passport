@@ -35,7 +35,7 @@ export default function DirectorFlyer() {
                 The Pickleball Passport is the first premier transformation travel platform.
                 We partner with select Club Directors to offer their members exclusive access
                 to curated travel experiences in Thailand that combine the sport they love with
-                exceptional wellness and medical care.
+                exceptional wellness and adventure.
               </p>
               
               <div className="space-y-6">
@@ -57,7 +57,7 @@ export default function DirectorFlyer() {
                   <Users className="w-6 h-6 text-emerald-600 shrink-0" />
                   <div>
                     <h4 className="font-semibold text-slate-900">Zero Effort Delivery</h4>
-                    <p className="text-sm text-slate-500">We handle 100% of the logistics, from flights to Phuket to private clinics.</p>
+                    <p className="text-sm text-slate-500">We handle 100% of the logistics, from flights to Phuket to premium courts and hotels.</p>
                   </div>
                 </div>
               </div>
