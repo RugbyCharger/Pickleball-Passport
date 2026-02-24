@@ -120,9 +120,9 @@ export const chatRouter = router({
 
         // Get or create the channel
         const channel = client.channel('messaging', channelId, {
-          name: trip.name,
           created_by_id: 'system',
-        })
+          ...(trip.name ? { name: trip.name } : {}),
+        } as Record<string, unknown>)
 
         // Query the channel to ensure it exists
         await channel.create()

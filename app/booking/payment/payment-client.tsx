@@ -261,7 +261,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
           bookingReference={bookingReference}
           amount={paymentAmount}
           totalAmount={totalAmount}
-          paymentPlan={paymentPlan}
+          paymentPlan={paymentPlan === 'DEPOSIT_20' ? 'FULL' : paymentPlan}
           installmentSchedule={installmentSchedule}
           currency={paymentCurrency}
         />

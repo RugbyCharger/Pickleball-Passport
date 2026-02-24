@@ -116,7 +116,7 @@ const notificationListInput = z
     limit: z.number().int().positive().max(100).optional().default(50),
   })
   .optional()
-  .default({})
+  .default({ limit: 50 })
 
 const notificationIdInput = z.object({
   id: z.string(),
