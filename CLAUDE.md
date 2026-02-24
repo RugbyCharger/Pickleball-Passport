@@ -50,8 +50,8 @@
 
 ## Project Overview
 
-Pickleball Passport is a Next.js 14 application for organizing and managing pickleball trips to Thailand. It uses:
-- **Framework:** Next.js 14 with App Router
+Pickleball Passport is a Next.js 16 application for organizing and managing pickleball trips to Thailand. It uses:
+- **Framework:** Next.js 16.1.1 with App Router
 - **Database:** Supabase (PostgreSQL) with Prisma ORM
 - **Auth:** Clerk
 - **Styling:** Tailwind CSS + shadcn/ui
