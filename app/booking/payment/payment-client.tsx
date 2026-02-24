@@ -127,7 +127,7 @@ export function PaymentPageClient({ userEmail }: PaymentPageClientProps) {
           accommodationTier,
           addOnIds: selectedAddOns.map((a) => a.id),
           referralCode: referralCode || undefined,
-          paymentPlan, // E4-S6: Include payment plan
+          paymentPlan: paymentPlan === 'DEPOSIT_20' ? 'FULL' : paymentPlan, // E4-S6: Map DEPOSIT_20 to FULL (not in Prisma enum)
           currency: paymentCurrency, // E4-S13: Include selected currency
         })
 
