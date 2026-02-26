@@ -87,9 +87,18 @@ export function WaitlistModal({ open, onOpenChange, tripName, isNotifyMe = false
                   : 'We\u2019ll reach out with final pricing and booking details soon.'}
               </DialogDescription>
             </DialogHeader>
+            <a
+              href="https://calendly.com/jaron-thepickleballpassport/15min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold rounded-xl hover:scale-105 transition-all shadow-lg shadow-[#B08D55]/25"
+            >
+              Book a Call with Jaron
+            </a>
             <Button
               onClick={() => handleClose(false)}
-              className="mt-4 bg-[#1D2D44] hover:bg-[#002B42] text-white rounded-xl"
+              variant="ghost"
+              className="mt-1 text-[#1D2D44]/50 hover:text-[#1D2D44]"
             >
               Close
             </Button>

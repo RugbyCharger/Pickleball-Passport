@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Sparkles } from 'lucide-react';
 import { LogoIcon } from '@/components/ui/logo';
+import { useLeadModal } from '@/components/providers/lead-modal-provider';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -17,6 +18,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { openLeadModal } = useLeadModal();
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -88,13 +90,11 @@ export function Header() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex lg:items-center lg:space-x-3">
             <Button
-              asChild
+              onClick={() => openLeadModal()}
               className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold shadow-lg shadow-[#B08D55]/30 transition-all hover:shadow-xl hover:shadow-[#B08D55]/40"
             >
-              <Link href="/apply">
-                <Sparkles className="mr-2 h-4 w-4" />
-                Start Your Journey
-              </Link>
+              <Sparkles className="mr-2 h-4 w-4" />
+              Start Your Journey
             </Button>
           </div>
 
@@ -145,13 +145,11 @@ export function Header() {
             {/* Mobile CTA Buttons */}
             <div className="border-t border-[#B08D55]/20 pt-4 pb-2 space-y-3">
               <Button
-                asChild
+                onClick={() => { openLeadModal(); setMobileMenuOpen(false); }}
                 className="w-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold py-6"
               >
-                <Link href="/apply" onClick={() => setMobileMenuOpen(false)}>
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Start Your Journey
-                </Link>
+                <Sparkles className="mr-2 h-5 w-5" />
+                Start Your Journey
               </Button>
             </div>
           </div>

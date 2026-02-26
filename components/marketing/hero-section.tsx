@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Sun, Palmtree } from 'lucide-react';
+import { ArrowRight, Sparkles, Sun, Palmtree, MapPin, CheckCircle } from 'lucide-react';
 import { PickleballIcon } from '@/components/ui/logo';
+import { useLeadModal } from '@/components/providers/lead-modal-provider';
 
 export function HeroSection() {
+  const { openLeadModal } = useLeadModal();
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
       {/* Background Layers */}
@@ -79,15 +80,13 @@ export function HeroSection() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
             <Button
-              asChild
               size="lg"
+              onClick={() => openLeadModal()}
               className="text-lg px-10 py-7 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold shadow-xl shadow-[#B08D55]/30 transition-all hover:shadow-2xl hover:shadow-[#B08D55]/40 hover:scale-105 rounded-xl"
             >
-              <Link href="/trips/thailand">
-                <Sparkles className="mr-2 h-5 w-5" />
-                Explore Thailand
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              <Sparkles className="mr-2 h-5 w-5" />
+              Explore Thailand
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
 
           </div>
@@ -95,13 +94,30 @@ export function HeroSection() {
           {/* Trust Indicators */}
           <div className="w-full max-w-4xl mt-16">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors overflow-hidden">
                     <PickleballIcon size="lg" />
                   </div>
                   <div className="text-3xl font-bold text-white">Daily</div>
                   <div className="text-sm text-white/60 mt-1">Curated Play</div>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <MapPin className="w-7 h-7 text-[#B08D55]" />
+                  </div>
+                  <div className="text-3xl font-bold text-white">Locally</div>
+                  <div className="text-sm text-white/60 mt-1">Led</div>
+                  <div className="text-xs text-white/40 mt-0.5">Expat-Built in Thailand</div>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <CheckCircle className="w-7 h-7 text-[#B08D55]" />
+                  </div>
+                  <div className="text-3xl font-bold text-white">Handpicked</div>
+                  <div className="text-xs text-white/40 mt-1">Every Detail, Personally Vetted</div>
                 </div>
 
                 <div className="text-center group">

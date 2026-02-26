@@ -73,12 +73,24 @@ export default function TrustAndSafetyPage() {
         </div>
       </section>
 
-      {/* Traveling in Thailand */}
+      {/* Intro Banner */}
+      <section className="bg-[#B08D55]/10 border-y border-[#B08D55]/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-center gap-3 text-center">
+            <Shield className="h-6 w-6 text-[#B08D55] flex-shrink-0" />
+            <p className="text-base font-medium text-[#1D2D44]">
+              Your safety is our priority. All The Pickleball Passport trips include comprehensive travel protection and liability coverage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 1. Country Safety */}
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Traveling in Thailand
+              Country Safety
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Thailand is one of the world&apos;s most visited countries, and for
@@ -132,7 +144,7 @@ export default function TrustAndSafetyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              How We Keep You Covered
+              Trip Logistics
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Every detail is handled so you can focus on playing pickleball
@@ -224,12 +236,68 @@ export default function TrustAndSafetyPage() {
         </div>
       </section>
 
-      {/* Pickleball Courts & Venues */}
+      {/* 3. Insurance & Protection */}
       <section className="py-16 sm:py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
+                Insurance &amp; Protection
+              </h2>
+            </div>
+
+            <Card className="p-6 bg-blue-50 border-blue-200">
+              <div className="flex items-start gap-4">
+                <Shield className="h-8 w-8 text-[#1D2D44] flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    We Strongly Recommend Travel Insurance
+                  </h3>
+                  <p className="text-sm text-gray-700 mb-4">
+                    Travel insurance is not included in our trip packages. We
+                    strongly recommend purchasing your own travel insurance policy
+                    before departure. A good policy should cover:
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-4">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Trip cancellation and interruption</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Emergency medical coverage abroad</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Emergency medical evacuation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Lost or delayed baggage</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>Sports and adventure activity coverage</span>
+                    </li>
+                  </ul>
+                  <p className="text-xs text-gray-500">
+                    We&apos;re working on a preferred insurance partner recommendation.
+                    In the meantime, popular options include World Nomads,
+                    Allianz Travel, and Safety Wing.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Pickleball */}
+      <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Pickleball Courts &amp; Venues
+              Pickleball
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               We play at the best pickleball facilities in each city. Purpose-built courts with quality surfaces, proper lighting,
@@ -289,69 +357,13 @@ export default function TrustAndSafetyPage() {
         </div>
       </section>
 
-      {/* Travel Insurance */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-                Travel Insurance
-              </h2>
-            </div>
-
-            <Card className="p-6 bg-blue-50 border-blue-200">
-              <div className="flex items-start gap-4">
-                <Shield className="h-8 w-8 text-[#1D2D44] flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    We Strongly Recommend Travel Insurance
-                  </h3>
-                  <p className="text-sm text-gray-700 mb-4">
-                    Travel insurance is not included in our trip packages. We
-                    strongly recommend purchasing your own travel insurance policy
-                    before departure. A good policy should cover:
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-4">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>Trip cancellation and interruption</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>Emergency medical coverage abroad</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>Emergency medical evacuation</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>Lost or delayed baggage</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span>Sports and adventure activity coverage</span>
-                    </li>
-                  </ul>
-                  <p className="text-xs text-gray-500">
-                    We&apos;re working on a preferred insurance partner recommendation.
-                    In the meantime, popular options include World Nomads,
-                    Allianz Travel, and Safety Wing.
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Wellness & Spa */}
+      {/* 5. Wellness */}
       <section className="py-16 sm:py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-                Wellness &amp; Recovery
+                Wellness
               </h2>
             </div>
 
@@ -378,12 +390,12 @@ export default function TrustAndSafetyPage() {
         </div>
       </section>
 
-      {/* Cancellation & Rescheduling Policy (kept from original) */}
+      {/* 6. Policies */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
-              Cancellation &amp; Rescheduling Policy
+              Policies
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               We understand plans change. Here&apos;s our clear, fair cancellation
@@ -545,10 +557,10 @@ export default function TrustAndSafetyPage() {
               <p className="text-xs text-gray-600 mt-4">
                 Documentation required for all force majeure claims. Contact{' '}
                 <a
-                  href="mailto:Ryan@thepickleballpassport.org"
+                  href="mailto:jaron@thepickleballpassport.org"
                   className="text-[#1D2D44] hover:text-[#B08D55] underline"
                 >
-                  Ryan@thepickleballpassport.org
+                  jaron@thepickleballpassport.org
                 </a>{' '}
                 for assistance.
               </p>

@@ -13,6 +13,7 @@ import { trpc } from '@/lib/trpc/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { LogoIcon } from '@/components/ui/logo';
+import { useLeadModal } from '@/components/providers/lead-modal-provider';
 
 const navigation = {
   explore: [
@@ -57,6 +58,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const { openLeadModal } = useLeadModal();
 
   const subscribeMutation = trpc.newsletter.subscribe.useMutation({
     onSuccess: (data) => {
@@ -211,15 +213,6 @@ export function Footer() {
                   <span>jaron@thepickleballpassport.org</span>
                 </a>
                 <a
-                  href="mailto:ryan@thepickleballpassport.org"
-                  className="flex items-center space-x-4 text-white/80 hover:text-white transition-colors group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <Mail className="h-5 w-5 text-[#B08D55]" />
-                  </div>
-                  <span>ryan@thepickleballpassport.org</span>
-                </a>
-                <a
                   href="tel:+15125648522"
                   className="flex items-center space-x-4 text-white/80 hover:text-white transition-colors group"
                 >
@@ -273,13 +266,23 @@ export function Footer() {
               <ul className="space-y-4">
                 {navigation.explore.map((item) => (
                   <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
-                      {item.name}
-                    </Link>
+                    {item.name === 'Apply Now' ? (
+                      <button
+                        onClick={() => openLeadModal()}
+                        className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
+                        {item.name}
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-white/70 hover:text-[#B08D55] transition-colors flex items-center gap-2 group"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B08D55]/50 group-hover:bg-[#B08D55] transition-colors" />
+                        {item.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

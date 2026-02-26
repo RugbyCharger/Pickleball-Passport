@@ -18,6 +18,7 @@ import { trpc } from '@/lib/trpc/client'
 import superjson from 'superjson'
 import { Toaster } from 'sonner'
 import { AnalyticsProvider } from '@/components/analytics-provider'
+import { LeadModalProvider } from '@/components/providers/lead-modal-provider'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') return '' // browser should use relative url
@@ -55,8 +56,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <Suspense fallback={null}>
           <AnalyticsProvider>
-            <Toaster position="top-right" richColors />
-            {children}
+            <LeadModalProvider>
+              <Toaster position="top-right" richColors />
+              {children}
+            </LeadModalProvider>
           </AnalyticsProvider>
         </Suspense>
       </QueryClientProvider>

@@ -70,6 +70,22 @@ export const waitlistRouter = router({
           },
         });
 
+        // Fire-and-forget Zapier webhook — does not block the user response
+        if (process.env.ZAPIER_WEBHOOK_URL) {
+          fetch(process.env.ZAPIER_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: fullName.trim(),
+              email: normalizedEmail,
+              phone: phone || '',
+              preferred_trip: trip,
+              how_heard: hearAbout || '',
+              referred_by: clubRef || '',
+            }),
+          }).catch((err) => console.error('Zapier webhook failed:', err));
+        }
+
         return {
           success: true,
           message:
