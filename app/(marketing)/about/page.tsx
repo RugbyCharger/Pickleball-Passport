@@ -101,28 +101,10 @@ export default function AboutPage() {
 
             <div className="space-y-6 text-lg text-[#1D2D44]/70 leading-relaxed">
               <p>
-                The Pickleball Passport was built by two cousins who took the long way around to get here. And that&apos;s kind of the point.
+                The Pickleball Passport was built by two cousins who took the long way around to get here. Jaron and Ryan grew up together in Colorado Springs. Hockey, snowboarding, pickup games of whatever was in season. They went separate ways. Ryan spent 15+ years in energy and construction. Jaron went into finance. When COVID hit, they bought a house in the Colorado mountains, rebuilt it with their own hands, and partnered with a local non-profit to turn it into a sober living home for young men in recovery. That experience taught them something they carry into everything now: transformation happens when you combine community, movement, and genuine care for people.
               </p>
               <p>
-                Jaron spent seven years growing up in Saudi Arabia, then Arizona, before landing in Colorado Springs. Ryan grew up there from the start. Hockey at the outdoor rink. Snowboarding. Tennis. Pickup games of whatever was in season. Different childhoods, same wiring: competitive, outdoors, always moving.
-              </p>
-              <p>
-                They went separate ways after that. Ryan spent 15+ years in energy and construction, building teams and navigating complex projects. Jaron went into finance, chasing numbers and climbing the ladder. The money was good. The fulfillment wasn&apos;t. No matter how much he made, something was missing.
-              </p>
-              <p>
-                When COVID hit, they both felt stuck. Searching for direction. They bought a house in the Colorado mountains and rebuilt it with their own hands over two years. Started playing hockey at the community rink with their neighbors. Found themselves in a small town of four hundred people, and found something they didn&apos;t know they were looking for.
-              </p>
-              <p>
-                They partnered with a local non-profit and turned that house into a sober living home for young men in recovery. The Launchpad. Shared meals. Real accountability. Showing up for guys putting their lives back together. It wasn&apos;t a business plan. It was the most important thing either of them had ever been part of. And it taught them something they carry into everything they do now: transformation happens when you combine community, movement, and genuine care for people.
-              </p>
-              <p>
-                Jaron eventually moved to Thailand, working finance remotely. Burned out by night, but discovering pickleball during Bangkok mornings. That opened a door. Last year, they reconnected at The Launchpad, then took a holistic wellness journey through South America together. That trip was the final spark. They realized what they&apos;d built in Colorado wasn&apos;t just local impact. It was a model they could scale globally.
-              </p>
-              <p>
-                That&apos;s The Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two guys who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
-              </p>
-              <p className="font-medium text-[#1D2D44]">
-                The Launchpad was their launchpad. The Pickleball Passport is how they&apos;re scaling what it taught them.
+                Jaron eventually moved to Thailand, discovered pickleball during early Bangkok mornings, and found a door he didn&apos;t expect. That&apos;s The Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two people who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
               </p>
             </div>
 
