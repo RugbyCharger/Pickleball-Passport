@@ -60,23 +60,23 @@ const upcoming13DayDates: UpcomingDate[] = [
 const comingSoonDestinations = [
   {
     destination: 'BALI',
-    subtitle: 'Ubud • Seminyak • Uluwatu',
     imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80',
   },
   {
     destination: 'VIETNAM',
-    subtitle: 'Ho Chi Minh City • Hoi An • Da Nang',
     imageUrl: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80',
   },
   {
     destination: 'JAPAN',
-    subtitle: 'Tokyo • Kyoto • Osaka',
     imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80',
   },
   {
     destination: 'MALAYSIA',
-    subtitle: 'Kuala Lumpur • Langkawi • Penang',
     imageUrl: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80',
+  },
+  {
+    destination: 'PHILIPPINES',
+    imageUrl: 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=80',
   },
 ];
 
@@ -586,12 +586,11 @@ export function TripsListingPage() {
               when booking opens.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
             {comingSoonDestinations.map((dest) => (
               <ComingSoonCard
                 key={dest.destination}
                 destination={dest.destination}
-                subtitle={dest.subtitle}
                 imageUrl={dest.imageUrl}
                 onNotifyClick={() => {
                   setNotifyDestination(dest.destination);

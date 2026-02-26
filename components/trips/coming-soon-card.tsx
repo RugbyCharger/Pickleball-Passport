@@ -1,37 +1,32 @@
 'use client';
 
-import { Bell, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ComingSoonCardProps {
   destination: string;
-  subtitle: string;
   imageUrl?: string;
   onNotifyClick?: () => void;
 }
 
-export function ComingSoonCard({ destination, subtitle, imageUrl, onNotifyClick }: ComingSoonCardProps) {
+export function ComingSoonCard({ destination, imageUrl, onNotifyClick }: ComingSoonCardProps) {
   return (
     <div className="bg-white/60 rounded-2xl shadow-md overflow-hidden border border-[#B08D55]/10 h-full flex flex-col opacity-80">
       {/* Hero image area */}
-      <div
-        className="relative h-48 sm:h-56 overflow-hidden"
-        style={
-          imageUrl
-            ? {
-                backgroundImage: `url(${imageUrl})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }
-            : undefined
-        }
-      >
-        {!imageUrl && (
+      <div className="relative h-48 sm:h-56 overflow-hidden">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={destination}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 25vw"
+          />
+        ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200" />
         )}
-        {imageUrl && (
-          <div className="absolute inset-0 bg-black/20" />
-        )}
+        {imageUrl && <div className="absolute inset-0 bg-black/20" />}
 
         {/* Coming Soon badge */}
         <div className="absolute top-4 left-4 z-10">
@@ -50,13 +45,8 @@ export function ComingSoonCard({ destination, subtitle, imageUrl, onNotifyClick 
 
       {/* Card content */}
       <div className="p-6 flex-1 flex flex-col">
-        <p className="text-[#1D2D44]/50 text-sm mb-3 flex items-center gap-1.5">
-          <MapPin className="w-4 h-4 text-[#B08D55]/50" />
-          {subtitle}
-        </p>
-
         <p className="text-sm text-[#1D2D44]/40 mb-5">
-          Dates & pricing coming soon
+          Dates &amp; pricing coming soon
         </p>
 
         <div className="mt-auto">

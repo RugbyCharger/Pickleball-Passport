@@ -60,6 +60,7 @@ const cspDirectives = {
     ...SUPABASE_DOMAINS,
     ...MUX_DOMAINS,
     'https://*.googleusercontent.com', // Google profile images
+    'https://images.unsplash.com', // Destination photography
   ],
   'font-src': [
     "'self'",
@@ -169,6 +170,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'img.clerk.com' },
       { protocol: 'https', hostname: 'image.mux.com' },
       { protocol: 'https', hostname: '*.googleusercontent.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
   async headers() {
