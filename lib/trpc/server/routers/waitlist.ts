@@ -73,17 +73,34 @@ export const waitlistRouter = router({
         // Zapier webhook — awaited so Vercel doesn't kill the function before it fires
         if (process.env.ZAPIER_WEBHOOK_URL) {
           try {
+            // Clean phone to E.164 format for Attio compatibility
+            let cleanPhone = '';
+            if (phone) {
+              const digits = phone.replace(/\D/g, '');
+              if (digits.length > 0) {
+                // If 10 digits (US number without country code), prepend +1
+                // If 11+ digits and starts with 1, prepend +
+                // Otherwise prepend +
+                cleanPhone = digits.length === 10
+                  ? `+1${digits}`
+                  : `+${digits.replace(/^0+/, '')}`;
+              }
+            }
+
+            const payload: Record<string, string> = {
+              name: fullName.trim(),
+              email: normalizedEmail,
+              preferred_trip: trip,
+            };
+            // Only include phone if it has a valid value
+            if (cleanPhone) payload.phone = cleanPhone;
+            if (hearAbout) payload.how_heard = hearAbout;
+            if (clubRef) payload.referred_by = clubRef;
+
             await fetch(process.env.ZAPIER_WEBHOOK_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: fullName.trim(),
-                email: normalizedEmail,
-                phone: phone || '',
-                preferred_trip: trip,
-                how_heard: hearAbout || '',
-                referred_by: clubRef || '',
-              }),
+              body: JSON.stringify(payload),
             });
           } catch (err) {
             console.error('Zapier webhook failed:', err);
