@@ -70,20 +70,24 @@ export const waitlistRouter = router({
           },
         });
 
-        // Fire-and-forget Zapier webhook — does not block the user response
+        // Zapier webhook — awaited so Vercel doesn't kill the function before it fires
         if (process.env.ZAPIER_WEBHOOK_URL) {
-          fetch(process.env.ZAPIER_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: fullName.trim(),
-              email: normalizedEmail,
-              phone: phone || '',
-              preferred_trip: trip,
-              how_heard: hearAbout || '',
-              referred_by: clubRef || '',
-            }),
-          }).catch((err) => console.error('Zapier webhook failed:', err));
+          try {
+            await fetch(process.env.ZAPIER_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: fullName.trim(),
+                email: normalizedEmail,
+                phone: phone || '',
+                preferred_trip: trip,
+                how_heard: hearAbout || '',
+                referred_by: clubRef || '',
+              }),
+            });
+          } catch (err) {
+            console.error('Zapier webhook failed:', err);
+          }
         }
 
         return {
