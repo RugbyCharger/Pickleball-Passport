@@ -1,31 +1,45 @@
 'use client';
 
 import { useState } from 'react';
+import { Calendar } from 'lucide-react';
 import { WaitlistModal } from '@/components/trips/waitlist-modal';
 
 interface BookingModuleProps {
   tripName?: string;
+  cities?: string;
+  dates?: string;
+  price?: number;
+  depositAmount?: number;
+  depositLink?: string;
+  fullLink?: string;
 }
 
-export function BookingModule({ tripName = 'Thailand - 13 Days / 12 Nights' }: BookingModuleProps) {
+export function BookingModule({
+  tripName = 'Thailand - 13 Days / 12 Nights',
+  cities = 'Bangkok \u2022 Chiang Mai \u2022 Phuket',
+  dates = 'May 15\u201327, 2026',
+  price = 4250,
+  depositAmount = 1065,
+  depositLink,
+  fullLink,
+}: BookingModuleProps) {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
   return (
     <>
       <div className="rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 bg-white overflow-hidden">
-        {/* Photo Carousel Placeholder */}
+        {/* Header */}
         <div className="relative h-[180px] bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] rounded-t-2xl flex flex-col items-center justify-center">
           <h3 className="font-serif text-2xl text-white font-semibold tracking-wide">
             Thailand
           </h3>
           <p className="text-white/70 text-sm mt-1">
-            Bangkok &bull; Chiang Mai &bull; Phuket
+            {cities}
           </p>
-          {/* Dot indicators */}
-          <div className="absolute bottom-3 flex gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#B08D55]" />
-            <span className="w-2 h-2 rounded-full bg-white/30" />
-            <span className="w-2 h-2 rounded-full bg-white/30" />
+          <div className="flex items-center gap-1.5 mt-3 text-white/80 text-xs">
+            <Calendar className="w-3.5 h-3.5 text-[#B08D55]" />
+            {dates}
           </div>
         </div>
 
@@ -33,24 +47,70 @@ export function BookingModule({ tripName = 'Thailand - 13 Days / 12 Nights' }: B
         <div className="p-5 space-y-4">
           {/* Price Display */}
           <div className="pt-2 pb-1 text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">Early Bird Pricing</p>
-            <p className="font-serif text-xl font-semibold text-[#1D2D44]">Coming Soon</p>
+            <p className="font-serif text-2xl font-bold text-[#1D2D44]">
+              From ${price.toLocaleString()}<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
+            </p>
+            <p className="text-xs text-[#1D2D44]/60 mt-1">
+              Secure your spot with a 25% deposit (${depositAmount.toLocaleString()})
+            </p>
           </div>
 
-          {/* Info Text */}
-          <p className="text-center text-xs text-[#1D2D44]/60 leading-relaxed">
-            Join the waitlist to be the first to know when pricing and booking open.
-          </p>
-
-          {/* CTA Button */}
-          <div className="space-y-2">
+          {/* Dual CTA Buttons */}
+          <div className="space-y-3">
+            {/* Reserve Your Spot — outline */}
             <button
               type="button"
               onClick={() => setWaitlistOpen(true)}
-              className="block w-full h-12 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider flex items-center justify-center shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+              className="flex w-full h-12 items-center justify-center rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider hover:bg-[#1D2D44] hover:text-white transition-all"
             >
-              Reserve Your Spot &rarr;
+              Reserve Your Spot
             </button>
+
+            {/* Book Now — gold filled */}
+            {depositLink && fullLink ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowPaymentOptions(!showPaymentOptions)}
+                  className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+                >
+                  Book Now
+                </button>
+
+                {showPaymentOptions && (
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={depositLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-3 text-center hover:bg-[#B08D55]/10 transition-colors"
+                    >
+                      <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay Deposit</span>
+                      <span className="text-base font-bold text-[#1D2D44] mt-0.5">${depositAmount.toLocaleString()}</span>
+                      <span className="text-xs text-[#1D2D44]/50">25%</span>
+                    </a>
+                    <a
+                      href={fullLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-3 text-center hover:bg-[#B08D55]/10 transition-colors"
+                    >
+                      <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay in Full</span>
+                      <span className="text-base font-bold text-[#1D2D44] mt-0.5">${price.toLocaleString()}</span>
+                      <span className="text-xs text-[#1D2D44]/50">Full amount</span>
+                    </a>
+                  </div>
+                )}
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setWaitlistOpen(true)}
+                className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+              >
+                Book Now
+              </button>
+            )}
           </div>
         </div>
       </div>

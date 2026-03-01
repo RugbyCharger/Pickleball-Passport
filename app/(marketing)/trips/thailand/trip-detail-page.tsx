@@ -77,7 +77,15 @@ export function TripDetailPage() {
       </section>
 
       {/* Main content with sidebar navigation */}
-      <TripDetailLayout />
+      <TripDetailLayout
+        tripName="Thailand - 13 Days / 12 Nights"
+        cities="Bangkok \u2022 Chiang Mai \u2022 Phuket"
+        dates="May 15–27, 2026"
+        price={4250}
+        depositAmount={1065}
+        depositLink="https://buy.stripe.com/eVq5kDfATgUT8uh3412cg00"
+        fullLink="https://buy.stripe.com/14AeVdgEX1ZZ7qdeMJ2cg01"
+      />
 
       {/* Cross-link to 8-day trip */}
       <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">

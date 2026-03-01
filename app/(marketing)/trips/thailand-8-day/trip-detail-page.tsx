@@ -736,25 +736,60 @@ export function Thailand8DayTripPage() {
         {/* ── PRICING ── */}
         <section className="text-center">
           <div className="bg-white rounded-2xl border border-[#B08D55]/20 shadow-lg shadow-[#1D2D44]/5 p-8 sm:p-12">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-3">
-              Early Bird Pricing
-            </p>
             <p className="font-serif text-3xl sm:text-4xl font-bold text-[#1D2D44] mb-2">
-              Coming Soon
+              From $2,888<span className="text-lg font-normal text-[#1D2D44]/60">/person</span>
             </p>
             <p className="text-[#1D2D44]/50 text-sm mb-2">Limited to 16 spots</p>
             <p className="text-[#1D2D44]/50 text-xs mb-8">
-              Join the waitlist to be the first to know when pricing and booking open.
+              Secure your spot with a 25% deposit ($722)
             </p>
 
-            <button
-              type="button"
-              onClick={() => setWaitlistOpen(true)}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-white font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
-            >
-              Reserve Your Spot
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => setWaitlistOpen(true)}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider hover:bg-[#1D2D44] hover:text-white transition-all"
+              >
+                Reserve Your Spot
+              </button>
+
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('payment-options-8day');
+                    if (el) el.classList.toggle('hidden');
+                  }}
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+                >
+                  Book Now
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div id="payment-options-8day" className="hidden mt-6 grid grid-cols-2 gap-3 max-w-sm mx-auto">
+              <a
+                href="https://buy.stripe.com/8x29ATagz5cb4e19sp2cg03"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-4 text-center hover:bg-[#B08D55]/10 transition-colors"
+              >
+                <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay Deposit</span>
+                <span className="text-lg font-bold text-[#1D2D44] mt-0.5">$722</span>
+                <span className="text-xs text-[#1D2D44]/50">25%</span>
+              </a>
+              <a
+                href="https://buy.stripe.com/7sYaEXcoHgUTh0N7kh2cg02"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-4 text-center hover:bg-[#B08D55]/10 transition-colors"
+              >
+                <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay in Full</span>
+                <span className="text-lg font-bold text-[#1D2D44] mt-0.5">$2,888</span>
+                <span className="text-xs text-[#1D2D44]/50">Full amount</span>
+              </a>
+            </div>
           </div>
         </section>
 

@@ -6,7 +6,25 @@ import { TripSectionContent } from './trip-section-content';
 import { BookingModule } from './booking-module';
 import { BookingModuleMobile } from './booking-module-mobile';
 
-export function TripDetailLayout() {
+interface TripDetailLayoutProps {
+  tripName?: string;
+  cities?: string;
+  dates?: string;
+  price?: number;
+  depositAmount?: number;
+  depositLink?: string;
+  fullLink?: string;
+}
+
+export function TripDetailLayout({
+  tripName,
+  cities,
+  dates,
+  price,
+  depositAmount,
+  depositLink,
+  fullLink,
+}: TripDetailLayoutProps) {
   const [activeSection, setActiveSection] = useState<TripSection>('details');
 
   const handleSectionChange = (section: TripSection) => {
@@ -46,7 +64,15 @@ export function TripDetailLayout() {
           {/* Right column: booking module (desktop only) */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <BookingModule />
+              <BookingModule
+                tripName={tripName}
+                cities={cities}
+                dates={dates}
+                price={price}
+                depositAmount={depositAmount}
+                depositLink={depositLink}
+                fullLink={fullLink}
+              />
             </div>
           </div>
         </div>
@@ -54,7 +80,13 @@ export function TripDetailLayout() {
 
       {/* Mobile booking bar + expandable sheet (padding for bottom bar) */}
       <div className="h-16 lg:hidden" />
-      <BookingModuleMobile />
+      <BookingModuleMobile
+        tripName={tripName}
+        price={price}
+        depositAmount={depositAmount}
+        depositLink={depositLink}
+        fullLink={fullLink}
+      />
     </>
   );
 }

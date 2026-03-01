@@ -2,31 +2,12 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
 import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
 
 /* ─────────────────────── CONFIG ─────────────────────── */
-
-/** Toggle early-bird promo banner on live cards */
-const SHOW_EARLY_BIRD_PROMO = true;
-
-/* ─────────────────────── STRIPE PAYMENT LINKS ─────────────────────── */
-
-const STRIPE_LINKS = {
-  '8day': {
-    deposit: 'https://buy.stripe.com/8x29ATagz5cb4e19sp2cg03',
-    full: 'https://buy.stripe.com/7sYaEXcoHgUTh0N7kh2cg02',
-    depositAmount: 722,
-    fullAmount: 2888,
-  },
-  '13day': {
-    deposit: 'https://buy.stripe.com/eVq5kDfATgUT8uh3412cg00',
-    full: 'https://buy.stripe.com/14AeVdgEX1ZZ7qdeMJ2cg01',
-    depositAmount: 1065,
-    fullAmount: 4250,
-  },
-} as const;
 
 /* ─────────────────────── UPCOMING DATES ─────────────────────── */
 
@@ -113,7 +94,7 @@ const journeySteps = [
   },
 ];
 
-/* ─────────────────────── LIVE BOOKING CARD ─────────────────────── */
+/* ─────────────────────── LIVE TRIP CARD ─────────────────────── */
 
 function LiveTripCard({
   duration,
@@ -121,29 +102,16 @@ function LiveTripCard({
   cities,
   price,
   imageUrl,
-  stripeKey,
+  detailHref,
 }: {
   duration: '8day' | '13day';
   dateRange: string;
   cities: string;
   price: string;
   imageUrl: string;
-  stripeKey: '8day' | '13day';
+  detailHref: string;
 }) {
-  const [occupancy, setOccupancy] = useState('');
-  const [pickleball, setPickleball] = useState('');
-  const [paymentType, setPaymentType] = useState<'deposit' | 'full'>('deposit');
-
-  const links = STRIPE_LINKS[stripeKey];
-  const allSelected = occupancy !== '' && pickleball !== '';
-
   const durationLabel = duration === '13day' ? '13 Days / 12 Nights' : '8 Days / 7 Nights';
-
-  const handleBookNow = () => {
-    if (!allSelected) return;
-    const url = paymentType === 'deposit' ? links.deposit : links.full;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
@@ -166,14 +134,6 @@ function LiveTripCard({
           </span>
         </div>
 
-        {SHOW_EARLY_BIRD_PROMO && (
-          <div className="absolute top-4 right-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#B08D55] text-white text-xs font-semibold">
-              Early Bird Pricing
-            </span>
-          </div>
-        )}
-
         {/* Destination overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <h3 className="text-3xl font-serif font-bold text-white">THAILAND</h3>
@@ -194,107 +154,15 @@ function LiveTripCard({
           {price}
         </div>
 
-        {/* Booking Dropdowns */}
-        <div className="space-y-3 mb-5">
-          {/* 1. Tour Dates */}
-          <div>
-            <label className="block text-xs font-bold text-[#1D2D44]/60 uppercase tracking-wider mb-1">
-              1. Tour Dates
-            </label>
-            <div className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700">
-              {dateRange}
-            </div>
-          </div>
-
-          {/* 2. Hotel Room Occupancy */}
-          <div>
-            <label className="block text-xs font-bold text-[#1D2D44]/60 uppercase tracking-wider mb-1">
-              2. Hotel Room Occupancy
-            </label>
-            <select
-              value={occupancy}
-              onChange={(e) => setOccupancy(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none"
-            >
-              <option value="">Select occupancy...</option>
-              <option value="double">Double Occupancy</option>
-              <option value="twin">Twin Occupancy</option>
-              <option value="single">Single Occupancy</option>
-            </select>
-          </div>
-
-          {/* 3. Pickleball */}
-          <div>
-            <label className="block text-xs font-bold text-[#1D2D44]/60 uppercase tracking-wider mb-1">
-              3. Will You Be Playing Pickleball?
-            </label>
-            <select
-              value={pickleball}
-              onChange={(e) => setPickleball(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:border-[#B08D55] focus:ring-1 focus:ring-[#B08D55] outline-none"
-            >
-              <option value="">Select...</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Payment Toggle */}
-        <div className="mb-5">
-          <label className="block text-xs font-bold text-[#1D2D44]/60 uppercase tracking-wider mb-2">
-            Payment Option
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setPaymentType('deposit')}
-              className={`rounded-lg border-2 p-3 text-center transition-all ${
-                paymentType === 'deposit'
-                  ? 'border-[#B08D55] bg-[#B08D55]/10 text-[#1D2D44]'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-              }`}
-            >
-              <div className="text-xs font-semibold uppercase">Pay Deposit</div>
-              <div className="text-lg font-bold mt-1">${links.depositAmount.toLocaleString()}</div>
-              <div className="text-xs text-gray-500">25% of total</div>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPaymentType('full')}
-              className={`rounded-lg border-2 p-3 text-center transition-all ${
-                paymentType === 'full'
-                  ? 'border-[#B08D55] bg-[#B08D55]/10 text-[#1D2D44]'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-              }`}
-            >
-              <div className="text-xs font-semibold uppercase">Pay in Full</div>
-              <div className="text-lg font-bold mt-1">${links.fullAmount.toLocaleString()}</div>
-              <div className="text-xs text-gray-500">Full amount</div>
-            </button>
-          </div>
-        </div>
-
-        {/* Book Now Button */}
+        {/* View Trip Details Button */}
         <div className="mt-auto">
-          <button
-            type="button"
-            onClick={handleBookNow}
-            disabled={!allSelected}
-            className={`flex w-full items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
-              allSelected
-                ? 'bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] shadow-lg shadow-[#B08D55]/30 hover:shadow-xl cursor-pointer'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
+          <Link
+            href={detailHref}
+            className="flex w-full items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
           >
-            Book Now
+            View Trip Details
             <ArrowRight className="w-4 h-4" />
-          </button>
-          {!allSelected && (
-            <p className="text-xs text-gray-400 text-center mt-2">
-              Select all options above to continue
-            </p>
-          )}
+          </Link>
         </div>
       </div>
     </div>
@@ -495,7 +363,7 @@ export function TripsListingPage() {
               cities="Bangkok • Chiang Mai"
               price="From $2,888/person"
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
-              stripeKey="8day"
+              detailHref="/trips/thailand-8-day"
             />
 
             {/* Card 2 — LIVE 13-Day */}
@@ -505,7 +373,7 @@ export function TripsListingPage() {
               cities="Bangkok • Chiang Mai • Phuket"
               price="From $4,250/person"
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
-              stripeKey="13day"
+              detailHref="/trips/thailand"
             />
 
             {/* Card 3 — UPCOMING 8-Day */}
