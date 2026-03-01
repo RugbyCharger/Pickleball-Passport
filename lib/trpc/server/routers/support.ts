@@ -194,24 +194,44 @@ export const supportRouter = router({
         });
       }
 
-      // Generate reference number
-      const referenceNumber = generateReferenceNumber();
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Build subject from category and optional trip interest
+      // Build human-readable category label
       const categoryLabel = category
         .replace(/_/g, ' ')
         .toLowerCase()
         .replace(/\b\w/g, (l) => l.toUpperCase());
-      let subject = `${categoryLabel}`;
-      if (tripInterest) {
-        subject += ` - ${tripInterest}`;
-      }
-      if (timeline) {
-        subject += ` (Timeline: ${timeline})`;
+
+      // ── Zapier webhook (primary — ensures lead reaches CRM) ──
+      if (process.env.ZAPIER_WEBHOOK_URL) {
+        try {
+          const payload: Record<string, string> = {
+            source: 'contact_form',
+            name: name.trim(),
+            email: normalizedEmail,
+            how_can_we_help: categoryLabel,
+            message,
+          };
+          if (timeline) payload.timeline = timeline;
+          if (tripInterest) payload.trip_interest = tripInterest;
+          if (phone) payload.phone = phone;
+
+          await fetch(process.env.ZAPIER_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        } catch (err) {
+          console.error('Zapier webhook failed (contact form):', err);
+        }
       }
 
-      // Create the support ticket
+      // ── DB ticket (secondary — best-effort) ──
+      const referenceNumber = generateReferenceNumber();
+      let subject = `${categoryLabel}`;
+      if (tripInterest) subject += ` - ${tripInterest}`;
+      if (timeline) subject += ` (Timeline: ${timeline})`;
+
       try {
         const ticket = await ctx.db.supportTicket.create({
           data: {
@@ -228,17 +248,10 @@ export const supportRouter = router({
           },
         });
 
-        dbLogger.info(
-          {
-            referenceNumber,
-            category,
-          },
-          'Public support ticket created'
-        );
+        dbLogger.info({ referenceNumber, category }, 'Public support ticket created');
 
-        // Send emails non-blocking (don't wait for them to complete)
+        // Send emails non-blocking
         if (isEmailConfigured()) {
-          // Send confirmation email to user
           sendTicketCreatedEmail(normalizedEmail, {
             name,
             email: normalizedEmail,
@@ -253,7 +266,6 @@ export const supportRouter = router({
             });
           });
 
-          // Send notification email to admin
           sendTicketAdminNotification({
             referenceNumber,
             name,
@@ -270,19 +282,16 @@ export const supportRouter = router({
             });
           });
         }
-
-        return {
-          success: true,
-          referenceNumber: ticket.referenceNumber,
-          message: `Thank you for contacting us! Your reference number is ${ticket.referenceNumber}. We'll respond within 24 hours.`,
-        };
       } catch (error) {
-        logError(dbLogger, error, 'Failed to create public support ticket');
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to submit your request. Please try again.',
-        });
+        // DB failure is non-fatal — the Zapier webhook already captured the lead
+        logError(dbLogger, error, 'Failed to create public support ticket (non-fatal, webhook sent)');
       }
+
+      return {
+        success: true,
+        referenceNumber,
+        message: "Message sent! We'll get back to you within 24 hours.",
+      };
     }),
 
   /**

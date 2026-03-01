@@ -25,7 +25,6 @@ import {
   Loader2,
   CheckCircle,
   MapPin,
-  Copy,
   MessageCircle,
   Sparkles,
   Sun,
@@ -93,7 +92,6 @@ type ContactFormInput = z.infer<typeof contactFormSchema>
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [referenceNumber, setReferenceNumber] = useState<string | null>(null)
 
   const {
     register,
@@ -120,7 +118,6 @@ export default function ContactPage() {
     onSuccess: (data) => {
       toast.success(data.message)
       setIsSubmitted(true)
-      setReferenceNumber(data.referenceNumber)
       reset()
     },
     onError: (error) => {
@@ -134,13 +131,6 @@ export default function ContactPage() {
       await contactMutation.mutateAsync(data)
     } catch (error) {
       console.error('Contact form submission error:', error)
-    }
-  }
-
-  const copyReferenceNumber = () => {
-    if (referenceNumber) {
-      navigator.clipboard.writeText(referenceNumber)
-      toast.success('Reference number copied!')
     }
   }
 
@@ -195,7 +185,7 @@ export default function ContactPage() {
                   Fill out the form below and we&apos;ll get back to you within 24 hours.
                 </p>
 
-                {isSubmitted && referenceNumber && (
+                {isSubmitted && (
                   <div className="mb-8 p-6 bg-gradient-to-r from-[#2D5A3D]/10 to-[#3D7A52]/10 border border-[#2D5A3D]/20 rounded-xl">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-full bg-[#2D5A3D] flex items-center justify-center flex-shrink-0">
@@ -203,29 +193,10 @@ export default function ContactPage() {
                       </div>
                       <div className="flex-1">
                         <p className="text-[#2D5A3D] font-semibold text-lg mb-1">
-                          Message sent successfully!
+                          Message sent!
                         </p>
-                        <p className="text-[#2D5A3D]/70 text-sm mb-4">
-                          We&apos;ve received your message and will respond within 24 hours.
-                        </p>
-                        <div className="flex items-center gap-3 bg-white rounded-lg p-3 border border-[#2D5A3D]/20">
-                          <span className="text-[#1D2D44] text-sm font-medium">
-                            Reference:
-                          </span>
-                          <code className="text-[#2D5A3D] font-mono font-bold text-lg">
-                            {referenceNumber}
-                          </code>
-                          <button
-                            type="button"
-                            onClick={copyReferenceNumber}
-                            className="ml-auto text-[#2D5A3D] hover:text-[#1D2D44] p-2 hover:bg-[#2D5A3D]/10 rounded-lg transition-colors"
-                            aria-label="Copy reference number"
-                          >
-                            <Copy className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <p className="text-[#2D5A3D]/60 text-xs mt-2">
-                          Save this reference number to check on your ticket status.
+                        <p className="text-[#2D5A3D]/70 text-sm">
+                          We&apos;ll get back to you within 24 hours.
                         </p>
                       </div>
                     </div>

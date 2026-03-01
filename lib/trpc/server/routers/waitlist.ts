@@ -88,6 +88,7 @@ export const waitlistRouter = router({
             }
 
             const payload: Record<string, string> = {
+              source: 'reserve_your_spot',
               name: fullName.trim(),
               email: normalizedEmail,
               preferred_trip: trip,
