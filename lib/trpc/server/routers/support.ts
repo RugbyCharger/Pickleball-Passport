@@ -214,7 +214,14 @@ export const supportRouter = router({
           };
           if (timeline) payload.timeline = timeline;
           if (tripInterest) payload.trip_interest = tripInterest;
-          if (phone) payload.phone = phone;
+          if (phone) {
+            const digits = phone.replace(/\D/g, '');
+            if (digits.length >= 10) {
+              payload.phone = digits.length === 10
+                ? `+1${digits}`
+                : `+${digits.replace(/^0+/, '')}`;
+            }
+          }
 
           await fetch(process.env.ZAPIER_WEBHOOK_URL, {
             method: 'POST',
