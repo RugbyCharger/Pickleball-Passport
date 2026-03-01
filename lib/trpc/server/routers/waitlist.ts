@@ -59,27 +59,16 @@ export const waitlistRouter = router({
       const normalizedEmail = email.toLowerCase().trim();
 
       // ── Zapier webhook (primary — fires first to ensure lead reaches CRM) ──
+      // Note: phone omitted from webhook — Attio rejects non-standard formats.
+      // Phone is still saved in the DB entry. Jaron collects during consultation.
       if (process.env.ZAPIER_WEBHOOK_URL) {
         try {
-          // Clean phone to E.164 format for Attio compatibility
-          let cleanPhone = '';
-          if (phone) {
-            const digits = phone.replace(/\D/g, '');
-            // Only format if we have a plausible phone number (at least 10 digits)
-            if (digits.length >= 10) {
-              cleanPhone = digits.length === 10
-                ? `+1${digits}`
-                : `+${digits.replace(/^0+/, '')}`;
-            }
-          }
-
           const payload: Record<string, string> = {
             source: 'reserve_your_spot',
             name: fullName.trim(),
             email: normalizedEmail,
             preferred_trip: trip,
           };
-          if (cleanPhone) payload.phone = cleanPhone;
           if (hearAbout) payload.how_heard = hearAbout;
           if (clubRef) payload.referred_by = clubRef;
 
