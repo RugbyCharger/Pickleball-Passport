@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { MapPin, Clock } from 'lucide-react';
 
 interface Hotel {
@@ -9,7 +8,6 @@ interface Hotel {
   location: string;
   duration: string;
   highlights: string[];
-  image: string;
 }
 
 const hotels: Hotel[] = [
@@ -18,7 +16,6 @@ const hotels: Hotel[] = [
     city: 'Bangkok',
     location: 'Thonglor, Bangkok\u2019s trendiest neighborhood',
     duration: '5 Nights',
-    image: 'https://images.unsplash.com/photo-4mBlowNrbxI?auto=format&fit=crop&w=800&q=80',
     highlights: [
       'Full-floor Japanese onsen and spa: 5 mineral baths, steam room, cold room, tatami private rooms. The ultimate jet lag recovery on arrival night',
       'Outdoor sunset pool and jacuzzi with city views, modern fitness center',
@@ -32,7 +29,6 @@ const hotels: Hotel[] = [
     city: 'Chiang Mai',
     location: 'Ping River, Wiang Kum Kam',
     duration: '4 Nights',
-    image: 'https://images.unsplash.com/photo-QcBHVxK0iRY?auto=format&fit=crop&w=800&q=80',
     highlights: [
       '18-room riverside boutique on the banks of the Ping River, surrounded by 700-year-old Lanna archaeological ruins',
       'Free cooked-to-order breakfast daily (included)',
@@ -47,7 +43,6 @@ const hotels: Hotel[] = [
     city: 'Phuket',
     location: 'Cherngtalay, near Bang Tao Beach',
     duration: '3 Nights',
-    image: 'https://images.unsplash.com/photo-_pPHgeHz1uk?auto=format&fit=crop&w=800&q=80',
     highlights: [
       'Adults-only 5-star boutique with a 9.4/10 guest rating',
       'Full wellness suite: sauna, steam room, ice/cold room, yoga classes, in-house spa',
@@ -75,21 +70,8 @@ export function AccommodationsSection() {
         {hotels.map((hotel, idx) => (
           <div
             key={idx}
-            className="bg-white rounded-2xl border border-[#B08D55]/15 shadow-sm overflow-hidden"
+            className="bg-white rounded-2xl border border-[#B08D55]/15 shadow-sm p-6 sm:p-8"
           >
-            {/* Hotel Image */}
-            <div className="relative h-48 w-full">
-              <Image
-                src={hotel.image}
-                alt={`${hotel.city} hotel`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 700px"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="p-6 sm:p-8">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
               <div>
@@ -124,7 +106,6 @@ export function AccommodationsSection() {
                 </li>
               ))}
             </ul>
-            </div>
           </div>
         ))}
       </div>
