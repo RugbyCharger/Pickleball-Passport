@@ -135,7 +135,7 @@ const days: ItineraryDay[] = [
       {
         label: '9:30 AM',
         description:
-          'PICKLEBALL SESSION 1 at SukSpace: Warm-up drills, round-robin.',
+          'PICKLEBALL SESSION 1 at our Bangkok courts: Warm-up drills, round-robin.',
       },
       {
         label: '12:30 PM',
@@ -183,7 +183,7 @@ const days: ItineraryDay[] = [
       {
         label: '5:30 PM',
         description:
-          'PICKLEBALL SESSION 2 at SukSpace: Structured doubles, skill clinics.',
+          'PICKLEBALL SESSION 2 at our Bangkok courts: Structured doubles, skill clinics.',
       },
       {
         label: '8:00 PM',
@@ -194,28 +194,19 @@ const days: ItineraryDay[] = [
   },
   {
     day: 4,
-    title: 'Pickleball + Farewell',
+    title: 'Free Day + Farewell',
     city: 'Bangkok',
-    vibe: 'Competition day, then celebrate',
-    icon: 'trophy',
+    vibe: 'Explore, recharge, then celebrate',
+    icon: 'sparkles',
     slots: [
       {
         label: '7\u20138:30 AM',
         description: 'Breakfast at hotel.',
       },
       {
-        label: '9:00 AM',
+        label: '9 AM\u20135 PM',
         description:
-          'PICKLEBALL SESSION 3 at SukSpace: Tournament day, king of the court.',
-      },
-      {
-        label: '12:30 PM',
-        description: 'Lunch near courts.',
-      },
-      {
-        label: '1:30 PM',
-        description:
-          'FREE AFTERNOON: Onsen, ICONSIAM, Muay Thai, or pool day.',
+          'FREE DAY. Options: Onsen + spa, ICONSIAM shopping, Chatuchak Weekend Market, Muay Thai match, pool day.',
       },
       {
         label: '7:30 PM',
@@ -241,7 +232,7 @@ const days: ItineraryDay[] = [
       {
         label: '12:30 PM',
         description:
-          'Private van to Maraya Hotel & Resort (Ping River).',
+          'Private van to our Chiang Mai hotel (Ping River).',
       },
       {
         label: '2:00 PM',
@@ -264,7 +255,7 @@ const days: ItineraryDay[] = [
     slots: [
       {
         label: '7\u20138:30 AM',
-        description: 'Breakfast at Maraya.',
+        description: 'Breakfast at the hotel.',
       },
       {
         label: '9:00 AM',
@@ -274,7 +265,7 @@ const days: ItineraryDay[] = [
       {
         label: '3:00 PM',
         description:
-          'PICKLEBALL SESSION 4 at BokBok: Skill clinics, dinking, stacking, open play.',
+          'PICKLEBALL SESSION 3 at BokBok: Skill clinics, dinking, stacking, open play.',
       },
       {
         label: '7:00 PM',
@@ -285,22 +276,27 @@ const days: ItineraryDay[] = [
   },
   {
     day: 7,
-    title: 'Elephant Nature Park',
+    title: 'Championship + Elephants',
     city: 'Chiang Mai',
-    vibe: 'The day they\u2019ll never forget',
-    icon: 'sparkles',
+    vibe: 'Compete in the morning, awe in the afternoon',
+    icon: 'trophy',
     slots: [
       {
         label: '7\u20137:30 AM',
         description: 'Early breakfast.',
       },
       {
-        label: '9:30 AM',
+        label: '9:00 AM',
+        description:
+          'PICKLEBALL SESSION 4 at BokBok: Competitive play, bracket tournament.',
+      },
+      {
+        label: '1:30 PM',
         description:
           'ELEPHANT NATURE PARK: Feed elephants, river bathing, guided walk, lunch included.',
       },
       {
-        label: '4:30 PM',
+        label: '5:30 PM',
         description: 'Pool / spa / decompress.',
       },
       {
@@ -347,7 +343,7 @@ const pickleballSessions: PickleballSession[] = [
   {
     number: 1,
     city: 'Bangkok',
-    venue: 'SukSpace',
+    venue: 'Courts',
     day: 'Day 2',
     time: '9:30 AM\u201312 PM',
     focus: 'Assessment, round-robin',
@@ -355,26 +351,26 @@ const pickleballSessions: PickleballSession[] = [
   {
     number: 2,
     city: 'Bangkok',
-    venue: 'SukSpace',
+    venue: 'Courts',
     day: 'Day 3',
     time: '5:30\u20137:30 PM',
-    focus: 'Structured doubles, clinics',
+    focus: 'Structured doubles, tournament',
   },
   {
     number: 3,
-    city: 'Bangkok',
-    venue: 'SukSpace',
-    day: 'Day 4',
-    time: '9:00 AM\u201312 PM',
-    focus: 'Tournament / competition',
-  },
-  {
-    number: 4,
     city: 'Chiang Mai',
     venue: 'BokBok',
     day: 'Day 6',
     time: '3:00\u20135:30 PM',
     focus: 'Skill clinics, open play',
+  },
+  {
+    number: 4,
+    city: 'Chiang Mai',
+    venue: 'BokBok',
+    day: 'Day 7',
+    time: '9:00 AM\u201312 PM',
+    focus: 'Competitive play, bracket tournament',
   },
 ];
 

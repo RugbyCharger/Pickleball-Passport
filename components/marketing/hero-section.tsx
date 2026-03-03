@@ -94,38 +94,37 @@ export function HeroSection() {
           {/* Trust Indicators */}
           <div className="w-full max-w-4xl mt-16">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors overflow-hidden">
+                  <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors overflow-hidden">
                     <PickleballIcon size="lg" />
                   </div>
-                  <div className="text-3xl font-bold text-white">Daily</div>
-                  <div className="text-sm text-white/60 mt-1">Curated Play</div>
+                  <div className="text-xl md:text-3xl font-bold text-white">Daily</div>
+                  <div className="text-xs md:text-sm text-white/60 mt-1">Curated Play</div>
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <MapPin className="w-7 h-7 text-[#B08D55]" />
+                  <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <MapPin className="w-6 h-6 md:w-7 md:h-7 text-[#B08D55]" />
                   </div>
-                  <div className="text-3xl font-bold text-white">Locally</div>
-                  <div className="text-sm text-white/60 mt-1">Led</div>
+                  <div className="text-xl md:text-3xl font-bold text-white">Locally Led</div>
                   <div className="text-xs text-white/40 mt-0.5">Expat-Built in Thailand</div>
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <CheckCircle className="w-7 h-7 text-[#B08D55]" />
+                  <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                    <CheckCircle className="w-6 h-6 md:w-7 md:h-7 text-[#B08D55]" />
                   </div>
-                  <div className="text-3xl font-bold text-white">Handpicked</div>
-                  <div className="text-xs text-white/40 mt-1">Every Detail, Personally Vetted</div>
+                  <div className="text-xl md:text-3xl font-bold text-white">Handpicked</div>
+                  <div className="text-xs text-white/40 mt-1">Personally Vetted</div>
                 </div>
 
                 <div className="text-center group">
-                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
+                  <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
                     <span className="text-2xl">🏨</span>
                   </div>
-                  <div className="text-3xl font-bold text-white">4-5 Star</div>
-                  <div className="text-sm text-white/60 mt-1">Boutique Hotels</div>
+                  <div className="text-xl md:text-3xl font-bold text-white">4-5 Star</div>
+                  <div className="text-xs md:text-sm text-white/60 mt-1">Boutique Hotels</div>
                 </div>
               </div>
             </div>

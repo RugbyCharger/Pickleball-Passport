@@ -12,20 +12,20 @@ interface Hotel {
 
 const hotels: Hotel[] = [
   {
-    name: 'Grande Centre Point Sukhumvit 55',
+    name: 'Boutique hotel in Bangkok\u2019s vibrant Thonglor or riverside district',
     city: 'Bangkok',
     location: 'Thonglor, Bangkok\u2019s trendiest neighborhood',
     duration: '5 Nights',
     highlights: [
-      'Full-floor Japanese onsen and spa (Let\u2019s Relax Spa & Onsen): 5 mineral baths, steam room, cold room, tatami private rooms. The ultimate jet lag recovery on arrival night',
+      'Full-floor Japanese onsen and spa: 5 mineral baths, steam room, cold room, tatami private rooms. The ultimate jet lag recovery on arrival night',
       'Outdoor sunset pool and jacuzzi with city views, modern fitness center',
-      'Daily breakfast at BlueSpice Caf\u00e9 (included)',
+      'Daily breakfast included',
       'Free tuk-tuk shuttle to Thong Lo BTS station every 20 minutes',
-      'Walking distance to SukSpace pickleball courts, Eight Thonglor dining complex, The Commons, and Bangkok\u2019s best street food',
+      'Walking distance to our pickleball courts, Eight Thonglor dining complex, The Commons, and Bangkok\u2019s best street food',
     ],
   },
   {
-    name: 'Maraya Hotel & Resort',
+    name: 'Riverside boutique resort near ancient Lanna ruins',
     city: 'Chiang Mai',
     location: 'Ping River, Wiang Kum Kam',
     duration: '4 Nights',
@@ -39,7 +39,7 @@ const hotels: Hotel[] = [
     ],
   },
   {
-    name: 'Sole Mio Boutique Hotel & Wellness',
+    name: 'Adults-only wellness boutique hotel near Bang Tao Beach',
     city: 'Phuket',
     location: 'Cherngtalay, near Bang Tao Beach',
     duration: '3 Nights',
@@ -49,7 +49,7 @@ const hotels: Hotel[] = [
       'Rooftop pool with mountain views, 7th-floor Mediterranean restaurant',
       'Daily breakfast buffet (included)',
       'Free shuttle to Bang Tao Beach and Boat Avenue shopping and dining district',
-      '5 minutes from Peak Racquet Club pickleball courts',
+      '5 minutes from our Phuket pickleball courts',
     ],
   },
 ];

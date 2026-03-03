@@ -44,7 +44,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Arrive Bangkok (BKK). VIP fast-track immigration. Private transfer to Grande Centre Point Sukhumvit 55.',
+          'Arrive Bangkok (BKK). VIP fast-track immigration. Private transfer to our Bangkok hotel.',
       },
       {
         label: 'Evening',
@@ -90,7 +90,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Pickleball Session 1 at SukSpace. Assessment, warm-up, round-robin.',
+          'Pickleball Session 1 at our Bangkok courts. Assessment, warm-up, round-robin.',
       },
       {
         label: 'Evening',
@@ -108,7 +108,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Pickleball Session 2 at SukSpace. Structured doubles, skill mixing.',
+          'Pickleball Session 2 at our Bangkok courts. Structured doubles, skill mixing.',
       },
       {
         label: 'Afternoon',
@@ -118,7 +118,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Evening',
         description:
-          'Pickleball Session 3 at SukSpace. Tournament day, king of the court, competitive brackets.',
+          'Pickleball Session 3. Tournament day, competitive brackets.',
       },
     ],
   },
@@ -159,7 +159,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Check in at Maraya Hotel & Resort. Explore Ping River area and Wiang Kum Kam ruins by bicycle.',
+          'Check in at our Chiang Mai hotel. Explore Ping River area and Wiang Kum Kam ruins by bicycle.',
       },
       {
         label: 'Evening',
@@ -228,12 +228,12 @@ const days: ItineraryDay[] = [
       {
         label: 'Afternoon',
         description:
-          'Arrive Phuket. Check in at Sole Mio Boutique Hotel & Wellness. Settle in and explore the property.',
+          'Arrive Phuket. Check in at our Phuket hotel. Settle in and explore the property.',
       },
       {
         label: 'Evening',
         description:
-          'Pickleball Session 6 at Peak Racquet Club. Welcome session, casual open play.',
+          'Pickleball Session 6 at Raccoon Pickleball by Peak Racket Club. Welcome session, casual open play.',
       },
     ],
   },
@@ -269,7 +269,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Pickleball Session 7 at Peak Racquet Club. Final championship, awards ceremony, group photo.',
+          'Pickleball Session 7 at Raccoon Pickleball by Peak Racket Club. Final championship, awards ceremony, group photo.',
       },
       {
         label: 'Afternoon',
@@ -292,7 +292,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Free morning. Optional: beach, spa, shopping, or group yoga session at Sole Mio.',
+          'Free morning. Optional: beach, spa, shopping, or group yoga session at the hotel.',
       },
       {
         label: 'Afternoon',
@@ -315,7 +315,7 @@ const days: ItineraryDay[] = [
       {
         label: 'Morning',
         description:
-          'Final breakfast at Sole Mio. Private transfer to Phuket International Airport (HKT).',
+          'Final breakfast at the hotel. Private transfer to Phuket International Airport (HKT).',
       },
       {
         label: 'Note',

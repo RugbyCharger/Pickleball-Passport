@@ -14,7 +14,7 @@ const sessions: Session[] = [
   {
     number: 1,
     city: 'Bangkok',
-    venue: 'SukSpace',
+    venue: 'Courts',
     time: 'Morning',
     description:
       'Assessment, warm-up, round-robin. Meet the group and find your level.',
@@ -22,7 +22,7 @@ const sessions: Session[] = [
   {
     number: 2,
     city: 'Bangkok',
-    venue: 'SukSpace',
+    venue: 'Courts',
     time: 'Evening',
     description:
       'Structured doubles, skill mixing. Play with different partners.',
@@ -30,7 +30,7 @@ const sessions: Session[] = [
   {
     number: 3,
     city: 'Bangkok',
-    venue: 'SukSpace',
+    venue: 'Courts',
     time: 'Morning',
     description:
       'Tournament day. King of the court, competitive brackets.',
@@ -53,7 +53,7 @@ const sessions: Session[] = [
   {
     number: 6,
     city: 'Phuket',
-    venue: 'Peak Racquet Club',
+    venue: 'Raccoon Pickleball by Peak Racket Club',
     time: 'Evening',
     description:
       'Welcome session. Casual open play at one of Phuket\'s premier facilities.',
@@ -61,7 +61,7 @@ const sessions: Session[] = [
   {
     number: 7,
     city: 'Phuket',
-    venue: 'Peak Racquet Club',
+    venue: 'Raccoon Pickleball by Peak Racket Club',
     time: 'Morning',
     description: 'Final championship, awards ceremony, group photo.',
   },

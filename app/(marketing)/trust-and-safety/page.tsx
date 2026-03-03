@@ -311,13 +311,13 @@ export default function TrustAndSafetyPage() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
                   Bangkok
                 </div>
-                <h3 className="text-xl font-bold">SukSpace</h3>
+                <h3 className="text-xl font-bold">Premium Pickleball Courts</h3>
               </div>
               <CardContent className="p-6">
                 <p className="text-sm text-gray-600">
-                  Bangkok&apos;s premier indoor pickleball facility. Climate-controlled
-                  courts, pro-shop, and a social lounge — the home base for
-                  Bangkok&apos;s growing pickleball community.
+                  Bangkok&apos;s premier pickleball venue. Climate-controlled indoor
+                  courts with professional-grade surfaces, equipment available,
+                  and a welcoming atmosphere for players of all levels.
                 </p>
               </CardContent>
             </Card>
@@ -343,7 +343,7 @@ export default function TrustAndSafetyPage() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
                   Phuket
                 </div>
-                <h3 className="text-xl font-bold">The Peak Pickleball</h3>
+                <h3 className="text-xl font-bold">Raccoon Pickleball by Peak Racket Club</h3>
               </div>
               <CardContent className="p-6">
                 <p className="text-sm text-gray-600">
