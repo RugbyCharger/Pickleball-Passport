@@ -14,6 +14,7 @@ interface TripDetailLayoutProps {
   depositAmount?: number;
   depositLink?: string;
   fullLink?: string;
+  ContentComponent?: React.ComponentType<{ activeSection: TripSection }>;
 }
 
 export function TripDetailLayout({
@@ -24,7 +25,9 @@ export function TripDetailLayout({
   depositAmount,
   depositLink,
   fullLink,
+  ContentComponent,
 }: TripDetailLayoutProps) {
+  const Content = ContentComponent ?? TripSectionContent;
   const [activeSection, setActiveSection] = useState<TripSection>('details');
 
   const handleSectionChange = (section: TripSection) => {
@@ -58,7 +61,7 @@ export function TripDetailLayout({
 
           {/* Center column: active section content */}
           <div className="min-w-0">
-            <TripSectionContent activeSection={activeSection} />
+            <Content activeSection={activeSection} />
           </div>
 
           {/* Right column: booking module (desktop only) */}
