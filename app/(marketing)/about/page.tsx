@@ -96,8 +96,8 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-            {/* Photo */}
-            <div className="relative w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
+            {/* Photos */}
+            <div className="flex flex-col gap-4 w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
                 <Image
                   src="/IMG_5818.JPG"
@@ -107,10 +107,13 @@ export default function AboutPage() {
                   priority
                 />
               </div>
-              {/* Caption badge */}
-              <div className="absolute bottom-4 left-4 right-4 bg-[#1D2D44]/80 backdrop-blur-sm rounded-xl px-4 py-3 text-center">
-                <p className="text-white font-semibold text-sm">Jaron &amp; Ryan</p>
-                <p className="text-white/60 text-xs mt-0.5">Bangkok, Thailand</p>
+              <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
+                <Image
+                  src="/frogandkhali.jpeg"
+                  alt="Frog and Khali"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </div>
 
