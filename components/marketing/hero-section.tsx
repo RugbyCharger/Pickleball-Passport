@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Sun, Palmtree, MapPin, CheckCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, Sun, Palmtree, ShieldCheck } from 'lucide-react';
 import { useLeadModal } from '@/components/providers/lead-modal-provider';
 
 export function HeroSection() {
@@ -105,7 +105,27 @@ export function HeroSection() {
 
                 <div className="text-center group">
                   <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <MapPin className="w-6 h-6 md:w-7 md:h-7 text-[#B08D55]" />
+                    {/* Tuk-tuk silhouette */}
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 md:w-8 md:h-8">
+                      {/* Cabin/body */}
+                      <rect x="6" y="14" width="22" height="16" rx="3" fill="#B08D55" />
+                      {/* Windshield cutout */}
+                      <rect x="9" y="17" width="8" height="7" rx="1.5" fill="#1D2D44" opacity="0.4" />
+                      {/* Roof overhang */}
+                      <rect x="4" y="11" width="26" height="4" rx="2" fill="#B08D55" />
+                      {/* Engine/front hood */}
+                      <rect x="28" y="20" width="10" height="10" rx="2" fill="#B08D55" />
+                      {/* Rear cargo area */}
+                      <rect x="4" y="22" width="4" height="8" rx="1" fill="#B08D55" />
+                      {/* Ground line */}
+                      <rect x="3" y="30" width="42" height="1.5" rx="0.75" fill="#B08D55" opacity="0.3" />
+                      {/* Front wheel */}
+                      <circle cx="35" cy="33" r="4.5" fill="#1D2D44" opacity="0.8" />
+                      <circle cx="35" cy="33" r="2" fill="#B08D55" />
+                      {/* Rear wheel */}
+                      <circle cx="12" cy="33" r="4.5" fill="#1D2D44" opacity="0.8" />
+                      <circle cx="12" cy="33" r="2" fill="#B08D55" />
+                    </svg>
                   </div>
                   <div className="text-xl md:text-3xl font-bold text-white">Locally Led</div>
                   <div className="text-xs text-white/40 mt-0.5">Expat-Built in Thailand</div>
@@ -113,7 +133,7 @@ export function HeroSection() {
 
                 <div className="text-center group">
                   <div className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 rounded-xl bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
-                    <CheckCircle className="w-6 h-6 md:w-7 md:h-7 text-[#B08D55]" />
+                    <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-[#B08D55]" />
                   </div>
                   <div className="text-xl md:text-3xl font-bold text-white">Handpicked</div>
                   <div className="text-xs text-white/40 mt-1">Personally Vetted Hotels</div>
