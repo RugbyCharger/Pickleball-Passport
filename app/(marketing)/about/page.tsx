@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -93,23 +94,44 @@ export default function AboutPage() {
       {/* Our Story Section */}
       <section className="py-16 sm:py-24 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/10 text-[#1D2D44] text-sm font-medium mb-6">
-              <Sun className="w-4 h-4 text-[#B08D55]" />
-              Our Story
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+            {/* Photo */}
+            <div className="relative w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
+                <Image
+                  src="/IMG_5818.JPG"
+                  alt="Jaron Shoptaugh and Ryan Magill, co-founders of The Pickleball Passport"
+                  fill
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+              {/* Caption badge */}
+              <div className="absolute bottom-4 left-4 right-4 bg-[#1D2D44]/80 backdrop-blur-sm rounded-xl px-4 py-3 text-center">
+                <p className="text-white font-semibold text-sm">Jaron &amp; Ryan</p>
+                <p className="text-white/60 text-xs mt-0.5">Bangkok, Thailand</p>
+              </div>
             </div>
 
-            <div className="space-y-6 text-lg text-[#1D2D44]/70 leading-relaxed">
-              <p>
-                The Pickleball Passport was built by two cousins who took the long way around to get here. Jaron and Ryan grew up together in Colorado Springs. Hockey, snowboarding, pickup games of whatever was in season. They went separate ways. Ryan spent 15+ years in energy and construction. Jaron went into finance. When COVID hit, they bought a house in the Colorado mountains, rebuilt it with their own hands, and partnered with a local non-profit to turn it into a sober living home for young men in recovery. That experience taught them something they carry into everything now: transformation happens when you combine community, movement, and genuine care for people.
-              </p>
-              <p>
-                Jaron eventually moved to Thailand, discovered pickleball during early Bangkok mornings, and found a door he didn&apos;t expect. That&apos;s The Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two people who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
-              </p>
-            </div>
+            {/* Text */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/10 text-[#1D2D44] text-sm font-medium mb-6">
+                <Sun className="w-4 h-4 text-[#B08D55]" />
+                Our Story
+              </div>
 
-            {/* Founder Attribution */}
-            <div className="mt-12 pt-8 border-t border-[#B08D55]/20">
+              <div className="space-y-6 text-lg text-[#1D2D44]/70 leading-relaxed">
+                <p>
+                  The Pickleball Passport was built by two cousins who took the long way around to get here. Jaron and Ryan grew up together in Colorado Springs. Hockey, snowboarding, pickup games of whatever was in season. They went separate ways. Ryan spent 15+ years in energy and construction. Jaron went into finance. When COVID hit, they bought a house in the Colorado mountains, rebuilt it with their own hands, and partnered with a local non-profit to turn it into a sober living home for young men in recovery. That experience taught them something they carry into everything now: transformation happens when you combine community, movement, and genuine care for people.
+                </p>
+                <p>
+                  Jaron eventually moved to Thailand, discovered pickleball during early Bangkok mornings, and found a door he didn&apos;t expect. That&apos;s The Pickleball Passport. Every itinerary, every hotel, every restaurant, every court. They&apos;ve walked it, played it, eaten there. This isn&apos;t planned from a desk in the States. It&apos;s built on the ground by two people who believe the best version of yourself shows up when you step outside your routine, pick up a paddle, and say yes to something bigger.
+                </p>
+              </div>
+
+              {/* Founder Attribution */}
+              <div className="mt-12 pt-8 border-t border-[#B08D55]/20">
               <p className="text-xl font-serif font-bold text-[#1D2D44] mb-1">
                 Jaron Shoptaugh &amp; Ryan Magill
               </p>
@@ -155,6 +177,7 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </section>
 

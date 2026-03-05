@@ -58,22 +58,25 @@ export function PickleballIcon({ size = 'md', className = '' }: LogoProps) {
       className={className}
       aria-label="Pickleball"
     >
-      {/* Pickleball (ball with holes) */}
+      {/* Pickleball ball */}
       <circle cx="60" cy="60" r="56" fill="#B08D55" />
+      {/* Outer ring for depth */}
+      <circle cx="60" cy="60" r="56" fill="none" stroke="#8D7144" strokeWidth="3" />
 
-      {/* Pickleball holes pattern */}
-      <circle cx="35" cy="35" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="60" cy="30" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="85" cy="35" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="30" cy="60" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="55" cy="55" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="80" cy="50" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="90" cy="70" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="35" cy="85" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="60" cy="80" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="85" cy="85" r="8" fill="#1D2D44" opacity="0.3" />
-      <circle cx="45" cy="105" r="6" fill="#1D2D44" opacity="0.3" />
-      <circle cx="75" cy="105" r="6" fill="#1D2D44" opacity="0.3" />
+      {/* Pickleball holes — evenly spaced, punched-through look */}
+      {/* Row 1 */}
+      <circle cx="40" cy="38" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="60" cy="32" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="80" cy="38" r="7" fill="#1D2D44" opacity="0.75" />
+      {/* Row 2 */}
+      <circle cx="28" cy="58" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="48" cy="58" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="72" cy="58" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="92" cy="58" r="7" fill="#1D2D44" opacity="0.75" />
+      {/* Row 3 */}
+      <circle cx="40" cy="78" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="60" cy="84" r="7" fill="#1D2D44" opacity="0.75" />
+      <circle cx="80" cy="78" r="7" fill="#1D2D44" opacity="0.75" />
     </svg>
   );
 }
