@@ -115,6 +115,9 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </div>
+              <p className="text-sm text-[#1D2D44]/50 italic text-center px-2">
+                Meet the mascots: Khali &amp; Frog. They don&apos;t play pickleball yet, but they&apos;re very much part of the family.
+              </p>
             </div>
 
             {/* Text */}
