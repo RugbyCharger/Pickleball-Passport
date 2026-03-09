@@ -16,7 +16,7 @@ interface BookingModuleProps {
 
 export function BookingModule({
   tripName = 'Thailand - 13 Days / 12 Nights',
-  cities = 'Bangkok \u2022 Chiang Mai \u2022 Phuket',
+  cities = 'Bangkok · Chiang Mai · Phuket',
   dates = 'May 15\u201327, 2026',
   price = 4250,
   depositAmount = 1065,

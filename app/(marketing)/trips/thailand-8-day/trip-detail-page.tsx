@@ -78,7 +78,7 @@ export function Thailand8DayTripPage() {
       {/* ══════════ TABBED CONTENT + SIDEBAR ══════════ */}
       <TripDetailLayout
         tripName="Thailand - 8 Days / 7 Nights"
-        cities="Bangkok \u2022 Chiang Mai"
+        cities="Bangkok · Chiang Mai"
         dates="May 6\u201313, 2026"
         price={2888}
         depositAmount={722}
