@@ -40,10 +40,26 @@ export const waitlistRouter = router({
           .max(200, 'Response must be 200 characters or less')
           .optional()
           .or(z.literal('')),
+        // Extended CRM fields
+        tripInterest: z.string().max(200).optional().or(z.literal('')),
+        referralSource: z.string().max(200).optional().or(z.literal('')),
+        referralName: z.string().max(200).optional().or(z.literal('')),
+        utmSource: z.string().max(200).optional().or(z.literal('')),
+        utmMedium: z.string().max(200).optional().or(z.literal('')),
+        utmCampaign: z.string().max(200).optional().or(z.literal('')),
+        utmContent: z.string().max(200).optional().or(z.literal('')),
+        leadSource: z.string().max(200).optional().or(z.literal('')),
+        tripType: z.string().max(200).optional().or(z.literal('')),
+        departureDate: z.string().max(200).optional().or(z.literal('')),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { fullName, email, phone, trip, hearAbout, clubRef } = input;
+      const {
+        fullName, email, phone, trip, hearAbout, clubRef,
+        tripInterest, referralSource, referralName,
+        utmSource, utmMedium, utmCampaign, utmContent,
+        leadSource, tripType, departureDate,
+      } = input;
 
       // Rate limiting check
       const ip = getIpAddress(ctx.headers);
@@ -59,8 +75,6 @@ export const waitlistRouter = router({
       const normalizedEmail = email.toLowerCase().trim();
 
       // ── Zapier webhook (primary — fires first to ensure lead reaches CRM) ──
-      // Note: phone omitted from webhook — Attio rejects non-standard formats.
-      // Phone is still saved in the DB entry. Jaron collects during consultation.
       if (process.env.ZAPIER_WEBHOOK_URL) {
         try {
           const payload: Record<string, string> = {
@@ -69,8 +83,22 @@ export const waitlistRouter = router({
             email: normalizedEmail,
             preferred_trip: trip,
           };
+          // Phone: included when E.164 format (starts with +)
+          if (phone && phone.startsWith('+')) payload.phone = phone;
+          // Legacy fields (backward compat)
           if (hearAbout) payload.how_heard = hearAbout;
           if (clubRef) payload.referred_by = clubRef;
+          // Extended CRM fields
+          if (tripInterest) payload.trip_interest = tripInterest;
+          if (referralSource) payload.referral_source = referralSource;
+          if (referralName) payload.referral_name = referralName;
+          if (utmSource) payload.utm_source = utmSource;
+          if (utmMedium) payload.utm_medium = utmMedium;
+          if (utmCampaign) payload.utm_campaign = utmCampaign;
+          if (utmContent) payload.utm_content = utmContent;
+          if (leadSource) payload.lead_source = leadSource;
+          if (tripType) payload.trip_type = tripType;
+          if (departureDate) payload.departure_date = departureDate;
 
           await fetch(process.env.ZAPIER_WEBHOOK_URL, {
             method: 'POST',
