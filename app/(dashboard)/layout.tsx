@@ -11,6 +11,8 @@
  * Prevents static generation since these routes require authentication
  */
 
+export const dynamic = 'force-dynamic';
+
 export default function DashboardGroupLayout({
   children,
 }: {
