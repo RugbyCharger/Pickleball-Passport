@@ -73,29 +73,33 @@ export default function RootLayout({
     },
   };
 
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-          />
-        </head>
-        <body
-          className={`${montserrat.variable} ${nunitoSans.variable} font-sans antialiased`}
-        >
-          <Providers>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </Providers>
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    </ClerkProvider>
+  const inner = (
+    <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
+      <body
+        className={`${montserrat.variable} ${nunitoSans.variable} font-sans antialiased`}
+      >
+        <Providers>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
   );
+
+  // ClerkProvider requires NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY at build time.
+  // Wrap conditionally so preview deployments (without the key) can still prerender.
+  return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    ? <ClerkProvider>{inner}</ClerkProvider>
+    : inner;
 }
