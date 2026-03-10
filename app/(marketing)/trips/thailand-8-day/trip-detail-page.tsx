@@ -79,7 +79,7 @@ export function Thailand8DayTripPage() {
       <TripDetailLayout
         tripName="Thailand - 8 Days / 7 Nights"
         cities="Bangkok · Chiang Mai"
-        dates="May 6\u201313, 2026"
+        dates="May 6–13, 2026"
         price={2888}
         depositAmount={722}
         depositLink="https://buy.stripe.com/8x29ATagz5cb4e19sp2cg03"
