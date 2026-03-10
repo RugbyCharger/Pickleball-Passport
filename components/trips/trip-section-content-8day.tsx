@@ -39,15 +39,15 @@ const includedItems = [
   '7 nights at handpicked boutique hotels (2 unique properties, 2 cities)',
   'Daily breakfast at all hotels (7 breakfasts)',
   '3 group dinners: welcome dinner in each city + Bangkok farewell dinner',
-  '1 domestic flight (Bangkok \u2192 Chiang Mai)',
+  'Private ground transfer Bangkok → Hua Hin (3–4 hr scenic drive)',
   'All private ground transportation (air-con vans, airport transfers)',
   '4 pickleball sessions with court fees, equipment, and structured programming',
   'Thai cooking class (half day with market tour)',
-  'Elephant Nature Park visit (ethical sanctuary, no riding, no chains)',
+  'Beach day with optional water sports or national park excursion',
   'Private long-tail boat sunset cruise on the Chao Phraya River',
   'Wat Pho guided temple tour (Reclining Buddha)',
   'Guided Chinatown street food walk (all tastings included)',
-  'Wiang Kum Kam archaeological site bicycle exploration',
+  'Hua Hin Night Market guided walk',
   'Hotel wellness amenities: onsen, pools, saunas',
   'Dedicated trip host throughout',
 ];
@@ -190,88 +190,95 @@ const days: ItineraryDay[] = [
   },
   {
     day: 5,
-    title: 'Fly to Chiang Mai',
-    city: 'Chiang Mai',
-    vibe: 'Travel, settle, breathe',
-    icon: 'plane',
+    title: 'Drive to Hua Hin',
+    city: 'Hua Hin',
+    vibe: 'Road trip, beach, settle in',
+    icon: 'ship',
     slots: [
-      { label: '7\u20138:30 AM', description: 'Breakfast, check out.' },
-      { label: '~11 AM', description: 'Flight to Chiang Mai (~1 hr 15 min).' },
+      { label: '7–8:30 AM', description: 'Breakfast, check out of Bangkok hotel.' },
       {
-        label: '12:30 PM',
-        description: 'Private van to our Chiang Mai hotel (Ping River).',
+        label: '9:00 AM',
+        description: 'Private van transfer to Hua Hin (~3–4 hr scenic drive along the coast).',
       },
       {
-        label: '2:00 PM',
-        description: 'WIANG KUM KAM BICYCLE EXPLORATION: 700-year-old Lanna ruins.',
+        label: '1:00 PM',
+        description: 'Check in to our Hua Hin beachfront resort. Lunch at the hotel.',
+      },
+      {
+        label: '3:00 PM',
+        description: 'BEACH TIME: Relax, swim, or explore the beachfront promenade.',
       },
       {
         label: '6:30 PM',
-        description: 'WELCOME DINNER: Huen Muan Jai (Michelin Bib Gourmand).',
+        description: 'HUA HIN WELCOME DINNER: Beachside seafood restaurant.',
       },
     ],
   },
   {
     day: 6,
-    title: 'Cooking Class + Pickleball',
-    city: 'Chiang Mai',
-    vibe: 'Make it, then burn it off',
-    icon: 'landmark',
+    title: 'Pickleball + Night Market',
+    city: 'Hua Hin',
+    vibe: 'Play hard, explore harder',
+    icon: 'trophy',
     slots: [
-      { label: '7\u20138:30 AM', description: 'Breakfast at the hotel.' },
+      { label: '7–8:30 AM', description: 'Breakfast at the hotel.' },
       {
-        label: '9:00 AM',
+        label: '9:30 AM',
         description:
-          'THAI COOKING CLASS: Market tour + cook 5\u20136 dishes at organic farm.',
+          'PICKLEBALL SESSION 3 at Sports Life Hua Hin: Skill clinics, dinking, stacking, open play.',
+      },
+      { label: '12:30 PM', description: 'Lunch near the courts.' },
+      {
+        label: '2:00 PM',
+        description: 'Free time: pool, beach, spa, or explore town.',
       },
       {
-        label: '3:00 PM',
-        description:
-          'PICKLEBALL SESSION 3 at BokBok: Skill clinics, dinking, stacking, open play.',
+        label: '6:00 PM',
+        description: 'HUA HIN NIGHT MARKET: Guided walk through one of Thailand\'s best night markets.',
       },
       {
-        label: '7:00 PM',
-        description: 'DINNER: Kiti Panit (Michelin-recommended, 130-year-old teak mansion).',
+        label: '8:00 PM',
+        description: 'Free dinner night (your trip host will share curated recommendations).',
       },
     ],
   },
   {
     day: 7,
-    title: 'Championship + Elephants',
-    city: 'Chiang Mai',
-    vibe: 'Compete in the morning, awe in the afternoon',
+    title: 'Championship + Beach or Nature',
+    city: 'Hua Hin',
+    vibe: 'Compete, then choose your own adventure',
     icon: 'trophy',
     slots: [
-      { label: '7\u20137:30 AM', description: 'Early breakfast.' },
+      { label: '7–7:30 AM', description: 'Early breakfast.' },
       {
         label: '9:00 AM',
-        description: 'PICKLEBALL SESSION 4 at BokBok: Competitive play, bracket tournament.',
+        description: 'PICKLEBALL SESSION 4 at Sports Life Hua Hin: Competitive play, bracket tournament.',
       },
       {
         label: '1:30 PM',
         description:
-          'ELEPHANT NATURE PARK: Feed elephants, river bathing, guided walk, lunch included.',
+          'YOUR PICK: Water sports (kiteboarding, jet ski, paddleboard) or national park excursion (Khao Sam Roi Yot — caves, mangroves, wildlife).',
       },
-      { label: '5:30 PM', description: 'Pool / spa / decompress.' },
+      { label: '5:30 PM', description: 'Pool / spa / beach sunset.' },
       {
-        label: '7:00 PM',
-        description: 'DINNER: Huan Soontaree (riverside, live folk music).',
+        label: '7:30 PM',
+        description: 'FAREWELL DINNER: Curated beachside dining experience.',
       },
     ],
   },
   {
     day: 8,
     title: 'Departure Day',
-    city: 'Chiang Mai',
+    city: 'Hua Hin',
     vibe: 'Hugs, promises to come back, airport',
     icon: 'plane',
     slots: [
-      { label: '7\u20139 AM', description: 'Final breakfast together.' },
-      { label: '9\u201310 AM', description: 'Check out.' },
+      { label: '7–9 AM', description: 'Final breakfast together.' },
+      { label: '9–10 AM', description: 'Check out.' },
       {
         label: 'Transfers',
         description:
-          'Staggered private van transfers to Chiang Mai airport (~15 min). Flights home, onward travel, or extend your stay independently.',
+          'Private van transfer back to Bangkok Suvarnabhumi Airport (~3–4 hrs). Flights home, onward travel, or extend your stay independently.',
       },
     ],
   },
@@ -298,18 +305,18 @@ const pickleballSessions = [
   },
   {
     number: 3,
-    city: 'Chiang Mai',
-    venue: 'BokBok',
+    city: 'Hua Hin',
+    venue: 'Sports Life Hua Hin',
     day: 'Day 6',
-    time: '3:00\u20135:30 PM',
+    time: '9:30 AM–12 PM',
     focus: 'Skill clinics, dinking, stacking, open play',
   },
   {
     number: 4,
-    city: 'Chiang Mai',
-    venue: 'BokBok',
+    city: 'Hua Hin',
+    venue: 'Sports Life Hua Hin',
     day: 'Day 7',
-    time: '9:00 AM\u201312 PM',
+    time: '9:00 AM–12 PM',
     focus: 'Competitive play, bracket tournament',
   },
 ];
@@ -331,17 +338,17 @@ const hotels = [
     ],
   },
   {
-    name: 'Riverside boutique resort near ancient Lanna ruins',
-    city: 'Chiang Mai',
-    location: 'Ping River, Wiang Kum Kam',
+    name: 'Boutique beachfront resort in Hua Hin',
+    city: 'Hua Hin',
+    location: 'Hua Hin beachfront',
     duration: '3 Nights',
     highlights: [
-      '18-room riverside boutique on the banks of the Ping River, surrounded by 700-year-old Lanna archaeological ruins',
+      'Beachfront boutique resort with direct beach access and ocean views',
       'Free cooked-to-order breakfast daily (included)',
-      'Outdoor pool with river and ancient pagoda views',
-      'Free shuttle to downtown and Night Bazaar 3x daily',
-      'Free bicycles for exploring Wiang Kum Kam ruins: temples, crumbling walls, zero tourists',
-      '5 minutes from Chiang Mai airport, 5-minute drive to BokBok Pickleball courts',
+      'Outdoor pool and beach lounge area',
+      'Walking distance to Hua Hin Night Market and town center',
+      'Short drive to Sports Life Hua Hin pickleball courts',
+      'Spa and wellness facilities on-site',
     ],
   },
 ];
@@ -362,16 +369,16 @@ const groupDinners = [
     description: 'S\u00fchring, Gaa, or Samrub Thai',
   },
   {
-    city: 'Chiang Mai',
-    label: 'Chiang Mai Welcome',
-    restaurant: 'Huen Muan Jai',
-    description: 'Michelin Bib Gourmand, traditional Lanna wooden house',
+    city: 'Hua Hin',
+    label: 'Hua Hin Welcome',
+    restaurant: 'Beachside seafood restaurant',
+    description: 'Fresh catch of the day, oceanfront dining',
   },
   {
-    city: 'Chiang Mai',
-    label: 'Chiang Mai Signature',
-    restaurant: 'Huan Soontaree',
-    description: 'Riverside Northern Thai with live folk music',
+    city: 'Hua Hin',
+    label: 'Hua Hin Farewell',
+    restaurant: 'Curated beachside dining experience',
+    description: 'Celebratory farewell dinner by the sea',
   },
 ];
 
@@ -398,18 +405,18 @@ const michelinUpgrades = [
     priceUSD: '~$145',
   },
   {
-    name: 'Kiti Panit',
-    detail: 'Michelin-recommended, Chiang Mai',
-    description: '130-year-old teak mansion.',
-    priceTHB: '~500 THB',
-    priceUSD: '~$15',
+    name: 'Hua Hin beachfront seafood',
+    detail: 'Local favorite, Hua Hin',
+    description: 'Fresh seafood right on the beach.',
+    priceTHB: '~800 THB',
+    priceUSD: '~$23',
   },
 ];
 
 /* ─────────────────────── HELPERS ─────────────────────── */
 
 function getCityColor(city: string): string {
-  return city === 'Chiang Mai' ? 'bg-[#B08D55] text-white' : 'bg-[#1D2D44] text-white';
+  return city === 'Hua Hin' ? 'bg-[#B08D55] text-white' : 'bg-[#1D2D44] text-white';
 }
 
 /* ─────────────────────── SECTION COMPONENTS ─────────────────────── */
@@ -460,7 +467,7 @@ function ItineraryAccordion() {
           Day-by-Day Itinerary
         </h2>
         <p className="text-[#1D2D44]/60 text-sm">
-          8 days across Bangkok and Chiang Mai. Click any day to see the full schedule.
+          8 days across Bangkok and Hua Hin. Click any day to see the full schedule.
         </p>
       </div>
 
@@ -716,7 +723,7 @@ function Dining8Day() {
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
           Several evenings are designated as free nights. Your trip host will share curated
-          recommendations for Bangkok and Chiang Mai, from night markets and rooftop bars to
+          recommendations for Bangkok and Hua Hin, from night markets and rooftop bars to
           hidden local spots.
         </p>
       </div>

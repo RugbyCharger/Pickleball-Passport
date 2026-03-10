@@ -18,10 +18,10 @@ interface UpcomingDate {
 }
 
 const upcoming8DayDates: UpcomingDate[] = [
-  { dateRange: 'Jun 16–23, 2026', cities: 'Bangkok + Chiang Mai' },
-  { dateRange: 'Aug 14–21, 2026', cities: 'Bangkok + Chiang Mai' },
-  { dateRange: 'Sep 26–Oct 3, 2026', cities: 'Bangkok + Chiang Mai' },
-  { dateRange: 'Nov 2–9, 2026', cities: 'Bangkok + Chiang Mai' },
+  { dateRange: 'Jun 16–23, 2026', cities: 'Bangkok + Hua Hin' },
+  { dateRange: 'Aug 14–21, 2026', cities: 'Bangkok + Hua Hin' },
+  { dateRange: 'Sep 26–Oct 3, 2026', cities: 'Bangkok + Hua Hin' },
+  { dateRange: 'Nov 2–9, 2026', cities: 'Bangkok + Hua Hin' },
 ];
 
 const upcoming13DayDates: UpcomingDate[] = [
@@ -50,6 +50,10 @@ const comingSoonDestinations = [
   {
     destination: 'JAPAN',
     imageUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80',
+  },
+  {
+    destination: 'DUBAI',
+    imageUrl: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80',
   },
   {
     destination: 'MALAYSIA',
@@ -360,7 +364,7 @@ export function TripsListingPage() {
             <LiveTripCard
               duration="8day"
               dateRange="May 6–13, 2026"
-              cities="Bangkok • Chiang Mai"
+              cities="Bangkok • Hua Hin"
               price="From $2,888/person"
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
               detailHref="/trips/thailand-8-day"
@@ -379,7 +383,7 @@ export function TripsListingPage() {
             {/* Card 3 — UPCOMING 8-Day */}
             <UpcomingTripCard
               durationLabel="8 Days / 7 Nights"
-              cities="Bangkok • Chiang Mai"
+              cities="Bangkok • Hua Hin"
               imageUrl="https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800&q=80"
               dates={upcoming8DayDates}
               onReserve={openWaitlist}
@@ -454,7 +458,7 @@ export function TripsListingPage() {
               when booking opens.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {comingSoonDestinations.map((dest) => (
               <ComingSoonCard
                 key={dest.destination}

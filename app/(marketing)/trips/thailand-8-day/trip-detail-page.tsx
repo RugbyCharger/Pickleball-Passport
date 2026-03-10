@@ -34,7 +34,7 @@ export function Thailand8DayTripPage() {
                 Bangkok
               </span>
               <span className="text-[#B08D55]">&bull;</span>
-              <span>Chiang Mai</span>
+              <span>Hua Hin</span>
             </p>
 
             {/* Trip summary badges */}
@@ -78,7 +78,7 @@ export function Thailand8DayTripPage() {
       {/* ══════════ TABBED CONTENT + SIDEBAR ══════════ */}
       <TripDetailLayout
         tripName="Thailand - 8 Days / 7 Nights"
-        cities="Bangkok · Chiang Mai"
+        cities="Bangkok · Hua Hin"
         dates="May 6–13, 2026"
         price={2888}
         depositAmount={722}
