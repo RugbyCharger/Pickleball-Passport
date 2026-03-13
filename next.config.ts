@@ -173,6 +173,20 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/trips/thailand-8-day',
+        destination: '/trips/bangkok-hua-hin-essential',
+        permanent: true,
+      },
+      {
+        source: '/trips/thailand',
+        destination: '/trips/bangkok-hua-hin-ultimate',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
