@@ -4,7 +4,7 @@ import { BangkokHuaHinUltimatePage } from './trip-detail-page';
 export const metadata: Metadata = {
   title: 'Bangkok + Hua Hin Ultimate: 15-Day Pickleball Trip | The Pickleball Passport',
   description:
-    'The ultimate 15-day pickleball experience. 5 nights at The Peninsula Bangkok, 8 nights at Dusit Thani Hua Hin, plus a farewell night back at The Peninsula. 6+ pickleball sessions, cultural immersion, and luxury accommodations. From $5,497.',
+    'The ultimate 15-day pickleball experience. 5 nights at The Peninsula Bangkok, 8 nights at Dusit Thani Hua Hin, plus a farewell night back at The Peninsula. 8+ pickleball sessions, cultural immersion, and luxury accommodations. From $5,497.',
   keywords: [
     'pickleball trip Thailand',
     'pickleball travel',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Bangkok + Hua Hin Ultimate: 15-Day Pickleball Trip | The Pickleball Passport',
     description:
-      '15 days across Bangkok and Hua Hin. The Peninsula Bangkok, Dusit Thani Hua Hin, 6+ pickleball sessions, and world-class dining. From $5,497.',
+      '15 days across Bangkok and Hua Hin. The Peninsula Bangkok, Dusit Thani Hua Hin, 8+ pickleball sessions, and world-class dining. From $5,497.',
     url: 'https://www.thepickleballpassport.org/trips/bangkok-hua-hin-ultimate',
     siteName: 'The Pickleball Passport',
     locale: 'en_US',

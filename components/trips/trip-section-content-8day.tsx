@@ -638,26 +638,28 @@ function Pickleball8Day() {
           {pickleballSessions.map((session) => (
             <div
               key={session.number}
-              className="bg-white rounded-xl border border-[#B08D55]/15 shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5"
+              className="bg-white rounded-xl border border-[#B08D55]/15 shadow-sm p-4 sm:p-5 overflow-hidden"
             >
-              <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0">
+              <div className="flex items-start gap-3 sm:gap-4">
                 <span className="w-10 h-10 rounded-full bg-[#1D2D44] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {session.number}
                 </span>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getCityColor(session.city)}`}
-                  >
-                    {session.city} &middot; {session.venue}
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#F5E6D3] text-[#1D2D44] text-xs font-medium">
-                    {session.day}, {session.time}
-                  </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getCityColor(session.city)}`}
+                    >
+                      {session.city} &middot; {session.venue}
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#F5E6D3] text-[#1D2D44] text-xs font-medium">
+                      {session.day}, {session.time}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#1D2D44]/75 leading-relaxed">
+                    {session.focus}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-[#1D2D44]/75 leading-relaxed sm:border-l sm:border-[#B08D55]/15 sm:pl-5">
-                {session.focus}
-              </p>
             </div>
           ))}
         </div>

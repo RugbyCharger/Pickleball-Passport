@@ -42,7 +42,7 @@ const includedItems = [
   'Private ground transfer Bangkok to Hua Hin (3-hr scenic drive)',
   'Private ground transfer Hua Hin back to The Peninsula Bangkok (farewell night)',
   'All private ground transportation (air-con vans, airport transfers)',
-  '3-4 pickleball sessions with court fees, equipment, and structured programming',
+  '4 pickleball sessions with court fees, equipment, and structured programming',
   'Guided Chinatown street food walk (all tastings included)',
   'Wat Pho guided temple tour (Reclining Buddha)',
   '1-2 cultural excursions',
@@ -98,24 +98,10 @@ const days: ItineraryDay[] = [
     vibe: 'Land, breathe, bond',
     icon: 'sparkles',
     slots: [
-      {
-        label: 'Daytime',
-        description:
-          'Staggered airport arrivals. Private transfers from Suvarnabhumi (BKK) to The Peninsula Bangkok. Check-in and room assignments.',
-      },
-      {
-        label: 'Free Time',
-        description: 'Settle in and explore The Peninsula. Riverside pool, spa, gardens.',
-      },
-      { label: '4:00 PM', description: 'Group meet in hotel lobby, orientation.' },
-      {
-        label: '5:00 PM',
-        description: 'Spa session or pool time at The Peninsula.',
-      },
-      {
-        label: '7:30 PM',
-        description: 'WELCOME DINNER at The Peninsula or nearby riverside restaurant.',
-      },
+      { label: 'Daytime', description: 'Staggered airport arrivals. Private van transfer from Suvarnabhumi (~30 min). Check-in, room assignments, property orientation.' },
+      { label: '2:00\u20135:00 PM', description: 'Free time to decompress, explore Peninsula grounds.' },
+      { label: '5:30 PM', description: 'Group meet in lobby, trip overview from host.' },
+      { label: '7:30 PM', description: 'WELCOME DINNER (included) at The Peninsula.' },
     ],
   },
   {
@@ -126,49 +112,28 @@ const days: ItineraryDay[] = [
     vibe: 'Shake off the rust, then explore the river',
     icon: 'trophy',
     slots: [
-      { label: '7\u20139 AM', description: 'Breakfast at The Peninsula.' },
-      {
-        label: '9:30 AM',
-        description:
-          'PICKLEBALL SESSION 1 at premier Bangkok courts: Warm-up drills, round-robin.',
-      },
-      { label: '12:30 PM', description: 'Lunch near courts.' },
-      { label: '1:30 PM', description: 'Free time / recovery / pool / spa.' },
-      {
-        label: '4:30 PM',
-        description:
-          'PRIVATE LONG-TAIL BOAT SUNSET CRUISE: canals to Wat Arun at dusk.',
-      },
-      {
-        label: '7:00 PM',
-        description: 'GROUP DINNER: Riverside dining experience.',
-      },
+      { label: '7:00\u20139:00 AM', description: 'Breakfast at The Peninsula (included daily).' },
+      { label: '9:30 AM\u201312:00 PM', description: 'PICKLEBALL SESSION 1 at Peninsula Bangkok. Warm-up drills, skill-level mixing, light round-robin.' },
+      { label: '12:30 PM', description: 'Lunch (own expense).' },
+      { label: '1:30\u20133:30 PM', description: 'Free time / pool / spa.' },
+      { label: '4:30\u20136:30 PM', description: 'PRIVATE LONG-TAIL BOAT SUNSET CRUISE (included). Thonburi canals, Grand Palace, Wat Arun at dusk.' },
+      { label: '7:00 PM', description: 'DINNER (included). Riverside restaurant, Wat Arun backdrop.' },
     ],
   },
   {
     day: 3,
-    title: 'Temple + Street Food',
+    title: 'Temple + Street Food + Pickleball',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'One temple done right, then eat everything',
     icon: 'landmark',
     slots: [
-      { label: '7\u20138:30 AM', description: 'Breakfast at The Peninsula.' },
-      {
-        label: '9:30 AM',
-        description: 'WAT PHO guided tour (Reclining Buddha, optional Thai massage).',
-      },
-      { label: '11:30 AM', description: 'GUIDED CHINATOWN STREET FOOD WALK.' },
-      { label: '2\u20135 PM', description: 'Free time / recovery / explore Bangkok.' },
-      {
-        label: '5:30 PM',
-        description:
-          'PICKLEBALL SESSION 2 at premier Bangkok courts: Structured doubles, skill clinics.',
-      },
-      {
-        label: '8:00 PM',
-        description: 'Free dinner night (your trip host will share curated recommendations).',
-      },
+      { label: '7:00\u20138:30 AM', description: 'Breakfast.' },
+      { label: '9:30\u201311:00 AM', description: 'GUIDED WAT PHO TOUR (included). Reclining Buddha, licensed English guide. Optional: Thai massage at Wat Pho massage school (~300\u2013500 THB).' },
+      { label: '11:30 AM\u20131:30 PM', description: 'GUIDED CHINATOWN STREET FOOD WALK (included). This IS lunch.' },
+      { label: '2:30\u20134:30 PM', description: 'Free time / pool.' },
+      { label: '5:00\u20137:00 PM', description: 'PICKLEBALL SESSION 2 at Peninsula Bangkok. Evening session, structured doubles, skill clinics.' },
+      { label: '7:30 PM', description: 'Dinner (own expense, free night). CHOOSE YOUR ADVENTURE: Rooftop bar, night market (Jodd Fairs or Rod Fai), or rest at The Peninsula.' },
     ],
   },
   {
@@ -179,23 +144,13 @@ const days: ItineraryDay[] = [
     vibe: 'Road trip, beach, settle in',
     icon: 'ship',
     slots: [
-      { label: '7-8:30 AM', description: 'Breakfast at The Peninsula, check out.' },
-      {
-        label: '9:00 AM',
-        description: 'Private van transfer to Hua Hin (~3-hr scenic drive along the coast).',
-      },
-      {
-        label: '12:30 PM',
-        description: 'Check in to Dusit Thani Hua Hin. Lunch at the hotel.',
-      },
-      {
-        label: '3:00 PM',
-        description: 'BEACH TIME: Relax, swim, or explore the beachfront.',
-      },
-      {
-        label: '6:30 PM',
-        description: 'HUA HIN WELCOME DINNER: Beachside seafood restaurant.',
-      },
+      { label: '7:00\u20138:30 AM', description: 'Breakfast at Peninsula.' },
+      { label: '9:00 AM', description: 'Check out, load van.' },
+      { label: '9:30 AM', description: 'Scenic 3-hour drive to Hua Hin, comfort stop midway.' },
+      { label: '12:30 PM', description: 'Arrive Dusit Thani, check-in.' },
+      { label: '1:00\u20132:00 PM', description: 'Lunch (own expense).' },
+      { label: '2:30\u20135:30 PM', description: 'Free afternoon. Beach, pool (#2 in Thailand), Devarana Wellness. CHOOSE YOUR ADVENTURE: Beach walk, spa (own expense), or pool relaxation.' },
+      { label: '7:00 PM', description: 'HUA HIN WELCOME DINNER (included). Beachfront seafood.' },
     ],
   },
   {
@@ -206,92 +161,56 @@ const days: ItineraryDay[] = [
     vibe: 'Play hard, explore harder',
     icon: 'trophy',
     slots: [
-      { label: '7-8:30 AM', description: 'Breakfast at Dusit Thani.' },
-      {
-        label: '9:30 AM',
-        description:
-          'PICKLEBALL SESSION 3: Skill clinics, dinking, stacking, open play.',
-      },
-      { label: '12:30 PM', description: 'Lunch near the courts.' },
-      {
-        label: '2:00 PM',
-        description: 'Free time: Devarana Wellness spa, pool, beach, or explore town.',
-      },
-      {
-        label: '6:00 PM',
-        description: 'HUA HIN NIGHT MARKET: Guided walk through one of Thailand\'s best night markets.',
-      },
-      {
-        label: '8:00 PM',
-        description: 'Free dinner night (your trip host will share curated recommendations).',
-      },
+      { label: '7:00\u20138:30 AM', description: 'Breakfast (included daily).' },
+      { label: '9:00\u201311:30 AM', description: 'PICKLEBALL SESSION 3 at Sports Life Hua Hin. Social play with local expat community.' },
+      { label: '12:00 PM', description: 'Lunch (own expense).' },
+      { label: '1:00\u20135:00 PM', description: 'Free afternoon. CHOOSE YOUR ADVENTURE: Beach day, Devarana Wellness (own expense), explore Hua Hin town, or golf at championship course (own expense).' },
+      { label: '6:30\u20139:00 PM', description: 'HUA HIN NIGHT MARKET TOUR (guided). Street food crawl, this IS dinner.' },
     ],
   },
   {
     day: 6,
-    title: 'Beach Day or Nature',
+    title: 'National Park + Farewell Pickleball',
+    city: 'Hua Hin',
+    hotel: 'Dusit Thani Hua Hin',
+    vibe: 'Explore nature, then compete',
+    icon: 'landmark',
+    slots: [
+      { label: '7:00\u20138:00 AM', description: 'Early breakfast.' },
+      { label: '8:30 AM', description: 'Van to Khao Sam Roi Yot (~45 min).' },
+      { label: '9:30 AM\u201312:30 PM', description: 'KHAO SAM ROI YOT NATIONAL PARK (included). Limestone hills, Phraya Nakhon Cave, royal pavilion.' },
+      { label: '12:30 PM', description: 'Return, lunch (own expense).' },
+      { label: '2:00\u20133:00 PM', description: 'Rest / pool / beach.' },
+      { label: '3:30\u20135:30 PM', description: 'PICKLEBALL SESSION 4 (FINAL) at Sports Life Hua Hin. Friendly tournament, awards, group photo.' },
+      { label: '7:30 PM', description: 'GROUP DINNER (included).' },
+    ],
+  },
+  {
+    day: 7,
+    title: 'Free Day',
     city: 'Hua Hin',
     hotel: 'Dusit Thani Hua Hin',
     vibe: 'Choose your own adventure',
     icon: 'sparkles',
     slots: [
-      { label: '7-8:30 AM', description: 'Breakfast at Dusit Thani.' },
-      {
-        label: '9 AM-5 PM',
-        description:
-          'FREE DAY. Options: Devarana Wellness spa day, water sports (kiteboarding, paddleboard), national park excursion (Khao Sam Roi Yot), or relax at the pool.',
-      },
-      {
-        label: '7:00 PM',
-        description: 'GROUP DINNER: Curated Hua Hin dining experience.',
-      },
-    ],
-  },
-  {
-    day: 7,
-    title: 'Championship + Farewell',
-    city: 'Hua Hin',
-    hotel: 'Dusit Thani Hua Hin',
-    vibe: 'Compete, then celebrate',
-    icon: 'trophy',
-    slots: [
-      { label: '7-7:30 AM', description: 'Early breakfast.' },
-      {
-        label: '9:00 AM',
-        description: 'PICKLEBALL SESSION 4: Competitive play, bracket tournament.',
-      },
-      {
-        label: '1:30 PM',
-        description: 'Free afternoon: pool, beach, spa, pack.',
-      },
-      {
-        label: '5:00 PM',
-        description: 'Private van transfer back to Bangkok (~3 hrs).',
-      },
-      {
-        label: '8:30 PM',
-        description: 'Check in to The Peninsula Bangkok for farewell night.',
-      },
+      { label: 'Full Day', description: 'CHOOSE YOUR ADVENTURE: Full beach relaxation, Devarana Wellness half-day spa (own expense), vineyard visit (own expense), golf (own expense), Cicada Market (if Fri/Sat), or extra pickleball at Sports Life Hua Hin.' },
+      { label: '7:00 PM', description: 'Dinner (own expense).' },
     ],
   },
   {
     day: 8,
-    title: 'Farewell Night',
+    title: 'Return to Bangkok + Farewell',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'One last night together',
     icon: 'sparkles',
     slots: [
-      { label: '9-10 AM', description: 'Sleep in. Breakfast at The Peninsula.' },
-      {
-        label: '10 AM-5 PM',
-        description:
-          'FREE DAY. Last-minute shopping, spa, or explore Bangkok at your own pace.',
-      },
-      {
-        label: '7:30 PM',
-        description: 'FAREWELL DINNER: Curated fine dining experience to close the trip.',
-      },
+      { label: '7:00\u20139:00 AM', description: 'Final breakfast at Dusit Thani.' },
+      { label: '10:00 AM', description: 'Depart for Bangkok, 3-hour drive.' },
+      { label: '1:00 PM', description: 'Arrive Peninsula, check-in.' },
+      { label: '1:30\u20135:00 PM', description: 'Free afternoon.' },
+      { label: '6:00 PM', description: 'Sunset cocktails.' },
+      { label: '7:30 PM', description: 'FAREWELL DINNER (included). Trip recap, awards, toasts.' },
     ],
   },
   {
@@ -302,13 +221,8 @@ const days: ItineraryDay[] = [
     vibe: 'Hugs, promises to come back',
     icon: 'plane',
     slots: [
-      { label: '7-9 AM', description: 'Final breakfast together at The Peninsula.' },
-      { label: '9-10 AM', description: 'Check out.' },
-      {
-        label: 'Transfers',
-        description:
-          'Private transfers to Suvarnabhumi Airport. Flights home, onward travel, or extend your stay independently.',
-      },
+      { label: '7:00\u20139:00 AM', description: 'Final breakfast.' },
+      { label: 'Check out', description: 'Private van to Suvarnabhumi.' },
     ],
   },
 ];
@@ -319,34 +233,34 @@ const pickleballSessions = [
   {
     number: 1,
     city: 'Bangkok',
-    venue: 'Premier Bangkok Courts',
+    venue: 'Peninsula Bangkok',
     day: 'Day 2',
-    time: '9:30 AM\u201312 PM',
-    focus: 'Assessment, round-robin',
+    time: '9:30 AM\u201312:00 PM',
+    focus: 'Assessment, warm-up drills, round-robin to gauge levels',
   },
   {
     number: 2,
     city: 'Bangkok',
-    venue: 'Premier Bangkok Courts',
+    venue: 'Peninsula Bangkok',
     day: 'Day 3',
-    time: '5:30\u20137:30 PM',
-    focus: 'Structured doubles, skill clinics',
+    time: '5:00\u20137:00 PM',
+    focus: 'Structured doubles play, skill clinics',
   },
   {
     number: 3,
     city: 'Hua Hin',
-    venue: 'Hua Hin Courts',
+    venue: 'Sports Life Hua Hin',
     day: 'Day 5',
-    time: '9:30 AM-12 PM',
-    focus: 'Skill clinics, dinking, stacking, open play',
+    time: '9:00\u201311:30 AM',
+    focus: 'Social play with local expat community, mixed levels',
   },
   {
     number: 4,
     city: 'Hua Hin',
-    venue: 'Hua Hin Courts',
-    day: 'Day 7',
-    time: '9:00 AM-12 PM',
-    focus: 'Competitive play, bracket tournament',
+    venue: 'Sports Life Hua Hin',
+    day: 'Day 6',
+    time: '3:30\u20135:30 PM',
+    focus: 'Friendly tournament, awards ceremony, group photo',
   },
 ];
 
@@ -360,10 +274,10 @@ const hotels = [
     duration: '3 Nights + 1 Farewell Night',
     highlights: [
       'Five-star riverside luxury on the Chao Phraya River',
-      'On-site courts, spa, world-class restaurants',
+      'On-site Peninsula courts, spa, world-class restaurants',
       'Daily breakfast included',
       'Outdoor riverside pool and fitness center',
-      'Walking distance to premier Bangkok pickleball courts',
+      'On-site pickleball courts at The Peninsula',
       'Your Bangkok home base for the bookend experience: arrive here, return here',
     ],
   },
@@ -377,7 +291,7 @@ const hotels = [
       'Devarana Wellness center: spa, wellness treatments, and relaxation',
       'Rated #2 pool in Thailand',
       'Daily breakfast included',
-      'Short drive to Hua Hin pickleball courts',
+      'Short drive to Sports Life Hua Hin pickleball courts',
       'Beachfront dining and lounge areas',
     ],
   },
@@ -656,13 +570,13 @@ function PickleballEssential() {
   return (
     <div className="space-y-10">
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
-        3-4 sessions across 2 cities. Each session blends structured instruction with social
+        4 sessions across 2 cities. Each session blends structured instruction with social
         play, so you&apos;re improving your game and meeting your travel crew at the same time.
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {[
-          { value: '3-4', label: 'Total Sessions' },
+          { value: '4', label: 'Total Sessions' },
           { value: '~10 hrs', label: 'Total Court Time' },
           { value: '5-7 hrs', label: 'Instruction' },
           { value: '5-8 hrs', label: 'Social Play' },
@@ -687,26 +601,28 @@ function PickleballEssential() {
           {pickleballSessions.map((session) => (
             <div
               key={session.number}
-              className="bg-white rounded-xl border border-[#B08D55]/15 shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5"
+              className="bg-white rounded-xl border border-[#B08D55]/15 shadow-sm p-4 sm:p-5 overflow-hidden"
             >
-              <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0">
+              <div className="flex items-start gap-3 sm:gap-4">
                 <span className="w-10 h-10 rounded-full bg-[#1D2D44] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {session.number}
                 </span>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getCityColor(session.city)}`}
-                  >
-                    {session.city} &middot; {session.venue}
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#F5E6D3] text-[#1D2D44] text-xs font-medium">
-                    {session.day}, {session.time}
-                  </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getCityColor(session.city)}`}
+                    >
+                      {session.city} &middot; {session.venue}
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#F5E6D3] text-[#1D2D44] text-xs font-medium">
+                      {session.day}, {session.time}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#1D2D44]/75 leading-relaxed">
+                    {session.focus}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-[#1D2D44]/75 leading-relaxed sm:border-l sm:border-[#B08D55]/15 sm:pl-5">
-                {session.focus}
-              </p>
             </div>
           ))}
         </div>
