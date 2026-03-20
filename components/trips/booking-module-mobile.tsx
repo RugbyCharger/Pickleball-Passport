@@ -12,9 +12,9 @@ interface BookingModuleMobileProps {
 }
 
 export function BookingModuleMobile({
-  tripName = 'Thailand - 13 Days / 12 Nights',
-  price = 4250,
-  depositAmount = 1065,
+  tripName = 'Thailand - 9 Days / 8 Nights',
+  price = 3488,
+  depositAmount = 872,
   depositLink,
   fullLink,
 }: BookingModuleMobileProps) {

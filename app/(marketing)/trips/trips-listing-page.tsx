@@ -3,36 +3,35 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart, Leaf } from 'lucide-react';
+import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
 import { WaitlistModal } from '@/components/trips/waitlist-modal';
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
 
-/* ─────────────────────── CONFIG ─────────────────────── */
+/* ─────────────────────── TRIP SCHEDULE ─────────────────────── */
 
-/* ─────────────────────── UPCOMING DATES ─────────────────────── */
-
-interface UpcomingDate {
-  dateRange: string;
+interface ScheduledTrip {
   route: string;
-  badge?: string;
+  startDate: string;
+  endDate: string;
+  status: 'live' | 'coming_soon';
+  crmTag: string;
 }
 
-const upcomingEssentialDates: UpcomingDate[] = [
-  { dateRange: 'Jun 16–23, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Aug 14–21, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Sep 26–Oct 3, 2026', route: 'Bangkok + Hua Hin' },
-];
-
-const upcomingUltimateDates: UpcomingDate[] = [
-  { dateRange: 'May 31–Jun 12, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Jun 27–Jul 9, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Jul 13–25, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Jul 29–Aug 10, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Aug 25–Sep 6, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Sep 10–22, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Oct 14–26, 2026', route: 'Bangkok + Hua Hin' },
-  { dateRange: 'Nov 10–22, 2026', route: 'Bangkok + Chiang Mai', badge: 'Cool Season' },
-  { dateRange: 'Dec 1–13, 2026', route: 'Bangkok + Phuket', badge: 'Dry Season' },
+const tripSchedule: ScheduledTrip[] = [
+  { route: 'Bangkok + Hua Hin', startDate: 'Jun 17', endDate: 'Jun 25', status: 'live', crmTag: 'reserve_bkk_huahin_jun17' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 1', endDate: 'Jul 9', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul1' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Jul 15', endDate: 'Jul 23', status: 'live', crmTag: 'reserve_bkk_huahin_jul15' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 29', endDate: 'Aug 6', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul29' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Aug 12', endDate: 'Aug 20', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_aug12' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 26', endDate: 'Sep 3', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_aug26' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Sep 9', endDate: 'Sep 17', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_sep9' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Sep 23', endDate: 'Oct 1', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_sep23' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Oct 7', endDate: 'Oct 15', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_oct7' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Oct 21', endDate: 'Oct 29', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_oct21' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Nov 4', endDate: 'Nov 12', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_nov4' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Nov 18', endDate: 'Nov 26', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_nov18' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Dec 2', endDate: 'Dec 10', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_dec2' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Dec 16', endDate: 'Dec 24', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_dec16' },
 ];
 
 /* ─────────────────────── COMING SOON ─────────────────────── */
@@ -70,7 +69,7 @@ const journeySteps = [
   {
     number: 1,
     title: 'Choose Your Route',
-    description: 'Pick the route and duration that fits your schedule. Our year-round Bangkok + Hua Hin trip is the perfect starting point.',
+    description: 'Pick Bangkok + Hua Hin (year-round) or Bangkok + Chiang Mai (May–January). Same format, different destinations.',
     icon: Sparkles,
     gradient: 'from-[#1D2D44] to-[#7587A5]',
   },
@@ -91,183 +90,53 @@ const journeySteps = [
   {
     number: 4,
     title: 'Come Back for More',
-    description: 'Head home with improved skills, new friendships, and the inside track on our seasonal routes. Come once. Come back for the rest.',
+    description: 'Head home with improved skills, new friendships, and the inside track on our next departure. Come once. Come back for the rest.',
     icon: Heart,
     gradient: 'from-[#E07A5F] to-[#F09B8A]',
   },
 ];
 
-/* ─────────────────────── HERO TRIP CARD (with toggle) ─────────────────────── */
+/* ─────────────────────── ROUTE CARD ─────────────────────── */
 
-function HeroTripCard({
-  onReserve,
-}: {
-  onReserve: (tripName: string) => void;
-}) {
-  const [selectedDuration, setSelectedDuration] = useState<'ultimate' | 'essential'>('ultimate');
-
-  const trips = {
-    ultimate: {
-      label: '15-Day Ultimate',
-      duration: '15 Days / 14 Nights',
-      dateRange: 'May 15 - May 29, 2026',
-      price: '$5,497',
-      split: '5 nights Peninsula BKK / 8 nights Dusit Thani HH / 1 night Peninsula BKK',
-      detailHref: '/trips/bangkok-hua-hin-ultimate',
-      tripName: 'Bangkok + Hua Hin Ultimate (May 15 - May 29)',
-    },
-    essential: {
-      label: '9-Day Essential',
-      duration: '9 Days / 8 Nights',
-      dateRange: 'June 1 - June 9, 2026',
-      price: '$3,488',
-      split: '3 nights Peninsula BKK / 4 nights Dusit Thani HH / 1 night Peninsula BKK',
-      detailHref: '/trips/bangkok-hua-hin-essential',
-      tripName: 'Bangkok + Hua Hin Essential (June 1 - June 9)',
-    },
-  };
-
-  const trip = trips[selectedDuration];
-
-  return (
-    <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
-      {/* Hero image */}
-      <div className="relative h-56 sm:h-72 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
-          alt="Bangkok + Hua Hin"
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 66vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
-        {/* Year-round badge */}
-        <div className="absolute top-4 left-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold">
-            <Sun className="w-3.5 h-3.5 text-[#B08D55]" />
-            Year-Round
-          </span>
-        </div>
-
-        {/* Destination overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="text-3xl sm:text-4xl font-serif font-bold text-white">Bangkok + Hua Hin</h3>
-          <p className="text-white/70 text-sm mt-1">The Peninsula Bangkok &middot; Dusit Thani Hua Hin</p>
-        </div>
-      </div>
-
-      {/* Duration toggle */}
-      <div className="px-6 pt-5">
-        <div className="flex rounded-lg bg-slate-100 p-1">
-          <button
-            type="button"
-            onClick={() => setSelectedDuration('ultimate')}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-md transition-all ${
-              selectedDuration === 'ultimate'
-                ? 'bg-white text-[#1D2D44] shadow-sm'
-                : 'text-[#1D2D44]/50 hover:text-[#1D2D44]/70'
-            }`}
-          >
-            15-Day Ultimate
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedDuration('essential')}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-md transition-all ${
-              selectedDuration === 'essential'
-                ? 'bg-white text-[#1D2D44] shadow-sm'
-                : 'text-[#1D2D44]/50 hover:text-[#1D2D44]/70'
-            }`}
-          >
-            9-Day Essential
-          </button>
-        </div>
-      </div>
-
-      {/* Card content */}
-      <div className="p-6 pt-4">
-        <div className="flex items-center gap-2 mb-1">
-          <Clock className="w-4 h-4 text-[#B08D55]" />
-          <span className="text-sm font-medium text-[#1D2D44]">{trip.duration}</span>
-        </div>
-        <div className="flex items-center gap-2 mb-1">
-          <Calendar className="w-4 h-4 text-[#B08D55]" />
-          <span className="text-sm font-medium text-[#B08D55]">{trip.dateRange}</span>
-        </div>
-        <p className="text-xs text-[#1D2D44]/50 mb-3">{trip.split}</p>
-        <div className="text-2xl font-bold text-[#1D2D44] mb-5">
-          From {trip.price}<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
-        </div>
-
-        <div className="flex gap-3">
-          <Link
-            href={trip.detailHref}
-            className="flex flex-1 items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
-          >
-            View Trip Details
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => onReserve(trip.tripName)}
-            className="flex items-center justify-center px-4 py-3 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-sm hover:bg-[#1D2D44] hover:text-white transition-all"
-          >
-            Reserve
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────── SEASONAL ROUTE CARD ─────────────────────── */
-
-function SeasonalRouteCard({
+function RouteCard({
   title,
-  season,
-  seasonIcon: SeasonIcon,
-  hotel,
+  badge,
+  badgeIcon: BadgeIcon,
   imageUrl,
+  nextDate,
   detailHref,
   onReserve,
 }: {
   title: string;
-  season: string;
-  seasonIcon: React.ComponentType<{ className?: string }>;
-  hotel: string;
+  badge: string;
+  badgeIcon: React.ComponentType<{ className?: string }>;
   imageUrl: string;
+  nextDate: string;
   detailHref: string;
   onReserve: () => void;
 }) {
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
       {/* Hero image */}
-      <div className="relative h-48 sm:h-56 overflow-hidden">
+      <div className="relative h-56 sm:h-72 overflow-hidden">
         <Image
           src={imageUrl}
           alt={title}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         <div className="absolute top-4 left-4">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold">
-            <SeasonIcon className="w-3.5 h-3.5 text-[#B08D55]" />
-            {season}
-          </span>
-        </div>
-
-        <div className="absolute top-4 right-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold">
-            Waitlist
+            <BadgeIcon className="w-3.5 h-3.5 text-[#B08D55]" />
+            {badge}
           </span>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">{title}</h3>
+          <h3 className="text-3xl sm:text-4xl font-serif font-bold text-white">{title}</h3>
         </div>
       </div>
 
@@ -275,11 +144,14 @@ function SeasonalRouteCard({
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex items-center gap-2 mb-1">
           <Clock className="w-4 h-4 text-[#B08D55]" />
-          <span className="text-sm font-medium text-[#1D2D44]">15 Days / 14 Nights</span>
+          <span className="text-sm font-medium text-[#1D2D44]">9 Days / 8 Nights</span>
         </div>
-        <p className="text-xs text-[#1D2D44]/50 mb-2">{hotel}</p>
-        <div className="text-lg font-semibold text-[#1D2D44]/60 mb-5">
-          Pricing Coming Soon
+        <div className="flex items-center gap-2 mb-1">
+          <Calendar className="w-4 h-4 text-[#B08D55]" />
+          <span className="text-sm font-medium text-[#B08D55]">{nextDate}</span>
+        </div>
+        <div className="text-2xl font-bold text-[#1D2D44] mb-5">
+          From $3,488<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
         </div>
 
         <div className="mt-auto flex gap-3">
@@ -287,7 +159,7 @@ function SeasonalRouteCard({
             href={detailHref}
             className="flex flex-1 items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
           >
-            Learn More
+            View Trip Details
             <ArrowRight className="w-4 h-4" />
           </Link>
           <button
@@ -295,7 +167,7 @@ function SeasonalRouteCard({
             onClick={onReserve}
             className="flex items-center justify-center px-4 py-3 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-sm hover:bg-[#1D2D44] hover:text-white transition-all"
           >
-            Waitlist
+            Reserve
           </button>
         </div>
       </div>
@@ -310,95 +182,95 @@ function UpcomingDatesSection({
 }: {
   onReserve: (tripName: string) => void;
 }) {
-  const [essentialExpanded, setEssentialExpanded] = useState(false);
-  const [ultimateExpanded, setUltimateExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  const huaHinDates = tripSchedule.filter(t => t.route === 'Bangkok + Hua Hin');
+  const chiangMaiDates = tripSchedule.filter(t => t.route === 'Bangkok + Chiang Mai');
 
   return (
     <section className="py-12 sm:py-20 bg-white border-t border-[#B08D55]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1D2D44] mb-3">
-            Upcoming Dates
+            2026 Trip Schedule
           </h2>
           <p className="text-[#1D2D44]/60 text-base max-w-2xl mx-auto">
-            Bangkok + Hua Hin runs year-round. Seasonal routes to Chiang Mai and Phuket
-            open when conditions are ideal.
+            New departures every two weeks, alternating between routes.
+            All trips depart on Wednesdays for budget-friendly international travel.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {/* Essential dates */}
-          <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
-            <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">9-Day Essential</h3>
-            <p className="text-xs text-[#1D2D44]/50 mb-4">Bangkok + Hua Hin</p>
-            <button
-              type="button"
-              onClick={() => setEssentialExpanded(!essentialExpanded)}
-              className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-white text-sm font-semibold text-[#1D2D44] hover:bg-slate-50 transition-colors"
-            >
-              <span>View Available Dates ({upcomingEssentialDates.length})</span>
-              {essentialExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
-            {essentialExpanded && (
-              <div className="mt-2 space-y-2">
-                {upcomingEssentialDates.map((date) => (
-                  <div key={date.dateRange} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
-                    <div>
-                      <div className="text-sm font-medium text-[#1D2D44]">{date.dateRange}</div>
-                      <div className="text-xs text-gray-500">{date.route}</div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onReserve(`Essential 9-Day (${date.dateRange})`)}
-                      className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
-                    >
-                      Reserve
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="max-w-5xl mx-auto">
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center justify-between w-full px-6 py-4 rounded-xl bg-[#FDF8F3] border border-[#B08D55]/10 text-sm font-semibold text-[#1D2D44] hover:bg-[#F5E6D3]/50 transition-colors mb-4"
+          >
+            <span>View All Departure Dates ({tripSchedule.length} trips)</span>
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
 
-          {/* Ultimate dates */}
-          <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
-            <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">15-Day Ultimate</h3>
-            <p className="text-xs text-[#1D2D44]/50 mb-4">Bangkok + Hua Hin / Seasonal Routes</p>
-            <button
-              type="button"
-              onClick={() => setUltimateExpanded(!ultimateExpanded)}
-              className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-white text-sm font-semibold text-[#1D2D44] hover:bg-slate-50 transition-colors"
-            >
-              <span>View Available Dates ({upcomingUltimateDates.length})</span>
-              {ultimateExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
-            {ultimateExpanded && (
-              <div className="mt-2 space-y-2 max-h-72 overflow-y-auto">
-                {upcomingUltimateDates.map((date) => (
-                  <div key={date.dateRange} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-[#1D2D44] flex items-center gap-2">
-                        {date.dateRange}
-                        {date.badge && (
-                          <span className="inline-flex px-2 py-0.5 rounded-full bg-[#B08D55]/20 text-[#B08D55] text-xs font-semibold">
-                            {date.badge}
-                          </span>
+          {expanded && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Hua Hin dates */}
+              <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
+                <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Hua Hin</h3>
+                <p className="text-xs text-[#1D2D44]/50 mb-4">Available Year-Round</p>
+                <div className="space-y-2">
+                  {huaHinDates.map((trip) => (
+                    <div key={trip.crmTag} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
+                      <div>
+                        <div className="text-sm font-medium text-[#1D2D44]">
+                          {trip.startDate} – {trip.endDate}, 2026
+                        </div>
+                        {trip.status === 'live' ? (
+                          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
+                        ) : (
+                          <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500">{date.route}</div>
+                      <button
+                        type="button"
+                        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
+                        className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
+                      >
+                        Reserve
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => onReserve(`Ultimate 15-Day (${date.dateRange}) - ${date.route}`)}
-                      className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
-                    >
-                      Reserve
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
+
+              {/* Chiang Mai dates */}
+              <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
+                <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Chiang Mai</h3>
+                <p className="text-xs text-[#1D2D44]/50 mb-4">May through January</p>
+                <div className="space-y-2">
+                  {chiangMaiDates.map((trip) => (
+                    <div key={trip.crmTag} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
+                      <div>
+                        <div className="text-sm font-medium text-[#1D2D44]">
+                          {trip.startDate} – {trip.endDate}, 2026
+                        </div>
+                        {trip.status === 'live' ? (
+                          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
+                        ) : (
+                          <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
+                        className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
+                      >
+                        Reserve
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -441,9 +313,9 @@ export function TripsListingPage() {
               Our Thailand Routes
             </h1>
             <p className="text-lg sm:text-xl text-white/80 leading-relaxed">
-              Three routes across Thailand, each built around five-star accommodations, daily pickleball,
-              and cultural immersion. Start with our year-round Bangkok + Hua Hin route.
-              Come back for the seasonal experiences in Chiang Mai and Phuket.
+              Two routes across Thailand, each 9 days / 8 nights, built around five-star
+              accommodations, daily pickleball, and cultural immersion. Choose Bangkok + Hua Hin
+              (year-round) or Bangkok + Chiang Mai (May through January).
             </p>
           </div>
         </div>
@@ -464,51 +336,36 @@ export function TripsListingPage() {
         </div>
       </section>
 
-      {/* Trip Cards */}
+      {/* Route Cards */}
       <section className="py-12 sm:py-20 bg-[#FDF8F3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Featured: Bangkok + Hua Hin */}
-          <div className="mb-6 text-center">
+          <div className="mb-8 text-center">
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-2">
-              Year-Round: Bangkok + Hua Hin
+              Choose Your Route
             </h2>
             <p className="text-[#1D2D44]/60 text-sm">
-              Our bread-and-butter route. The Peninsula Bangkok and Dusit Thani Hua Hin, available all year.
-            </p>
-          </div>
-
-          <div className="max-w-2xl mx-auto mb-16">
-            <HeroTripCard onReserve={openWaitlist} />
-          </div>
-
-          {/* Seasonal Routes */}
-          <div className="mb-6 text-center">
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-2">
-              Seasonal Routes
-            </h2>
-            <p className="text-[#1D2D44]/60 text-sm">
-              Exclusive routes that run only when conditions are perfect. Same bookend structure, different destinations.
+              Same format. Same price. Different destinations. $3,488/person for 9 days / 8 nights.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <SeasonalRouteCard
-              title="Bangkok + Chiang Mai"
-              season="Nov - Jan"
-              seasonIcon={Leaf}
-              hotel="The Peninsula Bangkok / Anantara Chiang Mai Resort"
-              imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
-              detailHref="/trips/bangkok-chiang-mai"
-              onReserve={() => openWaitlist('Bangkok + Chiang Mai - 15 Days (Nov-Jan)')}
+            <RouteCard
+              title="Bangkok + Hua Hin"
+              badge="Available Year-Round"
+              badgeIcon={Sun}
+              imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
+              nextDate="Jun 17 – Jun 25, 2026"
+              detailHref="/trips/bangkok-hua-hin"
+              onReserve={() => openWaitlist('Bangkok + Hua Hin (Jun 17 - Jun 25)')}
             />
-            <SeasonalRouteCard
-              title="Bangkok + Phuket"
-              season="Dec - Apr"
-              seasonIcon={Sun}
-              hotel="The Peninsula Bangkok / Sole Mio Boutique Hotel & Wellness"
-              imageUrl="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80"
-              detailHref="/trips/bangkok-phuket"
-              onReserve={() => openWaitlist('Bangkok + Phuket - 15 Days (Dec-Apr)')}
+            <RouteCard
+              title="Bangkok + Chiang Mai"
+              badge="May through January"
+              badgeIcon={Calendar}
+              imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
+              nextDate="Jul 1 – Jul 9, 2026"
+              detailHref="/trips/bangkok-chiang-mai"
+              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 1 - Jul 9)')}
             />
           </div>
         </div>

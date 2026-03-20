@@ -15,7 +15,7 @@ const hotels: Hotel[] = [
     name: 'Boutique hotel in Bangkok\u2019s vibrant Thonglor or riverside district',
     city: 'Bangkok',
     location: 'Thonglor, Bangkok\u2019s trendiest neighborhood',
-    duration: '5 Nights',
+    duration: '4 Nights',
     highlights: [
       'Full-floor Japanese onsen and spa: 5 mineral baths, steam room, cold room, tatami private rooms. The ultimate jet lag recovery on arrival night',
       'Outdoor sunset pool and jacuzzi with city views, modern fitness center',
@@ -36,20 +36,6 @@ const hotels: Hotel[] = [
       'Free shuttle to downtown and Night Bazaar 3x daily',
       'Free bicycles for exploring Wiang Kum Kam ruins: temples, crumbling walls, zero tourists',
       '5 minutes from Chiang Mai airport, 5-minute drive to BokBok Pickleball courts',
-    ],
-  },
-  {
-    name: 'Adults-only wellness boutique hotel near Bang Tao Beach',
-    city: 'Phuket',
-    location: 'Cherngtalay, near Bang Tao Beach',
-    duration: '3 Nights',
-    highlights: [
-      'Adults-only 5-star boutique with a 9.4/10 guest rating',
-      'Full wellness suite: sauna, steam room, ice/cold room, yoga classes, in-house spa',
-      'Rooftop pool with mountain views, 7th-floor Mediterranean restaurant',
-      'Daily breakfast buffet (included)',
-      'Free shuttle to Bang Tao Beach and Boat Avenue shopping and dining district',
-      '5 minutes from our Phuket pickleball courts',
     ],
   },
 ];

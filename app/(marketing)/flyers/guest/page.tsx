@@ -97,7 +97,7 @@ export default function GuestFlyer() {
               {/* Title overlay */}
               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm p-4 text-center shadow-lg">
                 <p className={`${playfair.className} text-lg tracking-wide text-slate-900`}>
-                  Phuket & Bangkok <span className="text-emerald-600">|</span> 2026
+                  Thailand <span className="text-emerald-600">|</span> 2026
                 </p>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function GuestFlyer() {
               Your next chapter starts with a paddle.
             </h2>
             <p className="text-slate-400 max-w-xl mx-auto">
-              Spaces for our inaugural 2026 Thailand transformation tours are strictly limited to 12 guests per trip.
+              Spaces for our inaugural 2026 Thailand transformation tours are strictly limited to 16 guests per trip.
             </p>
             <div className="pt-4">
               <Button asChild className="bg-white text-slate-900 hover:bg-emerald-50 transition-colors px-10 py-7 text-lg uppercase tracking-widest font-medium">

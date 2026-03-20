@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 
 const pickleballPackages = [
   {
-    id: '8-day',
-    name: '8-Day Pickleball Paradise',
+    id: '9-day-essential',
+    name: '9-Day Essential Experience',
     tagline: 'The Essential Experience',
-    duration: '8 Days',
-    basePrice: 2888,
+    duration: '9 Days',
+    basePrice: 3488,
     highlights: [
       'Daily curated open play & clinics',
       'Premier 4-5 star accommodation',
@@ -22,11 +22,11 @@ const pickleballPackages = [
     heroImageUrl: '/images/pickleball-court.jpg' // Placeholder
   },
   {
-    id: '13-day',
-    name: '13-Day Ultimate Tour',
+    id: '9-day-ultimate',
+    name: '9-Day Ultimate Experience',
     tagline: 'The Complete Journey',
-    duration: '13 Days',
-    basePrice: 3999,
+    duration: '9 Days',
+    basePrice: 3488,
     highlights: [
       'Extended coast-to-coast play',
       'Multiple tournament opportunities',

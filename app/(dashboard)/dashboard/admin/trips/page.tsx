@@ -443,7 +443,7 @@ export default function AdminTripsPage() {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g., Phuket January 2026"
+                      placeholder="e.g., Bangkok & Hua Hin January 2026"
                       required
                     />
                   </div>
@@ -456,7 +456,7 @@ export default function AdminTripsPage() {
                       type="text"
                       value={formData.destination}
                       onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                      placeholder="e.g., Phuket, Thailand"
+                      placeholder="e.g., Bangkok & Hua Hin, Thailand"
                       required
                     />
                   </div>

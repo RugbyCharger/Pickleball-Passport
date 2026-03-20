@@ -63,7 +63,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): {
       <div style="margin: 16px 0; padding: 16px; background-color: #f9fafb; border-radius: 8px; border-left: 4px solid #f59e0b;">
         <p style="margin: 0 0 8px 0; color: #111827; font-weight: 600;">👥 Small Group Experience</p>
         <p style="margin: 0; color: #6b7280; font-size: 14px;">
-          Travel with 8-12 like-minded people. Build friendships, share experiences, and create memories together.
+          Travel with 8-16 like-minded people. Build friendships, share experiences, and create memories together.
         </p>
       </div>
     </div>

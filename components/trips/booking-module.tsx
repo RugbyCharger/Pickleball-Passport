@@ -15,11 +15,11 @@ interface BookingModuleProps {
 }
 
 export function BookingModule({
-  tripName = 'Thailand - 13 Days / 12 Nights',
-  cities = 'Bangkok · Chiang Mai · Phuket',
-  dates = 'May 15–27, 2026',
-  price = 4250,
-  depositAmount = 1065,
+  tripName = 'Thailand - 9 Days / 8 Nights',
+  cities = 'Bangkok · Hua Hin',
+  dates = 'Jun 17–25, 2026',
+  price = 3488,
+  depositAmount = 872,
   depositLink,
   fullLink,
 }: BookingModuleProps) {

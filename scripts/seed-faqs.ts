@@ -35,7 +35,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
       question: 'What is The Pickleball Passport?',
       answer: [
         'The Pickleball Passport is a curated travel experience that combines exceptional pickleball with boutique hotels, cultural immersion, and wellness in Thailand.',
-        'We coordinate everything, from structured court sessions and private transportation to handpicked accommodations, group dinners, and cultural excursions across three cities.',
+        'We coordinate everything, from structured court sessions and private transportation to handpicked accommodations, group dinners, and cultural excursions across Thailand.',
       ],
       sortOrder: 1,
     },
@@ -50,8 +50,8 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Where do you go?',
       answer: [
-        'Our flagship trip is a 13-day journey through Bangkok, Chiang Mai, and Phuket. Three very different Thai cities that together give you the complete Thailand experience.',
-        'Bangkok for energy and street food. Chiang Mai for temples and nature. Phuket for beaches and the championship finale.',
+        'Our flagship trip is a 9-day journey through Bangkok and Hua Hin (or Bangkok and Chiang Mai). Two very different Thai destinations that together give you the complete Thailand experience.',
+        'Bangkok for energy and street food. Hua Hin for beaches and relaxation. Chiang Mai for temples and nature.',
       ],
       sortOrder: 3,
     },
@@ -67,8 +67,8 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What\'s included in the trip?',
       answer: [
-        '12 nights at handpicked boutique hotels across 3 cities, daily breakfast, 5 group dinners (including a welcome dinner in each city), 2 domestic flights (Bangkok to Chiang Mai, Chiang Mai to Phuket), all private ground transportation, 6 structured pickleball sessions with court fees and equipment, and a dedicated trip host throughout.',
-        'Cultural experiences are also included: a Thai cooking class, Elephant Nature Park visit, private long-tail boat sunset cruise, Wat Pho temple tour, Chinatown street food walk, Wiang Kum Kam bicycle exploration, and a private speedboat charter through Phang Nga Bay.',
+        '8 nights at handpicked boutique hotels across 2 cities, daily breakfast, 4 group dinners (including a welcome dinner in each city), private ground transportation, 5 structured pickleball sessions with court fees and equipment, and a dedicated trip host throughout.',
+        'Cultural experiences are also included: a Thai cooking class, private long-tail boat sunset cruise, Wat Pho temple tour, and Chinatown street food walk.',
       ],
       sortOrder: 1,
     },
@@ -83,7 +83,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'How long is the trip?',
       answer: [
-        'The Thailand trip is 13 days and 12 nights. You\'ll spend 5 nights in Bangkok, 4 nights in Chiang Mai, and 3 nights in Phuket.',
+        'The Thailand trip is 9 days and 8 nights. You\'ll spend 4 nights in Bangkok and 4 nights in your second destination (Hua Hin or Chiang Mai).',
         'The pace is designed to balance activity with downtime. Every day has structured experiences but also free time for personal exploration.',
       ],
       sortOrder: 3,
@@ -99,9 +99,8 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What are the hotel options?',
       answer: [
-        'Bangkok: Grande Centre Point Sukhumvit 55 (5 nights). Thonglor neighborhood with a full Japanese onsen, sunset pool, and free BTS shuttle.',
-        'Chiang Mai: Maraya Hotel & Resort (4 nights). 18-room riverside boutique on the Ping River, surrounded by 700-year-old Lanna ruins. Free bicycles for exploring.',
-        'Phuket: Sole Mio Boutique Hotel & Wellness (3 nights). Adults-only 5-star boutique with sauna, steam room, cold room, yoga, and a rooftop pool. 9.4/10 guest rating.',
+        'Bangkok: Boutique hotel in Thonglor (4 nights). Bangkok\'s trendiest neighborhood with a full Japanese onsen, sunset pool, and free BTS shuttle.',
+        'Second destination varies by route. Hua Hin or Chiang Mai (4 nights). Handpicked boutique properties with wellness amenities and local character.',
       ],
       sortOrder: 5,
     },
@@ -118,7 +117,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'How many pickleball sessions are there?',
       answer: [
-        '7 sessions across 3 cities: 3 sessions at SukSpace in Bangkok, 2 at BokBok in Chiang Mai, and 2 at Peak Racquet Club in Phuket (welcome session + final championship).',
+        '5 sessions across 2 cities: 3 sessions in Bangkok and 2 at your second destination.',
         'Total court time is approximately 18 hours, split between 10\u201312 hours of instruction and 10\u201314 hours of social play.',
       ],
       sortOrder: 2,
@@ -126,7 +125,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What does a typical session look like?',
       answer: [
-        'Sessions include warm-ups, structured drills, round-robin play, and competitive brackets. The Bangkok sessions focus on assessment and skill mixing. Chiang Mai brings skill clinics (dinking, third-shot drops, stacking). Phuket closes with the final championship tournament and awards ceremony.',
+        'Sessions include warm-ups, structured drills, round-robin play, and competitive brackets. The Bangkok sessions focus on assessment and skill mixing. Your second destination brings skill clinics and the final championship tournament with awards ceremony.',
         'Equipment (paddles and balls) is provided at every venue, though you\'re welcome to bring your own.',
       ],
       sortOrder: 3,
@@ -134,7 +133,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Where are the courts?',
       answer: [
-        'SukSpace in Bangkok (Thonglor, walking distance from the hotel), BokBok in Chiang Mai (5-minute drive from the hotel), and Peak Racquet Club in Phuket (5 minutes from the hotel).',
+        'Courts in Bangkok (Thonglor, walking distance from the hotel) and courts at your second destination (short drive from the hotel).',
         'All venues have regulation courts with professional lighting and quality surfaces.',
       ],
       sortOrder: 4,
@@ -144,7 +143,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What wellness amenities are included?',
       answer: [
-        'Each hotel was chosen partly for its wellness offerings. Bangkok\'s Grande Centre Point has a full Japanese onsen with 5 mineral baths, steam room, and cold room. Phuket\'s Sole Mio has a complete wellness suite: sauna, steam room, ice room, yoga classes, and an in-house spa.',
+        'Each hotel was chosen partly for its wellness offerings. Our Bangkok hotel has a full Japanese onsen with 5 mineral baths, steam room, and cold room. Properties at each destination include pools, fitness centers, and wellness amenities.',
         'Hotel pools, fitness centers, and shuttle services to beaches are included at every property.',
       ],
       sortOrder: 1,
@@ -152,15 +151,15 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'What cultural experiences are on the itinerary?',
       answer: [
-        'The trip includes a private long-tail boat sunset cruise on the Chao Phraya River, a guided Wat Pho temple tour, a Chinatown street food walk, a Thai cooking class with a morning market tour, an Elephant Nature Park visit (ethical sanctuary, no riding), Wiang Kum Kam archaeological exploration by bicycle, and a private speedboat charter through Phang Nga Bay with sea cave kayaking and snorkeling.',
+        'The trip includes a private long-tail boat sunset cruise on the Chao Phraya River, a guided Wat Pho temple tour, a Chinatown street food walk, and a Thai cooking class with a morning market tour. Additional excursions vary by route.',
       ],
       sortOrder: 2,
     },
     {
       question: 'What about the dining?',
       answer: [
-        '5 group dinners are included: a welcome dinner in each city (Bangkok, Chiang Mai, Phuket), a Bangkok farewell dinner, and a Phuket closing dinner. Daily breakfast is also included at all hotels.',
-        'Optional Michelin dining upgrades are available at restaurants like S\u00fchring, Gaa, and PRU (Phuket\'s only Michelin-starred restaurant). These are priced separately.',
+        '4 group dinners are included: a welcome dinner in each city, a Bangkok farewell dinner, and a closing dinner at your second destination. Daily breakfast is also included at all hotels.',
+        'Optional Michelin dining upgrades are available at restaurants like S\u00fchring and Gaa. These are priced separately.',
       ],
       sortOrder: 3,
     },
@@ -177,7 +176,7 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Do I need a visa for Thailand?',
       answer: [
-        'Most Western passport holders (US, UK, EU, Canada, Australia) can enter Thailand visa-free for stays up to 60 days, well beyond the 13-day trip duration.',
+        'Most Western passport holders (US, UK, EU, Canada, Australia) can enter Thailand visa-free for stays up to 60 days, well beyond the 9-day trip duration.',
         'We recommend checking the latest entry requirements for your specific nationality before booking.',
       ],
       sortOrder: 1,
@@ -185,15 +184,14 @@ const faqs: Record<string, { question: string; answer: string[]; sortOrder: numb
     {
       question: 'Are airport transfers included?',
       answer: [
-        'Yes. All airport transfers and ground transportation are included. Private air-conditioned vans in every city. A driver meets you at Bangkok arrivals on Day 1 and drops you at Phuket airport on Day 13.',
-        'Domestic flights between cities (Bangkok to Chiang Mai, Chiang Mai to Phuket) are also included.',
+        'Yes. All airport transfers and ground transportation are included. Private air-conditioned vans throughout the trip. A driver meets you at Bangkok arrivals on Day 1 and handles all transfers through departure on Day 9.',
       ],
       sortOrder: 2,
     },
     {
       question: 'What\'s the best time of year to visit Thailand?',
       answer: [
-        'The peak season runs from November to February when the weather is cooler and drier. Ideal for outdoor pickleball and beach days in Phuket.',
+        'The peak season runs from November to February when the weather is cooler and drier. Ideal for outdoor pickleball and exploring Thailand.',
         'Thailand is a year-round destination, though. The "green season" (June\u2013October) has occasional rain but lower prices and fewer crowds.',
       ],
       sortOrder: 3,

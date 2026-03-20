@@ -50,28 +50,13 @@ const sessions: Session[] = [
     time: 'Morning',
     description: 'Competitive bracket tournament.',
   },
-  {
-    number: 6,
-    city: 'Phuket',
-    venue: 'Raccoon Pickleball by Peak Racket Club',
-    time: 'Evening',
-    description:
-      'Welcome session. Casual open play at one of Phuket\'s premier facilities.',
-  },
-  {
-    number: 7,
-    city: 'Phuket',
-    venue: 'Raccoon Pickleball by Peak Racket Club',
-    time: 'Morning',
-    description: 'Final championship, awards ceremony, group photo.',
-  },
 ];
 
 const statItems = [
-  { value: '7', label: 'Total Sessions' },
-  { value: '~18 hrs', label: 'Total Court Time' },
-  { value: '10\u201312 hrs', label: 'Instruction' },
-  { value: '10\u201314 hrs', label: 'Social Play' },
+  { value: '5', label: 'Total Sessions' },
+  { value: '~14 hrs', label: 'Total Court Time' },
+  { value: '7\u20139 hrs', label: 'Instruction' },
+  { value: '7\u20139 hrs', label: 'Social Play' },
 ];
 
 function getCityColor(city: string): string {
@@ -80,7 +65,7 @@ function getCityColor(city: string): string {
       return 'bg-[#1D2D44] text-white';
     case 'Chiang Mai':
       return 'bg-[#B08D55] text-white';
-    case 'Phuket':
+    case 'Hua Hin':
       return 'bg-emerald-600 text-white';
     default:
       return 'bg-[#1D2D44] text-white';
@@ -92,7 +77,7 @@ export function PickleballSection() {
     <div className="space-y-10">
       {/* Intro */}
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
-        7 sessions across 3 cities. Each session blends structured instruction
+        5 sessions across 2 cities. Each session blends structured instruction
         with social play, so you&apos;re improving your game and meeting your
         travel crew at the same time.
       </p>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { TripSidebarNav, type TripSection } from './trip-sidebar-nav';
-import { TripSectionContent } from './trip-section-content';
 import { BookingModule } from './booking-module';
 import { BookingModuleMobile } from './booking-module-mobile';
 
@@ -27,7 +26,10 @@ export function TripDetailLayout({
   fullLink,
   ContentComponent,
 }: TripDetailLayoutProps) {
-  const Content = ContentComponent ?? TripSectionContent;
+  if (!ContentComponent) {
+    throw new Error('TripDetailLayout requires a ContentComponent prop');
+  }
+  const Content = ContentComponent;
   const [activeSection, setActiveSection] = useState<TripSection>('details');
 
   const handleSectionChange = (section: TripSection) => {

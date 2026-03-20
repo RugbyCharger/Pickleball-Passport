@@ -18,14 +18,12 @@ import { useLeadModal } from '@/components/providers/lead-modal-provider';
 const navigation = {
   explore: [
     { name: 'Trips', href: '/trips' },
-    { name: 'About Us', href: '/about' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Apply Now', href: '/apply' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Contact', href: '/contact' },
-    { name: 'FAQ', href: '/faq' },
   ],
   legal: [
     { name: 'Privacy Policy', href: '/privacy' },

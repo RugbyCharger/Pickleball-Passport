@@ -13,7 +13,7 @@ const faqs: FAQItem[] = [
   {
     question: 'Do I need a visa for Thailand?',
     answer:
-      'US citizens can enter Thailand visa-free for stays up to 30 days. Our trip is 13 days, so no visa is needed. We provide a pre-trip checklist with all entry requirements, including passport validity (must be valid for 6+ months after arrival).',
+      'US citizens can enter Thailand visa-free for stays up to 30 days. Our trip is 9 days, so no visa is needed. We provide a pre-trip checklist with all entry requirements, including passport validity (must be valid for 6+ months after arrival).',
   },
   {
     question: 'What should I pack?',

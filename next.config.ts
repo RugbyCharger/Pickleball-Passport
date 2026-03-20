@@ -177,12 +177,27 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/trips/thailand-8-day',
-        destination: '/trips/bangkok-hua-hin-essential',
+        destination: '/trips/bangkok-hua-hin',
         permanent: true,
       },
       {
         source: '/trips/thailand',
-        destination: '/trips/bangkok-hua-hin-ultimate',
+        destination: '/trips/bangkok-hua-hin',
+        permanent: true,
+      },
+      {
+        source: '/trips/bangkok-hua-hin-essential',
+        destination: '/trips/bangkok-hua-hin',
+        permanent: true,
+      },
+      {
+        source: '/trips/bangkok-hua-hin-ultimate',
+        destination: '/trips/bangkok-hua-hin',
+        permanent: true,
+      },
+      {
+        source: '/trips/bangkok-phuket',
+        destination: '/trips/bangkok-hua-hin',
         permanent: true,
       },
     ];

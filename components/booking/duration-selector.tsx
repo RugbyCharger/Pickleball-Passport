@@ -72,7 +72,7 @@ const ITINERARY_HIGHLIGHTS: SampleItinerary = {
       '7 days of intensive pickleball training',
       'Multiple excursions and cultural activities',
       'Daily wellness activities (yoga, meditation)',
-      'Weekend trip to Phuket or Krabi',
+      'Weekend trip to Hua Hin or Chiang Mai',
       'Thai cooking masterclass series',
       'Spa day at premier resort',
       'Shopping tour and cultural experiences',

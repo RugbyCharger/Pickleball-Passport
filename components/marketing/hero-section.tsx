@@ -68,8 +68,8 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            Our flagship Thailand experience launches May 15, 2026. Three cities. Boutique hotels.
-            Exceptional pickleball. Cultural immersion. The wellness reset you&apos;ve been waiting for.
+            9 days across Thailand. Two routes. Five-star hotels.
+            Exceptional pickleball. Cultural immersion. From $3,488/person.
           </p>
 
           {/* Tagline */}

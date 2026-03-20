@@ -24,10 +24,10 @@ import { PickleballIcon } from '@/components/ui/logo';
 
 const packages = [
   {
-    name: '8-Day Pickleball Paradise',
-    slug: '8-day-paradise',
-    duration: '8 Days',
-    description: 'The essential Thailand pickleball experience. Perfect for players who want a week of intense play and relaxation.',
+    name: '9-Day Essential Experience',
+    slug: '9-day-essential',
+    duration: '9 Days',
+    description: 'The essential Thailand pickleball experience. Perfect for players who want focused play and relaxation.',
     highlights: [
       'Daily curated open play & clinics',
       'Premier 4-5 star accommodation',
@@ -39,10 +39,10 @@ const packages = [
     price: 'Early Bird Pricing Coming Soon',
   },
   {
-    name: '13-Day Ultimate Tour',
-    slug: '13-day-ultimate',
-    duration: '13 Days',
-    description: 'The complete journey. Explore more courts, more culture, and experience the full breadth of our hospitality.',
+    name: '9-Day Ultimate Experience',
+    slug: '9-day-ultimate',
+    duration: '9 Days',
+    description: 'The complete journey. More courts, more culture, and the full breadth of our hospitality.',
     highlights: [
       'Extended coast-to-coast play',
       'Multiple tournament opportunities',

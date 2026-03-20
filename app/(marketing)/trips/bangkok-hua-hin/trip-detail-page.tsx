@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight } from 'lucide-react';
+import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight, Sun } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
-import { TripSectionContentUltimate } from '@/components/trips/trip-section-content-ultimate';
+import { TripSectionContentHuaHin } from '@/components/trips/trip-section-content-hua-hin';
 
-export function BangkokHuaHinUltimatePage() {
+export function BangkokHuaHinPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Trip Header */}
@@ -18,8 +18,8 @@ export function BangkokHuaHinUltimatePage() {
           <div className="max-w-4xl">
             {/* Tag pill */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-              <Sparkles className="w-4 h-4 text-[#B08D55]" />
-              The Ultimate Experience
+              <Sun className="w-4 h-4 text-[#B08D55]" />
+              Available Year-Round
             </div>
 
             {/* Headline */}
@@ -29,17 +29,17 @@ export function BangkokHuaHinUltimatePage() {
 
             {/* Subline */}
             <p className="text-xl sm:text-2xl text-white/80 mb-2">
-              15 Days / 14 Nights
+              9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Dusit Thani Hua Hin &middot; The Peninsula Bangkok
+              The Peninsula Bangkok &middot; Hua Hin &middot; The Peninsula Bangkok
             </p>
 
             {/* Trip summary badges */}
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                May 15 - May 29, 2026
+                Jun 17 – Jun 25, 2026
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
@@ -47,11 +47,11 @@ export function BangkokHuaHinUltimatePage() {
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Users className="h-4 w-4 text-[#B08D55]" />
-                12 Guests Max
+                16 Guests Max
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
-                8+ Pickleball Sessions
+                4 Pickleball Sessions
               </div>
             </div>
           </div>
@@ -75,25 +75,25 @@ export function BangkokHuaHinUltimatePage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Hua Hin Ultimate - 15 Days / 14 Nights"
-        cities="The Peninsula Bangkok · Dusit Thani Hua Hin"
-        dates="May 15 - May 29, 2026"
-        price={5497}
-        depositAmount={1375}
-        ContentComponent={TripSectionContentUltimate}
+        tripName="Bangkok + Hua Hin (Jun 17 - Jun 25)"
+        cities="The Peninsula Bangkok · Hua Hin"
+        dates="Jun 17 – Jun 25, 2026"
+        price={3488}
+        depositAmount={872}
+        depositLink="STRIPE_DEPOSIT_LINK_TBD"
+        fullLink="STRIPE_FULL_PAYMENT_LINK_TBD"
+        ContentComponent={TripSectionContentHuaHin}
       />
 
-      {/* Cross-link to Essential */}
+      {/* Cross-link to Chiang Mai route */}
       <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80 text-lg mb-3">
-            Looking for a shorter trip?
-          </p>
+          <p className="text-white/80 text-lg mb-3">Want to extend your trip? Add extra days in Chiang Mai after your 9-day experience. Contact us for add-on pricing.</p>
           <Link
-            href="/trips/bangkok-hua-hin-essential"
+            href="/trips/bangkok-chiang-mai"
             className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold text-xl transition-colors"
           >
-            Check out our 9-Day Essential Experience
+            Explore the Bangkok + Chiang Mai Route
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

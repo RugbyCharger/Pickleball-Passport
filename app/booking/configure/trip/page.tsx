@@ -169,7 +169,7 @@ export default async function TripSelectionPage() {
                 </svg>
               </summary>
               <p className="mt-4 text-slate-600">
-                We limit each trip to a maximum of 12 guests to ensure personalized attention,
+                We limit each trip to a maximum of 16 guests to ensure personalized attention,
                 quality experiences, and an intimate group atmosphere. This allows our team to
                 focus on each guest's transformation journey while fostering meaningful
                 connections with fellow travelers.
@@ -209,7 +209,7 @@ export default async function TripSelectionPage() {
           <div className="grid gap-8 sm:grid-cols-3">
             <div className="text-center">
               <div className="mb-2 text-3xl font-bold text-emerald-600">
-                12 Guests
+                16 Guests
               </div>
               <div className="text-sm text-slate-600">
                 Maximum Group Size

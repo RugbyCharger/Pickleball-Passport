@@ -57,7 +57,7 @@ export default function DirectorFlyer() {
                   <Users className="w-6 h-6 text-emerald-600 shrink-0" />
                   <div>
                     <h4 className="font-semibold text-slate-900">Zero Effort Delivery</h4>
-                    <p className="text-sm text-slate-500">We handle 100% of the logistics, from flights to Phuket to premium courts and hotels.</p>
+                    <p className="text-sm text-slate-500">We handle 100% of the logistics, from transportation to premium courts and hotels.</p>
                   </div>
                 </div>
               </div>

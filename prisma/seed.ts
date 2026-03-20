@@ -34,7 +34,7 @@ async function main() {
       tagline: 'All Pickleball, All Paradise',
       description: `# The Ultimate Pickleball Paradise Experience
 
-Experience the perfect blend of competitive play and tropical relaxation in Phuket, Thailand. Pure Play is designed for pickleball enthusiasts who want to focus on the game while enjoying outstanding amenities.
+Experience the perfect blend of competitive play and tropical relaxation in Thailand. Pure Play is designed for pickleball enthusiasts who want to focus on the game while enjoying outstanding amenities.
 
 ## What's Included
 
@@ -56,8 +56,8 @@ Players who want to immerse themselves in pickleball while experiencing the beau
         '/images/packages/pure-play-beach.jpg',
         '/images/packages/pure-play-yoga.jpg',
       ],
-      metaTitle: 'Pure Play - Pickleball Paradise in Phuket, Thailand',
-      metaDescription: 'Join us for the ultimate pickleball vacation in Phuket. Daily play, premier accommodations, and authentic Thai experiences.',
+      metaTitle: 'Pure Play - Pickleball Paradise in Thailand',
+      metaDescription: 'Join us for the ultimate pickleball vacation in Thailand. Daily play, premier accommodations, and authentic Thai experiences.',
       isActive: true,
     },
   });
@@ -99,7 +99,7 @@ Our partnered dental clinics are internationally accredited with US/UK trained d
         '/images/packages/smile-makeover-results.jpg',
       ],
       metaTitle: 'Smile Makeover - Dental Tourism & Pickleball in Thailand',
-      metaDescription: 'Get a perfect smile at 60% savings while enjoying pickleball in Phuket. High-quality dental care meets paradise.',
+      metaDescription: 'Get a perfect smile at 60% savings while enjoying pickleball in Thailand. High-quality dental care meets paradise.',
       isActive: true,
     },
   });
@@ -144,7 +144,7 @@ Board-certified surgeons with international training. JCI-accredited facilities 
         '/images/packages/total-transformation-recovery.jpg',
         '/images/packages/total-transformation-spa.jpg',
       ],
-      metaTitle: 'Total Transformation - Medical Tourism & Wellness in Phuket',
+      metaTitle: 'Total Transformation - Medical Tourism & Wellness in Thailand',
       metaDescription: 'Complete aesthetic transformation with exceptional medical care, wellness therapies, and pickleball in paradise.',
       isActive: true,
     },
@@ -186,7 +186,7 @@ Play with intention, focus on the mental game, and connect deeply with fellow pl
         '/images/packages/spiritual-journey-yoga.jpg',
       ],
       metaTitle: 'Spiritual Journey - Wellness & Pickleball Retreat in Thailand',
-      metaDescription: 'Transform mind, body, and spirit with meditation, Thai healing, and pickleball in sacred Phuket.',
+      metaDescription: 'Transform mind, body, and spirit with meditation, Thai healing, and pickleball in Thailand.',
       isActive: true,
     },
   });
@@ -334,38 +334,38 @@ Play with intention, focus on the mental game, and connect deeply with fellow pl
   const trips = await prisma.trip.createMany({
     data: [
       {
-        name: 'Phuket January 2026',
-        destination: 'Phuket, Thailand',
+        name: 'Bangkok & Hua Hin January 2026',
+        destination: 'Bangkok & Hua Hin, Thailand',
         startDate: new Date('2026-01-15T00:00:00Z'),
-        endDate: new Date('2026-01-29T00:00:00Z'),
-        capacity: 12,
+        endDate: new Date('2026-01-23T00:00:00Z'),
+        capacity: 16,
         currentBookings: 3,
         isActive: true,
       },
       {
-        name: 'Phuket February 2026',
-        destination: 'Phuket, Thailand',
+        name: 'Bangkok & Hua Hin February 2026',
+        destination: 'Bangkok & Hua Hin, Thailand',
         startDate: new Date('2026-02-12T00:00:00Z'),
-        endDate: new Date('2026-02-26T00:00:00Z'),
-        capacity: 12,
+        endDate: new Date('2026-02-20T00:00:00Z'),
+        capacity: 16,
         currentBookings: 8,
         isActive: true,
       },
       {
-        name: 'Chiang Mai March 2026',
-        destination: 'Chiang Mai, Thailand',
+        name: 'Bangkok & Chiang Mai March 2026',
+        destination: 'Bangkok & Chiang Mai, Thailand',
         startDate: new Date('2026-03-10T00:00:00Z'),
-        endDate: new Date('2026-03-24T00:00:00Z'),
-        capacity: 12,
-        currentBookings: 12, // Fully booked - for testing waitlist
+        endDate: new Date('2026-03-18T00:00:00Z'),
+        capacity: 16,
+        currentBookings: 16, // Fully booked - for testing waitlist
         isActive: true,
       },
       {
-        name: 'Bangkok April 2026',
-        destination: 'Bangkok, Thailand',
+        name: 'Bangkok & Hua Hin April 2026',
+        destination: 'Bangkok & Hua Hin, Thailand',
         startDate: new Date('2026-04-05T00:00:00Z'),
-        endDate: new Date('2026-04-19T00:00:00Z'),
-        capacity: 12,
+        endDate: new Date('2026-04-13T00:00:00Z'),
+        capacity: 16,
         currentBookings: 1,
         isActive: true,
       },

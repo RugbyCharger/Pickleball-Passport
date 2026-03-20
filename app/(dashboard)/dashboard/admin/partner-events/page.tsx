@@ -650,7 +650,7 @@ export default function AdminPartnerEventsPage() {
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="e.g., Phuket, Thailand"
+                      placeholder="e.g., Bangkok, Thailand"
                       className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                     />
                   </div>

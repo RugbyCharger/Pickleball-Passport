@@ -205,7 +205,7 @@ export default async function WellnessAddOnsPage() {
                 Cultural experiences are led by local guides who are passionate
                 about sharing Thai culture. Temple tours include monk blessings
                 and meditation instruction, cooking classes use fresh market
-                ingredients, and island tours showcase Phuket's natural beauty.
+                ingredients, and tours showcase Thailand's natural beauty.
                 All experiences are respectful, authentic, and designed for
                 international guests.
               </p>

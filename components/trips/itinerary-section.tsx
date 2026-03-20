@@ -216,111 +216,19 @@ const days: ItineraryDay[] = [
   },
   {
     day: 9,
-    title: 'Fly to Phuket & Welcome Play',
-    city: 'Phuket',
-    icon: 'plane',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Domestic flight Chiang Mai \u2192 Phuket (~2 hours).',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Arrive Phuket. Check in at our Phuket hotel. Settle in and explore the property.',
-      },
-      {
-        label: 'Evening',
-        description:
-          'Pickleball Session 6 at Raccoon Pickleball by Peak Racket Club. Welcome session, casual open play.',
-      },
-    ],
-  },
-  {
-    day: 10,
-    title: 'Beach & Leisure Day',
-    city: 'Phuket',
-    icon: 'ship',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Free morning. Bang Tao Beach, hotel pool, or wellness circuit: sauna, steam, cold room, yoga.',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Private speedboat charter. Phang Nga Bay, James Bond Island, sea cave kayaking, snorkeling, lunch on the water.',
-      },
-      {
-        label: 'Evening',
-        description:
-          'Free night. Optional: Phuket Old Town exploration, sunset rooftop cocktails.',
-      },
-    ],
-  },
-  {
-    day: 11,
-    title: 'Championship Day',
-    city: 'Phuket',
-    icon: 'trophy',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Pickleball Session 7 at Raccoon Pickleball by Peak Racket Club. Final championship, awards ceremony, group photo.',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Bang Tao Beach free time. Optional: Catch Beach Club day beds.',
-      },
-      {
-        label: 'Evening',
-        description:
-          "Phuket Closing Dinner at PRU at Trisara. Phuket's only Michelin-starred restaurant.",
-      },
-    ],
-  },
-  {
-    day: 12,
-    title: 'Free Day & Farewell',
-    city: 'Phuket',
-    icon: 'sparkles',
-    slots: [
-      {
-        label: 'Morning',
-        description:
-          'Free morning. Optional: beach, spa, shopping, or group yoga session at the hotel.',
-      },
-      {
-        label: 'Afternoon',
-        description:
-          'Departure preparations. Airport transfers available throughout the day.',
-      },
-      {
-        label: 'Evening',
-        description:
-          'Optional: final group dinner for those staying overnight.',
-      },
-    ],
-  },
-  {
-    day: 13,
     title: 'Departure',
-    city: 'Phuket',
+    city: 'Chiang Mai',
     icon: 'plane',
     slots: [
       {
         label: 'Morning',
         description:
-          'Final breakfast at the hotel. Private transfer to Phuket International Airport (HKT).',
+          'Final breakfast at the hotel. Private transfer to the airport.',
       },
       {
         label: 'Note',
         description:
-          'Extend your stay for additional beach time or personal travel.',
+          'Extend your stay for additional exploration or personal travel.',
       },
     ],
   },
@@ -345,7 +253,7 @@ export function ItinerarySection() {
           Day-by-Day Itinerary
         </h2>
         <p className="text-[#1D2D44]/60 text-sm">
-          13 days across Bangkok, Chiang Mai, and Phuket. Click any day to see
+          9 days across Bangkok and Chiang Mai. Click any day to see
           the full schedule.
         </p>
       </div>

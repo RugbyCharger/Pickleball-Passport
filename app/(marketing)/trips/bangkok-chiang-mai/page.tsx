@@ -2,21 +2,22 @@ import { Metadata } from 'next';
 import { BangkokChiangMaiPage } from './trip-detail-page';
 
 export const metadata: Metadata = {
-  title: 'Bangkok + Chiang Mai: 15-Day Pickleball Trip | The Pickleball Passport',
+  title: 'Bangkok + Chiang Mai: 9-Day Pickleball Trip | The Pickleball Passport',
   description:
-    'A seasonal 15-day pickleball experience through Bangkok and Chiang Mai. The Peninsula Bangkok, Anantara Chiang Mai Resort. Available November through January during cool season.',
+    '9-day pickleball experience through Bangkok and Chiang Mai. The Peninsula Bangkok, Maraya Hotel & Resort, 4 pickleball sessions, Elephant Nature Park, Thai cooking class. From $3,488/person. Available May through January.',
   keywords: [
     'pickleball trip Thailand',
     'Chiang Mai pickleball',
     'Bangkok pickleball',
-    'Anantara Chiang Mai',
+    'Maraya Hotel Chiang Mai',
     'Peninsula Bangkok',
-    'Thailand cool season',
+    'BokBok Pickleball',
+    '9 day Thailand trip',
   ],
   openGraph: {
-    title: 'Bangkok + Chiang Mai: 15-Day Pickleball Trip | The Pickleball Passport',
+    title: 'Bangkok + Chiang Mai: 9-Day Pickleball Trip | The Pickleball Passport',
     description:
-      'Seasonal 15-day route through Bangkok and Chiang Mai. Available November through January.',
+      '9 days across Bangkok and Chiang Mai. The Peninsula Bangkok, Maraya Hotel & Resort, pickleball sessions, and cultural immersion. From $3,488/person.',
     url: 'https://www.thepickleballpassport.org/trips/bangkok-chiang-mai',
     siteName: 'The Pickleball Passport',
     locale: 'en_US',

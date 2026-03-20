@@ -46,11 +46,11 @@ const groupDinners: GroupDinner[] = [
       'Riverside Northern Thai with live folk music by the owner',
   },
   {
-    city: 'Phuket',
-    label: 'Phuket Closing',
-    restaurant: 'PRU at Trisara',
+    city: 'Hua Hin',
+    label: 'Hua Hin Closing',
+    restaurant: 'Curated local experience',
     description:
-      'Phuket\u2019s only Michelin-starred restaurant, farm-to-table sustainability',
+      'Beachside dining featuring fresh Thai seafood',
   },
 ];
 
@@ -86,22 +86,6 @@ const michelinUpgrades: MichelinUpgrade[] = [
     city: 'Chiang Mai',
     priceTHB: '~500 THB',
     priceUSD: '~$15',
-  },
-  {
-    name: 'Suay',
-    detail: 'Michelin Plate, Phuket',
-    description: 'Iron Chef Noi.',
-    city: 'Phuket',
-    priceTHB: '~1,200 THB',
-    priceUSD: '~$35',
-  },
-  {
-    name: 'L\u2019Ar\u00f4me by the Sea',
-    detail: '#1 restaurant in Phuket',
-    description: 'Cliffside French.',
-    city: 'Phuket',
-    priceTHB: '~5,000 THB',
-    priceUSD: '~$145',
   },
 ];
 

@@ -338,21 +338,6 @@ export default function TrustAndSafetyPage() {
               </CardContent>
             </Card>
 
-            <Card className="overflow-hidden">
-              <div className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] p-6 text-white">
-                <div className="text-xs font-semibold uppercase tracking-wider text-[#B08D55] mb-1">
-                  Phuket
-                </div>
-                <h3 className="text-xl font-bold">Raccoon Pickleball by Peak Racket Club</h3>
-              </div>
-              <CardContent className="p-6">
-                <p className="text-sm text-gray-600">
-                  Phuket&apos;s top pickleball destination with well-maintained
-                  outdoor courts, ocean breezes, and a vibrant mix of local
-                  and international players.
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
