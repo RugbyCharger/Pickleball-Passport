@@ -202,13 +202,13 @@ export function Footer() {
               {/* Contact Info */}
               <div className="space-y-4 mb-8">
                 <a
-                  href="mailto:jaron@thepickleballpassport.org"
+                  href="mailto:hello@thepickleballpassport.org"
                   className="flex items-center space-x-4 text-white/80 hover:text-white transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-[#B08D55]/20 flex items-center justify-center group-hover:bg-[#B08D55]/30 transition-colors">
                     <Mail className="h-5 w-5 text-[#B08D55]" />
                   </div>
-                  <span>jaron@thepickleballpassport.org</span>
+                  <span>hello@thepickleballpassport.org</span>
                 </a>
                 <a
                   href="tel:+15125648522"

@@ -424,8 +424,8 @@ export async function sendTicketAdminNotification(
   const { generateTicketAdminNotificationEmail } = await import('./templates/ticket-admin-notification');
   const { html, text, subject } = generateTicketAdminNotificationEmail(data);
 
-  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'jaron@thepickleballpassport.org';
-  const ccEmails = process.env.ADMIN_ALERT_CC_EMAILS?.split(',').map((e) => e.trim()).filter(Boolean) || ['ryan@thepickleballpassport.org'];
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@thepickleballpassport.org';
+  const ccEmails = process.env.ADMIN_ALERT_CC_EMAILS?.split(',').map((e) => e.trim()).filter(Boolean) || [];
 
   // Send to all admins
   const allRecipients = [adminEmail, ...ccEmails];
@@ -490,7 +490,7 @@ export interface PartnerTicketNotificationData {
  * Send notification to admin when partner creates a new support ticket
  */
 export async function sendPartnerTicketNotification(data: PartnerTicketNotificationData): Promise<void> {
-  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'jaron@thepickleballpassport.org';
+  const adminEmail = process.env.ADMIN_ALERT_EMAIL || 'hello@thepickleballpassport.org';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.thepickleballpassport.org';
 
   const priorityColors: Record<string, string> = {

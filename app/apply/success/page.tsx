@@ -116,8 +116,8 @@ export default function ApplicationSuccessPage() {
           <div className="mt-8 pt-8 border-t border-slate-200">
             <p className="text-sm text-slate-600">
               Questions? Email us at{' '}
-              <a href="mailto:Ryan@thepickleballpassport.org" className="text-emerald-600 hover:underline">
-                Ryan@thepickleballpassport.org
+              <a href="mailto:hello@thepickleballpassport.org" className="text-emerald-600 hover:underline">
+                hello@thepickleballpassport.org
               </a>{' '}
               or call{' '}
               <a href="tel:+15125648522" className="text-emerald-600 hover:underline">

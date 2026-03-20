@@ -39,7 +39,7 @@ export function BangkokChiangMaiPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 1 – Jul 9, 2026
+                Jul 2 – Jul 10, 2026
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
@@ -75,9 +75,9 @@ export function BangkokChiangMaiPage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Chiang Mai (Jul 1 - Jul 9)"
+        tripName="Bangkok + Chiang Mai (Jul 2 - Jul 10)"
         cities="The Peninsula Bangkok · Maraya Hotel & Resort"
-        dates="Jul 1 – Jul 9, 2026"
+        dates="Jul 2 – Jul 10, 2026"
         price={3488}
         depositAmount={872}
         depositLink="STRIPE_DEPOSIT_LINK_TBD"

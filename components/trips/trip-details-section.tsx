@@ -40,8 +40,8 @@ const statItems = [
     tooltip:
       '6/10 \u2014 Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
-  { value: '10\u201312', label: 'Hrs. of Instruction' },
-  { value: '10\u201314', label: 'Hrs. of Social Play' },
+  { value: '4-5', label: 'Hrs. of Instruction' },
+  { value: '4-5', label: 'Hrs. of Social Play' },
 ];
 
 export function TripDetailsSection() {

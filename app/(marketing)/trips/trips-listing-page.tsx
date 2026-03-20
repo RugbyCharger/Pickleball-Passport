@@ -18,20 +18,20 @@ interface ScheduledTrip {
 }
 
 const tripSchedule: ScheduledTrip[] = [
-  { route: 'Bangkok + Hua Hin', startDate: 'Jun 17', endDate: 'Jun 25', status: 'live', crmTag: 'reserve_bkk_huahin_jun17' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 1', endDate: 'Jul 9', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul1' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Jul 15', endDate: 'Jul 23', status: 'live', crmTag: 'reserve_bkk_huahin_jul15' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 29', endDate: 'Aug 6', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul29' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Aug 12', endDate: 'Aug 20', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_aug12' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 26', endDate: 'Sep 3', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_aug26' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Sep 9', endDate: 'Sep 17', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_sep9' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Sep 23', endDate: 'Oct 1', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_sep23' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Oct 7', endDate: 'Oct 15', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_oct7' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Oct 21', endDate: 'Oct 29', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_oct21' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Nov 4', endDate: 'Nov 12', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_nov4' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Nov 18', endDate: 'Nov 26', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_nov18' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Dec 2', endDate: 'Dec 10', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_dec2' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Dec 16', endDate: 'Dec 24', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_dec16' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Jun 18', endDate: 'Jun 26', status: 'live', crmTag: 'reserve_bkk_huahin_jun18' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 2', endDate: 'Jul 10', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul2' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Jul 16', endDate: 'Jul 24', status: 'live', crmTag: 'reserve_bkk_huahin_jul16' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 30', endDate: 'Aug 7', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul30' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Aug 13', endDate: 'Aug 21', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_aug13' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 27', endDate: 'Sep 4', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_aug27' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Sep 10', endDate: 'Sep 18', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_sep10' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Sep 24', endDate: 'Oct 2', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_sep24' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Oct 8', endDate: 'Oct 16', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_oct8' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Oct 22', endDate: 'Oct 30', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_oct22' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Nov 5', endDate: 'Nov 13', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_nov5' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Nov 19', endDate: 'Nov 27', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_nov19' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Dec 3', endDate: 'Dec 11', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_dec3' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Dec 17', endDate: 'Dec 25', status: 'coming_soon', crmTag: 'reserve_bkk_chiangmai_dec17' },
 ];
 
 /* ─────────────────────── COMING SOON ─────────────────────── */
@@ -177,15 +177,52 @@ function RouteCard({
 
 /* ─────────────────────── UPCOMING DATES SECTION ─────────────────────── */
 
+function TripDateRow({
+  trip,
+  onReserve,
+}: {
+  trip: ScheduledTrip;
+  onReserve: (tripName: string) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
+      <div>
+        <div className="text-sm font-medium text-[#1D2D44]">
+          {trip.startDate} – {trip.endDate}, 2026
+        </div>
+        {trip.status === 'live' ? (
+          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
+        ) : (
+          <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
+        className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
+      >
+        Reserve
+      </button>
+    </div>
+  );
+}
+
+const PREVIEW_COUNT = 2;
+
 function UpcomingDatesSection({
   onReserve,
 }: {
   onReserve: (tripName: string) => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const huaHinDates = tripSchedule.filter(t => t.route === 'Bangkok + Hua Hin');
   const chiangMaiDates = tripSchedule.filter(t => t.route === 'Bangkok + Chiang Mai');
+
+  const huaHinVisible = showAll ? huaHinDates : huaHinDates.slice(0, PREVIEW_COUNT);
+  const chiangMaiVisible = showAll ? chiangMaiDates : chiangMaiDates.slice(0, PREVIEW_COUNT);
+
+  const remainingCount = (huaHinDates.length - PREVIEW_COUNT) + (chiangMaiDates.length - PREVIEW_COUNT);
 
   return (
     <section className="py-12 sm:py-20 bg-white border-t border-[#B08D55]/10">
@@ -196,79 +233,55 @@ function UpcomingDatesSection({
           </h2>
           <p className="text-[#1D2D44]/60 text-base max-w-2xl mx-auto">
             New departures every two weeks, alternating between routes.
-            All trips depart on Wednesdays for budget-friendly international travel.
+            All trips depart on Thursdays for budget-friendly international travel.
           </p>
         </div>
 
         <div className="max-w-5xl mx-auto">
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            className="flex items-center justify-between w-full px-6 py-4 rounded-xl bg-[#FDF8F3] border border-[#B08D55]/10 text-sm font-semibold text-[#1D2D44] hover:bg-[#F5E6D3]/50 transition-colors mb-4"
-          >
-            <span>View All Departure Dates ({tripSchedule.length} trips)</span>
-            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-
-          {expanded && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Hua Hin dates */}
-              <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
-                <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Hua Hin</h3>
-                <p className="text-xs text-[#1D2D44]/50 mb-4">Available Year-Round</p>
-                <div className="space-y-2">
-                  {huaHinDates.map((trip) => (
-                    <div key={trip.crmTag} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
-                      <div>
-                        <div className="text-sm font-medium text-[#1D2D44]">
-                          {trip.startDate} – {trip.endDate}, 2026
-                        </div>
-                        {trip.status === 'live' ? (
-                          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
-                        ) : (
-                          <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
-                        className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
-                      >
-                        Reserve
-                      </button>
-                    </div>
-                  ))}
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Hua Hin dates */}
+            <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
+              <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Hua Hin</h3>
+              <p className="text-xs text-[#1D2D44]/50 mb-4">Available Year-Round</p>
+              <div className="space-y-2">
+                {huaHinVisible.map((trip) => (
+                  <TripDateRow key={trip.crmTag} trip={trip} onReserve={onReserve} />
+                ))}
               </div>
+            </div>
 
-              {/* Chiang Mai dates */}
-              <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
-                <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Chiang Mai</h3>
-                <p className="text-xs text-[#1D2D44]/50 mb-4">May through January</p>
-                <div className="space-y-2">
-                  {chiangMaiDates.map((trip) => (
-                    <div key={trip.crmTag} className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
-                      <div>
-                        <div className="text-sm font-medium text-[#1D2D44]">
-                          {trip.startDate} – {trip.endDate}, 2026
-                        </div>
-                        {trip.status === 'live' ? (
-                          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
-                        ) : (
-                          <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
-                        className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
-                      >
-                        Reserve
-                      </button>
-                    </div>
-                  ))}
-                </div>
+            {/* Chiang Mai dates */}
+            <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-6">
+              <h3 className="font-serif text-lg font-bold text-[#1D2D44] mb-1">Bangkok + Chiang Mai</h3>
+              <p className="text-xs text-[#1D2D44]/50 mb-4">May through January</p>
+              <div className="space-y-2">
+                {chiangMaiVisible.map((trip) => (
+                  <TripDateRow key={trip.crmTag} trip={trip} onReserve={onReserve} />
+                ))}
               </div>
+            </div>
+          </div>
+
+          {/* Show more / Show less */}
+          {huaHinDates.length > PREVIEW_COUNT && (
+            <div className="text-center mt-6">
+              <button
+                type="button"
+                onClick={() => setShowAll(!showAll)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[#B08D55]/30 text-[#1D2D44] font-semibold text-sm hover:bg-[#B08D55]/10 transition-colors"
+              >
+                {showAll ? (
+                  <>
+                    Show Fewer Dates
+                    <ChevronUp className="w-4 h-4" />
+                  </>
+                ) : (
+                  <>
+                    Show All {remainingCount} More Departure Dates
+                    <ChevronDown className="w-4 h-4" />
+                  </>
+                )}
+              </button>
             </div>
           )}
         </div>
@@ -354,18 +367,18 @@ export function TripsListingPage() {
               badge="Available Year-Round"
               badgeIcon={Sun}
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
-              nextDate="Jun 17 – Jun 25, 2026"
+              nextDate="Jun 18 – Jun 26, 2026"
               detailHref="/trips/bangkok-hua-hin"
-              onReserve={() => openWaitlist('Bangkok + Hua Hin (Jun 17 - Jun 25)')}
+              onReserve={() => openWaitlist('Bangkok + Hua Hin (Jun 18 - Jun 26)')}
             />
             <RouteCard
               title="Bangkok + Chiang Mai"
               badge="May through January"
               badgeIcon={Calendar}
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
-              nextDate="Jul 1 – Jul 9, 2026"
+              nextDate="Jul 2 – Jul 10, 2026"
               detailHref="/trips/bangkok-chiang-mai"
-              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 1 - Jul 9)')}
+              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 2 - Jul 10)')
             />
           </div>
         </div>
@@ -454,10 +467,10 @@ export function TripsListingPage() {
             New destinations are added based on demand. Want to see a specific
             destination? Email us at{' '}
             <a
-              href="mailto:jaron@thepickleballpassport.org"
+              href="mailto:hello@thepickleballpassport.org"
               className="text-[#B08D55] hover:underline font-medium"
             >
-              jaron@thepickleballpassport.org
+              hello@thepickleballpassport.org
             </a>{' '}
             and let us know where you want to play next.
           </p>

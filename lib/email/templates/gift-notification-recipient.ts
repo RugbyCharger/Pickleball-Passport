@@ -218,7 +218,7 @@ export function generateGiftNotificationRecipientEmail(data: GiftNotificationRec
       <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;">
         <strong>Note:</strong> This gift link is valid for 90 days. Please accept your gift at your earliest convenience.
         If you have any questions or need assistance, contact us at
-        <a href="mailto:Ryan@thepickleballpassport.org" style="color: #b45309;">Ryan@thepickleballpassport.org</a>.
+        <a href="mailto:support@thepickleballpassport.org" style="color: #b45309;">support@thepickleballpassport.org</a>.
       </p>
     </div>
 

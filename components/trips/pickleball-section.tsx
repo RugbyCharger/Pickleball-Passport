@@ -53,10 +53,10 @@ const sessions: Session[] = [
 ];
 
 const statItems = [
-  { value: '5', label: 'Total Sessions' },
-  { value: '~14 hrs', label: 'Total Court Time' },
-  { value: '7\u20139 hrs', label: 'Instruction' },
-  { value: '7\u20139 hrs', label: 'Social Play' },
+  { value: '4', label: 'Total Sessions' },
+  { value: '~10 hrs', label: 'Total Court Time' },
+  { value: '4-5 hrs', label: 'Instruction' },
+  { value: '4-5 hrs', label: 'Social Play' },
 ];
 
 function getCityColor(city: string): string {

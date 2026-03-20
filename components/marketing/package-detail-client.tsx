@@ -228,10 +228,10 @@ export function PackageDetailClient({ packageData }: PackageDetailClientProps) {
               <p className="mt-4 text-center text-xs text-gray-500">
                 Questions? Contact us at{' '}
                 <a
-                  href="mailto:info@thepickleballpassport.org"
+                  href="mailto:hello@thepickleballpassport.org"
                   className="text-emerald-600 hover:underline"
                 >
-                  info@thepickleballpassport.org
+                  hello@thepickleballpassport.org
                 </a>
               </p>
             </motion.div>

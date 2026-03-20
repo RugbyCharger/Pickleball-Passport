@@ -45,7 +45,7 @@ export default function ContactLayout({
               '@type': 'Organization',
               name: 'The Pickleball Passport',
               url: 'https://thepickleballpassport.org',
-              email: 'jaron@thepickleballpassport.org',
+              email: 'hello@thepickleballpassport.org',
               telephone: '+1-555-123-4567',
               address: {
                 '@type': 'PostalAddress',
@@ -56,7 +56,7 @@ export default function ContactLayout({
                 '@type': 'ContactPoint',
                 telephone: '+1-555-123-4567',
                 contactType: 'Customer Service',
-                email: 'jaron@thepickleballpassport.org',
+                email: 'hello@thepickleballpassport.org',
                 availableLanguage: ['English'],
                 hoursAvailable: {
                   '@type': 'OpeningHoursSpecification',

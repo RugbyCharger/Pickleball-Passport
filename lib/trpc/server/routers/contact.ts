@@ -186,7 +186,7 @@ export const contactRouter = router({
       // Step 5: Send notification email to admin
       try {
         const adminEmail =
-          process.env.SENDGRID_FROM_EMAIL || 'Ryan@thepickleballpassport.org'
+          process.env.SENDGRID_FROM_EMAIL || 'hello@thepickleballpassport.org'
 
         const adminData: ContactAdminNotificationData = {
           name,

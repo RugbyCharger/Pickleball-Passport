@@ -147,7 +147,7 @@ The "Last Updated" date at the top of this policy indicates when the latest chan
 
 If you have questions about this Privacy Policy or wish to exercise your privacy rights, please contact us:
 
-**Email:** ryan@thepickleballpassport.org
+**Email:** support@thepickleballpassport.org
 
 **Mail:**
 Pickleball Passport

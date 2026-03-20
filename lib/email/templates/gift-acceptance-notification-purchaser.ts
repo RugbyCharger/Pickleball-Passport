@@ -170,7 +170,7 @@ export function generateGiftAcceptanceNotificationPurchaserEmail(data: GiftAccep
 
     <p style="color: #6b7280; font-size: 14px; margin: 16px 0 0 0;">
       If you have any questions, please contact our support team at
-      <a href="mailto:Ryan@thepickleballpassport.org" style="color: #2563eb;">Ryan@thepickleballpassport.org</a>.
+      <a href="mailto:support@thepickleballpassport.org" style="color: #2563eb;">support@thepickleballpassport.org</a>.
     </p>
 
     <p style="color: #111827; font-weight: 600; margin: 16px 0 0 0;">

@@ -31,12 +31,12 @@ const statItems = [
     tooltip:
       '6/10: Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
-  { value: '5-7', label: 'Hrs. Instruction' },
-  { value: '5-8', label: 'Hrs. Social Play' },
+  { value: '4-5', label: 'Hrs. Instruction' },
+  { value: '4-5', label: 'Hrs. Social Play' },
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (The Peninsula Bangkok + Hua Hin resort)',
+  '8 nights at two five-star hotels (The Peninsula Bangkok + Dusit Thani Hua Hin)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Private ground transfer Bangkok to Hua Hin (3-hr scenic drive)',
@@ -140,14 +140,14 @@ const days: ItineraryDay[] = [
     day: 4,
     title: 'Transfer to Hua Hin',
     city: 'Hua Hin',
-    hotel: 'Hua Hin Resort (TBD)',
+    hotel: 'Dusit Thani Hua Hin',
     vibe: 'Road trip, beach, settle in',
     icon: 'ship',
     slots: [
       { label: '7:00\u20138:30 AM', description: 'Breakfast at Peninsula.' },
       { label: '9:00 AM', description: 'Check out, load van.' },
       { label: '9:30 AM', description: 'Scenic 3-hour drive to Hua Hin, comfort stop midway.' },
-      { label: '12:00 PM', description: 'Arrive Hua Hin resort, check-in.' },
+      { label: '12:00 PM', description: 'Arrive Dusit Thani Hua Hin, check-in.' },
       { label: '1:00\u20135:30 PM', description: 'Free afternoon. Beach, pool, explore the area.' },
       { label: '6:30 PM', description: 'HUA HIN WELCOME DINNER (included). Beachfront seafood.' },
     ],
@@ -156,7 +156,7 @@ const days: ItineraryDay[] = [
     day: 5,
     title: 'Morning Pickleball + Beach Day',
     city: 'Hua Hin',
-    hotel: 'Hua Hin Resort (TBD)',
+    hotel: 'Dusit Thani Hua Hin',
     vibe: 'Play hard, explore harder',
     icon: 'trophy',
     slots: [
@@ -171,7 +171,7 @@ const days: ItineraryDay[] = [
     day: 6,
     title: 'Cultural Day',
     city: 'Hua Hin',
-    hotel: 'Hua Hin Resort (TBD)',
+    hotel: 'Dusit Thani Hua Hin',
     vibe: 'Explore culture, soak it in',
     icon: 'landmark',
     slots: [
@@ -186,7 +186,7 @@ const days: ItineraryDay[] = [
     day: 7,
     title: 'Final Pickleball + Celebration',
     city: 'Hua Hin',
-    hotel: 'Hua Hin Resort (TBD)',
+    hotel: 'Dusit Thani Hua Hin',
     vibe: 'Last paddles, sunset toasts',
     icon: 'trophy',
     slots: [
@@ -206,7 +206,7 @@ const days: ItineraryDay[] = [
     vibe: 'One last night together',
     icon: 'sparkles',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Final breakfast at Hua Hin resort.' },
+      { label: '7:00\u20139:00 AM', description: 'Final breakfast at Dusit Thani Hua Hin.' },
       { label: '9:30 AM', description: 'Depart for Bangkok, 3-hour drive.' },
       { label: '12:00 PM', description: 'Arrive Peninsula, check-in.' },
       { label: '12:30\u20135:00 PM', description: 'Free afternoon.' },
@@ -282,7 +282,7 @@ const hotels = [
     ],
   },
   {
-    name: 'Hua Hin Resort (TBD)',
+    name: 'Dusit Thani Hua Hin',
     city: 'Hua Hin',
     location: 'Beachfront, Hua Hin',
     duration: '4 Nights',
@@ -382,7 +382,7 @@ function TripDetailsHuaHin() {
         <div className="flex items-center gap-3 text-sm flex-wrap">
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
-          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Hua Hin Resort (4 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Dusit Thani Hua Hin (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (1 farewell night)</span>
         </div>
@@ -578,8 +578,8 @@ function PickleballHuaHin() {
         {[
           { value: '4', label: 'Total Sessions' },
           { value: '~10 hrs', label: 'Total Court Time' },
-          { value: '5-7 hrs', label: 'Instruction' },
-          { value: '5-8 hrs', label: 'Social Play' },
+          { value: '4-5 hrs', label: 'Instruction' },
+          { value: '4-5 hrs', label: 'Social Play' },
         ].map((item, idx) => (
           <div
             key={idx}

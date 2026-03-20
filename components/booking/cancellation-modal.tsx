@@ -277,8 +277,8 @@ export default function CancellationModal({
               </p>
               <p className="text-sm text-gray-700">
                 You can reschedule once instead of canceling. Contact our support team at{' '}
-                <a href="mailto:Ryan@thepickleballpassport.org" className="text-blue-600 hover:text-blue-700 underline">
-                  Ryan@thepickleballpassport.org
+                <a href="mailto:support@thepickleballpassport.org" className="text-blue-600 hover:text-blue-700 underline">
+                  support@thepickleballpassport.org
                 </a>{' '}
                 for assistance.
               </p>

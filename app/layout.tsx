@@ -59,7 +59,7 @@ export default function RootLayout({
       '@type': 'ContactPoint',
       telephone: '+1-512-564-8522',
       contactType: 'Customer Service',
-      email: 'jaron@thepickleballpassport.org',
+      email: 'hello@thepickleballpassport.org',
       availableLanguage: ['English'],
     },
     sameAs: [

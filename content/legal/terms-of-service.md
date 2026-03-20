@@ -94,7 +94,7 @@ All payments are processed securely through Stripe. Your payment information is 
 
 ### Cancellation by Guest
 
-Cancellations must be submitted in writing to Ryan@thepickleballpassport.org. Refunds are calculated as follows:
+Cancellations must be submitted in writing to support@thepickleballpassport.org. Refunds are calculated as follows:
 
 | Cancellation Timing | Refund Amount |
 |---------------------|---------------|
@@ -231,7 +231,7 @@ By submitting reviews, photos, or other content, you grant The Pickleball Passpo
 
 ### Informal Resolution
 
-Before initiating formal proceedings, you agree to contact us at ryan@thepickleballpassport.org to attempt informal resolution. We will endeavor to resolve disputes within 30 days.
+Before initiating formal proceedings, you agree to contact us at support@thepickleballpassport.org to attempt informal resolution. We will endeavor to resolve disputes within 30 days.
 
 ### Binding Arbitration
 
@@ -280,7 +280,7 @@ Your continued use of our Services after changes constitutes acceptance of the m
 
 For questions about these Terms of Service, please contact us:
 
-**Email:** ryan@thepickleballpassport.org
+**Email:** support@thepickleballpassport.org
 
 **Mail:**
 The Pickleball Passport
@@ -289,7 +289,7 @@ Legal Department
 
 **Phone:** +1 (512) 564-8522
 
-**Customer Support:** Ryan@thepickleballpassport.org
+**Customer Support:** support@thepickleballpassport.org
 
 ---
 

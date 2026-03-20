@@ -297,7 +297,7 @@ For now, you can manually add your contact info to downloaded materials. If you 
 - Community building
 
 **Emergency Support:**
-- For urgent issues, contact: partners@thepickleballpassport.org
+- For urgent issues, contact: support@thepickleballpassport.org
 - Phone: +1 (512) 564-8522
     `,
   },

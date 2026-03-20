@@ -17,7 +17,7 @@ interface BookingModuleProps {
 export function BookingModule({
   tripName = 'Thailand - 9 Days / 8 Nights',
   cities = 'Bangkok · Hua Hin',
-  dates = 'Jun 17–25, 2026',
+  dates = 'Jun 18–26, 2026',
   price = 3488,
   depositAmount = 872,
   depositLink,

@@ -451,7 +451,7 @@ export default function ContactPage() {
 
                 <div className="space-y-5">
                   <a
-                    href="mailto:jaron@thepickleballpassport.org"
+                    href="mailto:hello@thepickleballpassport.org"
                     className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#F5E6D3]/50 transition-colors group"
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#B08D55]/30 group-hover:to-[#CFB78D]/30 transition-colors">
@@ -460,22 +460,7 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Email</p>
                       <p className="text-[#1D2D44] font-medium group-hover:text-[#B08D55] transition-colors">
-                        jaron@thepickleballpassport.org
-                      </p>
-                    </div>
-                  </a>
-
-                  <a
-                    href="mailto:ryan@thepickleballpassport.org"
-                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-[#F5E6D3]/50 transition-colors group"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#B08D55]/20 to-[#CFB78D]/20 flex items-center justify-center flex-shrink-0 group-hover:from-[#B08D55]/30 group-hover:to-[#CFB78D]/30 transition-colors">
-                      <Mail className="h-5 w-5 text-[#B08D55]" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-[#1D2D44]/60 mb-1">Email</p>
-                      <p className="text-[#1D2D44] font-medium group-hover:text-[#B08D55] transition-colors">
-                        ryan@thepickleballpassport.org
+                        hello@thepickleballpassport.org
                       </p>
                     </div>
                   </a>

@@ -542,10 +542,10 @@ export default function TrustAndSafetyPage() {
               <p className="text-xs text-gray-600 mt-4">
                 Documentation required for all force majeure claims. Contact{' '}
                 <a
-                  href="mailto:jaron@thepickleballpassport.org"
+                  href="mailto:support@thepickleballpassport.org"
                   className="text-[#1D2D44] hover:text-[#B08D55] underline"
                 >
-                  jaron@thepickleballpassport.org
+                  support@thepickleballpassport.org
                 </a>{' '}
                 for assistance.
               </p>

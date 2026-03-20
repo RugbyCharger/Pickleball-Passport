@@ -147,4 +147,4 @@ By signing below, you acknowledge that:
 **Pickleball Passport LLC**
 123 Travel Way, Suite 100
 Miami, FL 33101
-partners@pickleballpassport.com
+hello@thepickleballpassport.org

@@ -186,7 +186,7 @@ export default function TripCard({
             <div className="rounded-md bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-700">
               <p className="font-medium">Waitlist feature coming soon!</p>
               <p className="mt-1 text-xs text-blue-600">
-                Contact us at Ryan@thepickleballpassport.org to be notified when spots open up.
+                Contact us at support@thepickleballpassport.org to be notified when spots open up.
               </p>
             </div>
           )}

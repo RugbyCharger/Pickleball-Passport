@@ -31,8 +31,8 @@ const statItems = [
     tooltip:
       '6/10: Moderate. Pickleball sessions are the most physically active part. Cultural activities, boat tours, and wellness days keep the overall pace accessible to all fitness levels.',
   },
-  { value: '5-7', label: 'Hrs. Instruction' },
-  { value: '5-8', label: 'Hrs. Social Play' },
+  { value: '4-5', label: 'Hrs. Instruction' },
+  { value: '4-5', label: 'Hrs. Social Play' },
 ];
 
 const includedItems = [
@@ -578,8 +578,8 @@ function PickleballEssential() {
         {[
           { value: '4', label: 'Total Sessions' },
           { value: '~10 hrs', label: 'Total Court Time' },
-          { value: '5-7 hrs', label: 'Instruction' },
-          { value: '5-8 hrs', label: 'Social Play' },
+          { value: '4-5 hrs', label: 'Instruction' },
+          { value: '4-5 hrs', label: 'Social Play' },
         ].map((item, idx) => (
           <div
             key={idx}

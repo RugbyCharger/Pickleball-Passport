@@ -87,7 +87,7 @@ export default function ContactError({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {/* Email Card */}
             <a
-              href="mailto:jaron@thepickleballpassport.org"
+              href="mailto:hello@thepickleballpassport.org"
               className="group bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 border border-[#B08D55]/10 hover:border-[#B08D55]/30 transition-all hover:shadow-2xl"
             >
               <div className="flex items-center gap-4 mb-4">
@@ -101,7 +101,7 @@ export default function ContactError({
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-[#B08D55] font-semibold">
-                  jaron@thepickleballpassport.org
+                  hello@thepickleballpassport.org
                 </span>
                 <ArrowRight className="w-5 h-5 text-[#B08D55] group-hover:translate-x-1 transition-transform" />
               </div>

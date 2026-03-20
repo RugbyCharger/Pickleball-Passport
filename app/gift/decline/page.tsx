@@ -128,8 +128,8 @@ export default function GiftDeclinePage() {
                   <p className="font-medium mb-1">Need Help?</p>
                   <p>
                     If you believe this is an error, please contact our support team at{' '}
-                    <a href="mailto:Ryan@thepickleballpassport.org" className="underline font-medium">
-                      Ryan@thepickleballpassport.org
+                    <a href="mailto:support@thepickleballpassport.org" className="underline font-medium">
+                      support@thepickleballpassport.org
                     </a>
                   </p>
                 </div>

@@ -207,7 +207,7 @@ export function generateBookingModificationEmail(data: BookingModificationData):
         • <strong>Locked items:</strong> Base package, duration, and accommodation cannot be modified
       </p>
       <p style="margin: 4px 0; color: #78350f; font-size: 14px;">
-        • <strong>Need help?</strong> Contact us at Ryan@thepickleballpassport.org
+        • <strong>Need help?</strong> Contact us at support@thepickleballpassport.org
       </p>
     </div>
 
@@ -270,7 +270,7 @@ IMPORTANT REMINDERS:
 
 • Modifications allowed only 60+ days before trip
 • Base package, duration, and accommodation cannot be modified
-• Need help? Email Ryan@thepickleballpassport.org
+• Need help? Email support@thepickleballpassport.org
 
 Safe travels,
 The Pickleball Passport Team

@@ -147,18 +147,11 @@ export default function AboutPage() {
               </p>
               <div className="flex flex-wrap gap-4 text-sm">
                 <a
-                  href="mailto:jaron@thepickleballpassport.org"
+                  href="mailto:hello@thepickleballpassport.org"
                   className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
                 >
                   <Mail className="w-4 h-4" />
-                  jaron@thepickleballpassport.org
-                </a>
-                <a
-                  href="mailto:ryan@thepickleballpassport.org"
-                  className="flex items-center gap-1.5 text-[#1D2D44]/60 hover:text-[#B08D55] transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  ryan@thepickleballpassport.org
+                  hello@thepickleballpassport.org
                 </a>
               </div>
               <div className="flex flex-wrap gap-4 text-sm mt-2">

@@ -32,14 +32,14 @@ export function BangkokHuaHinPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Hua Hin &middot; The Peninsula Bangkok
+              The Peninsula Bangkok &middot; Dusit Thani Hua Hin &middot; The Peninsula Bangkok
             </p>
 
             {/* Trip summary badges */}
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jun 17 – Jun 25, 2026
+                Jun 18 – Jun 26, 2026
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
@@ -75,9 +75,9 @@ export function BangkokHuaHinPage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Hua Hin (Jun 17 - Jun 25)"
-        cities="The Peninsula Bangkok · Hua Hin"
-        dates="Jun 17 – Jun 25, 2026"
+        tripName="Bangkok + Hua Hin (Jun 18 - Jun 26)"
+        cities="The Peninsula Bangkok · Dusit Thani Hua Hin"
+        dates="Jun 18 – Jun 26, 2026"
         price={3488}
         depositAmount={872}
         depositLink="STRIPE_DEPOSIT_LINK_TBD"
