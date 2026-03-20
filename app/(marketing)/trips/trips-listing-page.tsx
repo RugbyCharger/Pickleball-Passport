@@ -378,7 +378,7 @@ export function TripsListingPage() {
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
               nextDate="Jul 2 – Jul 10, 2026"
               detailHref="/trips/bangkok-chiang-mai"
-              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 2 - Jul 10)')
+              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 2 - Jul 10)')}
             />
           </div>
         </div>
