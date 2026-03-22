@@ -7,7 +7,13 @@
  */
 
 import Link from 'next/link';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Palmtree, Sun, Waves, ArrowRight } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Palmtree, Sun, Waves, ArrowRight, type LucideProps } from 'lucide-react';
+
+const TikTokIcon = (props: LucideProps) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.17a8.16 8.16 0 004.77 1.52V7.24a4.85 4.85 0 01-1.01-.55z" />
+  </svg>
+);
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import { toast } from 'sonner';
@@ -46,6 +52,11 @@ const navigation = {
       name: 'LinkedIn',
       href: 'https://www.linkedin.com/in/jaron-shoptaugh-ab675574/',
       icon: Linkedin,
+    },
+    {
+      name: 'TikTok',
+      href: 'https://www.tiktok.com/@pickleball.passport',
+      icon: TikTokIcon,
     },
   ],
 };
