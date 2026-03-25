@@ -142,7 +142,7 @@ const days: ItineraryDay[] = [
     vibe: 'Cook like a local, then compete',
     icon: 'landmark',
     slots: [
-      { label: 'Highlights', description: 'Thai cooking class with market tour \u2014 cook 5-6 dishes. Afternoon pickleball session at BokBok. Dinner at a Michelin-recommended restaurant.' },
+      { label: 'Highlights', description: 'Thai cooking class with market tour. Cook 5-6 dishes. Afternoon pickleball session at BokBok. Dinner at a Michelin-recommended restaurant.' },
     ],
   },
   {
@@ -153,7 +153,7 @@ const days: ItineraryDay[] = [
     vibe: 'Once-in-a-lifetime, then unwind',
     icon: 'sparkles',
     slots: [
-      { label: 'Highlights', description: 'Full-day visit to Elephant Nature Park \u2014 ethical, observation-based experience. Return to hotel for pool and spa time. Riverside dinner with live folk music.' },
+      { label: 'Highlights', description: 'Full-day visit to Elephant Nature Park. Ethical, observation-based experience. Return to hotel for pool and spa time. Riverside dinner with live folk music.' },
     ],
   },
   {
@@ -164,7 +164,7 @@ const days: ItineraryDay[] = [
     vibe: 'Compete, celebrate, explore',
     icon: 'trophy',
     slots: [
-      { label: 'Highlights', description: 'Final pickleball session at BokBok \u2014 fun tournament, awards, and group photos. Free afternoon to explore Old City temples, spas, or Doi Suthep. Farewell dinner.' },
+      { label: 'Highlights', description: 'Final pickleball session at BokBok. Fun tournament, awards, and group photos. Free afternoon to explore Old City temples, spas, or Doi Suthep. Farewell dinner.' },
     ],
   },
   {
@@ -175,7 +175,7 @@ const days: ItineraryDay[] = [
     vibe: 'One last night together',
     icon: 'plane',
     slots: [
-      { label: 'Highlights', description: 'Flight back to Bangkok, check into The Peninsula for one last night. Free afternoon to explore. Bangkok farewell dinner \u2014 trip recap and toasts.' },
+      { label: 'Highlights', description: 'Flight back to Bangkok, check into The Peninsula for one last night. Free afternoon to explore. Bangkok farewell dinner. Trip recap and toasts.' },
     ],
   },
   {
@@ -566,7 +566,7 @@ function DiningChiangMai() {
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         4-5 group dinners included, from riverside restaurants in Bangkok to Northern Thai
         cuisine in Chiang Mai. Daily breakfast at both hotels. Free nights give you a chance
-        to explore on your own — your trip host will share curated recommendations.
+        to explore on your own. Your trip host will share curated recommendations.
       </p>
 
       <div>
@@ -592,7 +592,7 @@ function DiningChiangMai() {
 
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-          Optional Michelin dining upgrades available — ask us on your consultation call for details.
+          Optional Michelin dining upgrades available. Ask us on your consultation call for details.
         </p>
       </div>
     </div>

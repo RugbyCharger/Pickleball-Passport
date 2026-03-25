@@ -153,7 +153,7 @@ const days: ItineraryDay[] = [
     vibe: 'Explore culture, soak it in',
     icon: 'landmark',
     slots: [
-      { label: 'Highlights', description: 'Morning cultural experience \u2014 cooking class, national park, or heritage walk. Relaxed afternoon at the beach or spa. Group dinner.' },
+      { label: 'Highlights', description: 'Morning cultural experience - cooking class, national park, or heritage walk. Relaxed afternoon at the beach or spa. Group dinner.' },
     ],
   },
   {
@@ -164,7 +164,7 @@ const days: ItineraryDay[] = [
     vibe: 'Last paddles, sunset toasts',
     icon: 'trophy',
     slots: [
-      { label: 'Highlights', description: 'Final pickleball session at Sports Life Hua Hin \u2014 fun tournament, awards, and group photos. Farewell dinner with sunset cocktails and trip highlights.' },
+      { label: 'Highlights', description: 'Final pickleball session at Sports Life Hua Hin - fun tournament, awards, and group photos. Farewell dinner with sunset cocktails and trip highlights.' },
     ],
   },
   {
@@ -175,7 +175,7 @@ const days: ItineraryDay[] = [
     vibe: 'One last night together',
     icon: 'sparkles',
     slots: [
-      { label: 'Highlights', description: 'Drive back to Bangkok, check into The Peninsula for one last night. Farewell dinner \u2014 trip recap, awards, and toasts.' },
+      { label: 'Highlights', description: 'Drive back to Bangkok, check into The Peninsula for one last night. Farewell dinner - trip recap, awards, and toasts.' },
     ],
   },
   {
@@ -566,7 +566,7 @@ function DiningHuaHin() {
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         4-5 group dinners included, from riverside restaurants in Bangkok to beachfront seafood
         in Hua Hin. Daily breakfast at both hotels. Free nights give you a chance to explore
-        on your own — your trip host will share curated recommendations.
+        on your own. Your trip host will share curated recommendations.
       </p>
 
       <div>
@@ -592,7 +592,7 @@ function DiningHuaHin() {
 
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-          Optional Michelin dining upgrades available — ask us on your consultation call for details.
+          Optional Michelin dining upgrades available. Ask us on your consultation call for details.
         </p>
       </div>
     </div>
