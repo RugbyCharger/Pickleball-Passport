@@ -80,8 +80,8 @@ export function BangkokChiangMaiPage() {
         dates="Jul 2 – Jul 10, 2026"
         price={3488}
         depositAmount={872}
-        depositLink="STRIPE_DEPOSIT_LINK_TBD"
-        fullLink="STRIPE_FULL_PAYMENT_LINK_TBD"
+        depositLink="https://buy.stripe.com/fZu4gz4WfgUTdOB6gd2cg05"
+        fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
         ContentComponent={TripSectionContentChiangMai}
       />
 
