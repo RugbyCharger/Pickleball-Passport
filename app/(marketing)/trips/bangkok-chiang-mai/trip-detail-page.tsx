@@ -9,7 +9,7 @@ export function BangkokChiangMaiPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Trip Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-20 navy-texture">
         {/* Decorative orbs */}
         <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />

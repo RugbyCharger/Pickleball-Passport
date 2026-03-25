@@ -98,88 +98,62 @@ const days: ItineraryDay[] = [
     vibe: 'Land, breathe, bond',
     icon: 'sparkles',
     slots: [
-      { label: 'Daytime', description: 'Staggered airport arrivals. Private van transfer from Suvarnabhumi (~30 min). Check-in, room assignments, property orientation.' },
-      { label: '2:00\u20135:00 PM', description: 'Free time to decompress, explore Peninsula grounds.' },
-      { label: '5:30 PM', description: 'Group meet in lobby, trip overview from host.' },
-      { label: '7:30 PM', description: 'WELCOME DINNER (included) at The Peninsula.' },
+      { label: 'Highlights', description: 'Land in Bangkok, settle into The Peninsula, welcome dinner on the river.' },
     ],
   },
   {
     day: 2,
-    title: 'First Paddles + River Experience',
+    title: 'Pickleball + River Cruise',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'Shake off the rust, then explore the river',
     icon: 'trophy',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Breakfast at The Peninsula (included daily).' },
-      { label: '9:30 AM\u201312:00 PM', description: 'PICKLEBALL SESSION 1 at Peninsula Bangkok. Assessment, warm-up, coaching + round-robin.' },
-      { label: '12:30 PM', description: 'Lunch (own expense).' },
-      { label: '1:30\u20133:30 PM', description: 'Free time / pool / spa.' },
-      { label: '4:30\u20136:30 PM', description: 'PRIVATE LONG-TAIL BOAT SUNSET CRUISE (included). Thonburi canals, Grand Palace, Wat Arun at dusk.' },
-      { label: '7:00 PM', description: 'DINNER (included). Riverside restaurant, Wat Arun backdrop.' },
+      { label: 'Highlights', description: 'Morning session on court at Peninsula Bangkok. Afternoon long-tail boat cruise through Bangkok\u2019s canals past the Grand Palace and Wat Arun at sunset. Group dinner on the river.' },
     ],
   },
   {
     day: 3,
-    title: 'Temple Day + Street Food + Pickleball',
+    title: 'Temples, Street Food + Pickleball',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'One temple done right, then eat everything',
     icon: 'landmark',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast.' },
-      { label: '9:30\u201311:00 AM', description: 'GUIDED WAT PHO TOUR (included). Reclining Buddha, licensed English guide. Optional: Thai massage at Wat Pho massage school (~300\u2013500 THB).' },
-      { label: '11:30 AM\u20131:30 PM', description: 'GUIDED CHINATOWN STREET FOOD WALK (included). This IS lunch.' },
-      { label: '2:30\u20134:00 PM', description: 'Free time / pool.' },
-      { label: '4:30\u20137:00 PM', description: 'PICKLEBALL SESSION 2 at Peninsula Bangkok. Coaching clinic (dinks, 3rd shots) + doubles.' },
-      { label: '7:30 PM', description: 'Dinner (own expense, free night). CHOOSE YOUR ADVENTURE: Rooftop bar, night market (Jodd Fairs or Rod Fai), or rest at The Peninsula.' },
+      { label: 'Highlights', description: 'Guided tour of Wat Pho (Reclining Buddha), street food walk through Chinatown, afternoon pickleball session at Peninsula Bangkok. Free evening to explore night markets or rooftop bars.' },
     ],
   },
   {
     day: 4,
-    title: 'Transfer to Hua Hin',
+    title: 'Scenic Drive to Hua Hin',
     city: 'Hua Hin',
     hotel: 'Dusit Thani Hua Hin',
     vibe: 'Road trip, beach, settle in',
     icon: 'ship',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast at Peninsula.' },
-      { label: '9:00 AM', description: 'Check out, load van.' },
-      { label: '9:30 AM', description: 'Scenic 3-hour drive to Hua Hin, comfort stop midway.' },
-      { label: '12:00 PM', description: 'Arrive Dusit Thani Hua Hin, check-in.' },
-      { label: '1:00\u20135:30 PM', description: 'Free afternoon. Beach, pool, explore the area.' },
-      { label: '6:30 PM', description: 'HUA HIN WELCOME DINNER (included). Beachfront seafood.' },
+      { label: 'Highlights', description: 'Scenic drive to Hua Hin. Check into Dusit Thani, explore the beachfront resort. Welcome dinner with fresh seafood by the ocean.' },
     ],
   },
   {
     day: 5,
-    title: 'Morning Pickleball + Beach Day',
+    title: 'Pickleball + Beach Day',
     city: 'Hua Hin',
     hotel: 'Dusit Thani Hua Hin',
     vibe: 'Play hard, explore harder',
     icon: 'trophy',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast (included daily).' },
-      { label: '9:00 AM\u201312:00 PM', description: 'PICKLEBALL SESSION 3 at Sports Life Hua Hin. Coaching clinic (stacking, resets) + round-robin.' },
-      { label: '12:30 PM', description: 'Lunch (own expense).' },
-      { label: '1:00\u20136:00 PM', description: 'Free afternoon. CHOOSE YOUR ADVENTURE: Beach day, pool, night market, explore Hua Hin town, or golf at championship course (own expense).' },
-      { label: '7:00 PM', description: 'Dinner (group or free).' },
+      { label: 'Highlights', description: 'Morning pickleball session at Sports Life Hua Hin. Free afternoon for beach, pool, exploring Hua Hin town, or golf. Group dinner.' },
     ],
   },
   {
     day: 6,
-    title: 'Cultural Day',
+    title: 'Cultural Excursion',
     city: 'Hua Hin',
     hotel: 'Dusit Thani Hua Hin',
     vibe: 'Explore culture, soak it in',
     icon: 'landmark',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast.' },
-      { label: '9:00 AM\u201312:30 PM', description: 'Morning cultural experience options: cooking class, Sam Roi Yot National Park, or heritage walk.' },
-      { label: '12:30 PM', description: 'Lunch (own expense).' },
-      { label: '1:30\u20135:30 PM', description: 'Free afternoon. Beach, pool, spa (own expense), or explore.' },
-      { label: '6:30 PM', description: 'GROUP DINNER (included).' },
+      { label: 'Highlights', description: 'Morning cultural experience \u2014 cooking class, national park, or heritage walk. Relaxed afternoon at the beach or spa. Group dinner.' },
     ],
   },
   {
@@ -190,27 +164,18 @@ const days: ItineraryDay[] = [
     vibe: 'Last paddles, sunset toasts',
     icon: 'trophy',
     slots: [
-      { label: '7:00\u20138:00 AM', description: 'Breakfast.' },
-      { label: '8:30\u201311:30 AM', description: 'PICKLEBALL SESSION 4 (FINAL) at Sports Life Hua Hin. Clinic (strategy) + fun tournament + awards.' },
-      { label: '12:00 PM', description: 'Lunch (own expense).' },
-      { label: '1:00\u20135:00 PM', description: 'Free afternoon. Beach, pool, spa, or rest.' },
-      { label: '6:00 PM', description: 'Sunset cocktails.' },
-      { label: '7:30 PM', description: 'HUA HIN FAREWELL DINNER (included). Trip highlights, awards, toasts.' },
+      { label: 'Highlights', description: 'Final pickleball session at Sports Life Hua Hin \u2014 fun tournament, awards, and group photos. Farewell dinner with sunset cocktails and trip highlights.' },
     ],
   },
   {
     day: 8,
-    title: 'Return to Bangkok + Farewell Evening',
+    title: 'Return to Bangkok + Farewell',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'One last night together',
     icon: 'sparkles',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Final breakfast at Dusit Thani Hua Hin.' },
-      { label: '9:30 AM', description: 'Depart for Bangkok, 3-hour drive.' },
-      { label: '12:00 PM', description: 'Arrive Peninsula, check-in.' },
-      { label: '12:30\u20135:00 PM', description: 'Free afternoon.' },
-      { label: '7:00 PM', description: 'BANGKOK FAREWELL DINNER (included). Trip recap, awards, toasts.' },
+      { label: 'Highlights', description: 'Drive back to Bangkok, check into The Peninsula for one last night. Farewell dinner \u2014 trip recap, awards, and toasts.' },
     ],
   },
   {
@@ -221,8 +186,7 @@ const days: ItineraryDay[] = [
     vibe: 'Hugs, promises to come back',
     icon: 'plane',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Final breakfast.' },
-      { label: 'Check out', description: 'Private van to Suvarnabhumi.' },
+      { label: 'Highlights', description: 'Final breakfast at The Peninsula. Private transfer to the airport. Head home with new friends and plans to come back.' },
     ],
   },
 ];
@@ -235,7 +199,7 @@ const pickleballSessions = [
     city: 'Bangkok',
     venue: 'Peninsula Bangkok',
     day: 'Day 2',
-    time: '9:30 AM\u201312:00 PM',
+    time: 'Morning',
     focus: 'Assessment, warm-up, coaching + round-robin',
   },
   {
@@ -243,24 +207,24 @@ const pickleballSessions = [
     city: 'Bangkok',
     venue: 'Peninsula Bangkok',
     day: 'Day 3',
-    time: '4:30\u20137:00 PM',
-    focus: 'Coaching clinic (dinks, 3rd shots) + doubles',
+    time: 'Afternoon',
+    focus: 'Coaching clinic + doubles play',
   },
   {
     number: 3,
     city: 'Hua Hin',
     venue: 'Sports Life Hua Hin',
     day: 'Day 5',
-    time: '9:00 AM\u201312:00 PM',
-    focus: 'Coaching clinic (stacking, resets) + round-robin',
+    time: 'Morning',
+    focus: 'Coaching clinic + round-robin',
   },
   {
     number: 4,
     city: 'Hua Hin',
     venue: 'Sports Life Hua Hin',
     day: 'Day 7',
-    time: '8:30\u201311:30 AM',
-    focus: 'Clinic (strategy) + fun tournament + awards',
+    time: 'Morning',
+    focus: 'Fun tournament + awards ceremony',
   },
 ];
 
@@ -274,11 +238,8 @@ const hotels = [
     duration: '3 Nights + 1 Farewell Night',
     highlights: [
       'Five-star riverside luxury on the Chao Phraya River',
-      'On-site Peninsula courts, spa, world-class restaurants',
-      'Daily breakfast included',
-      'Outdoor riverside pool and fitness center',
-      'On-site pickleball courts at The Peninsula',
-      'Your Bangkok home base for the bookend experience: arrive here, return here',
+      'On-site pickleball courts, spa, and world-class restaurants',
+      'Outdoor riverside pool and daily breakfast included',
     ],
   },
   {
@@ -288,11 +249,8 @@ const hotels = [
     duration: '4 Nights',
     highlights: [
       'Five-star beachfront resort with direct beach access',
-      'Full-service spa, wellness treatments, and relaxation facilities',
-      'Resort pool and beach amenities',
-      'Daily breakfast included',
-      'Short drive to Sports Life Hua Hin pickleball courts',
-      'Beachfront dining and lounge areas',
+      'Full-service spa and wellness facilities',
+      'Resort pool, daily breakfast, and beachfront dining',
     ],
   },
 ];
@@ -302,66 +260,37 @@ const hotels = [
 const groupDinners = [
   {
     city: 'Bangkok',
-    label: 'Bangkok Welcome',
-    restaurant: 'The Peninsula or riverside restaurant',
-    description: 'Welcome dinner on the river',
+    label: 'Welcome Dinner',
+    restaurant: 'Riverside dining',
+    description: 'Welcome dinner on the river at The Peninsula',
   },
   {
     city: 'Bangkok',
     label: 'River Dinner',
-    restaurant: 'Riverside dining experience',
+    restaurant: 'Curated restaurant',
     description: 'Group dinner along the Chao Phraya',
   },
   {
     city: 'Hua Hin',
     label: 'Hua Hin Welcome',
-    restaurant: 'Beachside seafood restaurant',
-    description: 'Fresh catch of the day, oceanfront dining',
+    restaurant: 'Beachside restaurant',
+    description: 'Fresh seafood, oceanfront dining',
   },
   {
     city: 'Hua Hin',
-    label: 'Hua Hin Group Dinner',
-    restaurant: 'Curated Hua Hin dining experience',
+    label: 'Group Dinner',
+    restaurant: 'Curated local restaurant',
     description: 'Local flavors and beachside atmosphere',
   },
   {
     city: 'Bangkok',
     label: 'Farewell Dinner',
-    restaurant: 'Curated fine dining experience',
-    description: 'Final night celebration back at The Peninsula',
+    restaurant: 'Curated fine dining',
+    description: 'Final night celebration back in Bangkok',
   },
 ];
 
-const michelinUpgrades = [
-  {
-    name: 'Canvas',
-    detail: '1 star, Bangkok',
-    description: '18-course tasting menu.',
-    priceTHB: '~4,500 THB',
-    priceUSD: '~$130',
-  },
-  {
-    name: 'S\u00fchring',
-    detail: '2 stars, Bangkok',
-    description: 'Modern German by twin chefs in a garden villa.',
-    priceTHB: '~6,000 THB',
-    priceUSD: '~$175',
-  },
-  {
-    name: 'Gaa',
-    detail: '2 stars, Bangkok',
-    description: 'Indian-Thai fusion by Chef Garima Arora.',
-    priceTHB: '~5,000 THB',
-    priceUSD: '~$145',
-  },
-  {
-    name: 'Hua Hin beachfront seafood',
-    detail: 'Local favorite, Hua Hin',
-    description: 'Fresh seafood right on the beach.',
-    priceTHB: '~800 THB',
-    priceUSD: '~$23',
-  },
-];
+const michelinUpgrades: { name: string; detail: string; description: string; priceTHB: string; priceUSD: string }[] = [];
 
 /* ─────────────────────── HELPERS ─────────────────────── */
 
@@ -429,7 +358,7 @@ function ItineraryAccordion() {
           Day-by-Day Itinerary
         </h2>
         <p className="text-[#1D2D44]/60 text-sm">
-          9 days across Bangkok and Hua Hin, with a farewell night back at The Peninsula. Click any day to see the full schedule.
+          9 days across Bangkok and Hua Hin, with a farewell night back at The Peninsula. Click any day to see the highlights.
         </p>
       </div>
 
@@ -577,9 +506,9 @@ function PickleballHuaHin() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {[
           { value: '4', label: 'Total Sessions' },
-          { value: '~10 hrs', label: 'Total Court Time' },
-          { value: '4-5 hrs', label: 'Instruction' },
-          { value: '4-5 hrs', label: 'Social Play' },
+          { value: '8-10 hrs', label: 'Total Court Time' },
+          { value: 'Coaching', label: 'Clinics Each Session' },
+          { value: '3.0–5.0+', label: 'All Skill Levels' },
         ].map((item, idx) => (
           <div
             key={idx}
@@ -635,9 +564,9 @@ function DiningHuaHin() {
   return (
     <div className="space-y-10">
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
-        Thailand has 43 Michelin-starred restaurants. We&apos;ll introduce you to the best,
-        from 200-baht street food legends to Michelin-star tasting menus. 4-5 group dinners
-        are included; optional upgrades available.
+        4-5 group dinners included, from riverside restaurants in Bangkok to beachfront seafood
+        in Hua Hin. Daily breakfast at both hotels. Free nights give you a chance to explore
+        on your own — your trip host will share curated recommendations.
       </p>
 
       <div>
@@ -653,32 +582,8 @@ function DiningHuaHin() {
                   <span className="text-sm font-semibold text-[#1D2D44]">
                     {dinner.label}:
                   </span>
-                  <span className="text-sm text-[#1D2D44]/80">{dinner.restaurant}</span>
-                  <span className="text-xs text-[#1D2D44]/50">- {dinner.description}</span>
+                  <span className="text-sm text-[#1D2D44]/80">{dinner.description}</span>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-serif text-2xl font-bold text-[#1D2D44] mb-6">
-          Optional Michelin Dining Upgrades
-        </h3>
-        <div className="space-y-4">
-          {michelinUpgrades.map((upgrade, idx) => (
-            <div key={idx} className="flex items-start gap-3">
-              <Utensils className="w-4 h-4 text-[#B08D55]/50 flex-shrink-0 mt-1" />
-              <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                <div>
-                  <span className="text-sm font-semibold text-[#1D2D44]">{upgrade.name}</span>
-                  <span className="text-xs text-[#1D2D44]/50 ml-1.5">({upgrade.detail})</span>
-                </div>
-                <span className="text-xs text-[#1D2D44]/50">{upgrade.description}</span>
-                <span className="text-xs font-medium text-[#1D2D44]/40">
-                  {upgrade.priceTHB} / {upgrade.priceUSD}
-                </span>
               </div>
             </div>
           ))}
@@ -687,9 +592,7 @@ function DiningHuaHin() {
 
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-          Several evenings are designated as free nights. Your trip host will share curated
-          recommendations for Bangkok and Hua Hin, from night markets and rooftop bars to
-          hidden local spots.
+          Optional Michelin dining upgrades available — ask us on your consultation call for details.
         </p>
       </div>
     </div>

@@ -98,42 +98,29 @@ const days: ItineraryDay[] = [
     vibe: 'Land, breathe, bond',
     icon: 'sparkles',
     slots: [
-      { label: 'Daytime', description: 'Staggered airport arrivals. Private van transfer from Suvarnabhumi (~30 min). Check-in, room assignments, property orientation.' },
-      { label: '4:00 PM', description: 'Group meet in hotel lobby, trip overview from host.' },
-      { label: '5:00\u20136:30 PM', description: 'Wellness session.' },
-      { label: '7:30 PM', description: 'WELCOME DINNER (included).' },
+      { label: 'Highlights', description: 'Land in Bangkok, settle into The Peninsula, wellness session, welcome dinner on the river.' },
     ],
   },
   {
     day: 2,
-    title: 'First Paddles + River Experience',
+    title: 'Pickleball + River Cruise',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'Shake off the rust, then cruise the river',
     icon: 'trophy',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Breakfast at The Peninsula (included daily).' },
-      { label: '9:30 AM\u201312:00 PM', description: 'PICKLEBALL SESSION 1 at Peninsula Bangkok. Assessment, warm-up, coaching + round-robin.' },
-      { label: '12:30 PM', description: 'Lunch (own expense).' },
-      { label: '1:30\u20133:30 PM', description: 'Free time / pool / spa.' },
-      { label: '4:30\u20136:30 PM', description: 'PRIVATE LONG-TAIL BOAT SUNSET CRUISE (included).' },
-      { label: '7:00 PM', description: 'DINNER ON THE RIVER (included).' },
+      { label: 'Highlights', description: 'Morning session on court at Peninsula Bangkok. Afternoon long-tail boat cruise through Bangkok\u2019s canals past the Grand Palace and Wat Arun at sunset. Group dinner on the river.' },
     ],
   },
   {
     day: 3,
-    title: 'Temple Day + Street Food + Pickleball',
+    title: 'Temples, Street Food + Pickleball',
     city: 'Bangkok',
     hotel: 'The Peninsula Bangkok',
     vibe: 'One temple done right, eat everything, then play',
     icon: 'landmark',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast.' },
-      { label: '9:30\u201311:00 AM', description: 'GUIDED WAT PHO TOUR (included). Reclining Buddha, licensed English guide.' },
-      { label: '11:30 AM\u20131:30 PM', description: 'GUIDED CHINATOWN STREET FOOD WALK (included). This IS lunch.' },
-      { label: '2:30\u20134:00 PM', description: 'Free time / pool.' },
-      { label: '4:30\u20137:00 PM', description: 'PICKLEBALL SESSION 2 at Peninsula Bangkok. Coaching clinic (dinks, 3rd shots) + doubles.' },
-      { label: '8:00 PM', description: 'Dinner (own expense, free night).' },
+      { label: 'Highlights', description: 'Guided tour of Wat Pho (Reclining Buddha), street food walk through Chinatown, afternoon pickleball session at Peninsula Bangkok. Free evening to explore.' },
     ],
   },
   {
@@ -144,60 +131,40 @@ const days: ItineraryDay[] = [
     vibe: 'New city, ancient ruins, welcome feast',
     icon: 'plane',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast at Peninsula, check out.' },
-      { label: '9:30 AM', description: 'Van to airport.' },
-      { label: '~11:00 AM\u201312:15 PM', description: 'Flight to Chiang Mai (~1h15).' },
-      { label: '12:30 PM', description: 'Van to hotel (~15 min).' },
-      { label: '1:00 PM', description: 'Check in at Maraya Hotel & Resort.' },
-      { label: '2:00\u20134:00 PM', description: 'WIANG KUM KAM BICYCLE EXPLORATION (included). Ancient Lanna ruins by bike.' },
-      { label: '4:30 PM', description: 'Pool / rest.' },
-      { label: '6:30 PM', description: 'CHIANG MAI WELCOME DINNER (included) at Huen Muan Jai.' },
+      { label: 'Highlights', description: 'Short flight to Chiang Mai. Explore ancient Lanna ruins at Wiang Kum Kam by bicycle. Welcome dinner at a Michelin Bib Gourmand restaurant.' },
     ],
   },
   {
     day: 5,
-    title: 'Cooking Class + Afternoon Pickleball',
+    title: 'Cooking Class + Pickleball',
     city: 'Chiang Mai',
     hotel: 'Maraya Hotel & Resort',
     vibe: 'Cook like a local, then compete',
     icon: 'landmark',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast (included daily).' },
-      { label: '9:00 AM\u20131:00 PM', description: 'THAI COOKING CLASS (included). Market tour + cook 5\u20136 dishes.' },
-      { label: '1:30 PM', description: 'Return to hotel.' },
-      { label: '3:00\u20135:30 PM', description: 'PICKLEBALL SESSION 3 at BokBok Pickleball. Coaching clinic (stacking, resets) + open play.' },
-      { label: '7:00 PM', description: 'DINNER (included) at Kiti Panit (Michelin-recommended).' },
+      { label: 'Highlights', description: 'Thai cooking class with market tour \u2014 cook 5-6 dishes. Afternoon pickleball session at BokBok. Dinner at a Michelin-recommended restaurant.' },
     ],
   },
   {
     day: 6,
-    title: 'Elephant Nature Park Day',
+    title: 'Elephant Nature Park',
     city: 'Chiang Mai',
     hotel: 'Maraya Hotel & Resort',
     vibe: 'Once-in-a-lifetime, then unwind',
     icon: 'sparkles',
     slots: [
-      { label: '7:00\u20137:30 AM', description: 'Early breakfast.' },
-      { label: '7:30 AM', description: 'Pickup from hotel.' },
-      { label: '9:30 AM\u20133:00 PM', description: 'ELEPHANT NATURE PARK (included). Ethical, observation-based experience.' },
-      { label: '4:00 PM', description: 'Return to hotel.' },
-      { label: '4:30\u20136:00 PM', description: 'Pool / spa / decompress.' },
-      { label: '7:00 PM', description: 'DINNER (included) at Huan Soontaree (riverside, live folk music).' },
+      { label: 'Highlights', description: 'Full-day visit to Elephant Nature Park \u2014 ethical, observation-based experience. Return to hotel for pool and spa time. Riverside dinner with live folk music.' },
     ],
   },
   {
     day: 7,
-    title: 'Final Pickleball + Free Exploration',
+    title: 'Final Pickleball + Exploration',
     city: 'Chiang Mai',
     hotel: 'Maraya Hotel & Resort',
     vibe: 'Compete, celebrate, explore',
     icon: 'trophy',
     slots: [
-      { label: '7:00\u20138:30 AM', description: 'Breakfast.' },
-      { label: '9:00 AM\u201312:00 PM', description: 'PICKLEBALL SESSION 4 (FINAL) at BokBok Pickleball. Clinic (strategy) + fun tournament + awards.' },
-      { label: '12:30 PM', description: 'Lunch (own expense).' },
-      { label: '1:30\u20136:00 PM', description: 'FREE AFTERNOON. Old City temples, Fah Lanna Spa, Nimmanhaemin Road, or Doi Suthep.' },
-      { label: 'Evening', description: 'Walking street (if Sat/Sun) or farewell dinner at Baan Landai.' },
+      { label: 'Highlights', description: 'Final pickleball session at BokBok \u2014 fun tournament, awards, and group photos. Free afternoon to explore Old City temples, spas, or Doi Suthep. Farewell dinner.' },
     ],
   },
   {
@@ -208,12 +175,7 @@ const days: ItineraryDay[] = [
     vibe: 'One last night together',
     icon: 'plane',
     slots: [
-      { label: '7:00\u20138:00 AM', description: 'Breakfast at Maraya, check out.' },
-      { label: '9:00 AM', description: 'Van to Chiang Mai airport.' },
-      { label: '~10:30 AM\u201312:00 PM', description: 'Flight to Bangkok.' },
-      { label: '12:30 PM', description: 'Arrive Peninsula, check in.' },
-      { label: '1:00\u20135:30 PM', description: 'Free afternoon. ICONSIAM, spa, or explore.' },
-      { label: '7:00 PM', description: 'BANGKOK FAREWELL DINNER (included).' },
+      { label: 'Highlights', description: 'Flight back to Bangkok, check into The Peninsula for one last night. Free afternoon to explore. Bangkok farewell dinner \u2014 trip recap and toasts.' },
     ],
   },
   {
@@ -224,9 +186,7 @@ const days: ItineraryDay[] = [
     vibe: 'Hugs, promises to come back',
     icon: 'plane',
     slots: [
-      { label: '7:00\u20139:00 AM', description: 'Final breakfast.' },
-      { label: '9:00\u201310:00 AM', description: 'Check out.' },
-      { label: 'Departure', description: 'Private van transfers to airport.' },
+      { label: 'Highlights', description: 'Final breakfast at The Peninsula. Private transfer to the airport. Head home with new friends and plans to come back.' },
     ],
   },
 ];
@@ -239,7 +199,7 @@ const pickleballSessions = [
     city: 'Bangkok',
     venue: 'Peninsula Bangkok',
     day: 'Day 2',
-    time: '9:30 AM\u201312:00 PM',
+    time: 'Morning',
     focus: 'Assessment, warm-up, coaching + round-robin',
   },
   {
@@ -247,24 +207,24 @@ const pickleballSessions = [
     city: 'Bangkok',
     venue: 'Peninsula Bangkok',
     day: 'Day 3',
-    time: '4:30\u20137:00 PM',
-    focus: 'Coaching clinic (dinks, 3rd shots) + doubles',
+    time: 'Afternoon',
+    focus: 'Coaching clinic + doubles play',
   },
   {
     number: 3,
     city: 'Chiang Mai',
     venue: 'BokBok Pickleball',
     day: 'Day 5',
-    time: '3:00\u20135:30 PM',
-    focus: 'Coaching clinic (stacking, resets) + open play',
+    time: 'Afternoon',
+    focus: 'Coaching clinic + open play',
   },
   {
     number: 4,
     city: 'Chiang Mai',
     venue: 'BokBok Pickleball',
     day: 'Day 7',
-    time: '9:00 AM\u201312:00 PM',
-    focus: 'Clinic (strategy) + fun tournament + awards',
+    time: 'Morning',
+    focus: 'Fun tournament + awards ceremony',
   },
 ];
 
@@ -278,11 +238,8 @@ const hotels = [
     duration: '3 Nights + 1 Farewell Night',
     highlights: [
       'Five-star riverside luxury on the Chao Phraya River',
-      'On-site Peninsula courts, spa, world-class restaurants',
-      'Daily breakfast included',
-      'Outdoor riverside pool and fitness center',
-      'On-site pickleball courts at The Peninsula',
-      'Your Bangkok home base for the bookend experience: arrive here, return here',
+      'On-site pickleball courts, spa, and world-class restaurants',
+      'Outdoor riverside pool and daily breakfast included',
     ],
   },
   {
@@ -292,11 +249,8 @@ const hotels = [
     duration: '4 Nights',
     highlights: [
       'Riverside boutique resort near ancient Lanna ruins',
-      'Spa and wellness facilities',
-      'Free bicycles for exploration',
-      'Short drive to BokBok Pickleball courts',
+      'Spa, wellness facilities, and free bicycles for exploration',
       'Daily breakfast included',
-      'Near ancient Wiang Kum Kam ruins',
     ],
   },
 ];
@@ -306,79 +260,37 @@ const hotels = [
 const groupDinners = [
   {
     city: 'Bangkok',
-    label: 'Bangkok Welcome',
-    restaurant: 'Riverside restaurant',
-    description: 'Welcome dinner on the river',
+    label: 'Welcome Dinner',
+    restaurant: 'Riverside dining',
+    description: 'Welcome dinner on the river at The Peninsula',
   },
   {
     city: 'Bangkok',
     label: 'River Dinner',
-    restaurant: 'Riverside dining experience',
+    restaurant: 'Curated restaurant',
     description: 'Group dinner along the Chao Phraya',
   },
   {
     city: 'Chiang Mai',
     label: 'Chiang Mai Welcome',
-    restaurant: 'Huen Muan Jai (Michelin Bib Gourmand)',
+    restaurant: 'Curated local restaurant',
     description: 'Traditional Northern Thai cuisine',
   },
   {
     city: 'Chiang Mai',
-    label: 'Kiti Panit',
-    restaurant: 'Kiti Panit (Michelin-recommended)',
-    description: 'Classic Lanna cuisine in a 130-year-old teak mansion',
-  },
-  {
-    city: 'Chiang Mai',
-    label: 'Huan Soontaree',
-    restaurant: 'Huan Soontaree',
+    label: 'Cultural Dinner',
+    restaurant: 'Curated local restaurant',
     description: 'Riverside dining with live folk music',
   },
   {
     city: 'Bangkok',
-    label: 'Bangkok Farewell',
-    restaurant: 'Curated fine dining experience',
-    description: 'Final night celebration back at The Peninsula',
+    label: 'Farewell Dinner',
+    restaurant: 'Curated fine dining',
+    description: 'Final night celebration back in Bangkok',
   },
 ];
 
-const michelinUpgrades = [
-  {
-    name: 'Canvas',
-    detail: '1 star, Bangkok',
-    description: '18-course tasting menu.',
-    priceTHB: '~4,500 THB',
-    priceUSD: '~$130',
-  },
-  {
-    name: 'S\u00fchring',
-    detail: '2 stars, Bangkok',
-    description: 'Modern German by twin chefs in a garden villa.',
-    priceTHB: '~6,000 THB',
-    priceUSD: '~$175',
-  },
-  {
-    name: 'Gaa',
-    detail: '2 stars, Bangkok',
-    description: 'Indian-Thai fusion by Chef Garima Arora.',
-    priceTHB: '~5,000 THB',
-    priceUSD: '~$145',
-  },
-  {
-    name: 'Kiti Panit',
-    detail: 'Michelin-recommended, Chiang Mai',
-    description: 'Classic Lanna cuisine in restored teak mansion.',
-    priceTHB: '~800 THB',
-    priceUSD: '~$23',
-  },
-  {
-    name: 'Baan Landai',
-    detail: 'Michelin-recognized, Chiang Mai',
-    description: 'Creative Northern Thai.',
-    priceTHB: '~600 THB',
-    priceUSD: '~$17',
-  },
-];
+const michelinUpgrades: { name: string; detail: string; description: string; priceTHB: string; priceUSD: string }[] = [];
 
 /* ─────────────────────── HELPERS ─────────────────────── */
 
@@ -446,7 +358,7 @@ function ItineraryAccordion() {
           Day-by-Day Itinerary
         </h2>
         <p className="text-[#1D2D44]/60 text-sm">
-          9 days across Bangkok and Chiang Mai, with a farewell night back at The Peninsula. Click any day to see the full schedule.
+          9 days across Bangkok and Chiang Mai, with a farewell night back at The Peninsula. Click any day to see the highlights.
         </p>
       </div>
 
@@ -594,9 +506,9 @@ function PickleballChiangMai() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {[
           { value: '4', label: 'Total Sessions' },
-          { value: '~10 hrs', label: 'Total Court Time' },
-          { value: '4-5 hrs', label: 'Instruction' },
-          { value: '4-5 hrs', label: 'Social Play' },
+          { value: '8-10 hrs', label: 'Total Court Time' },
+          { value: 'Coaching', label: 'Clinics Each Session' },
+          { value: '3.0–5.0+', label: 'All Skill Levels' },
         ].map((item, idx) => (
           <div
             key={idx}
@@ -652,9 +564,9 @@ function DiningChiangMai() {
   return (
     <div className="space-y-10">
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
-        Thailand has 43 Michelin-starred restaurants. We&apos;ll introduce you to the best,
-        from 200-baht street food legends to Michelin-star tasting menus. 4-5 group dinners
-        are included; optional upgrades available.
+        4-5 group dinners included, from riverside restaurants in Bangkok to Northern Thai
+        cuisine in Chiang Mai. Daily breakfast at both hotels. Free nights give you a chance
+        to explore on your own — your trip host will share curated recommendations.
       </p>
 
       <div>
@@ -670,32 +582,8 @@ function DiningChiangMai() {
                   <span className="text-sm font-semibold text-[#1D2D44]">
                     {dinner.label}:
                   </span>
-                  <span className="text-sm text-[#1D2D44]/80">{dinner.restaurant}</span>
-                  <span className="text-xs text-[#1D2D44]/50">- {dinner.description}</span>
+                  <span className="text-sm text-[#1D2D44]/80">{dinner.description}</span>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-serif text-2xl font-bold text-[#1D2D44] mb-6">
-          Optional Michelin Dining Upgrades
-        </h3>
-        <div className="space-y-4">
-          {michelinUpgrades.map((upgrade, idx) => (
-            <div key={idx} className="flex items-start gap-3">
-              <Utensils className="w-4 h-4 text-[#B08D55]/50 flex-shrink-0 mt-1" />
-              <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                <div>
-                  <span className="text-sm font-semibold text-[#1D2D44]">{upgrade.name}</span>
-                  <span className="text-xs text-[#1D2D44]/50 ml-1.5">({upgrade.detail})</span>
-                </div>
-                <span className="text-xs text-[#1D2D44]/50">{upgrade.description}</span>
-                <span className="text-xs font-medium text-[#1D2D44]/40">
-                  {upgrade.priceTHB} / {upgrade.priceUSD}
-                </span>
               </div>
             </div>
           ))}
@@ -704,9 +592,7 @@ function DiningChiangMai() {
 
       <div className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-5">
         <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
-          Several evenings are designated as free nights. Your trip host will share curated
-          recommendations for Bangkok and Chiang Mai, from night markets and rooftop bars to
-          hidden local spots.
+          Optional Michelin dining upgrades available — ask us on your consultation call for details.
         </p>
       </div>
     </div>

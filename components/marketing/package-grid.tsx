@@ -7,34 +7,34 @@ import { Button } from '@/components/ui/button';
 
 const pickleballPackages = [
   {
-    id: '9-day-essential',
-    name: '9-Day Essential Experience',
-    tagline: 'The Essential Experience',
-    duration: '9 Days',
+    id: 'bangkok-hua-hin',
+    name: 'Bangkok + Hua Hin',
+    tagline: 'Available Year-Round',
+    duration: '9 Days / 8 Nights',
     basePrice: 3488,
     highlights: [
-      'Daily curated open play & clinics',
-      'Premier 4-5 star accommodation',
-      'Airport VIP fast-track & transfers',
-      'Welcome dinner & cultural tour',
-      'Dedicated concierge support'
+      '4 pickleball sessions across 2 cities',
+      'The Peninsula Bangkok & Dusit Thani Hua Hin',
+      'Guided temples, street food & river cruise',
+      'Daily breakfast & 4-5 group dinners',
+      'All ground transportation included'
     ],
-    heroImageUrl: '/images/pickleball-court.jpg' // Placeholder
+    heroImageUrl: '/images/pickleball-court.jpg'
   },
   {
-    id: '9-day-ultimate',
-    name: '9-Day Ultimate Experience',
-    tagline: 'The Complete Journey',
-    duration: '9 Days',
+    id: 'bangkok-chiang-mai',
+    name: 'Bangkok + Chiang Mai',
+    tagline: 'May through January',
+    duration: '9 Days / 8 Nights',
     basePrice: 3488,
     highlights: [
-      'Extended coast-to-coast play',
-      'Multiple tournament opportunities',
-      'Island excursions & premier stay',
-      'Full wellness recovery day',
-      'Private pro coaching sessions'
+      '4 pickleball sessions across 2 cities',
+      'The Peninsula Bangkok & Maraya Hotel Chiang Mai',
+      'Cooking class, Elephant Nature Park & temples',
+      'Daily breakfast & 4-5 group dinners',
+      'Domestic flights & ground transport included'
     ],
-    heroImageUrl: '/images/pickleball-resort.jpg' // Placeholder
+    heroImageUrl: '/images/pickleball-resort.jpg'
   }
 ];
 

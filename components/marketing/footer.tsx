@@ -177,7 +177,7 @@ export function Footer() {
       </div>
 
       {/* Main Footer Content - Deep ocean */}
-      <div className="bg-gradient-to-b from-[#1D2D44] to-[#002B42] text-white relative">
+      <div className="bg-gradient-to-b from-[#1D2D44] to-[#002B42] text-white relative navy-texture">
         {/* Decorative wave pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full" style={{
