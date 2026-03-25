@@ -306,7 +306,7 @@ export function TripsListingPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-24 navy-texture">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-24">
         {/* Decorative elements */}
         <div className="absolute top-10 left-10 opacity-10">
           <Palmtree className="w-32 h-32" />
