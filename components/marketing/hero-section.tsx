@@ -1,59 +1,43 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, Sun, Palmtree, ShieldCheck } from 'lucide-react';
 import { useLeadModal } from '@/components/providers/lead-modal-provider';
-
-/* Thailand stock photos — replace with your own shots when ready */
-const heroImages = [
-  'https://images.unsplash.com/photo-1528181304800-259b08848526?w=1920&q=80', // Wat Arun temple
-  'https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=1920&q=80', // Long-tail boats
-  'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1920&q=80', // Thai street food
-  'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=1920&q=80', // Thailand sunset beach
-];
-
-const SLIDE_DURATION = 6000; // 6 seconds per image
 
 export function HeroSection() {
   const { openLeadModal } = useLeadModal();
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(nextSlide, SLIDE_DURATION);
-    return () => clearInterval(interval);
-  }, [nextSlide]);
-
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden navy-texture">
-      {/* Rotating background images with Ken Burns effect */}
-      {heroImages.map((src, index) => (
-        <div
-          key={src}
-          className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
-          style={{ opacity: index === currentSlide ? 1 : 0 }}
-        >
-          <Image
-            src={src}
-            alt=""
-            fill
-            className="object-cover animate-ken-burns"
-            sizes="100vw"
-            priority={index === 0}
-            style={{
-              animationDelay: `${index * SLIDE_DURATION}ms`,
-            }}
-          />
-        </div>
-      ))}
+      {/* Background Layers */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
 
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-[#1B2B4B]/65" />
+      {/* Decorative tropical pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="palm-leaves" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M50 0C50 0 60 25 50 50C40 25 50 0 50 0Z" fill="white" fillOpacity="0.5"/>
+              <path d="M0 50C0 50 25 60 50 50C25 40 0 50 0 50Z" fill="white" fillOpacity="0.3"/>
+              <path d="M100 50C100 50 75 60 50 50C75 40 100 50 100 50Z" fill="white" fillOpacity="0.3"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#palm-leaves)"/>
+        </svg>
+      </div>
+
+      {/* Gradient orbs for depth */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#B08D55]/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-[#7587A5]/30 rounded-full blur-3xl animate-float animation-delay-2000" />
+      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/10 rounded-full blur-2xl animate-float animation-delay-4000" />
+
+      {/* Decorative palm icon */}
+      <div className="absolute top-20 left-10 opacity-10 hidden lg:block">
+        <Palmtree className="w-32 h-32 text-white" />
+      </div>
+      <div className="absolute bottom-20 right-10 opacity-10 hidden lg:block">
+        <Sun className="w-24 h-24 text-[#B08D55]" />
+      </div>
 
       {/* Hero Content */}
       <div className="container px-4 py-20 md:py-28 lg:py-36 relative z-10">
@@ -84,8 +68,8 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
-            9 days across Thailand. Two routes. Boutique hotels.
-            Exceptional pickleball. From $3,488/person.
+            9 days across Thailand. Two routes. Five-star hotels.
+            Exceptional pickleball. Cultural immersion. From $3,488/person.
           </p>
 
           {/* Tagline */}
