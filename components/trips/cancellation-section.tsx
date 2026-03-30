@@ -11,20 +11,32 @@ interface PolicyTier {
 
 const policyTiers: PolicyTier[] = [
   {
-    timeframe: '60+ days before departure',
-    description: 'Full refund minus $500 processing fee',
+    timeframe: '90+ days',
+    description: '100% refund of additional payments (DP held as credit)',
     color: 'green',
     icon: <CheckCircle className="h-5 w-5" />,
   },
   {
-    timeframe: '30\u201360 days before departure',
-    description: '50% refund',
+    timeframe: '60\u201389 days',
+    description: '75% refund of additional payments (DP held as credit)',
+    color: 'green',
+    icon: <CheckCircle className="h-5 w-5" />,
+  },
+  {
+    timeframe: '30\u201359 days',
+    description: '50% refund of additional payments (DP held as credit)',
     color: 'amber',
     icon: <AlertTriangle className="h-5 w-5" />,
   },
   {
-    timeframe: 'Less than 30 days',
-    description: 'No refund',
+    timeframe: '15\u201329 days',
+    description: '25% refund of additional payments (DP held as credit)',
+    color: 'amber',
+    icon: <AlertTriangle className="h-5 w-5" />,
+  },
+  {
+    timeframe: 'Less than 15 days',
+    description: 'No refund; DP remains on file for future booking',
     color: 'red',
     icon: <XCircle className="h-5 w-5" />,
   },
@@ -63,8 +75,15 @@ export function CancellationSection() {
         </p>
       </div>
 
+      {/* Deposit Note */}
+      <div className="rounded-xl border-2 border-[#B08D55]/30 bg-[#FDF8F3] p-4">
+        <p className="text-sm font-medium text-[#1D2D44]">
+          Your 25% deposit locks in your spot and is non-refundable, but fully transferable to a future rescheduled date.
+        </p>
+      </div>
+
       {/* Policy Tiers */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-5">
         {policyTiers.map((tier, index) => {
           const styles = colorStyles[tier.color];
           return (
@@ -105,11 +124,11 @@ export function CancellationSection() {
           <CreditCard className="h-5 w-5 flex-shrink-0 text-[#B08D55] mt-0.5" />
           <div>
             <p className="font-serif font-semibold text-[#1D2D44] text-sm">
-              Trip Credit
+              Deposit Credit
             </p>
             <p className="text-sm text-[#1D2D44]/70 mt-1 leading-relaxed">
-              If you cancel 60+ days before departure, you may opt for a full
-              trip credit (no processing fee) valid for 12 months.
+              Your deposit is always held as credit and can be applied toward
+              any future trip date.
             </p>
           </div>
         </div>

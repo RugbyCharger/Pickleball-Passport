@@ -13,6 +13,8 @@ interface TripDetailLayoutProps {
   depositAmount?: number;
   depositLink?: string;
   fullLink?: string;
+  spotsLeft?: number;
+  totalSpots?: number;
   ContentComponent?: React.ComponentType<{ activeSection: TripSection }>;
 }
 
@@ -24,6 +26,8 @@ export function TripDetailLayout({
   depositAmount,
   depositLink,
   fullLink,
+  spotsLeft,
+  totalSpots,
   ContentComponent,
 }: TripDetailLayoutProps) {
   if (!ContentComponent) {
@@ -77,6 +81,8 @@ export function TripDetailLayout({
                 depositAmount={depositAmount}
                 depositLink={depositLink}
                 fullLink={fullLink}
+                spotsLeft={spotsLeft}
+                totalSpots={totalSpots}
               />
             </div>
           </div>
@@ -91,6 +97,7 @@ export function TripDetailLayout({
         depositAmount={depositAmount}
         depositLink={depositLink}
         fullLink={fullLink}
+        spotsLeft={spotsLeft}
       />
     </>
   );

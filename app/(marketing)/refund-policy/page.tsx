@@ -33,50 +33,42 @@ export default function RefundPolicyPage() {
 
           <div className="prose prose-slate max-w-none">
             <p className="text-gray-600 mb-6">
-              <strong>Last Updated:</strong> January 2025
+              <strong>Last Updated:</strong> March 2026
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-              Deposit and Payment Structure
+              Deposit Policy
             </h2>
             <p className="text-gray-600 mb-4">
-              Our standard payment structure is as follows:
+              Your deposit locks in your spot! A 25% down payment (DP) is required at the
+              time of booking to secure your reservation. Please note that while the deposit
+              is non-refundable, we are happy to apply the full amount toward your next
+              rescheduled date.
             </p>
-            <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li><strong>Initial Deposit:</strong> 25% due at booking confirmation</li>
-              <li><strong>Second Payment:</strong> 50% due 60 days before travel</li>
-              <li><strong>Final Payment:</strong> 25% due 30 days before travel</li>
-            </ul>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
               Cancellation by Guest
             </h2>
             <p className="text-gray-600 mb-4">
-              If you need to cancel your booking, the following refund schedule applies:
+              The initial down payment (DP) is non-refundable but remains fully transferable
+              to a future rescheduled date. For any additional payments made beyond the DP,
+              the following refund schedule applies based on your cancellation date:
             </p>
             <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li><strong>90+ days before travel:</strong> Full refund minus a $500 administrative fee</li>
-              <li><strong>60-89 days before travel:</strong> 75% refund of total amount paid</li>
-              <li><strong>30-59 days before travel:</strong> 50% refund of total amount paid</li>
-              <li><strong>15-29 days before travel:</strong> 25% refund of total amount paid</li>
-              <li><strong>Less than 15 days before travel:</strong> No refund</li>
+              <li><strong>90+ days before travel:</strong> 100% refund of additional payments (DP held as credit)</li>
+              <li><strong>60-89 days before travel:</strong> 75% refund of additional payments (DP held as credit)</li>
+              <li><strong>30-59 days before travel:</strong> 50% refund of additional payments (DP held as credit)</li>
+              <li><strong>15-29 days before travel:</strong> 25% refund of additional payments (DP held as credit)</li>
+              <li><strong>Less than 15 days before travel:</strong> No refund of payments; however, your DP remains on file for a future booking</li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
               Rescheduling
             </h2>
             <p className="text-gray-600 mb-4">
-              We understand that flexibility is important. You may reschedule your trip under
-              the following conditions:
-            </p>
-            <ul className="list-disc pl-6 text-gray-600 mb-4 space-y-2">
-              <li><strong>60+ days before travel:</strong> One free reschedule to a date within 12 months</li>
-              <li><strong>30-59 days before travel:</strong> Reschedule fee of $250</li>
-              <li><strong>Less than 30 days before travel:</strong> Reschedule fee of $500</li>
-            </ul>
-            <p className="text-gray-600 mb-4">
-              Note: Rescheduling is subject to availability and may result in price adjustments
-              if package costs have changed.
+              Your deposit is fully transferable to a future trip date, subject to
+              availability. Rescheduling may result in price adjustments if package
+              costs have changed for the new date.
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">

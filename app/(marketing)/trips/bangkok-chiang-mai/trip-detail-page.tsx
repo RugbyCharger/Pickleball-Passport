@@ -47,7 +47,7 @@ export function BangkokChiangMaiPage() {
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Users className="h-4 w-4 text-[#B08D55]" />
-                16 Guests Max
+                16 Spots Available
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
@@ -82,6 +82,8 @@ export function BangkokChiangMaiPage() {
         depositAmount={872}
         depositLink="https://buy.stripe.com/fZu4gz4WfgUTdOB6gd2cg05"
         fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
+        spotsLeft={16}
+        totalSpots={16}
         ContentComponent={TripSectionContentChiangMai}
       />
 

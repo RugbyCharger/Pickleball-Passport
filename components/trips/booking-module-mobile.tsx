@@ -9,6 +9,7 @@ interface BookingModuleMobileProps {
   depositAmount?: number;
   depositLink?: string;
   fullLink?: string;
+  spotsLeft?: number;
 }
 
 export function BookingModuleMobile({
@@ -17,6 +18,7 @@ export function BookingModuleMobile({
   depositAmount = 872,
   depositLink,
   fullLink,
+  spotsLeft,
 }: BookingModuleMobileProps) {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
@@ -33,6 +35,11 @@ export function BookingModuleMobile({
             <p className="text-xs text-[#1D2D44]/50">
               25% deposit: ${depositAmount.toLocaleString()}
             </p>
+            {spotsLeft !== undefined && (
+              <p className={`text-xs font-semibold ${spotsLeft <= 4 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {spotsLeft === 0 ? 'Sold Out' : spotsLeft <= 4 ? `Only ${spotsLeft} spots left!` : `${spotsLeft} spots available`}
+              </p>
+            )}
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <button

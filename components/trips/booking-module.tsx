@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar } from 'lucide-react';
+import { Calendar, Users } from 'lucide-react';
 import { WaitlistModal } from '@/components/trips/waitlist-modal';
 
 interface BookingModuleProps {
@@ -12,6 +12,8 @@ interface BookingModuleProps {
   depositAmount?: number;
   depositLink?: string;
   fullLink?: string;
+  spotsLeft?: number;
+  totalSpots?: number;
 }
 
 export function BookingModule({
@@ -22,6 +24,8 @@ export function BookingModule({
   depositAmount = 872,
   depositLink,
   fullLink,
+  spotsLeft,
+  totalSpots,
 }: BookingModuleProps) {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
@@ -54,6 +58,25 @@ export function BookingModule({
               Secure your spot with a 25% deposit (${depositAmount.toLocaleString()})
             </p>
           </div>
+
+          {/* Spots Counter */}
+          {spotsLeft !== undefined && totalSpots !== undefined && (
+            <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold ${
+              spotsLeft <= 4
+                ? 'bg-red-50 text-red-700 border border-red-200'
+                : spotsLeft <= 8
+                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+            }`}>
+              <Users className="w-4 h-4" />
+              {spotsLeft === 0
+                ? 'Sold Out'
+                : spotsLeft <= 4
+                  ? `Only ${spotsLeft} Spots Left!`
+                  : `${spotsLeft} of ${totalSpots} Spots Available`
+              }
+            </div>
+          )}
 
           {/* Dual CTA Buttons */}
           <div className="space-y-3">
