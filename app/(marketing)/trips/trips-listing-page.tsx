@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Sparkles, Palmtree, Sun, Calendar, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
+import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 
 /* ─────────────────────── TRIP SCHEDULE ─────────────────────── */
 
@@ -112,6 +113,7 @@ function RouteCard({
   nextDate: string;
   detailHref: string;
 }) {
+  const reserveHref = useReserveHref();
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
       {/* Hero image */}
@@ -160,7 +162,7 @@ function RouteCard({
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            href="/reserve"
+            href={reserveHref}
             className="flex items-center justify-center px-4 py-3 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-sm hover:bg-[#1D2D44] hover:text-white transition-all"
           >
             Reserve
@@ -178,6 +180,7 @@ function TripDateRow({
 }: {
   trip: ScheduledTrip;
 }) {
+  const reserveHref = useReserveHref();
   return (
     <div className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
       <div>
@@ -191,7 +194,7 @@ function TripDateRow({
         )}
       </div>
       <Link
-        href="/reserve"
+        href={reserveHref}
         className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
       >
         Reserve
@@ -282,6 +285,7 @@ function UpcomingDatesSection() {
 /* ─────────────────────── PAGE ─────────────────────── */
 
 export function TripsListingPage() {
+  const reserveHref = useReserveHref();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
@@ -429,7 +433,7 @@ export function TripsListingPage() {
                 destination={dest.destination}
                 imageUrl={dest.imageUrl}
                 onNotifyClick={() => {
-                  window.location.href = '/reserve';
+                  window.location.href = reserveHref;
                 }}
               />
             ))}

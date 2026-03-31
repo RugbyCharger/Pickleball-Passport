@@ -41,8 +41,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const existingCookie = request.cookies.get(REFERRAL_COOKIE_NAME);
   const shouldSetCookie = !existingCookie;
 
-  // Create the redirect response
+  // Create the redirect response with ref param for client-side attribution
   const redirectUrl = new URL('/', request.url);
+  redirectUrl.searchParams.set('ref', code);
   const response = NextResponse.redirect(redirectUrl);
 
   try {
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (shouldSetCookie) {
       response.cookies.set(REFERRAL_COOKIE_NAME, code, {
         maxAge: REFERRAL_COOKIE_MAX_AGE,
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',

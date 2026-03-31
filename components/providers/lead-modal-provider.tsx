@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface LeadModalContextValue {
   openLeadModal: (tripName?: string) => void;
@@ -17,10 +17,12 @@ export function useLeadModal() {
 
 export function LeadModalProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const openLeadModal = useCallback(() => {
-    router.push('/reserve');
-  }, [router]);
+    const ref = searchParams.get('ref');
+    router.push(ref ? `/reserve?ref=${encodeURIComponent(ref)}` : '/reserve');
+  }, [router, searchParams]);
 
   return (
     <LeadModalContext.Provider value={{ openLeadModal }}>

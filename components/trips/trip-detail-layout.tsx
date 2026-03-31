@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { TripSidebarNav, type TripSection } from './trip-sidebar-nav';
 import { BookingModule } from './booking-module';
 import { BookingModuleMobile } from './booking-module-mobile';
@@ -73,17 +73,19 @@ export function TripDetailLayout({
           {/* Right column: booking module (desktop only) */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <BookingModule
-                tripName={tripName}
-                cities={cities}
-                dates={dates}
-                price={price}
-                depositAmount={depositAmount}
-                depositLink={depositLink}
-                fullLink={fullLink}
-                spotsLeft={spotsLeft}
-                totalSpots={totalSpots}
-              />
+              <Suspense>
+                <BookingModule
+                  tripName={tripName}
+                  cities={cities}
+                  dates={dates}
+                  price={price}
+                  depositAmount={depositAmount}
+                  depositLink={depositLink}
+                  fullLink={fullLink}
+                  spotsLeft={spotsLeft}
+                  totalSpots={totalSpots}
+                />
+              </Suspense>
             </div>
           </div>
         </div>
@@ -91,14 +93,16 @@ export function TripDetailLayout({
 
       {/* Mobile booking bar + expandable sheet (padding for bottom bar) */}
       <div className="h-16 lg:hidden" />
-      <BookingModuleMobile
-        tripName={tripName}
-        price={price}
-        depositAmount={depositAmount}
-        depositLink={depositLink}
-        fullLink={fullLink}
-        spotsLeft={spotsLeft}
-      />
+      <Suspense>
+        <BookingModuleMobile
+          tripName={tripName}
+          price={price}
+          depositAmount={depositAmount}
+          depositLink={depositLink}
+          fullLink={fullLink}
+          spotsLeft={spotsLeft}
+        />
+      </Suspense>
     </>
   );
 }

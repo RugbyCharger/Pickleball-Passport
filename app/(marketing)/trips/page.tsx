@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { TripsListingPage } from './trips-listing-page';
 
@@ -20,5 +21,5 @@ export const metadata: Metadata = {
 };
 
 export default function TripsPage() {
-  return <TripsListingPage />;
+  return <Suspense><TripsListingPage /></Suspense>;
 }

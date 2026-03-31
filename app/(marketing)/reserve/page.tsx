@@ -1,9 +1,26 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import { useSearchParams } from 'next/navigation';
 
-export default function ReservePage() {
+const GHL_FORM_BASE_URL = 'https://api.leadconnectorhq.com/widget/form/PkzQfxB3VtWVxh0cLkNO';
+
+function getCookieValue(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function ReserveForm() {
+  const searchParams = useSearchParams();
+  const ref = searchParams.get('ref') || getCookieValue('referral_code') || '';
+
+  const iframeSrc = ref
+    ? `${GHL_FORM_BASE_URL}?ref=${encodeURIComponent(ref)}`
+    : GHL_FORM_BASE_URL;
+
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Header */}
@@ -22,7 +39,7 @@ export default function ReservePage() {
       <section className="py-8 sm:py-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <iframe
-            src="https://api.leadconnectorhq.com/widget/form/PkzQfxB3VtWVxh0cLkNO"
+            src={iframeSrc}
             style={{ width: '100%', height: '971px', border: 'none', borderRadius: '3px' }}
             id="inline-PkzQfxB3VtWVxh0cLkNO"
             data-layout="{'id':'INLINE'}"
@@ -51,5 +68,13 @@ export default function ReservePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function ReservePage() {
+  return (
+    <Suspense>
+      <ReserveForm />
+    </Suspense>
   );
 }

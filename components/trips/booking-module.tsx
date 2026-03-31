@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, Users } from 'lucide-react';
+import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 
 interface BookingModuleProps {
   tripName?: string;
@@ -27,6 +28,7 @@ export function BookingModule({
   totalSpots,
 }: BookingModuleProps) {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const reserveHref = useReserveHref();
 
   return (
     <div className="rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 bg-white overflow-hidden">
@@ -79,7 +81,7 @@ export function BookingModule({
         <div className="space-y-3">
           {/* Reserve Your Spot — outline */}
           <Link
-            href="/reserve"
+            href={reserveHref}
             className="flex w-full h-12 items-center justify-center rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider hover:bg-[#1D2D44] hover:text-white transition-all"
           >
             Reserve Your Spot
@@ -123,7 +125,7 @@ export function BookingModule({
             </>
           ) : (
             <Link
-              href="/reserve"
+              href={reserveHref}
               className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
             >
               Book Now

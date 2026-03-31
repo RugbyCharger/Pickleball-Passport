@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 
 interface BookingModuleMobileProps {
   tripName?: string;
@@ -20,6 +21,7 @@ export function BookingModuleMobile({
   spotsLeft,
 }: BookingModuleMobileProps) {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const reserveHref = useReserveHref();
 
   return (
     <>
@@ -41,7 +43,7 @@ export function BookingModuleMobile({
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <Link
-              href="/reserve"
+              href={reserveHref}
               className="px-4 py-2.5 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-xs"
             >
               Reserve
@@ -56,7 +58,7 @@ export function BookingModuleMobile({
               </button>
             ) : (
               <Link
-                href="/reserve"
+                href={reserveHref}
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
               >
                 Book Now

@@ -1,7 +1,9 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 import {
   ArrowRight,
   CheckCircle,
@@ -78,6 +80,11 @@ const includedItems = [
 ];
 
 export default function PickleballPage() {
+  return <Suspense><PickleballContent /></Suspense>;
+}
+
+function PickleballContent() {
+  const reserveHref = useReserveHref();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
@@ -197,7 +204,7 @@ export default function PickleballPage() {
                         </li>
                       ))}
                     </ul>
-                    <Link href="/reserve">
+                    <Link href={reserveHref}>
                       <Button
                         className={`w-full h-14 rounded-xl font-semibold text-base transition-all ${
                           pkg.featured
@@ -301,7 +308,7 @@ export default function PickleballPage() {
             Reserve your spot today and get ready for the trip of a lifetime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/reserve">
+            <Link href={reserveHref}>
               <Button
                 size="lg"
                 className="bg-[#1D2D44] hover:bg-[#002B42] text-white px-10 py-7 text-lg rounded-xl font-semibold"
@@ -326,3 +333,4 @@ export default function PickleballPage() {
     </main>
   );
 }
+
