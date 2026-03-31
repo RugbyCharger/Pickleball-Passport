@@ -53,11 +53,6 @@ const navigation = {
       href: 'https://www.linkedin.com/in/jaron-shoptaugh-ab675574/',
       icon: Linkedin,
     },
-    {
-      name: 'TikTok',
-      href: 'https://www.tiktok.com/@pickleball.passport',
-      icon: TikTokIcon,
-    },
   ],
 };
 
