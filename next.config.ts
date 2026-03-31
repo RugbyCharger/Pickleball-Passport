@@ -36,6 +36,11 @@ const MUX_DOMAINS = [
   'https://image.mux.com',
 ];
 
+const GHL_DOMAINS = [
+  'https://api.leadconnectorhq.com',
+  'https://link.msgsndr.com',
+];
+
 // Build CSP directives
 const cspDirectives = {
   'default-src': ["'self'"],
@@ -46,6 +51,7 @@ const cspDirectives = {
     ...CLERK_DOMAINS,
     ...STRIPE_DOMAINS,
     ...GOOGLE_DOMAINS,
+    ...GHL_DOMAINS,
   ],
   'style-src': [
     "'self'",
@@ -74,12 +80,14 @@ const cspDirectives = {
     ...SUPABASE_DOMAINS,
     ...GOOGLE_DOMAINS,
     ...MUX_DOMAINS,
+    ...GHL_DOMAINS,
   ],
   'frame-src': [
     "'self'",
     ...CLERK_DOMAINS,
     ...STRIPE_DOMAINS, // Stripe Elements uses iframes
     ...GOOGLE_DOMAINS, // reCAPTCHA uses iframes
+    ...GHL_DOMAINS, // Go High Level forms
   ],
   'frame-ancestors': ["'self'"],
   'form-action': ["'self'"],
