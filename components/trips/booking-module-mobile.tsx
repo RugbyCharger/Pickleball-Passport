@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { WaitlistModal } from '@/components/trips/waitlist-modal';
+import Link from 'next/link';
 
 interface BookingModuleMobileProps {
   tripName?: string;
@@ -13,14 +13,12 @@ interface BookingModuleMobileProps {
 }
 
 export function BookingModuleMobile({
-  tripName = 'Thailand - 9 Days / 8 Nights',
   price = 3488,
   depositAmount = 872,
   depositLink,
   fullLink,
   spotsLeft,
 }: BookingModuleMobileProps) {
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
   return (
@@ -42,13 +40,12 @@ export function BookingModuleMobile({
             )}
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <button
-              type="button"
-              onClick={() => setWaitlistOpen(true)}
+            <Link
+              href="/reserve"
               className="px-4 py-2.5 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-xs"
             >
               Reserve
-            </button>
+            </Link>
             {depositLink ? (
               <button
                 type="button"
@@ -58,13 +55,12 @@ export function BookingModuleMobile({
                 Book Now
               </button>
             ) : (
-              <button
-                type="button"
-                onClick={() => setWaitlistOpen(true)}
+              <Link
+                href="/reserve"
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
               >
                 Book Now
-              </button>
+              </Link>
             )}
           </div>
         </div>
@@ -93,12 +89,6 @@ export function BookingModuleMobile({
           </div>
         )}
       </div>
-
-      <WaitlistModal
-        open={waitlistOpen}
-        onOpenChange={setWaitlistOpen}
-        tripName={tripName}
-      />
     </>
   );
 }

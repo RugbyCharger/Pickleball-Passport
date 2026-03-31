@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, Palmtree, Sun, Calendar, MapPin, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
-import { WaitlistModal } from '@/components/trips/waitlist-modal';
+import { Sparkles, Palmtree, Sun, Calendar, Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Heart } from 'lucide-react';
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
 
 /* ─────────────────────── TRIP SCHEDULE ─────────────────────── */
@@ -105,7 +104,6 @@ function RouteCard({
   imageUrl,
   nextDate,
   detailHref,
-  onReserve,
 }: {
   title: string;
   badge: string;
@@ -113,7 +111,6 @@ function RouteCard({
   imageUrl: string;
   nextDate: string;
   detailHref: string;
-  onReserve: () => void;
 }) {
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10 flex flex-col">
@@ -162,13 +159,12 @@ function RouteCard({
             View Trip Details
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <button
-            type="button"
-            onClick={onReserve}
+          <Link
+            href="/reserve"
             className="flex items-center justify-center px-4 py-3 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-sm hover:bg-[#1D2D44] hover:text-white transition-all"
           >
             Reserve
-          </button>
+          </Link>
         </div>
       </div>
     </div>
@@ -179,10 +175,8 @@ function RouteCard({
 
 function TripDateRow({
   trip,
-  onReserve,
 }: {
   trip: ScheduledTrip;
-  onReserve: (tripName: string) => void;
 }) {
   return (
     <div className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-white border border-slate-100">
@@ -196,24 +190,19 @@ function TripDateRow({
           <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
         )}
       </div>
-      <button
-        type="button"
-        onClick={() => onReserve(`${trip.route} (${trip.startDate} - ${trip.endDate})`)}
+      <Link
+        href="/reserve"
         className="ml-3 px-3 py-1.5 rounded-lg bg-[#B08D55]/10 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/20 transition-colors flex-shrink-0"
       >
         Reserve
-      </button>
+      </Link>
     </div>
   );
 }
 
 const PREVIEW_COUNT = 2;
 
-function UpcomingDatesSection({
-  onReserve,
-}: {
-  onReserve: (tripName: string) => void;
-}) {
+function UpcomingDatesSection() {
   const [showAll, setShowAll] = useState(false);
 
   const huaHinDates = tripSchedule.filter(t => t.route === 'Bangkok + Hua Hin');
@@ -245,7 +234,7 @@ function UpcomingDatesSection({
               <p className="text-xs text-[#1D2D44]/50 mb-4">Available Year-Round</p>
               <div className="space-y-2">
                 {huaHinVisible.map((trip) => (
-                  <TripDateRow key={trip.crmTag} trip={trip} onReserve={onReserve} />
+                  <TripDateRow key={trip.crmTag} trip={trip} />
                 ))}
               </div>
             </div>
@@ -256,7 +245,7 @@ function UpcomingDatesSection({
               <p className="text-xs text-[#1D2D44]/50 mb-4">May through January</p>
               <div className="space-y-2">
                 {chiangMaiVisible.map((trip) => (
-                  <TripDateRow key={trip.crmTag} trip={trip} onReserve={onReserve} />
+                  <TripDateRow key={trip.crmTag} trip={trip} />
                 ))}
               </div>
             </div>
@@ -293,15 +282,6 @@ function UpcomingDatesSection({
 /* ─────────────────────── PAGE ─────────────────────── */
 
 export function TripsListingPage() {
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const [selectedTrip, setSelectedTrip] = useState('');
-  const [notifyOpen, setNotifyOpen] = useState(false);
-  const [notifyDestination, setNotifyDestination] = useState('');
-
-  const openWaitlist = (tripName: string) => {
-    setSelectedTrip(tripName);
-    setWaitlistOpen(true);
-  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
@@ -369,7 +349,6 @@ export function TripsListingPage() {
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
               nextDate="Jun 18 – Jun 26, 2026"
               detailHref="/trips/bangkok-hua-hin"
-              onReserve={() => openWaitlist('Bangkok + Hua Hin (Jun 18 - Jun 26)')}
             />
             <RouteCard
               title="Bangkok + Chiang Mai"
@@ -378,14 +357,13 @@ export function TripsListingPage() {
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
               nextDate="Jul 2 – Jul 10, 2026"
               detailHref="/trips/bangkok-chiang-mai"
-              onReserve={() => openWaitlist('Bangkok + Chiang Mai (Jul 2 - Jul 10)')}
             />
           </div>
         </div>
       </section>
 
       {/* Upcoming Dates */}
-      <UpcomingDatesSection onReserve={openWaitlist} />
+      <UpcomingDatesSection />
 
       {/* Your Journey in 4 Simple Steps */}
       <section className="py-12 sm:py-20 bg-[#FDF8F3] border-t border-[#B08D55]/10">
@@ -451,8 +429,7 @@ export function TripsListingPage() {
                 destination={dest.destination}
                 imageUrl={dest.imageUrl}
                 onNotifyClick={() => {
-                  setNotifyDestination(dest.destination);
-                  setNotifyOpen(true);
+                  window.location.href = '/notify';
                 }}
               />
             ))}
@@ -477,18 +454,6 @@ export function TripsListingPage() {
         </div>
       </section>
 
-      <WaitlistModal
-        open={waitlistOpen}
-        onOpenChange={setWaitlistOpen}
-        tripName={selectedTrip}
-      />
-
-      <WaitlistModal
-        open={notifyOpen}
-        onOpenChange={setNotifyOpen}
-        tripName={notifyDestination}
-        isNotifyMe
-      />
     </main>
   );
 }

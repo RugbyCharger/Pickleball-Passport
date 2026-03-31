@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Calendar, MapPin, Clock, Users } from 'lucide-react';
-import { WaitlistModal } from '@/components/trips/waitlist-modal';
 
 interface TripCardProps {
   destination: string;
@@ -29,13 +27,11 @@ export function TripCard({
   totalSpots,
   status,
 }: TripCardProps) {
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const isAvailable = status === 'available';
   const isSoldOut = status === 'sold_out';
 
   return (
-    <>
-      <Link href={href} className="block group">
+    <Link href={href} className="block group">
         <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 border border-[#B08D55]/10 h-full flex flex-col">
           {/* Hero image area */}
           <div className="relative h-48 sm:h-56 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] overflow-hidden">
@@ -95,11 +91,6 @@ export function TripCard({
               {isAvailable && (
                 <Button
                   className="w-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold shadow-lg shadow-[#B08D55]/30 hover:shadow-xl rounded-xl h-12"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setWaitlistOpen(true);
-                  }}
                 >
                   Reserve Your Spot
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -117,13 +108,6 @@ export function TripCard({
             </div>
           </div>
         </div>
-      </Link>
-
-      <WaitlistModal
-        open={waitlistOpen}
-        onOpenChange={setWaitlistOpen}
-        tripName={`${destination} - ${badge}`}
-      />
-    </>
+    </Link>
   );
 }
