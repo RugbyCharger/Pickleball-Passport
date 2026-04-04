@@ -32,7 +32,7 @@ export function BangkokHuaHinPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Dusit Thani Hua Hin &middot; The Peninsula Bangkok
+              The Peninsula Bangkok &middot; Anantara Hua Hin Resort &middot; The Peninsula Bangkok
             </p>
 
             {/* Trip summary badges */}
@@ -76,7 +76,7 @@ export function BangkokHuaHinPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin (Jun 18 - Jun 26)"
-        cities="The Peninsula Bangkok · Dusit Thani Hua Hin"
+        cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
         dates="Jun 18 – Jun 26, 2026"
         price={3488}
         depositAmount={872}

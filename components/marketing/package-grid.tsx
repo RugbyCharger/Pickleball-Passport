@@ -14,7 +14,7 @@ const pickleballPackages = [
     basePrice: 3488,
     highlights: [
       '4 pickleball sessions across 2 cities',
-      'The Peninsula Bangkok & Dusit Thani Hua Hin',
+      'The Peninsula Bangkok & Anantara Hua Hin Resort',
       'Guided temples, street food & river cruise',
       'Daily breakfast & 4-5 group dinners',
       'All ground transportation included'
@@ -29,7 +29,7 @@ const pickleballPackages = [
     basePrice: 3488,
     highlights: [
       '4 pickleball sessions across 2 cities',
-      'The Peninsula Bangkok & Maraya Hotel Chiang Mai',
+      'The Peninsula Bangkok & Anantara Chiang Mai Resort',
       'Cooking class, Elephant Nature Park & temples',
       'Daily breakfast & 4-5 group dinners',
       'Domestic flights & ground transport included'

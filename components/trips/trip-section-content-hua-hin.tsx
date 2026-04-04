@@ -36,7 +36,7 @@ const statItems = [
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (The Peninsula Bangkok + Dusit Thani Hua Hin)',
+  '8 nights at two five-star hotels (The Peninsula Bangkok + Anantara Hua Hin Resort)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Private ground transfer Bangkok to Hua Hin (3-hr scenic drive)',
@@ -127,18 +127,18 @@ const days: ItineraryDay[] = [
     day: 4,
     title: 'Scenic Drive to Hua Hin',
     city: 'Hua Hin',
-    hotel: 'Dusit Thani Hua Hin',
+    hotel: 'Anantara Hua Hin Resort',
     vibe: 'Road trip, beach, settle in',
     icon: 'ship',
     slots: [
-      { label: 'Highlights', description: 'Scenic drive to Hua Hin. Check into Dusit Thani, explore the beachfront resort. Welcome dinner with fresh seafood by the ocean.' },
+      { label: 'Highlights', description: 'Scenic drive to Hua Hin. Check into Anantara, explore the beachfront resort. Welcome dinner with fresh seafood by the ocean.' },
     ],
   },
   {
     day: 5,
     title: 'Pickleball + Beach Day',
     city: 'Hua Hin',
-    hotel: 'Dusit Thani Hua Hin',
+    hotel: 'Anantara Hua Hin Resort',
     vibe: 'Play hard, explore harder',
     icon: 'trophy',
     slots: [
@@ -149,7 +149,7 @@ const days: ItineraryDay[] = [
     day: 6,
     title: 'Cultural Excursion',
     city: 'Hua Hin',
-    hotel: 'Dusit Thani Hua Hin',
+    hotel: 'Anantara Hua Hin Resort',
     vibe: 'Explore culture, soak it in',
     icon: 'landmark',
     slots: [
@@ -160,7 +160,7 @@ const days: ItineraryDay[] = [
     day: 7,
     title: 'Final Pickleball + Celebration',
     city: 'Hua Hin',
-    hotel: 'Dusit Thani Hua Hin',
+    hotel: 'Anantara Hua Hin Resort',
     vibe: 'Last paddles, sunset toasts',
     icon: 'trophy',
     slots: [
@@ -243,7 +243,7 @@ const hotels = [
     ],
   },
   {
-    name: 'Dusit Thani Hua Hin',
+    name: 'Anantara Hua Hin Resort',
     city: 'Hua Hin',
     location: 'Beachfront, Hua Hin',
     duration: '4 Nights',
@@ -311,7 +311,7 @@ function TripDetailsHuaHin() {
         <div className="flex items-center gap-3 text-sm flex-wrap">
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
-          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Dusit Thani Hua Hin (4 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Anantara Hua Hin Resort (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (1 farewell night)</span>
         </div>

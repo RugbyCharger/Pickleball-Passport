@@ -36,7 +36,7 @@ const statItems = [
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (The Peninsula Bangkok + Maraya Hotel & Resort Chiang Mai)',
+  '8 nights at two five-star hotels (The Peninsula Bangkok + Anantara Chiang Mai Resort)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Domestic flights Bangkok to Chiang Mai and Chiang Mai to Bangkok',
@@ -127,7 +127,7 @@ const days: ItineraryDay[] = [
     day: 4,
     title: 'Fly to Chiang Mai',
     city: 'Chiang Mai',
-    hotel: 'Maraya Hotel & Resort',
+    hotel: 'Anantara Chiang Mai Resort',
     vibe: 'New city, ancient ruins, welcome feast',
     icon: 'plane',
     slots: [
@@ -138,7 +138,7 @@ const days: ItineraryDay[] = [
     day: 5,
     title: 'Cooking Class + Pickleball',
     city: 'Chiang Mai',
-    hotel: 'Maraya Hotel & Resort',
+    hotel: 'Anantara Chiang Mai Resort',
     vibe: 'Cook like a local, then compete',
     icon: 'landmark',
     slots: [
@@ -149,7 +149,7 @@ const days: ItineraryDay[] = [
     day: 6,
     title: 'Elephant Nature Park',
     city: 'Chiang Mai',
-    hotel: 'Maraya Hotel & Resort',
+    hotel: 'Anantara Chiang Mai Resort',
     vibe: 'Once-in-a-lifetime, then unwind',
     icon: 'sparkles',
     slots: [
@@ -160,7 +160,7 @@ const days: ItineraryDay[] = [
     day: 7,
     title: 'Final Pickleball + Exploration',
     city: 'Chiang Mai',
-    hotel: 'Maraya Hotel & Resort',
+    hotel: 'Anantara Chiang Mai Resort',
     vibe: 'Compete, celebrate, explore',
     icon: 'trophy',
     slots: [
@@ -243,7 +243,7 @@ const hotels = [
     ],
   },
   {
-    name: 'Maraya Hotel & Resort',
+    name: 'Anantara Chiang Mai Resort',
     city: 'Chiang Mai',
     location: 'Wiang Kum Kam / Ping River',
     duration: '4 Nights',
@@ -311,7 +311,7 @@ function TripDetailsChiangMai() {
         <div className="flex items-center gap-3 text-sm flex-wrap">
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
-          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Maraya Hotel & Resort Chiang Mai (4 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Anantara Chiang Mai Resort (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (1 farewell night)</span>
         </div>
@@ -450,7 +450,7 @@ function AccommodationsChiangMai() {
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         Two five-star properties selected for their location, wellness amenities, and proximity
         to our pickleball venues. You start and finish at The Peninsula Bangkok, with
-        Maraya Hotel & Resort as your Chiang Mai destination in between.
+        Anantara Chiang Mai Resort as your Chiang Mai destination in between.
       </p>
 
       <div className="space-y-6">

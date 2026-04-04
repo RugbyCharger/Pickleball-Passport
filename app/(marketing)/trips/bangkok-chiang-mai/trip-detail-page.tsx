@@ -32,7 +32,7 @@ export function BangkokChiangMaiPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Maraya Hotel &amp; Resort &middot; The Peninsula Bangkok
+              The Peninsula Bangkok &middot; Anantara Chiang Mai Resort &middot; The Peninsula Bangkok
             </p>
 
             {/* Trip summary badges */}
@@ -76,7 +76,7 @@ export function BangkokChiangMaiPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Chiang Mai (Jul 2 - Jul 10)"
-        cities="The Peninsula Bangkok · Maraya Hotel & Resort"
+        cities="The Peninsula Bangkok · Anantara Chiang Mai Resort"
         dates="Jul 2 – Jul 10, 2026"
         price={3488}
         depositAmount={872}
