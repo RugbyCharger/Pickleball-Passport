@@ -514,7 +514,7 @@ function PickleballHuaHin() {
             key={idx}
             className="bg-white rounded-xl border border-[#B08D55]/20 p-4 text-center shadow-sm"
           >
-            <div className="text-2xl font-bold text-[#1D2D44]">{item.value}</div>
+            <div className="text-base sm:text-2xl font-bold text-[#1D2D44] break-words">{item.value}</div>
             <div className="text-xs text-[#1D2D44]/60 font-medium uppercase tracking-wider mt-1">
               {item.label}
             </div>

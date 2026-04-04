@@ -37,10 +37,10 @@ export function BookingModule({
         <h3 className="font-serif text-2xl text-white font-semibold tracking-wide">
           Thailand
         </h3>
-        <p className="text-white/70 text-sm mt-1">
+        <p className="text-white/70 text-sm mt-1 text-center px-4">
           {cities}
         </p>
-        <div className="flex items-center gap-1.5 mt-3 text-white/80 text-xs">
+        <div className="flex items-center gap-1.5 mt-3 text-white/80 text-xs text-center">
           <Calendar className="w-3.5 h-3.5 text-[#B08D55]" />
           {dates}
         </div>
