@@ -21,7 +21,7 @@ export function BookingModule({
   cities = 'Bangkok · Hua Hin',
   dates = 'Jun 18–26, 2026',
   price = 3488,
-  depositAmount = 872,
+  depositAmount = 1163,
   depositLink,
   fullLink,
   spotsLeft,
@@ -54,7 +54,7 @@ export function BookingModule({
             From ${price.toLocaleString()}<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
           </p>
           <p className="text-xs text-[#1D2D44]/60 mt-1">
-            Secure your spot with a 25% deposit (${depositAmount.toLocaleString()})
+            3 payments of ${depositAmount.toLocaleString()}
           </p>
         </div>
 
@@ -106,9 +106,9 @@ export function BookingModule({
                     rel="noopener noreferrer"
                     className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-3 text-center hover:bg-[#B08D55]/10 transition-colors"
                   >
-                    <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay Deposit</span>
-                    <span className="text-base font-bold text-[#1D2D44] mt-0.5">${depositAmount.toLocaleString()}</span>
-                    <span className="text-xs text-[#1D2D44]/50">25%</span>
+                    <span className="text-xs font-semibold uppercase text-[#1D2D44]">Payment Plan</span>
+                    <span className="text-base font-bold text-[#1D2D44] mt-0.5">3 x ${depositAmount.toLocaleString()}</span>
+                    <span className="text-xs text-[#1D2D44]/50">3 payments</span>
                   </a>
                   <a
                     href={fullLink}

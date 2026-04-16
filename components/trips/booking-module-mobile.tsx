@@ -15,7 +15,7 @@ interface BookingModuleMobileProps {
 
 export function BookingModuleMobile({
   price = 3488,
-  depositAmount = 872,
+  depositAmount = 1163,
   depositLink,
   fullLink,
   spotsLeft,
@@ -33,7 +33,7 @@ export function BookingModuleMobile({
               From ${price.toLocaleString()}/person
             </p>
             <p className="text-xs text-[#1D2D44]/50">
-              25% deposit: ${depositAmount.toLocaleString()}
+              3 payments of ${depositAmount.toLocaleString()}
             </p>
             {spotsLeft !== undefined && (
               <p className={`text-xs font-semibold ${spotsLeft <= 4 ? 'text-red-600' : 'text-emerald-600'}`}>
@@ -76,8 +76,8 @@ export function BookingModuleMobile({
               rel="noopener noreferrer"
               className="flex flex-col items-center justify-center rounded-lg border-2 border-[#B08D55] p-2.5 text-center hover:bg-[#B08D55]/10 transition-colors"
             >
-              <span className="text-xs font-semibold uppercase text-[#1D2D44]">Pay Deposit</span>
-              <span className="text-sm font-bold text-[#1D2D44]">${depositAmount.toLocaleString()}</span>
+              <span className="text-xs font-semibold uppercase text-[#1D2D44]">Payment Plan</span>
+              <span className="text-sm font-bold text-[#1D2D44]">3 x ${depositAmount.toLocaleString()}</span>
             </a>
             <a
               href={fullLink}

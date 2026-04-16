@@ -79,8 +79,8 @@ export function BangkokHuaHinPage() {
         cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
         dates="Jun 18 – Jun 26, 2026"
         price={3488}
-        depositAmount={872}
-        depositLink="https://buy.stripe.com/fZu4gz4WfgUTdOB6gd2cg05"
+        depositAmount={1163}
+        depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
         fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
         spotsLeft={16}
         totalSpots={16}
