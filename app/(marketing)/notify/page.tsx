@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Script from 'next/script';
 
 export default function NotifyPage() {
   return (
@@ -23,8 +24,7 @@ export default function NotifyPage() {
           <div className="bg-white rounded-2xl border border-[#B08D55]/10 shadow-lg overflow-hidden">
             <iframe
               src="https://api.leadconnectorhq.com/widget/form/LBIrAn6DfhY8MKFOzuU4"
-              style={{ width: '100%', border: 'none', overflow: 'hidden' }}
-              scrolling="no"
+              style={{ width: '100%', height: '901px', border: 'none', borderRadius: '3px' }}
               id="inline-LBIrAn6DfhY8MKFOzuU4"
               data-layout="{'id':'INLINE'}"
               data-trigger-type="alwaysShow"
@@ -33,13 +33,13 @@ export default function NotifyPage() {
               data-activation-value=""
               data-deactivation-type="neverDeactivate"
               data-deactivation-value=""
-              data-form-name="Notify Me"
-              data-height="600"
+              data-form-name="Website: Notify Me - General"
+              data-height="901"
               data-layout-iframe-id="inline-LBIrAn6DfhY8MKFOzuU4"
               data-form-id="LBIrAn6DfhY8MKFOzuU4"
-              title="Notify Me"
-              className="min-h-[600px]"
+              title="Website: Notify Me - General"
             />
+            <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="afterInteractive" />
           </div>
         </div>
       </section>

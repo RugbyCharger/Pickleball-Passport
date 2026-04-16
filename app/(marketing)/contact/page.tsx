@@ -1,5 +1,6 @@
 'use client'
 
+import Script from 'next/script'
 import { Button } from '@/components/ui/button'
 import {
   Mail,
@@ -54,8 +55,7 @@ export default function ContactPage() {
               <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
                 <iframe
                   src="https://api.leadconnectorhq.com/widget/form/DOYQ7o4C8pR6V0hSLxcm"
-                  style={{ width: '100%', border: 'none', overflow: 'hidden' }}
-                  scrolling="no"
+                  style={{ width: '100%', height: '724px', border: 'none', borderRadius: '3px' }}
                   id="inline-DOYQ7o4C8pR6V0hSLxcm"
                   data-layout="{'id':'INLINE'}"
                   data-trigger-type="alwaysShow"
@@ -64,13 +64,13 @@ export default function ContactPage() {
                   data-activation-value=""
                   data-deactivation-type="neverDeactivate"
                   data-deactivation-value=""
-                  data-form-name="Contact Us"
-                  data-height="700"
+                  data-form-name="Website: Contact Us"
+                  data-height="724"
                   data-layout-iframe-id="inline-DOYQ7o4C8pR6V0hSLxcm"
                   data-form-id="DOYQ7o4C8pR6V0hSLxcm"
-                  title="Contact Us"
-                  className="min-h-[700px]"
+                  title="Website: Contact Us"
                 />
+                <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="afterInteractive" />
               </div>
             </div>
 
