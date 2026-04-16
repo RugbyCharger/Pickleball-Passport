@@ -433,7 +433,7 @@ export function TripsListingPage() {
                 destination={dest.destination}
                 imageUrl={dest.imageUrl}
                 onNotifyClick={() => {
-                  window.location.href = reserveHref;
+                  window.location.href = '/notify';
                 }}
               />
             ))}
