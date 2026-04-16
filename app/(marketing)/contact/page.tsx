@@ -1,139 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { trpc } from '@/lib/trpc/client'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Mail,
   Phone,
   Clock,
-  Send,
-  Loader2,
-  CheckCircle,
   MapPin,
   MessageCircle,
-  Sparkles,
   Sun,
   Palmtree,
   Waves,
 } from 'lucide-react'
 
-const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/
-
-const categoryOptions = [
-  { value: 'GENERAL_INQUIRY', label: 'General Inquiry' },
-  { value: 'BOOKING_QUESTION', label: 'Booking Question' },
-  { value: 'MEDICAL_WELLNESS_QUESTION', label: 'Trip Question' },
-  { value: 'PAYMENT_ISSUE', label: 'Payment Issue' },
-  { value: 'PARTNERSHIP_INQUIRY', label: 'Partnership Inquiry' },
-  { value: 'OTHER', label: 'Other' },
-] as const
-
-const tripInterestOptions = [
-  { value: 'Singles Retreat', label: 'Singles Retreat' },
-  { value: 'Couples Getaway', label: 'Couples Getaway' },
-  { value: 'Group Adventure', label: 'Group Adventure' },
-  { value: 'Corporate Event', label: 'Corporate Event' },
-  { value: 'Custom Trip', label: 'Custom Trip' },
-  { value: 'Not Sure Yet', label: 'Not Sure Yet' },
-] as const
-
-const timelineOptions = [
-  { value: 'Within 1 month', label: 'Within 1 month' },
-  { value: '1-3 months', label: '1-3 months' },
-  { value: '3-6 months', label: '3-6 months' },
-  { value: '6+ months', label: '6+ months' },
-  { value: 'Just exploring', label: 'Just exploring' },
-] as const
-
-const contactFormSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Name is required')
-    .max(100, 'Name must be 100 characters or less'),
-  email: z.string().email('Please enter a valid email address'),
-  phone: z
-    .string()
-    .regex(phoneRegex, 'Please enter a valid phone number')
-    .optional()
-    .or(z.literal('')),
-  category: z.enum([
-    'GENERAL_INQUIRY',
-    'BOOKING_QUESTION',
-    'MEDICAL_WELLNESS_QUESTION',
-    'PAYMENT_ISSUE',
-    'PARTNERSHIP_INQUIRY',
-    'OTHER',
-  ]),
-  message: z
-    .string()
-    .min(20, 'Message must be at least 20 characters')
-    .max(5000, 'Message must be 5000 characters or less'),
-  tripInterest: z.string().optional(),
-  timeline: z.string().optional(),
-  website: z.string().optional(),
-})
-
-type ContactFormInput = z.infer<typeof contactFormSchema>
-
 export default function ContactPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-    setValue,
-    watch,
-  } = useForm<ContactFormInput>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      category: 'GENERAL_INQUIRY',
-      tripInterest: '',
-      timeline: '',
-      website: '',
-    },
-  })
-
-  const selectedCategory = watch('category')
-  const selectedTripInterest = watch('tripInterest')
-  const selectedTimeline = watch('timeline')
-
-  const contactMutation = trpc.support.createPublicTicket.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message)
-      setIsSubmitted(true)
-      reset()
-    },
-    onError: (error) => {
-      console.error('Contact form error:', error)
-      toast.error(error.message || 'Failed to send message. Please try again.')
-    },
-  })
-
-  const onSubmit = async (data: ContactFormInput) => {
-    try {
-      await contactMutation.mutateAsync(data)
-    } catch (error) {
-      console.error('Contact form submission error:', error)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FDF8F3] via-white to-[#F5E6D3]">
       {/* Hero Section */}
@@ -170,271 +49,28 @@ export default function ContactPage() {
       <section className="py-16 px-4 -mt-8 relative z-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Contact Form */}
+            {/* GHL Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 p-8 md:p-10 border border-[#B08D55]/10">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#B08D55] to-[#CFB78D] flex items-center justify-center">
-                    <Send className="w-5 h-5 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-serif font-bold text-[#1D2D44]">
-                    Send Us a Message
-                  </h2>
-                </div>
-                <p className="text-[#1D2D44]/60 mb-8 ml-13">
-                  Fill out the form below and we&apos;ll get back to you within 24 hours.
-                </p>
-
-                {isSubmitted && (
-                  <div className="mb-8 p-6 bg-gradient-to-r from-[#2D5A3D]/10 to-[#3D7A52]/10 border border-[#2D5A3D]/20 rounded-xl">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-full bg-[#2D5A3D] flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[#2D5A3D] font-semibold text-lg mb-1">
-                          Message sent!
-                        </p>
-                        <p className="text-[#2D5A3D]/70 text-sm">
-                          We&apos;ll get back to you within 24 hours.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Honeypot field */}
-                  <div className="hidden" aria-hidden="true">
-                    <Label htmlFor="website">Website</Label>
-                    <Input
-                      id="website"
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      {...register('website')}
-                    />
-                  </div>
-
-                  {/* Name & Email Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="name" className="text-[#1D2D44] font-medium mb-2 block">
-                        Name <span className="text-[#E07A5F]">*</span>
-                      </Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Your full name"
-                        aria-required="true"
-                        aria-invalid={errors.name ? 'true' : 'false'}
-                        aria-describedby={errors.name ? 'name-error' : undefined}
-                        {...register('name')}
-                        className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
-                          errors.name
-                            ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
-                        }`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.name && (
-                        <p id="name-error" className="text-[#E07A5F] text-sm mt-2" role="alert">
-                          {errors.name.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="email" className="text-[#1D2D44] font-medium mb-2 block">
-                        Email <span className="text-[#E07A5F]">*</span>
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your.email@example.com"
-                        aria-required="true"
-                        aria-invalid={errors.email ? 'true' : 'false'}
-                        aria-describedby={errors.email ? 'email-error' : undefined}
-                        {...register('email')}
-                        className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
-                          errors.email
-                            ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
-                        }`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.email && (
-                        <p id="email-error" className="text-[#E07A5F] text-sm mt-2" role="alert">
-                          {errors.email.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Phone & Category Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="phone" className="text-[#1D2D44] font-medium mb-2 block">
-                        Phone <span className="text-[#1D2D44]/40">(optional)</span>
-                      </Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+1 (555) 123-4567"
-                        aria-invalid={errors.phone ? 'true' : 'false'}
-                        aria-describedby={errors.phone ? 'phone-error' : undefined}
-                        {...register('phone')}
-                        className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
-                          errors.phone
-                            ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                            : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
-                        }`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.phone && (
-                        <p id="phone-error" className="text-[#E07A5F] text-sm mt-2" role="alert">
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="category" className="text-[#1D2D44] font-medium mb-2 block">
-                        How can we help? <span className="text-[#E07A5F]">*</span>
-                      </Label>
-                      <Select
-                        value={selectedCategory}
-                        onValueChange={(value) =>
-                          setValue('category', value as ContactFormInput['category'])
-                        }
-                        disabled={isSubmitting}
-                      >
-                        <SelectTrigger
-                          id="category"
-                          className={`h-12 rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors ${
-                            errors.category
-                              ? 'border-[#E07A5F]'
-                              : 'border-[#1D2D44]/10 focus:border-[#B08D55]'
-                          }`}
-                        >
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#B08D55]/20">
-                          {categoryOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.category && (
-                        <p id="category-error" className="text-[#E07A5F] text-sm mt-2" role="alert">
-                          {errors.category.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Trip Interest & Timeline Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="tripInterest" className="text-[#1D2D44] font-medium mb-2 block">
-                        Trip Interest <span className="text-[#1D2D44]/40">(optional)</span>
-                      </Label>
-                      <Select
-                        value={selectedTripInterest}
-                        onValueChange={(value) => setValue('tripInterest', value)}
-                        disabled={isSubmitting}
-                      >
-                        <SelectTrigger
-                          id="tripInterest"
-                          className="h-12 rounded-xl border-2 border-[#1D2D44]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#B08D55] transition-colors"
-                        >
-                          <SelectValue placeholder="Select a trip (optional)" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#B08D55]/20">
-                          {tripInterestOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="timeline" className="text-[#1D2D44] font-medium mb-2 block">
-                        Timeline <span className="text-[#1D2D44]/40">(optional)</span>
-                      </Label>
-                      <Select
-                        value={selectedTimeline}
-                        onValueChange={(value) => setValue('timeline', value)}
-                        disabled={isSubmitting}
-                      >
-                        <SelectTrigger
-                          id="timeline"
-                          className="h-12 rounded-xl border-2 border-[#1D2D44]/10 bg-[#FDF8F3]/50 focus:bg-white focus:border-[#B08D55] transition-colors"
-                        >
-                          <SelectValue placeholder="Select timeline (optional)" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl border-[#B08D55]/20">
-                          {timelineOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {/* Message Field */}
-                  <div>
-                    <Label htmlFor="message" className="text-[#1D2D44] font-medium mb-2 block">
-                      Message <span className="text-[#E07A5F]">*</span>
-                    </Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Tell us about your questions or interests... (minimum 20 characters)"
-                      rows={6}
-                      aria-required="true"
-                      aria-invalid={errors.message ? 'true' : 'false'}
-                      aria-describedby={errors.message ? 'message-error' : undefined}
-                      {...register('message')}
-                      className={`rounded-xl border-2 bg-[#FDF8F3]/50 focus:bg-white transition-colors resize-none ${
-                        errors.message
-                          ? 'border-[#E07A5F] focus:border-[#E07A5F] focus:ring-[#E07A5F]/20'
-                          : 'border-[#1D2D44]/10 focus:border-[#B08D55] focus:ring-[#B08D55]/20'
-                      }`}
-                      disabled={isSubmitting}
-                    />
-                    {errors.message && (
-                      <p id="message-error" className="text-[#E07A5F] text-sm mt-2" role="alert">
-                        {errors.message.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Submit Button */}
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full h-14 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-bold text-lg rounded-xl shadow-lg shadow-[#B08D55]/30 hover:shadow-xl hover:shadow-[#B08D55]/40 transition-all flex items-center justify-center gap-3"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-5 w-5" aria-hidden="true" />
-                        Send Message
-                        <Sparkles className="h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </form>
+              <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 overflow-hidden border border-[#B08D55]/10">
+                <iframe
+                  src="https://api.leadconnectorhq.com/widget/form/DOYQ7o4C8pR6V0hSLxcm"
+                  style={{ width: '100%', border: 'none', overflow: 'hidden' }}
+                  scrolling="no"
+                  id="inline-DOYQ7o4C8pR6V0hSLxcm"
+                  data-layout="{'id':'INLINE'}"
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Contact Us"
+                  data-height="700"
+                  data-layout-iframe-id="inline-DOYQ7o4C8pR6V0hSLxcm"
+                  data-form-id="DOYQ7o4C8pR6V0hSLxcm"
+                  title="Contact Us"
+                  className="min-h-[700px]"
+                />
               </div>
             </div>
 
