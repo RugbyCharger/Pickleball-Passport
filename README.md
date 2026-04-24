@@ -91,4 +91,4 @@ scripts/
 
 ## License
 
-Private — All Rights Reserved. Copyright 2025-2026 Pickleball Passport.
+Private — All Rights Reserved. Copyright 2026 Pickleball Passport.
