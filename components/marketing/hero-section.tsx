@@ -69,7 +69,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <p className="text-lg text-white/80 sm:text-xl md:text-2xl max-w-3xl leading-relaxed">
             9 days across Thailand. Two routes. Five-star hotels.
-            Exceptional pickleball. Cultural immersion. From $3,488/person.
+            Exceptional pickleball. Cultural immersion. From $3,888/person.
           </p>
 
           {/* Tagline */}

@@ -15,6 +15,7 @@ interface TripDetailLayoutProps {
   fullLink?: string;
   spotsLeft?: number;
   totalSpots?: number;
+  hidePaymentPlan?: boolean;
   ContentComponent?: React.ComponentType<{ activeSection: TripSection }>;
 }
 
@@ -28,6 +29,7 @@ export function TripDetailLayout({
   fullLink,
   spotsLeft,
   totalSpots,
+  hidePaymentPlan,
   ContentComponent,
 }: TripDetailLayoutProps) {
   if (!ContentComponent) {
@@ -84,6 +86,7 @@ export function TripDetailLayout({
                   fullLink={fullLink}
                   spotsLeft={spotsLeft}
                   totalSpots={totalSpots}
+                  hidePaymentPlan={hidePaymentPlan}
                 />
               </Suspense>
             </div>
@@ -101,6 +104,7 @@ export function TripDetailLayout({
           depositLink={depositLink}
           fullLink={fullLink}
           spotsLeft={spotsLeft}
+          hidePaymentPlan={hidePaymentPlan}
         />
       </Suspense>
     </>

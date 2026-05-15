@@ -39,7 +39,7 @@ export function BangkokHuaHinPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jun 18 – Jun 26, 2026
+                Jul 16 – Jul 24, 2026
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
@@ -75,12 +75,11 @@ export function BangkokHuaHinPage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Hua Hin (Jun 18 - Jun 26)"
+        tripName="Bangkok + Hua Hin (Jul 16 - Jul 24)"
         cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
-        dates="Jun 18 – Jun 26, 2026"
-        price={3488}
-        depositAmount={1163}
-        depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
+        dates="Jul 16 – Jul 24, 2026"
+        price={3888}
+        hidePaymentPlan={true}
         fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
         spotsLeft={16}
         totalSpots={16}

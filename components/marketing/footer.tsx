@@ -97,7 +97,7 @@ export function Footer() {
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#B08D55] via-[#CFB78D] to-[#B08D55]" />
 
       {/* Newsletter Section - Hidden until email service is configured */}
-      <div className="bg-gradient-to-b from-[#FDF8F3] to-[#F5E6D3] pt-16 pb-12 relative hidden">
+      <div className="bg-gradient-to-b from-[#FDF8F3] to-[#F5E6D3] pt-16 pb-12 relative">
         {/* Decorative elements */}
         <div className="absolute top-8 left-8 opacity-10">
           <Palmtree className="w-24 h-24 text-[#1D2D44]" />

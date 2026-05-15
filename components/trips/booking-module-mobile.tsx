@@ -11,14 +11,16 @@ interface BookingModuleMobileProps {
   depositLink?: string;
   fullLink?: string;
   spotsLeft?: number;
+  hidePaymentPlan?: boolean;
 }
 
 export function BookingModuleMobile({
-  price = 3488,
+  price = 3888,
   depositAmount = 1163,
   depositLink,
   fullLink,
   spotsLeft,
+  hidePaymentPlan = false,
 }: BookingModuleMobileProps) {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const reserveHref = useReserveHref();
@@ -32,9 +34,11 @@ export function BookingModuleMobile({
             <p className="font-serif font-bold text-[#1D2D44] text-sm">
               From ${price.toLocaleString()}/person
             </p>
-            <p className="text-xs text-[#1D2D44]/50">
-              3 payments of ${depositAmount.toLocaleString()}
-            </p>
+            {!hidePaymentPlan && (
+              <p className="text-xs text-[#1D2D44]/50">
+                3 payments of ${depositAmount.toLocaleString()}
+              </p>
+            )}
             {spotsLeft !== undefined && (
               <p className={`text-xs font-semibold ${spotsLeft <= 4 ? 'text-red-600' : 'text-emerald-600'}`}>
                 {spotsLeft === 0 ? 'Sold Out' : spotsLeft <= 4 ? `Only ${spotsLeft} spots left!` : `${spotsLeft} spots available`}
@@ -48,7 +52,16 @@ export function BookingModuleMobile({
             >
               Reserve
             </Link>
-            {depositLink ? (
+            {hidePaymentPlan && fullLink ? (
+              <a
+                href={fullLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
+              >
+                Book Now
+              </a>
+            ) : depositLink ? (
               <button
                 type="button"
                 onClick={() => setShowPaymentOptions(!showPaymentOptions)}

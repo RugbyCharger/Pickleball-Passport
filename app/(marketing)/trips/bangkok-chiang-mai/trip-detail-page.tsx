@@ -39,7 +39,7 @@ export function BangkokChiangMaiPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 2 – Jul 10, 2026
+                Jul 30 – Aug 7, 2026
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
@@ -75,11 +75,10 @@ export function BangkokChiangMaiPage() {
 
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Chiang Mai (Jul 2 - Jul 10)"
+        tripName="Bangkok + Chiang Mai (Jul 30 - Aug 7)"
         cities="The Peninsula Bangkok · Anantara Chiang Mai Resort"
-        dates="Jul 2 – Jul 10, 2026"
-        price={3488}
-        depositAmount={1163}
+        dates="Jul 30 – Aug 7, 2026"
+        price={3888}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
         fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
         spotsLeft={16}

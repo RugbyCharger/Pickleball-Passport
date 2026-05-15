@@ -11,7 +11,7 @@ const pickleballPackages = [
     name: 'Bangkok + Hua Hin',
     tagline: 'Available Year-Round',
     duration: '9 Days / 8 Nights',
-    basePrice: 3488,
+    basePrice: 3888,
     highlights: [
       '4 pickleball sessions across 2 cities',
       'The Peninsula Bangkok & Anantara Hua Hin Resort',
@@ -26,7 +26,7 @@ const pickleballPackages = [
     name: 'Bangkok + Chiang Mai',
     tagline: 'May through January',
     duration: '9 Days / 8 Nights',
-    basePrice: 3488,
+    basePrice: 3888,
     highlights: [
       '4 pickleball sessions across 2 cities',
       'The Peninsula Bangkok & Anantara Chiang Mai Resort',

@@ -15,17 +15,19 @@ interface BookingModuleProps {
   fullLink?: string;
   spotsLeft?: number;
   totalSpots?: number;
+  hidePaymentPlan?: boolean;
 }
 
 export function BookingModule({
   cities = 'Bangkok · Hua Hin',
-  dates = 'Jun 18–26, 2026',
-  price = 3488,
+  dates = 'Jul 16–24, 2026',
+  price = 3888,
   depositAmount = 1163,
   depositLink,
   fullLink,
   spotsLeft,
   totalSpots,
+  hidePaymentPlan = false,
 }: BookingModuleProps) {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const reserveHref = useReserveHref();
@@ -53,9 +55,11 @@ export function BookingModule({
           <p className="font-serif text-2xl font-bold text-[#1D2D44]">
             From ${price.toLocaleString()}<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
           </p>
-          <p className="text-xs text-[#1D2D44]/60 mt-1">
-            3 payments of ${depositAmount.toLocaleString()}
-          </p>
+          {!hidePaymentPlan && (
+            <p className="text-xs text-[#1D2D44]/60 mt-1">
+              3 payments of ${depositAmount.toLocaleString()}
+            </p>
+          )}
         </div>
 
         {/* Spots Counter */}
@@ -88,7 +92,16 @@ export function BookingModule({
           </Link>
 
           {/* Book Now — gold filled */}
-          {depositLink && fullLink ? (
+          {hidePaymentPlan && fullLink ? (
+            <a
+              href={fullLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+            >
+              Book Now — ${price.toLocaleString()}
+            </a>
+          ) : depositLink && fullLink ? (
             <>
               <button
                 type="button"

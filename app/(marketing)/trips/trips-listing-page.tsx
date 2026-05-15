@@ -18,8 +18,6 @@ interface ScheduledTrip {
 }
 
 const tripSchedule: ScheduledTrip[] = [
-  { route: 'Bangkok + Hua Hin', startDate: 'Jun 18', endDate: 'Jun 26', status: 'live', crmTag: 'reserve_bkk_huahin_jun18' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 2', endDate: 'Jul 10', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul2' },
   { route: 'Bangkok + Hua Hin', startDate: 'Jul 16', endDate: 'Jul 24', status: 'live', crmTag: 'reserve_bkk_huahin_jul16' },
   { route: 'Bangkok + Chiang Mai', startDate: 'Jul 30', endDate: 'Aug 7', status: 'live', crmTag: 'reserve_bkk_chiangmai_jul30' },
   { route: 'Bangkok + Hua Hin', startDate: 'Aug 13', endDate: 'Aug 21', status: 'coming_soon', crmTag: 'reserve_bkk_huahin_aug13' },
@@ -150,7 +148,7 @@ function RouteCard({
           <span className="text-sm font-medium text-[#B08D55]">{nextDate}</span>
         </div>
         <div className="text-2xl font-bold text-[#1D2D44] mb-5">
-          From $3,488<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
+          From $3,888<span className="text-base font-normal text-[#1D2D44]/60">/person</span>
         </div>
 
         <div className="mt-auto flex gap-3">
@@ -188,7 +186,7 @@ function TripDateRow({
           {trip.startDate} – {trip.endDate}, 2026
         </div>
         {trip.status === 'live' ? (
-          <div className="text-xs text-emerald-600 font-medium">$3,488/person</div>
+          <div className="text-xs text-emerald-600 font-medium">$3,888/person</div>
         ) : (
           <div className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</div>
         )}
@@ -341,7 +339,7 @@ export function TripsListingPage() {
               Choose Your Route
             </h2>
             <p className="text-[#1D2D44]/60 text-sm">
-              Same format. Same price. Different destinations. $3,488/person for 9 days / 8 nights.
+              Same format. Same price. Different destinations. $3,888/person for 9 days / 8 nights.
             </p>
           </div>
 
@@ -351,7 +349,7 @@ export function TripsListingPage() {
               badge="Available Year-Round"
               badgeIcon={Sun}
               imageUrl="https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80"
-              nextDate="Jun 18 – Jun 26, 2026"
+              nextDate="Jul 16 – Jul 24, 2026"
               detailHref="/trips/bangkok-hua-hin"
             />
             <RouteCard
@@ -359,7 +357,7 @@ export function TripsListingPage() {
               badge="May through January"
               badgeIcon={Calendar}
               imageUrl="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80"
-              nextDate="Jul 2 – Jul 10, 2026"
+              nextDate="Jul 30 – Aug 7, 2026"
               detailHref="/trips/bangkok-chiang-mai"
             />
           </div>

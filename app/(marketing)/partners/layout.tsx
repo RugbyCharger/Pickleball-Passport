@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Partner Program - Earn Rewards | The Pickleball Passport',
-  description: 'Join our partner network and earn rewards by offering your pickleball community access to transformational wellness experiences in Thailand. Free trips, marketing support, and unlimited earning potential.',
-  keywords: ['partner program', 'pickleball partners', 'earn rewards', 'affiliate program', 'referral program', 'pickleball club partnership'],
+  title: 'Our Partners | The Pickleball Passport',
+  description: 'Meet the creators, pros, and personalities who partner with The Pickleball Passport to bring world-class pickleball travel to the community.',
+  keywords: ['pickleball partners', 'pickleball creators', 'pickleball influencers', 'pickleball travel partners'],
   openGraph: {
-    title: 'Partner Program - Earn Rewards | The Pickleball Passport',
-    description: 'Join our partner network and earn rewards, free trips, and exclusive benefits while helping your members live their best lives.',
+    title: 'Our Partners | The Pickleball Passport',
+    description: 'Meet the creators, pros, and personalities who partner with The Pickleball Passport.',
     url: 'https://thepickleballpassport.org/partners',
     siteName: 'The Pickleball Passport',
     images: [
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
         url: '/og-images/partners.jpg',
         width: 1200,
         height: 630,
-        alt: 'The Pickleball Passport Partner Program - Earn Rewards',
+        alt: 'The Pickleball Passport Partners',
       },
     ],
     locale: 'en_US',
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Partner Program - Earn Rewards | The Pickleball Passport',
-    description: 'Join our partner network and earn rewards, free trips, and exclusive benefits while helping your members live their best lives.',
+    title: 'Our Partners | The Pickleball Passport',
+    description: 'Meet the creators, pros, and personalities who partner with The Pickleball Passport.',
     images: ['/og-images/partners.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',
