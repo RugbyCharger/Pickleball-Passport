@@ -80,7 +80,7 @@ export function BangkokChiangMaiPage() {
         dates="Jul 30 – Aug 7, 2026"
         price={3888}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
-        fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
+        fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
         spotsLeft={16}
         totalSpots={16}
         ContentComponent={TripSectionContentChiangMai}

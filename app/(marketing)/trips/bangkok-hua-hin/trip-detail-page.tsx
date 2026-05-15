@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight, Sun } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
 import { TripSectionContentHuaHin } from '@/components/trips/trip-section-content-hua-hin';
+import { FeaturedPartnerSection } from '@/components/trips/featured-partner-section';
 
 export function BangkokHuaHinPage() {
   return (
@@ -16,10 +17,16 @@ export function BangkokHuaHinPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
-            {/* Tag pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
-              <Sun className="w-4 h-4 text-[#B08D55]" />
-              Available Year-Round
+            {/* Tag pills */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium">
+                <Sun className="w-4 h-4 text-[#B08D55]" />
+                Available Year-Round
+              </div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/30 backdrop-blur-sm text-white text-sm font-semibold">
+                <Sparkles className="w-4 h-4 text-[#CFB78D]" />
+                Featuring BK
+              </div>
             </div>
 
             {/* Headline */}
@@ -73,6 +80,15 @@ export function BangkokHuaHinPage() {
         </div>
       </section>
 
+      {/* Featured Partner */}
+      <FeaturedPartnerSection
+        name='Bharat "BK" Karunakaran'
+        title="Pro Pickleball Player & Content Creator · @bk_pickleball"
+        bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators — he'll be on the court with you every day in Bangkok and Hua Hin."
+        siteUrl="https://www.bk-pickleball.com"
+        siteName="bk-pickleball.com"
+      />
+
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin (Jul 16 - Jul 24)"
@@ -80,7 +96,7 @@ export function BangkokHuaHinPage() {
         dates="Jul 16 – Jul 24, 2026"
         price={3888}
         hidePaymentPlan={true}
-        fullLink="https://buy.stripe.com/14AeVdagz4879ylgUR2cg04"
+        fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
         spotsLeft={16}
         totalSpots={16}
         ContentComponent={TripSectionContentHuaHin}

@@ -13,12 +13,12 @@ interface Partner {
 
 const partners: Partner[] = [
   {
-    name: 'BK',
-    handle: '@bk',
-    category: 'Pro Player',
-    bio: 'Bio coming soon — check back for the full story on BK and his connection to The Pickleball Passport.',
-    siteUrl: '#',
-    siteName: 'Follow BK',
+    name: 'Bharat "BK" Karunakaran',
+    handle: '@bk_pickleball',
+    category: 'Pro Player & Content Creator',
+    bio: 'BK is a Professional Pickleball Player and Content Creator based in Orlando, FL — originally from Chennai, India. A former USTA National Coordinator turned full-time pro, he competes on the APP and PPA circuits, won the inaugural All Florida Pro League, and runs the instructional channel BK Pickleball. He joins us for the July 16 Bangkok + Hua Hin trip.',
+    siteUrl: 'https://www.bk-pickleball.com',
+    siteName: 'bk-pickleball.com',
     imagePlaceholder: 'BK',
   },
   {
