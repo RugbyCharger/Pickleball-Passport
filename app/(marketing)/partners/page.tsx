@@ -1,4 +1,5 @@
 import { Sun, Globe } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface Partner {
@@ -8,6 +9,8 @@ interface Partner {
   bio: string;
   siteUrl: string;
   siteName: string;
+  imageSrc?: string;
+  imageType: 'photo' | 'logo' | 'logo-dark';
   imagePlaceholder: string;
 }
 
@@ -19,6 +22,8 @@ const partners: Partner[] = [
     bio: 'BK is a Professional Pickleball Player and Content Creator based in Orlando, FL — originally from Chennai, India. A former USTA National Coordinator turned full-time pro, he competes on the APP and PPA circuits, won the inaugural All Florida Pro League, and runs the instructional channel BK Pickleball. He joins us for the July 16 Bangkok + Hua Hin trip.',
     siteUrl: 'https://www.bk-pickleball.com',
     siteName: 'bk-pickleball.com',
+    imageSrc: '/bk-karunakaran.jpeg',
+    imageType: 'photo',
     imagePlaceholder: 'BK',
   },
   {
@@ -28,6 +33,8 @@ const partners: Partner[] = [
     bio: 'Bio coming soon — check back for the full story on Neil and his connection to The Pickleball Passport.',
     siteUrl: '#',
     siteName: 'The Dinking Dad',
+    imageSrc: '/dinking-dad-logo.webp',
+    imageType: 'logo',
     imagePlaceholder: 'Neil',
   },
   {
@@ -37,18 +44,49 @@ const partners: Partner[] = [
     bio: 'Bio coming soon — check back for the full story on Travis and his connection to The Pickleball Passport.',
     siteUrl: '#',
     siteName: 'Mind Your Pickle',
+    imageSrc: '/Mindyourpickle.jpeg',
+    imageType: 'logo-dark',
     imagePlaceholder: 'Travis',
   },
 ];
 
 function PartnerCard({ partner }: { partner: Partner }) {
+  const headerBg =
+    partner.imageType === 'logo-dark'
+      ? 'bg-[#111]'
+      : partner.imageType === 'logo'
+        ? 'bg-white'
+        : 'bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5]';
+
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 overflow-hidden flex flex-col">
-      {/* Photo / Logo area */}
-      <div className="h-56 bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] flex items-center justify-center">
-        <span className="text-5xl font-serif font-bold text-white/40">
-          {partner.imagePlaceholder}
-        </span>
+      {/* Image area */}
+      <div className={`relative h-56 ${headerBg} flex items-center justify-center overflow-hidden`}>
+        {partner.imageSrc ? (
+          partner.imageType === 'photo' ? (
+            <Image
+              src={partner.imageSrc}
+              alt={partner.name}
+              fill
+              className="object-cover object-top"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          ) : (
+            <div className="relative w-4/5 h-4/5">
+              <Image
+                src={partner.imageSrc}
+                alt={partner.name}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 80vw, 26vw"
+              />
+            </div>
+          )
+        ) : (
+          <span className="text-5xl font-serif font-bold text-white/40">
+            {partner.imagePlaceholder}
+          </span>
+        )}
       </div>
 
       <div className="p-6 flex flex-col flex-1">

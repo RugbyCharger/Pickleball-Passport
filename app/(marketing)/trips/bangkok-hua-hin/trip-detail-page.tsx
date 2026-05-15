@@ -87,6 +87,8 @@ export function BangkokHuaHinPage() {
         bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators — he'll be on the court with you every day in Bangkok and Hua Hin."
         siteUrl="https://www.bk-pickleball.com"
         siteName="bk-pickleball.com"
+        photoSrc="/bk-karunakaran.jpeg"
+        photoAlt="Bharat BK Karunakaran"
       />
 
       {/* Main content with sidebar navigation */}
