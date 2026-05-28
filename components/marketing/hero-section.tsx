@@ -2,42 +2,24 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Sun, Palmtree, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 import { useLeadModal } from '@/components/providers/lead-modal-provider';
 
 export function HeroSection() {
   const { openLeadModal } = useLeadModal();
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
-      {/* Background Layers */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1D2D44] via-[#495F87] to-[#7587A5]" />
-
-      {/* Decorative tropical pattern overlay */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="palm-leaves" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M50 0C50 0 60 25 50 50C40 25 50 0 50 0Z" fill="white" fillOpacity="0.5"/>
-              <path d="M0 50C0 50 25 60 50 50C25 40 0 50 0 50Z" fill="white" fillOpacity="0.3"/>
-              <path d="M100 50C100 50 75 60 50 50C75 40 100 50 100 50Z" fill="white" fillOpacity="0.3"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#palm-leaves)"/>
-        </svg>
-      </div>
-
-      {/* Gradient orbs for depth */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#B08D55]/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-[#7587A5]/30 rounded-full blur-3xl animate-float animation-delay-2000" />
-      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-white/10 rounded-full blur-2xl animate-float animation-delay-4000" />
-
-      {/* Decorative palm icon */}
-      <div className="absolute top-20 left-10 opacity-10 hidden lg:block">
-        <Palmtree className="w-32 h-32 text-white" />
-      </div>
-      <div className="absolute bottom-20 right-10 opacity-10 hidden lg:block">
-        <Sun className="w-24 h-24 text-[#B08D55]" />
-      </div>
+      {/* Background photo */}
+      <Image
+        src="/images/anantara-hua-hin.jpg"
+        alt="Anantara Hua Hin Resort"
+        fill
+        className="object-cover object-center"
+        priority
+        sizes="100vw"
+      />
+      {/* Dark overlay for text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
 
       {/* Hero Content */}
       <div className="container px-4 py-20 md:py-28 lg:py-36 relative z-10">

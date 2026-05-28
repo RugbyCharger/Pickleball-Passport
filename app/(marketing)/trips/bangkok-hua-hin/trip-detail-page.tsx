@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight, Sun } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
@@ -10,10 +11,17 @@ export function BangkokHuaHinPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Trip Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-20">
-        {/* Decorative orbs */}
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
+      <section className="relative overflow-hidden text-white py-16 sm:py-20">
+        {/* Background photo */}
+        <Image
+          src="/images/peninsula-pool.jpg"
+          alt="The Peninsula Bangkok pool"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
