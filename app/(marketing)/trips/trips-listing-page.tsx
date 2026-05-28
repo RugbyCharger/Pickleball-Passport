@@ -229,7 +229,7 @@ export function TripsListingPage() {
             {/* Photo */}
             <div className="relative w-full sm:w-40 h-40 sm:h-auto flex-shrink-0">
               <Image
-                src="/bk-karunakaran.jpeg"
+                src="/bk-karunakaran-coaching.jpeg"
                 alt="BK Karunakaran"
                 fill
                 className="object-cover object-top"
