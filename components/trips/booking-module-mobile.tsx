@@ -40,8 +40,8 @@ export function BookingModuleMobile({
               </p>
             )}
             {spotsLeft !== undefined && (
-              <p className={`text-xs font-semibold ${spotsLeft <= 4 ? 'text-red-600' : 'text-emerald-600'}`}>
-                {spotsLeft === 0 ? 'Sold Out' : spotsLeft <= 4 ? `Only ${spotsLeft} spots left!` : `${spotsLeft} spots available`}
+              <p className="text-xs font-semibold text-[#1D2D44]/60">
+                {spotsLeft === 0 ? 'Fully reserved' : `${spotsLeft} spaces available`}
               </p>
             )}
           </div>
@@ -59,7 +59,7 @@ export function BookingModuleMobile({
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
               >
-                Book Now
+                Reserve
               </a>
             ) : depositLink ? (
               <button
@@ -67,14 +67,14 @@ export function BookingModuleMobile({
                 onClick={() => setShowPaymentOptions(!showPaymentOptions)}
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
               >
-                Book Now
+                Reserve
               </button>
             ) : (
               <Link
                 href={reserveHref}
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
               >
-                Book Now
+                Reserve
               </Link>
             )}
           </div>

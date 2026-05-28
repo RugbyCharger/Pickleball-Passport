@@ -1,4 +1,5 @@
 import { HeroSection } from '@/components/marketing/hero-section';
+import { FeaturedDeparture } from '@/components/marketing/featured-departure';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <FeaturedDeparture />
     </>
   );
 }
