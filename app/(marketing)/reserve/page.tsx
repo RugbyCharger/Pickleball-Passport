@@ -2,10 +2,9 @@
 
 import { Suspense } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 import { useSearchParams } from 'next/navigation';
 
-const GHL_FORM_BASE_URL = 'https://api.leadconnectorhq.com/widget/form/PkzQfxB3VtWVxh0cLkNO';
+const GHL_CALENDAR_URL = 'https://api.leadconnectorhq.com/widget/bookings/tpp-discoverycall';
 
 function getCookieValue(name: string): string | null {
   if (typeof document === 'undefined') return null;
@@ -18,8 +17,8 @@ function ReserveForm() {
   const ref = searchParams.get('ref') || getCookieValue('referral_code') || '';
 
   const iframeSrc = ref
-    ? `${GHL_FORM_BASE_URL}?ref=${encodeURIComponent(ref)}`
-    : GHL_FORM_BASE_URL;
+    ? `${GHL_CALENDAR_URL}?ref=${encodeURIComponent(ref)}`
+    : GHL_CALENDAR_URL;
 
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
@@ -30,32 +29,19 @@ function ReserveForm() {
             Let&apos;s Talk About Your Trip
           </h1>
           <p className="text-white/60 text-base max-w-xl mx-auto leading-relaxed">
-            Fill out the form below and we&apos;ll reach out to schedule a quick call — answer your questions, walk you through the experience, and find the right departure for you.
+            Pick a time that works for you. We&apos;ll walk you through the experience, answer every question, and find the right departure.
           </p>
         </div>
       </section>
 
-      {/* GHL Form */}
+      {/* GHL Calendar */}
       <section className="py-8 sm:py-12">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <iframe
             src={iframeSrc}
-            style={{ width: '100%', height: '971px', border: 'none', borderRadius: '3px' }}
-            id="inline-PkzQfxB3VtWVxh0cLkNO"
-            data-layout="{'id':'INLINE'}"
-            data-trigger-type="alwaysShow"
-            data-trigger-value=""
-            data-activation-type="alwaysActivated"
-            data-activation-value=""
-            data-deactivation-type="neverDeactivate"
-            data-deactivation-value=""
-            data-form-name="Reserve Your Spot"
-            data-height="971"
-            data-layout-iframe-id="inline-PkzQfxB3VtWVxh0cLkNO"
-            data-form-id="PkzQfxB3VtWVxh0cLkNO"
-            title="Reserve Your Spot"
+            style={{ width: '100%', height: '700px', border: 'none', borderRadius: '8px' }}
+            title="Book a Discovery Call"
           />
-          <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="afterInteractive" />
         </div>
       </section>
 
