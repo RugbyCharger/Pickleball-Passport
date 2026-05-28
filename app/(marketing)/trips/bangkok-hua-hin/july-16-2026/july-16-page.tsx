@@ -100,7 +100,7 @@ export function July16Page() {
                   href={reserveHref}
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
                 >
-                  Talk to our team
+                  Meet Our Team
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
@@ -109,7 +109,7 @@ export function July16Page() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
                 >
-                  Reserve your place
+                  Reserve Your Spot
                 </a>
               </div>
               <p className="text-xs text-white/40 mt-3">

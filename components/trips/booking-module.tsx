@@ -80,7 +80,7 @@ export function BookingModule({
             href={reserveHref}
             className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
           >
-            Talk to our team
+            Meet Our Team
           </Link>
 
           {/* Secondary — direct payment (outline) */}
@@ -91,7 +91,7 @@ export function BookingModule({
               rel="noopener noreferrer"
               className="flex w-full h-12 items-center justify-center rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-semibold text-sm hover:border-[#1D2D44]/40 hover:text-[#1D2D44] transition-all"
             >
-              Reserve your place — ${price.toLocaleString()}
+              Reserve Your Spot
             </a>
           ) : depositLink && fullLink ? (
             <>

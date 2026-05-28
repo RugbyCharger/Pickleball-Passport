@@ -51,7 +51,7 @@ export function BookingModuleMobile({
               href={reserveHref}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
             >
-              Talk to us
+              Meet Our Team
             </Link>
             {/* Secondary — direct payment */}
             {hidePaymentPlan && fullLink ? (
@@ -61,7 +61,7 @@ export function BookingModuleMobile({
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-bold text-xs"
               >
-                Pay now
+                Reserve Your Spot
               </a>
             ) : depositLink ? (
               <button
