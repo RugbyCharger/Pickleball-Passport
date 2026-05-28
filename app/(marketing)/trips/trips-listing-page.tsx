@@ -247,7 +247,7 @@ export function TripsListingPage() {
                 Train with BK Karunakaran,<br className="hidden sm:block" /> PPR Certified Pro Coach
               </h2>
               <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-md">
-                5.5 DUPR · APP/PPA circuit pro · Wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros. BK leads every coached session on the July 16 departure — drills, strategy, and live match-play feedback.
+                5.5 DUPR · APP/PPA circuit pro · Wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros. BK joins coached sessions throughout the July 16 departure — drills, strategy, and live match-play feedback.
               </p>
               <Link
                 href="/trips/bangkok-hua-hin/july-16-2026"

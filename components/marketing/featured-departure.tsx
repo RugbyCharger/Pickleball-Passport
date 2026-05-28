@@ -28,7 +28,7 @@ export function FeaturedDeparture() {
               Joined by BK Karunakaran,<br className="hidden sm:block" /> PPR Certified Pro Coach
             </h2>
             <p className="text-sm text-[#1D2D44]/60 leading-relaxed mb-5 max-w-md">
-              The July 16–24 Bangkok + Hua Hin departure is the only summer trip with a headlining pro coach. BK leads every coached session across 9 days in Bangkok and Hua Hin.
+              The July 16–24 Bangkok + Hua Hin departure is the only summer trip with a headlining pro coach. BK joins coached sessions throughout 9 days in Bangkok and Hua Hin.
             </p>
             <Link
               href="/trips/bangkok-hua-hin/july-16-2026"

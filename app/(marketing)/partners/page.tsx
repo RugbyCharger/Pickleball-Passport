@@ -13,6 +13,8 @@ interface Partner {
   imageType: 'photo' | 'logo' | 'logo-dark';
   imagePlaceholder: string;
   pullQuote?: string;
+  logoSrc?: string;
+  logoDark?: boolean;
 }
 
 const partners: Partner[] = [
@@ -26,6 +28,8 @@ const partners: Partner[] = [
     imageSrc: '/bk-karunakaran.jpeg',
     imageType: 'photo',
     imagePlaceholder: 'BK',
+    logoSrc: '/bk-logo.png',
+    logoDark: true,
   },
   {
     name: 'Travis Rhea',
@@ -38,6 +42,8 @@ const partners: Partner[] = [
     imageSrc: '/travis-rhea.png',
     imageType: 'photo',
     imagePlaceholder: 'Travis',
+    logoSrc: '/Mindyourpickle.jpeg',
+    logoDark: false,
   },
   {
     name: 'Neil Friedenberg',
@@ -50,6 +56,8 @@ const partners: Partner[] = [
     imageSrc: '/neil-friedenberg.png',
     imageType: 'photo',
     imagePlaceholder: 'Neil',
+    logoSrc: '/dinking-dad-logo-new.png',
+    logoDark: false,
   },
 ];
 
@@ -110,6 +118,21 @@ function PartnerCard({ partner }: { partner: Partner }) {
           <blockquote className="border-l-2 border-[#B08D55] pl-3 mb-5">
             <p className="text-sm italic text-[#B08D55]">"{partner.pullQuote}"</p>
           </blockquote>
+        )}
+
+        {/* Brand logo */}
+        {partner.logoSrc && (
+          <div className={`inline-flex items-center rounded-lg px-3 py-2 mb-4 ${partner.logoDark ? 'bg-[#0F1A2A]' : 'bg-[#F5F0EB]'}`}>
+            <div className="relative h-7 w-32">
+              <Image
+                src={partner.logoSrc}
+                alt={`${partner.name} logo`}
+                fill
+                className="object-contain object-left"
+                sizes="128px"
+              />
+            </div>
+          </div>
         )}
 
         {/* Link */}

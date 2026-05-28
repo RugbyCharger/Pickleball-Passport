@@ -24,7 +24,7 @@ const credentials = [
 ];
 
 const coachingHighlights = [
-  'Four coached sessions with BK across the 9 days',
+  'Coached sessions with BK throughout the trip',
   'Drills, strategy, and live match-play feedback',
   'Open play and an optional friendly tournament',
 ];
@@ -61,7 +61,7 @@ export function July16Page() {
 
               {/* Body */}
               <p className="text-white/70 text-base leading-relaxed mb-8">
-                The July 16 departure is the only summer trip joined by BK Karunakaran — Professional Pickleball Player, Content Creator, and PPR Certified Pro Coach. Across nine days in Bangkok and Hua Hin, BK leads every coached session: drills, strategy, and live feedback alongside open play and an optional friendly tournament.
+                The July 16 departure is the only summer trip joined by BK Karunakaran — Professional Pickleball Player, Content Creator, and PPR Certified Pro Coach. Across nine days in Bangkok and Hua Hin, BK joins coached sessions throughout the trip: drills, strategy, and live match-play feedback alongside open play and an optional friendly tournament.
               </p>
 
               {/* Coaching highlights checklist */}
