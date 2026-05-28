@@ -35,8 +35,8 @@ const partners: Partner[] = [
     pullQuote: 'The gap between good players and great ones isn\'t physical — it\'s mental.',
     siteUrl: 'https://mindyourpickle.com',
     siteName: 'mindyourpickle.com',
-    imageSrc: '/Mindyourpickle.jpeg',
-    imageType: 'logo-dark',
+    imageSrc: '/travis-rhea.jpg',
+    imageType: 'photo',
     imagePlaceholder: 'Travis',
   },
   {

@@ -46,37 +46,32 @@ export function BookingModuleMobile({
             )}
           </div>
           <div className="flex gap-2 flex-shrink-0">
+            {/* Primary — talk to team */}
             <Link
               href={reserveHref}
-              className="px-4 py-2.5 rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-bold text-xs"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
             >
-              Reserve
+              Talk to us
             </Link>
+            {/* Secondary — direct payment */}
             {hidePaymentPlan && fullLink ? (
               <a
                 href={fullLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
+                className="px-4 py-2.5 rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-bold text-xs"
               >
-                Reserve
+                Pay now
               </a>
             ) : depositLink ? (
               <button
                 type="button"
                 onClick={() => setShowPaymentOptions(!showPaymentOptions)}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
+                className="px-4 py-2.5 rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-bold text-xs"
               >
-                Reserve
+                Pay now
               </button>
-            ) : (
-              <Link
-                href={reserveHref}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-xs shadow-lg shadow-[#B08D55]/25"
-              >
-                Reserve
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
 

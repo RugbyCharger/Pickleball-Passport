@@ -198,16 +198,16 @@ export function TripsListingPage() {
               <div className="flex gap-3">
                 <Link
                   href={reserveHref}
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
                 >
-                  Reserve Your Spot
+                  Talk to our team
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="/trips/bangkok-hua-hin"
+                  href="/trips/bangkok-hua-hin/july-16-2026"
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border-2 border-white/30 text-white font-bold text-sm backdrop-blur-sm hover:border-white/60 hover:bg-white/10 transition-all"
                 >
-                  View Trip Details
+                  View trip details
                 </Link>
               </div>
             </div>
@@ -219,6 +219,45 @@ export function TripsListingPage() {
           <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 60L60 55C120 50 240 40 360 35C480 30 600 30 720 32C840 34 960 40 1080 43C1200 46 1320 46 1380 46L1440 46V60H0Z" fill="#FDF8F3" />
           </svg>
+        </div>
+      </section>
+
+      {/* ── BK Callout ── */}
+      <section className="bg-white border-b border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div className="flex flex-col sm:flex-row items-stretch gap-0 bg-[#0F1A2A] rounded-2xl overflow-hidden shadow-lg">
+            {/* Photo */}
+            <div className="relative w-full sm:w-40 h-40 sm:h-auto flex-shrink-0">
+              <Image
+                src="/bk-karunakaran.jpeg"
+                alt="BK Karunakaran"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 640px) 100vw, 160px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0F1A2A]/60 hidden sm:block" />
+            </div>
+
+            {/* Copy */}
+            <div className="flex-1 p-6 sm:p-8 flex flex-col justify-center">
+              <p className="text-xs font-bold tracking-[0.18em] uppercase text-[#B08D55] mb-2">
+                July 16–24 · Featured Pro
+              </p>
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-white mb-2 leading-snug">
+                Train with BK Karunakaran,<br className="hidden sm:block" /> PPR Certified Pro Coach
+              </h2>
+              <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-md">
+                5.5 DUPR · APP/PPA circuit pro · Wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros. BK leads every coached session on the July 16 departure — drills, strategy, and live match-play feedback.
+              </p>
+              <Link
+                href="/trips/bangkok-hua-hin/july-16-2026"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#B08D55] hover:text-[#CFB78D] transition-colors self-start"
+              >
+                See the July 16 departure
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -24,13 +24,13 @@ function ReserveForm() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Header */}
-      <section className="bg-gradient-to-br from-[#1D2D44] to-[#495F87] text-white py-12">
+      <section className="bg-[#0F1A2A] text-white py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-2">
-            Reserve Your Spot
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">
+            Let&apos;s Talk About Your Trip
           </h1>
-          <p className="text-white/70 text-base">
-            Fill out the form below and our team will be in touch to finalize your booking.
+          <p className="text-white/60 text-base max-w-xl mx-auto leading-relaxed">
+            Fill out the form below and we&apos;ll reach out to schedule a quick call — answer your questions, walk you through the experience, and find the right departure for you.
           </p>
         </div>
       </section>
