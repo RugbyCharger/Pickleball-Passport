@@ -110,6 +110,9 @@ export function July16Page() {
                   Reserve your place
                 </Link>
               </div>
+              <p className="text-xs text-white/40 mt-3">
+                Joining a call before June 1 locks in current pricing.
+              </p>
             </div>
 
             {/* Right column — BK photo */}
