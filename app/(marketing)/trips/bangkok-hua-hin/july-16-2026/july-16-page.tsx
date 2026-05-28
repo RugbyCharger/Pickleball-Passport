@@ -103,12 +103,14 @@ export function July16Page() {
                   Talk to our team
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <Link
-                  href={reserveHref}
+                <a
+                  href="https://thepickleballpassport.net/main-checkout/trip071626-160081"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
                 >
                   Reserve your place
-                </Link>
+                </a>
               </div>
               <p className="text-xs text-white/40 mt-3">
                 Joining a call before June 1 locks in current pricing.
@@ -202,9 +204,8 @@ export function July16Page() {
         cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
         dates="Jul 16–24, 2026"
         price={3888}
-        depositAmount={1163}
-        depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
-        fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
+        fullLink="https://thepickleballpassport.net/main-checkout/trip071626-160081"
+        hidePaymentPlan
         spotsLeft={16}
         totalSpots={16}
         ContentComponent={TripSectionContentHuaHin}
