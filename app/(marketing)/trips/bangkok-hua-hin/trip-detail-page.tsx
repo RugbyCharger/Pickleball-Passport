@@ -2,10 +2,21 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight, Sun } from 'lucide-react';
+import { Sparkles, MapPin, Calendar, Trophy, ArrowRight, Sun, Star } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
 import { TripSectionContentHuaHin } from '@/components/trips/trip-section-content-hua-hin';
 import { FeaturedPartnerSection } from '@/components/trips/featured-partner-section';
+
+/* ─────────────────────── DEPARTURE DATA ─────────────────────── */
+
+const departures = [
+  { dates: 'Jul 16–24', year: '2026', price: 3888, featured: true, featuredLabel: 'With BK Karunakaran', href: '/trips/bangkok-hua-hin/july-16-2026' },
+  { dates: 'Aug 13–21', year: '2026', price: 3888, featured: false, href: null },
+  { dates: 'Sep 10–18', year: '2026', price: 3888, featured: false, href: null },
+  { dates: 'Oct 8–16', year: '2026', price: 3888, featured: false, href: null },
+  { dates: 'Nov 5–13', year: '2026', price: 3888, featured: false, href: null },
+  { dates: 'Dec 3–11', year: '2026', price: 3888, featured: false, href: null },
+];
 
 export function BangkokHuaHinPage() {
   return (
@@ -33,7 +44,7 @@ export function BangkokHuaHinPage() {
               </div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/30 backdrop-blur-sm text-white text-sm font-semibold">
                 <Sparkles className="w-4 h-4 text-[#CFB78D]" />
-                Featuring BK
+                July 16 — Featuring BK Karunakaran
               </div>
             </div>
 
@@ -54,15 +65,11 @@ export function BangkokHuaHinPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 16 – Jul 24, 2026
+                Departures Jun–Jan
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
                 2 Cities, 2 Five-Star Hotels
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
-                <Users className="h-4 w-4 text-[#B08D55]" />
-                16 Spots Available
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
@@ -99,11 +106,72 @@ export function BangkokHuaHinPage() {
         photoAlt="Bharat BK Karunakaran"
       />
 
+      {/* Upcoming Departures */}
+      <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-1">
+              2026 Departures
+            </h2>
+            <p className="text-sm text-[#1D2D44]/50">
+              From $3,888/person, double occupancy. Single supplement $600. Available year-round — including February through April when Chiang Mai trips are paused for smoke season.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {departures.map((dep) => (
+              <div
+                key={dep.dates}
+                className={`rounded-2xl border p-5 flex flex-col gap-3 ${
+                  dep.featured
+                    ? 'bg-[#0F1A2A] border-[#B08D55]/40'
+                    : 'bg-[#FDF8F3] border-[#B08D55]/10'
+                }`}
+              >
+                <div>
+                  {dep.featured && (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#B08D55] text-white text-xs font-semibold mb-2">
+                      <Star className="w-3 h-3" />
+                      Featured
+                    </div>
+                  )}
+                  <div className={`text-base font-serif font-bold ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+                    {dep.dates}, {dep.year}
+                  </div>
+                  {dep.featuredLabel && (
+                    <div className="text-xs text-[#B08D55] font-medium mt-0.5">{dep.featuredLabel}</div>
+                  )}
+                </div>
+                <div className={`text-sm font-bold mt-auto ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+                  ${dep.price.toLocaleString()}<span className={`font-normal text-xs ml-1 ${dep.featured ? 'text-white/50' : 'text-[#1D2D44]/40'}`}>/person</span>
+                </div>
+                {dep.href ? (
+                  <Link
+                    href={dep.href}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] text-xs font-bold transition-all hover:shadow-md"
+                  >
+                    View this departure
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
+                  >
+                    Request availability
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Hua Hin (Jul 16 - Jul 24)"
+        tripName="Bangkok + Hua Hin"
         cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
-        dates="Jul 16 – Jul 24, 2026"
+        dates="Multiple 2026 departures"
         price={3888}
         hidePaymentPlan={true}
         fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
@@ -113,15 +181,15 @@ export function BangkokHuaHinPage() {
       />
 
       {/* Cross-link to Chiang Mai route */}
-      <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">
+      <section className="py-12 bg-[#0F1A2A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80 text-lg mb-3">Want to extend your trip? Add extra days in Chiang Mai after your 9-day experience. Contact us for add-on pricing.</p>
+          <p className="text-white/70 text-base mb-3">Prefer a mountain city over the coast? Explore our Chiang Mai route — same format, ancient temples and elephants instead of beaches.</p>
           <Link
             href="/trips/bangkok-chiang-mai"
-            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold text-xl transition-colors"
+            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold transition-colors"
           >
             Explore the Bangkok + Chiang Mai Route
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
