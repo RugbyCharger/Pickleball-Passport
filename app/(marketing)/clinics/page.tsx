@@ -6,12 +6,14 @@ import { CheckCircle, MapPin, Users, Clock, Calendar, ArrowRight, QrCode } from 
 
 /* ─────────────────────── VENUES ─────────────────────── */
 
+const TOTAL_SPOTS = 12;
+
 const venues = [
   {
     name: 'The Peninsula Bangkok',
     subtitle: 'Arise Pickleball',
     courts: '3 courts',
-    capacity: '10 spots per session',
+    capacity: '12 spots per session',
     note: 'Small-group coaching at a five-star hotel.',
     image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80',
   },
@@ -19,15 +21,15 @@ const venues = [
     name: 'Sterling / Papaya',
     subtitle: 'Pick-a-Court Bangkok',
     courts: 'Multiple courts',
-    capacity: '20 spots per session',
-    note: 'Bigger group, full camp energy in the heart of Bangkok.',
+    capacity: '12 spots per session',
+    note: 'Coaching clinic in the heart of Bangkok.',
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
   },
   {
     name: 'Sports Life Hua Hin',
     subtitle: "Hua Hin's biggest facility",
     courts: '13 courts (8 new)',
-    capacity: '20 spots per session',
+    capacity: '12 spots per session',
     note: "Right in the expat hub. Thailand's best pickleball setup.",
     image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&q=80',
   },
@@ -36,10 +38,10 @@ const venues = [
 /* ─────────────────────── JULY DATES ─────────────────────── */
 
 const julyDates = [
-  { date: 'Fri Jul 17', venue: 'Sterling / Papaya, Bangkok', spots: 20, spotsLeft: 20 },
-  { date: 'Sat Jul 18', venue: 'Peninsula Bangkok (Arise)', spots: 10, spotsLeft: 10 },
-  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spots: 20, spotsLeft: 20 },
-  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spots: 20, spotsLeft: 20 },
+  { date: 'Fri Jul 17', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 12 },
+  { date: 'Sat Jul 18', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 12 },
+  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 12 },
+  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 12 },
 ];
 
 /* ─────────────────────── WHAT'S INCLUDED ─────────────────────── */
@@ -67,7 +69,7 @@ export default function ClinicsPage() {
             Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
           </h1>
           <p className="text-xl text-white/70 mb-8 max-w-2xl">
-            3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $100.
+            3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $150 · 12 spots per session.
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10">
@@ -176,43 +178,63 @@ export default function ClinicsPage() {
           </p>
 
           <div className="space-y-3 mb-8">
-            {julyDates.map((d) => (
-              <div
-                key={d.date}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-4"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#B08D55]" />
-                    <span className="font-semibold text-[#1D2D44] text-sm">{d.date}</span>
+            {julyDates.map((d) => {
+              const taken = TOTAL_SPOTS - d.spotsLeft;
+              const pct = Math.round((taken / TOTAL_SPOTS) * 100);
+              return (
+                <div
+                  key={d.date}
+                  className="bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10 p-4"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-[#B08D55]" />
+                        <span className="font-semibold text-[#1D2D44] text-sm">{d.date}</span>
+                      </div>
+                      <span className="text-[#1D2D44]/60 text-sm">{d.venue}</span>
+                    </div>
+                    <a
+                      href="#book"
+                      className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap self-start sm:self-auto"
+                    >
+                      Book — $150
+                    </a>
                   </div>
-                  <span className="text-[#1D2D44]/60 text-sm">{d.venue}</span>
+                  {/* Availability bar */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-semibold text-[#1D2D44]">
+                        {d.spotsLeft} of {TOTAL_SPOTS} spots remaining
+                      </span>
+                      {d.spotsLeft <= 4 && (
+                        <span className="text-xs font-bold text-amber-600">Almost full</span>
+                      )}
+                    </div>
+                    <div className="h-1.5 w-full bg-[#1D2D44]/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#B08D55] to-[#CFB78D] rounded-full transition-all"
+                        style={{ width: `${Math.max(pct, 4)}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-xs text-[#1D2D44]/40">{d.spotsLeft} of {d.spots} spots open</span>
-                  <a
-                    href="#book"
-                    className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap"
-                  >
-                    Book — $100
-                  </a>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Clinic Pass upsell */}
           <div className="bg-[#0F1A2A] rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <p className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">Better value</p>
-              <p className="text-white font-serif font-bold text-xl">Clinic Pass — 4 Sessions</p>
-              <p className="text-white/60 text-sm mt-1">Attend all four July clinics. $350 vs. $400 if booked separately.</p>
+              <p className="text-white font-serif font-bold text-xl">Clinic Pass — All 4 Sessions</p>
+              <p className="text-white/60 text-sm mt-1">All four July clinics for $500 — save $100 vs. booking individually.</p>
             </div>
             <a
               href="#book-pass"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm whitespace-nowrap shrink-0"
             >
-              Get the Clinic Pass — $350
+              Get the Clinic Pass — $500
             </a>
           </div>
         </div>
@@ -236,7 +258,7 @@ export default function ClinicsPage() {
                 If you're based in Thailand, scan the QR code below to pay via PromptPay — standard Thai bank transfer, zero international fees. Screenshot it and go.
               </p>
               <p className="text-sm font-semibold text-[#1D2D44]">
-                ฿3,000 per session &nbsp;·&nbsp; ฿10,500 for the Clinic Pass (4 sessions)
+                ฿5,000 per session &nbsp;·&nbsp; ฿15,000 for the Clinic Pass (all 4 sessions)
               </p>
             </div>
           </div>
