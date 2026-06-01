@@ -50,8 +50,8 @@ export default function LoyKrathongPage() {
 
           <p className="text-lg text-white/70 max-w-2xl mb-8 leading-relaxed">
             One night a year, thousands of candlelit lanterns rise over the Mae Ping River in Chiang Mai.
-            The November 19 departure is timed to put you there for Loy Krathong — Thailand's most
-            spectacular festival — while you're already playing pickleball with BK.
+            The November 19 departure is timed to put you there for Loy Krathong, Thailand's most
+            spectacular festival, while you're already playing pickleball with BK.
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10">
@@ -79,7 +79,7 @@ export default function LoyKrathongPage() {
                 href="#stripe-loy-5688"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
               >
-                Book This Departure — $5,688
+                Book This Departure · $5,688
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a
@@ -111,7 +111,7 @@ export default function LoyKrathongPage() {
               </div>
               <h3 className="font-serif font-bold text-[#1D2D44] mb-2">The Festival</h3>
               <p className="text-[#1D2D44]/60 text-sm leading-relaxed">
-                Loy Krathong falls on the full moon of the 12th Thai lunar month. In Chiang Mai, it becomes Yi Peng — thousands of sky lanterns released simultaneously over the city.
+                Loy Krathong falls on the full moon of the 12th Thai lunar month. In Chiang Mai, it becomes Yi Peng, with thousands of sky lanterns released simultaneously over the city.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-6">
@@ -120,7 +120,7 @@ export default function LoyKrathongPage() {
               </div>
               <h3 className="font-serif font-bold text-[#1D2D44] mb-2">The Location</h3>
               <p className="text-[#1D2D44]/60 text-sm leading-relaxed">
-                You'll be staying at Anantara Chiang Mai Resort on the Mae Ping River — the same river the lanterns float down. Front-row seat without planning anything yourself.
+                You'll be staying at Anantara Chiang Mai Resort on the Mae Ping River, the same river the lanterns float down. Front-row seat without planning anything yourself.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-6">
@@ -129,7 +129,7 @@ export default function LoyKrathongPage() {
               </div>
               <h3 className="font-serif font-bold text-[#1D2D44] mb-2">One Night a Year</h3>
               <p className="text-[#1D2D44]/60 text-sm leading-relaxed">
-                This isn't a standing trip feature — it only happens once. The Nov 19 departure is the only TPP trip that aligns with Loy Krathong in 2026.
+                This isn't a standing trip feature. It only happens once. The Nov 19 departure is the only TPP trip that aligns with Loy Krathong in 2026.
               </p>
             </div>
           </div>

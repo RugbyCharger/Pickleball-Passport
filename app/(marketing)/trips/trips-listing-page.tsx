@@ -13,7 +13,7 @@ const products = [
     label: 'Day Clinic',
     price: '$100',
     duration: '3 hours',
-    description: 'Coaching, drills, and you play alongside BK. Drop in — no trip required.',
+    description: 'Coaching, drills, and you play alongside BK. Drop in, no trip required.',
     badge: null,
     href: '/clinics',
     dark: false,
@@ -192,7 +192,7 @@ export function TripsListingPage() {
           priority
           sizes="100vw"
         />
-        {/* Overlay gradient — dark at bottom for text legibility */}
+        {/* Overlay gradient  ·  dark at bottom for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
 
         {/* Content */}
@@ -291,7 +291,7 @@ export function TripsListingPage() {
                 Train with BK Karunakaran,<br className="hidden sm:block" /> PPR Certified Pro Coach
               </h2>
               <p className="text-sm text-white/55 leading-relaxed mb-5 max-w-md">
-                5.5 DUPR · APP/PPA circuit pro · Wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros. BK joins coached sessions throughout the July 16 departure — drills, strategy, and live match-play feedback.
+                5.5 DUPR · APP/PPA circuit pro · Wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros. BK joins coached sessions throughout the July 16 departure: drills, strategy, and live match-play feedback.
               </p>
               <Link
                 href="/trips/bangkok-hua-hin/july-16-2026"

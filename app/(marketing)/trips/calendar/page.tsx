@@ -7,7 +7,7 @@ import { ArrowRight, Calendar, Star } from 'lucide-react';
 
 const routeA = [
   { num: 1, depart: 'Thu Jun 18', ret: 'Fri Jun 26', price: 3888, status: 'Open', href: '/trips/bangkok-hua-hin' },
-  { num: 3, depart: 'Thu Jul 16', ret: 'Fri Jul 24', price: 3888, status: 'Featured — BK', href: '/trips/bangkok-hua-hin/july-16-2026', featured: true },
+  { num: 3, depart: 'Thu Jul 16', ret: 'Fri Jul 24', price: 3888, status: 'Featured: BK', href: '/trips/bangkok-hua-hin/july-16-2026', featured: true },
   { num: 5, depart: 'Thu Aug 13', ret: 'Fri Aug 21', price: 3888, status: 'Open', href: '/trips/bangkok-hua-hin' },
   { num: 7, depart: 'Thu Sep 10', ret: 'Fri Sep 18', price: 3888, status: 'Open', href: '/trips/bangkok-hua-hin' },
   { num: 9, depart: 'Thu Oct 8', ret: 'Fri Oct 16', price: 3888, status: 'Open', href: '/trips/bangkok-hua-hin' },
@@ -60,7 +60,7 @@ export default function CalendarPage() {
         {/* ── Route A ── */}
         <div>
           <div className="mb-4">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route A — Bangkok + Hua Hin</h2>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route A: Bangkok + Hua Hin</h2>
             <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Peninsula Bangkok + Anantara Hua Hin · from $3,888/person</p>
           </div>
           <div className="overflow-x-auto">
@@ -105,7 +105,7 @@ export default function CalendarPage() {
         {/* ── Route B ── */}
         <div>
           <div className="mb-4">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route B — Bangkok + Chiang Mai</h2>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route B: Bangkok + Chiang Mai</h2>
             <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Peninsula Bangkok + Anantara Chiang Mai · price varies by season</p>
           </div>
           <div className="overflow-x-auto">
@@ -176,7 +176,7 @@ export default function CalendarPage() {
         {/* ── Day Clinics ── */}
         <div>
           <div className="mb-4">
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Day Clinics — July 2026</h2>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Day Clinics: July 2026</h2>
             <p className="text-[#1D2D44]/50 text-sm mt-0.5">Drop-in sessions with BK. $100 per session. No trip required.</p>
           </div>
           <div className="space-y-3">
@@ -195,7 +195,7 @@ export default function CalendarPage() {
                     href="/clinics"
                     className="text-xs font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors"
                   >
-                    Book — $100 →
+                    Book · $100 →
                   </Link>
                 </div>
               </div>

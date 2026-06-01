@@ -22,7 +22,7 @@ export function FeaturedDeparture() {
           {/* Content */}
           <div className="flex-1 p-6 sm:p-8 flex flex-col justify-center">
             <p className="text-xs font-bold tracking-[0.18em] uppercase text-[#B08D55] mb-2">
-              Featured Departure — July 16
+              Featured Departure  ·  July 16
             </p>
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1D2D44] mb-2 leading-snug">
               Joined by BK Karunakaran,<br className="hidden sm:block" /> PPR Certified Pro Coach

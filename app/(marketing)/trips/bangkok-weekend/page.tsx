@@ -17,7 +17,7 @@ const itinerary = [
     day: 'Day 2',
     label: 'Friday',
     title: 'Pickleball + Sunset Cruise',
-    details: 'Pickleball Session 1 with BK — drills, strategy, and match play. Sunset long-tail boat cruise on the Chao Phraya. Riverside dinner.',
+    details: 'Pickleball Session 1 with BK  ·  drills, strategy, and match play. Sunset long-tail boat cruise on the Chao Phraya. Riverside dinner.',
   },
   {
     day: 'Day 3',
@@ -29,7 +29,7 @@ const itinerary = [
     day: 'Day 4',
     label: 'Sunday',
     title: 'Breakfast & Check Out',
-    details: 'Breakfast at the hotel. Check out. Fly home, or continue to Hua Hin — van transfer is included if you\'ve booked the Hua Hin Escape.',
+    details: 'Breakfast at the hotel. Check out. Fly home, or continue to Hua Hin  ·  van transfer is included if you\'ve booked the Hua Hin Escape.',
   },
 ];
 
@@ -115,14 +115,14 @@ export default function BangkokWeekendPage() {
               href="#stripe-bkk-1488"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
             >
-              Book Bangkok — $1,488
+              Book Bangkok  ·  $1,488
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href="#stripe-bkk-deposit"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
-              Reserve with Deposit — $496
+              Reserve with Deposit  ·  $496
             </a>
           </div>
         </div>
@@ -140,13 +140,13 @@ export default function BangkokWeekendPage() {
           <div className="bg-[#1D2D44] rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <p className="text-white/60 text-sm">Bangkok ($1,488) + Hua Hin ($2,488) booked separately = <span className="line-through text-white/40">$3,976</span></p>
-              <p className="text-white font-semibold mt-1">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span> — less money, both cities, more included.</p>
+              <p className="text-white font-semibold mt-1">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span>  ·  less money, both cities, more included.</p>
             </div>
             <Link
               href="/trips/bangkok-hua-hin/july-16-2026"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm whitespace-nowrap shrink-0"
             >
-              Book Full Trip — $3,888
+              Book Full Trip  ·  $3,888
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -269,7 +269,7 @@ export default function BangkokWeekendPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
             <p className="text-white/50 text-sm mb-1">Going further?</p>
-            <p className="text-white font-serif font-bold text-xl">Add the Hua Hin Escape — $2,488</p>
+            <p className="text-white font-serif font-bold text-xl">Add the Hua Hin Escape  ·  $2,488</p>
             <p className="text-white/40 text-sm">4 nights at Anantara Hua Hin · 2 more sessions with BK</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
@@ -284,7 +284,7 @@ export default function BangkokWeekendPage() {
               href="/trips/bangkok-hua-hin/july-16-2026"
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm"
             >
-              Book Full 9-Day Trip — $3,888
+              Book Full 9-Day Trip  ·  $3,888
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

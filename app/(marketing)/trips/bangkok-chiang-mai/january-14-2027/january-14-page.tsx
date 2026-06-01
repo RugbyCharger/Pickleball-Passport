@@ -32,7 +32,7 @@ const phuketIncludes = [
   'Daily breakfast',
   'Pickleball at Raccoon Pickleball Club',
   'Private airport transfer (Chiang Mai → Phuket flight not included)',
-  'Trip ends in Phuket — fly home from HKT',
+  'Trip ends in Phuket. Fly home from HKT.',
 ];
 
 /* ─────────────────────── COMPONENT ─────────────────────── */
@@ -62,7 +62,7 @@ export function January14Page() {
             </p>
 
             <p className="text-white/70 text-base leading-relaxed mb-8 max-w-2xl">
-              The January 14 departure follows the standard Route B format — 9 days across Bangkok and Chiang Mai — with one distinction: this is the only Chiang Mai departure where you can add a Phuket extension and fly home from the beach. Choose 3 or 5 nights at Banyan Tree Phuket or Angsana Laguna Phuket.
+              The January 14 departure follows the standard Route B format: 9 days across Bangkok and Chiang Mai, with one distinction. This is the only Chiang Mai departure where you can add a Phuket extension and fly home from the beach. Choose 3 or 5 nights at Banyan Tree Phuket or Angsana Laguna Phuket.
             </p>
 
             {/* Badges */}
@@ -98,7 +98,7 @@ export function January14Page() {
                 href="#stripe-jan14-4860"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
               >
-                Reserve Your Spot — $4,860
+                Reserve Your Spot  ·  $4,860
                 <ArrowRight className="w-4 h-4" />
               </a>
               <Link
@@ -128,7 +128,7 @@ export function January14Page() {
               Phuket Extension
             </h2>
             <p className="text-[#1D2D44]/60 text-sm max-w-2xl leading-relaxed">
-              After your 9 days in Bangkok and Chiang Mai, extend into Phuket instead of flying home. Available only on this departure. Trip ends in Phuket — fly home from HKT.
+              After your 9 days in Bangkok and Chiang Mai, extend into Phuket instead of flying home. Available only on this departure. Trip ends in Phuket  ·  fly home from HKT.
             </p>
           </div>
 

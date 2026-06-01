@@ -84,7 +84,7 @@ export function NewsletterPage() {
             Stay in the Loop
           </h1>
           <p className="text-xl sm:text-2xl text-white/80">
-            Trip updates, new destinations, and stories from the road — delivered to your inbox.
+            Trip updates, new destinations, and stories from the road  ·  delivered to your inbox.
           </p>
         </div>
 

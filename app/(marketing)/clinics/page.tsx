@@ -47,7 +47,7 @@ const julyDates = [
 /* ─────────────────────── WHAT'S INCLUDED ─────────────────────── */
 
 const included = [
-  'Coaching clinic — technique, strategy, and game sense',
+  'Coaching clinic: technique, strategy, and game sense',
   'Structured drills and match play',
   'ProAM: play doubles alongside BK',
   'Water and refreshments',
@@ -131,7 +131,7 @@ export default function ClinicsPage() {
             Venues
           </h2>
           <p className="text-[#1D2D44]/50 text-sm mb-8">
-            Sessions run at three locations — choose based on the date and city you're in.
+            Sessions run at three locations. Choose based on the date and city you're in.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {venues.map((v) => (
@@ -174,7 +174,7 @@ export default function ClinicsPage() {
             July 2026 Dates
           </h2>
           <p className="text-[#1D2D44]/50 text-sm mb-8">
-            These sessions run during the July 16–24 BK Karunakaran departure. Join the day — no trip required.
+            These sessions run during the July 16–24 BK Karunakaran departure. Join for the day. No trip required.
           </p>
 
           <div className="space-y-3 mb-8">
@@ -194,12 +194,15 @@ export default function ClinicsPage() {
                       </div>
                       <span className="text-[#1D2D44]/60 text-sm">{d.venue}</span>
                     </div>
-                    <a
-                      href="#book"
-                      className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap self-start sm:self-auto"
-                    >
-                      Book — $125
-                    </a>
+                    <div className="flex flex-col items-end gap-1 self-start sm:self-auto">
+                      <a
+                        href="#book"
+                        className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap"
+                      >
+                        Book · $125
+                      </a>
+                      <span className="text-xs text-[#1D2D44]/40">฿4,000 via PromptPay</span>
+                    </div>
                   </div>
                   {/* Availability bar */}
                   <div className="mt-3">
@@ -227,14 +230,14 @@ export default function ClinicsPage() {
           <div className="bg-[#0F1A2A] rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <p className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">Better value</p>
-              <p className="text-white font-serif font-bold text-xl">Clinic Pass — All 4 Sessions</p>
-              <p className="text-white/60 text-sm mt-1">All four July clinics for $500 — one session free vs. buying individually.</p>
+              <p className="text-white font-serif font-bold text-xl">Clinic Pass: All 4 Sessions</p>
+              <p className="text-white/60 text-sm mt-1">All four July clinics for $400. Save $100 vs. booking individually.</p>
             </div>
             <a
               href="#book-pass"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm whitespace-nowrap shrink-0"
             >
-              Get the Clinic Pass — $500
+              Get the Clinic Pass · $400
             </a>
           </div>
         </div>
@@ -252,18 +255,18 @@ export default function ClinicsPage() {
                 Paying in Thailand? ชำระเงินในไทย
               </p>
               <h3 className="font-serif text-xl font-bold text-[#1D2D44] mb-2">
-                PromptPay — No Stripe Fees
+                PromptPay: No Stripe Fees
               </h3>
               <p className="text-[#1D2D44]/60 text-sm leading-relaxed mb-3">
-                If you're based in Thailand, scan the QR code below to pay via PromptPay — standard Thai bank transfer, zero international fees. Screenshot it and go.
+                If you're based in Thailand, scan the QR code below to pay via PromptPay, standard Thai bank transfer, zero international fees. Screenshot it and go.
               </p>
               <p className="text-sm font-semibold text-[#1D2D44]">
-                ฿4,000 per session &nbsp;·&nbsp; ฿16,270 for the Clinic Pass (all 4 sessions)
+                ฿4,000 per session &nbsp;·&nbsp; ฿13,000 for the Clinic Pass (all 4 sessions)
               </p>
             </div>
           </div>
 
-          {/* QR placeholder — swap with real image once provided */}
+          {/* QR placeholder  ·  swap with real image once provided */}
           <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 text-center">
             <div className="inline-flex items-center justify-center w-40 h-40 rounded-xl bg-[#FDF8F3] border-2 border-dashed border-[#B08D55]/20 mx-auto mb-4">
               <div className="text-center">
@@ -272,7 +275,7 @@ export default function ClinicsPage() {
               </div>
             </div>
             <p className="text-xs text-[#1D2D44]/40">
-              PromptPay QR — The Pickleball Passport
+              PromptPay QR · The Pickleball Passport
             </p>
           </div>
         </div>

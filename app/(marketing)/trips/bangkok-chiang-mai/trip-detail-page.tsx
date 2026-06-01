@@ -203,7 +203,7 @@ export function BangkokChiangMaiPage() {
             <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
               Chiang Mai trips run May through January. February–April departures are not available due to regional air quality during the dry season burning period. For travel during those months, consider{' '}
               <Link href="/trips/bangkok-hua-hin" className="text-[#B08D55] hover:underline font-medium">
-                Route A — Bangkok + Hua Hin
+                Route A: Bangkok + Hua Hin
               </Link>{' '}
               which operates year-round.
             </p>

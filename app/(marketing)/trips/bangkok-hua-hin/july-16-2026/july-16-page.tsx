@@ -42,7 +42,7 @@ export function July16Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            {/* Left column — copy */}
+            {/* Left column  ·  copy */}
             <div>
               {/* Eyebrow */}
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-4">
@@ -61,7 +61,7 @@ export function July16Page() {
 
               {/* Body */}
               <p className="text-white/70 text-base leading-relaxed mb-8">
-                The July 16 departure is the only summer trip joined by BK Karunakaran — Professional Pickleball Player, Content Creator, and PPR Certified Pro Coach. Across nine days in Bangkok and Hua Hin, BK joins coached sessions throughout the trip: drills, strategy, and live match-play feedback alongside open play and an optional friendly tournament.
+                The July 16 departure is the only summer trip joined by BK Karunakaran  ·  Professional Pickleball Player, Content Creator, and PPR Certified Pro Coach. Across nine days in Bangkok and Hua Hin, BK joins coached sessions throughout the trip: drills, strategy, and live match-play feedback alongside open play and an optional friendly tournament.
               </p>
 
               {/* Coaching highlights checklist */}
@@ -112,7 +112,7 @@ export function July16Page() {
               </div>
             </div>
 
-            {/* Right column — BK photo */}
+            {/* Right column  ·  BK photo */}
             <div className="flex flex-col items-center gap-6">
               {/* Silhouette / dynamic treatment */}
               <div className="relative w-full max-w-sm mx-auto">
@@ -158,7 +158,7 @@ export function July16Page() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Full Trip — primary */}
+            {/* Full Trip  ·  primary */}
             <div className="sm:col-span-1 bg-[#0F1A2A] rounded-2xl border border-[#B08D55]/40 p-5 flex flex-col">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#B08D55] text-white text-xs font-bold mb-3 self-start">
                 BEST VALUE
@@ -175,13 +175,13 @@ export function July16Page() {
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm hover:shadow-lg transition-all"
                 >
-                  Book Full Trip — $3,888
+                  Book Full Trip  ·  $3,888
                 </a>
                 <a
                   href="#deposit-fulltrip"
                   className="flex w-full items-center justify-center py-2.5 rounded-xl border border-white/15 text-white/70 text-xs font-medium hover:bg-white/5 transition-colors"
                 >
-                  Reserve with Deposit — $1,296
+                  Reserve with Deposit  ·  $1,296
                 </a>
               </div>
             </div>
@@ -198,13 +198,13 @@ export function July16Page() {
                   href="#stripe-bkk-1488"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
                 >
-                  Book Bangkok — $1,488
+                  Book Bangkok  ·  $1,488
                 </a>
                 <a
                   href="#stripe-bkk-deposit"
                   className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
                 >
-                  Reserve with Deposit — $496
+                  Reserve with Deposit  ·  $496
                 </a>
               </div>
             </div>
@@ -221,13 +221,13 @@ export function July16Page() {
                   href="#stripe-hh-2488"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
                 >
-                  Book Hua Hin — $2,488
+                  Book Hua Hin  ·  $2,488
                 </a>
                 <a
                   href="#stripe-hh-deposit"
                   className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
                 >
-                  Reserve with Deposit — $830
+                  Reserve with Deposit  ·  $830
                 </a>
               </div>
             </div>
@@ -244,12 +244,12 @@ export function July16Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-            {/* Bio — 2/3 */}
+            {/* Bio  ·  2/3 */}
             <div className="lg:col-span-2">
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-2">About BK</p>
               <div className="prose prose-lg max-w-none text-[#1D2D44]/80 leading-relaxed space-y-4">
                 <p>
-                  Bharat "BK" Karunakaran is a Professional Pickleball Player and Content Creator based in Orlando — and the headlining coach on the July 16 TPP departure. Originally from Chennai, India, BK came up in tennis and badminton from age five, studied Sport Management at NC State, and spent three years with the USTA as National Coordinator of Junior Programs before going full-time pickleball pro in 2024.
+                  Bharat "BK" Karunakaran is a Professional Pickleball Player and Content Creator based in Orlando  ·  and the headlining coach on the July 16 TPP departure. Originally from Chennai, India, BK came up in tennis and badminton from age five, studied Sport Management at NC State, and spent three years with the USTA as National Coordinator of Junior Programs before going full-time pickleball pro in 2024.
                 </p>
                 <p>
                   A Level 1 PPR Certified Pro with a 5.5 DUPR, BK has tournament wins over Anna Bright, Parris Todd, and multiple Top 100 PPA pros.
@@ -257,7 +257,7 @@ export function July16Page() {
               </div>
             </div>
 
-            {/* Credentials sidebar — 1/3 */}
+            {/* Credentials sidebar  ·  1/3 */}
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-6 shadow-sm h-fit">
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-4">Credentials</p>
               <ul className="space-y-2.5">

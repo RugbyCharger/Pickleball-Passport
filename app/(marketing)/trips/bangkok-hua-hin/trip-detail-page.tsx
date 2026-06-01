@@ -44,7 +44,7 @@ export function BangkokHuaHinPage() {
               </div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/30 backdrop-blur-sm text-white text-sm font-semibold">
                 <Sparkles className="w-4 h-4 text-[#CFB78D]" />
-                July 16 — Featuring BK Karunakaran
+                July 16  ·  Featuring BK Karunakaran
               </div>
             </div>
 
@@ -99,7 +99,7 @@ export function BangkokHuaHinPage() {
       <FeaturedPartnerSection
         name='Bharat "BK" Karunakaran'
         title="Pro Pickleball Player & Content Creator · @bk_pickleball"
-        bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators — he'll be on the court with you every day in Bangkok and Hua Hin."
+        bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators  ·  he'll be on the court with you every day in Bangkok and Hua Hin."
         siteUrl="https://www.bk-pickleball.com"
         siteName="bk-pickleball.com"
         photoSrc="/bk-karunakaran.jpeg"
@@ -114,7 +114,7 @@ export function BangkokHuaHinPage() {
               2026 Departures
             </h2>
             <p className="text-sm text-[#1D2D44]/50">
-              From $3,888/person, double occupancy. Single supplement $600. Available year-round — including February through April when Chiang Mai trips are paused for smoke season.
+              From $3,888/person, double occupancy. Single supplement $600. Available year-round  ·  including February through April when Chiang Mai trips are paused for smoke season.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export function BangkokHuaHinPage() {
           <div className="bg-[#1D2D44] rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-white/70 text-sm">
               Bangkok Weekend ($1,488) + Hua Hin Escape ($2,488) separately = <span className="line-through text-white/30">$3,976</span>.{' '}
-              <span className="text-white font-semibold">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span> — less money, both cities, more included.</span>
+              <span className="text-white font-semibold">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span>  ·  less money, both cities, more included.</span>
             </p>
           </div>
           {/* Segment cards */}
@@ -182,7 +182,7 @@ export function BangkokHuaHinPage() {
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Bangkok</p>
-                <p className="font-serif font-bold text-[#1D2D44]">Bangkok Weekend — $1,488</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Bangkok Weekend  ·  $1,488</p>
                 <p className="text-[#1D2D44]/50 text-xs mt-0.5">3 nights · Peninsula Bangkok · 2 sessions</p>
               </div>
               <Link
@@ -195,7 +195,7 @@ export function BangkokHuaHinPage() {
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Hua Hin</p>
-                <p className="font-serif font-bold text-[#1D2D44]">Hua Hin Escape — $2,488</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Hua Hin Escape  ·  $2,488</p>
                 <p className="text-[#1D2D44]/50 text-xs mt-0.5">4 nights · Anantara Hua Hin · 2 sessions + ProAM</p>
               </div>
               <Link
@@ -225,7 +225,7 @@ export function BangkokHuaHinPage() {
       {/* Cross-link to Chiang Mai route */}
       <section className="py-12 bg-[#0F1A2A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/70 text-base mb-3">Prefer a mountain city over the coast? Explore our Chiang Mai route — same format, ancient temples and elephants instead of beaches.</p>
+          <p className="text-white/70 text-base mb-3">Prefer a mountain city over the coast? Explore our Chiang Mai route  ·  same format, ancient temples and elephants instead of beaches.</p>
           <Link
             href="/trips/bangkok-chiang-mai"
             className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold transition-colors"
