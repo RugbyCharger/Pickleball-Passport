@@ -62,12 +62,12 @@ const notIncluded = [
 /* ─────────────────────── DEPARTURES ─────────────────────── */
 
 const departures = [
-  { dates: 'Jul 19–23', year: '2026', note: 'With BK Karunakaran', featured: true },
-  { dates: 'Aug 16–20', year: '2026', note: null, featured: false },
-  { dates: 'Sep 13–17', year: '2026', note: null, featured: false },
-  { dates: 'Oct 11–15', year: '2026', note: null, featured: false },
-  { dates: 'Nov 8–12', year: '2026', note: null, featured: false },
-  { dates: 'Dec 6–10', year: '2026', note: null, featured: false },
+  { month: 'July 2026', note: 'With BK Karunakaran', featured: true },
+  { month: 'August 2026', note: null, featured: false },
+  { month: 'September 2026', note: null, featured: false },
+  { month: 'October 2026', note: null, featured: false },
+  { month: 'November 2026', note: null, featured: false },
+  { month: 'December 2026', note: null, featured: false },
 ];
 
 /* ─────────────────────── PAGE ─────────────────────── */
@@ -237,17 +237,14 @@ export default function HuaHinEscapePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {departures.map((dep) => (
               <div
-                key={dep.dates}
+                key={dep.month}
                 className={`rounded-xl border p-4 ${dep.featured ? 'bg-[#0F1A2A] border-[#B08D55]/40' : 'bg-white border-[#B08D55]/10'}`}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <Calendar className="w-3.5 h-3.5 text-[#B08D55]" />
-                  <span className={`text-sm font-semibold ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
-                    {dep.dates}
-                  </span>
-                </div>
+                <span className={`text-sm font-serif font-bold ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+                  {dep.month}
+                </span>
                 {dep.note && <p className="text-xs text-[#B08D55] mt-0.5">{dep.note}</p>}
-                <p className={`text-xs mt-1 ${dep.featured ? 'text-white/40' : 'text-[#1D2D44]/40'}`}>{dep.year}</p>
+                {!dep.note && <p className={`text-xs mt-0.5 ${dep.featured ? 'text-white/35' : 'text-[#1D2D44]/35'}`}>Dates confirmed on booking</p>}
               </div>
             ))}
           </div>
