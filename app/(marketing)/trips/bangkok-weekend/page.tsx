@@ -179,6 +179,28 @@ export default function BangkokWeekendPage() {
         </div>
       </section>
 
+      {/* ── Photo strip ── */}
+      <section className="grid grid-cols-2 h-56 sm:h-72">
+        <div className="relative overflow-hidden">
+          <Image
+            src="/images/ryan-wat-pho.jpg"
+            alt="Wat Pho temple, Bangkok"
+            fill
+            className="object-cover object-center"
+            sizes="50vw"
+          />
+        </div>
+        <div className="relative overflow-hidden">
+          <Image
+            src="/images/river-cruise-wat-arun.jpg"
+            alt="Sunset river cruise, Wat Arun Bangkok"
+            fill
+            className="object-cover object-center"
+            sizes="50vw"
+          />
+        </div>
+      </section>
+
       {/* ── Included / Not Included ── */}
       <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

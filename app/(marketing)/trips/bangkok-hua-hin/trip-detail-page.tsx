@@ -10,12 +10,12 @@ import { FeaturedPartnerSection } from '@/components/trips/featured-partner-sect
 /* ─────────────────────── DEPARTURE DATA ─────────────────────── */
 
 const departures = [
-  { dates: 'Jul 16–24', year: '2026', price: 3888, featured: true, featuredLabel: 'With BK Karunakaran', href: '/trips/bangkok-hua-hin/july-16-2026' },
-  { dates: 'Aug 13–21', year: '2026', price: 3888, featured: false, href: null },
-  { dates: 'Sep 10–18', year: '2026', price: 3888, featured: false, href: null },
-  { dates: 'Oct 8–16', year: '2026', price: 3888, featured: false, href: null },
-  { dates: 'Nov 5–13', year: '2026', price: 3888, featured: false, href: null },
-  { dates: 'Dec 3–11', year: '2026', price: 3888, featured: false, href: null },
+  { month: 'July 2026', price: 3888, featured: true, featuredLabel: 'With BK Karunakaran', href: '/trips/bangkok-hua-hin/july-16-2026', confirmed: true },
+  { month: 'August 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'September 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'October 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'November 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'December 2026', price: 3888, featured: false, href: null, confirmed: false },
 ];
 
 export function BangkokHuaHinPage() {
@@ -121,7 +121,7 @@ export function BangkokHuaHinPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {departures.map((dep) => (
               <div
-                key={dep.dates}
+                key={dep.month}
                 className={`rounded-2xl border p-5 flex flex-col gap-3 ${
                   dep.featured
                     ? 'bg-[#0F1A2A] border-[#B08D55]/40'
@@ -136,10 +136,15 @@ export function BangkokHuaHinPage() {
                     </div>
                   )}
                   <div className={`text-base font-serif font-bold ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
-                    {dep.dates}, {dep.year}
+                    {dep.month}
                   </div>
                   {dep.featuredLabel && (
                     <div className="text-xs text-[#B08D55] font-medium mt-0.5">{dep.featuredLabel}</div>
+                  )}
+                  {!dep.confirmed && (
+                    <div className={`text-xs mt-0.5 ${dep.featured ? 'text-white/40' : 'text-[#1D2D44]/35'}`}>
+                      Dates set once your spot is reserved
+                    </div>
                   )}
                 </div>
                 <div className={`text-sm font-bold mt-auto ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
@@ -154,12 +159,15 @@ export function BangkokHuaHinPage() {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 ) : (
-                  <Link
-                    href="/contact"
+                  <a
+                    href="https://wa.me/15125648522"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
                   >
-                    Request availability
-                  </Link>
+                    I'm interested
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
                 )}
               </div>
             ))}

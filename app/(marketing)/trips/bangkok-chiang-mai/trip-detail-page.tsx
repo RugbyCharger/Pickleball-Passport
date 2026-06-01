@@ -10,24 +10,24 @@ import { TripSectionContentChiangMai } from '@/components/trips/trip-section-con
 type DepartureStatus = 'live' | 'open' | 'special';
 
 interface Departure {
-  dates: string;
-  year: string;
+  month: string;
   price: number | null;
   season: string;
   status: DepartureStatus;
+  note?: string;
   phuket?: boolean;
   specialHref?: string;
   dedicatedHref?: string;
 }
 
 const departures: Departure[] = [
-  { dates: 'Jul 30 – Aug 7', year: '2026', price: 3888, season: 'Standard Season', status: 'live' },
-  { dates: 'Aug 27 – Sep 4', year: '2026', price: 3888, season: 'Standard Season', status: 'open' },
-  { dates: 'Sep 24 – Oct 2', year: '2026', price: 3888, season: 'Standard Season', status: 'open' },
-  { dates: 'Oct 22 – Oct 30', year: '2026', price: 3888, season: 'Standard Season', status: 'open' },
-  { dates: 'Nov 22–26', year: '2026', price: null, season: 'Loy Krathong Festival', status: 'special', specialHref: '/loy-krathong' },
-  { dates: 'Dec 17 – Dec 25', year: '2026', price: 4860, season: 'High Season', status: 'open' },
-  { dates: 'Jan 14 – Jan 22', year: '2027', price: 4860, season: 'High Season', status: 'open', phuket: true, dedicatedHref: '/trips/bangkok-chiang-mai/january-14-2027' },
+  { month: 'July 2026', price: 3888, season: 'Standard Season', status: 'live', note: 'Jul 2–10 confirmed' },
+  { month: 'August 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'September 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'October 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'November 2026', price: 5688, season: 'Loy Krathong Festival', status: 'special', specialHref: '/trips/loy-krathong', note: 'Nov 19–27 confirmed' },
+  { month: 'December 2026', price: 4860, season: 'High Season', status: 'open', note: 'Dec 17–25 confirmed' },
+  { month: 'January 2027', price: 4860, season: 'High Season', status: 'open', phuket: true, dedicatedHref: '/trips/bangkok-chiang-mai/january-14-2027', note: 'Jan 14–22 confirmed' },
 ];
 
 export function BangkokChiangMaiPage() {
@@ -128,7 +128,7 @@ export function BangkokChiangMaiPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {departures.map((dep) => (
               <div
-                key={`${dep.dates}-${dep.year}`}
+                key={dep.month}
                 className={`rounded-2xl border p-5 flex flex-col gap-3 ${
                   dep.status === 'special'
                     ? 'bg-[#FDF8F3] border-[#B08D55]/30'
@@ -144,8 +144,11 @@ export function BangkokChiangMaiPage() {
                     {dep.season}
                   </div>
                   <div className="text-base font-serif font-bold text-[#1D2D44]">
-                    {dep.dates}, {dep.year}
+                    {dep.month}
                   </div>
+                  {dep.note && (
+                    <div className="text-xs text-[#1D2D44]/40 mt-0.5">{dep.note}</div>
+                  )}
                   {dep.phuket && (
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2D5A3D]/10 text-[#2D5A3D] text-xs font-semibold mt-1.5">
                       + Phuket Extension available
@@ -161,15 +164,7 @@ export function BangkokChiangMaiPage() {
                     <div className="text-xs text-[#1D2D44]/50 italic">See dedicated event page</div>
                   )}
                 </div>
-                {dep.status === 'live' ? (
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors"
-                  >
-                    Reserve your place
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                ) : dep.status === 'special' && dep.specialHref ? (
+                {dep.status === 'special' && dep.specialHref ? (
                   <Link
                     href={dep.specialHref}
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
@@ -186,12 +181,15 @@ export function BangkokChiangMaiPage() {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 ) : (
-                  <Link
-                    href="/contact"
+                  <a
+                    href="https://wa.me/15125648522"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
                   >
-                    Request availability
-                  </Link>
+                    I'm interested
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
                 )}
               </div>
             ))}

@@ -23,7 +23,7 @@ const venues = [
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    image: '/images/sterling-pickleball.jpg',
   },
   {
     name: 'Sports Life Hua Hin',
@@ -60,8 +60,17 @@ export default function ClinicsPage() {
     <main className="min-h-screen bg-[#FDF8F3]">
 
       {/* ── Hero ── */}
-      <section className="bg-[#0F1A2A] text-white py-16 sm:py-24">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden text-white py-16 sm:py-24">
+        <Image
+          src="/images/sterling-pickleball.jpg"
+          alt="Pickleball at Sterling Sport and Wellness Bangkok"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75" />
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-3">
             Day Clinics · Bangkok & Hua Hin
           </p>
@@ -279,6 +288,18 @@ export default function ClinicsPage() {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* ── Social photo ── */}
+      <section className="relative h-64 sm:h-80 overflow-hidden">
+        <Image
+          src="/images/pickleball-social-1.jpg"
+          alt="Pickleball players at the net"
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
       </section>
 
       {/* ── Upsell to full experience ── */}
