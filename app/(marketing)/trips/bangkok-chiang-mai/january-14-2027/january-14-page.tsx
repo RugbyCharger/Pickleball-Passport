@@ -85,20 +85,27 @@ export function January14Page() {
               </div>
             </div>
 
+            {/* Price */}
+            <div className="mb-8">
+              <span className="text-4xl font-bold text-white">$4,860</span>
+              <span className="text-white/50 text-lg ml-2">/person</span>
+              <p className="text-white/40 text-xs mt-1">Double occupancy · Single supplement $600</p>
+            </div>
+
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href={reserveHref}
+              <a
+                href="#stripe-jan14-4860"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
               >
-                Talk to our team
+                Reserve Your Spot — $4,860
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </a>
               <Link
                 href={reserveHref}
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
               >
-                Reserve your place
+                Have Questions? Message Us
               </Link>
             </div>
           </div>

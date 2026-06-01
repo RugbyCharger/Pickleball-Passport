@@ -23,7 +23,7 @@ const routeB = [
   { num: 10, depart: 'Thu Oct 22', ret: 'Fri Oct 30', price: 3888, status: 'Open', href: '/trips/bangkok-chiang-mai' },
   { num: 12, depart: 'Thu Nov 19', ret: 'Fri Nov 27', price: 5688, status: 'Loy Krathong', href: '/trips/loy-krathong', special: true },
   { num: 14, depart: 'Thu Dec 17', ret: 'Fri Dec 25', price: 4860, status: 'Peak Season', href: '/trips/bangkok-chiang-mai' },
-  { num: 15, depart: 'Wed Jan 14', ret: 'Wed Jan 22', price: 3488, status: '8 spots left', href: '/trips/bangkok-chiang-mai/january-14-2027' },
+  { num: 15, depart: 'Wed Jan 14', ret: 'Wed Jan 22', price: 4860, status: '8 spots left', href: '/trips/bangkok-chiang-mai/january-14-2027' },
 ];
 
 const segments = [
