@@ -50,12 +50,10 @@ const products = [
 /* ─────────────────────── TRIP SCHEDULE ─────────────────────── */
 
 const upcomingDepartures = [
-  { route: 'Bangkok + Hua Hin', startDate: 'Jun 18', endDate: 'Jun 26', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 2', endDate: 'Jul 10', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Jul 16', endDate: 'Jul 24', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin/july-16-2026' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 30', endDate: 'Aug 7', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Aug 13', endDate: 'Aug 21', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 27', endDate: 'Sep 4', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
+  { month: 'July 2026', route: 'Bangkok + Hua Hin', price: 3888, note: 'Jul 16–24 · With BK Karunakaran', href: '/trips/bangkok-hua-hin/july-16-2026', featured: true },
+  { month: 'August 2026', route: 'Bangkok + Chiang Mai', price: 3888, note: null, href: null, featured: false },
+  { month: 'September 2026', route: 'Bangkok + Hua Hin', price: 3888, note: null, href: null, featured: false },
+  { month: 'October 2026', route: 'Bangkok + Chiang Mai', price: 3888, note: null, href: null, featured: false },
 ];
 
 /* ─────────────────────── COMING SOON ─────────────────────── */
@@ -123,51 +121,56 @@ const journeySteps = [
 /* ─────────────────────── UPCOMING DEPARTURE CARD ─────────────────────── */
 
 function UpcomingDepartureCard({
+  month,
   route,
-  startDate,
-  endDate,
-  status,
-  detailHref,
+  price,
+  note,
+  href,
+  featured,
 }: {
+  month: string;
   route: string;
-  startDate: string;
-  endDate: string;
-  status: 'live' | 'coming_soon';
-  detailHref: string;
+  price: number;
+  note: string | null;
+  href: string | null;
+  featured: boolean;
 }) {
-  const reserveHref = useReserveHref();
   return (
-    <div className="bg-white rounded-2xl border border-[#B08D55]/10 shadow-sm p-5 flex flex-col gap-3">
+    <div className={`rounded-2xl border p-5 flex flex-col gap-3 ${featured ? 'bg-[#0F1A2A] border-[#B08D55]/40' : 'bg-white border-[#B08D55]/10 shadow-sm'}`}>
       <div>
-        <div className="text-xs font-semibold text-[#B08D55] uppercase tracking-wide mb-1">
-          {status === 'live' ? 'Now Open' : 'Coming Soon'}
-        </div>
-        <div className="text-base font-serif font-bold text-[#1D2D44]">{route}</div>
-        <div className="flex items-center gap-1.5 mt-1">
-          <Calendar className="w-3.5 h-3.5 text-[#B08D55]" />
-          <span className="text-sm text-[#1D2D44]/70">{startDate} – {endDate}, 2026</span>
-        </div>
+        {featured && (
+          <div className="text-xs font-semibold text-[#B08D55] uppercase tracking-wide mb-1">Featured Departure</div>
+        )}
+        <div className={`text-base font-serif font-bold ${featured ? 'text-white' : 'text-[#1D2D44]'}`}>{month}</div>
+        <div className={`text-sm mt-0.5 ${featured ? 'text-white/60' : 'text-[#1D2D44]/60'}`}>{route}</div>
+        {note && (
+          <div className="text-xs text-[#B08D55] mt-1">{note}</div>
+        )}
+        {!note && (
+          <div className={`text-xs mt-1 ${featured ? 'text-white/30' : 'text-[#1D2D44]/30'}`}>Dates set once your spot is reserved</div>
+        )}
       </div>
       <div className="flex items-center justify-between mt-auto">
-        {status === 'live' ? (
-          <span className="text-sm font-bold text-[#1D2D44]">$3,888<span className="font-normal text-[#1D2D44]/50">/person</span></span>
+        <span className={`text-sm font-bold ${featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+          ${price.toLocaleString()}<span className={`font-normal text-xs ml-1 ${featured ? 'text-white/40' : 'text-[#1D2D44]/40'}`}>/person</span>
+        </span>
+        {href ? (
+          <Link
+            href={href}
+            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] text-xs font-semibold hover:shadow-md transition-all"
+          >
+            View trip
+          </Link>
         ) : (
-          <span className="text-xs text-[#1D2D44]/40">Pricing Coming Soon</span>
+          <a
+            href="https://wa.me/15125648522"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
+          >
+            I'm interested
+          </a>
         )}
-        <div className="flex gap-2">
-          <Link
-            href={detailHref}
-            className="text-xs font-medium text-[#1D2D44]/60 hover:text-[#1D2D44] transition-colors"
-          >
-            Details
-          </Link>
-          <Link
-            href={reserveHref}
-            className="px-3 py-1.5 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors"
-          >
-            Reserve
-          </Link>
-        </div>
       </div>
     </div>
   );
@@ -380,7 +383,7 @@ export function TripsListingPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {upcomingDepartures.map((d) => (
-              <UpcomingDepartureCard key={`${d.route}-${d.startDate}`} {...d} />
+              <UpcomingDepartureCard key={d.month} {...d} />
             ))}
           </div>
           <div className="mt-4 sm:hidden">
