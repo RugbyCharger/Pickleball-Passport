@@ -69,7 +69,7 @@ export default function ClinicsPage() {
             Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
           </h1>
           <p className="text-xl text-white/70 mb-8 max-w-2xl">
-            3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $153.66 · 12 spots per session.
+            3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10">
@@ -198,7 +198,7 @@ export default function ClinicsPage() {
                       href="#book"
                       className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap self-start sm:self-auto"
                     >
-                      Book — $153.66
+                      Book — $125
                     </a>
                   </div>
                   {/* Availability bar */}
@@ -258,7 +258,7 @@ export default function ClinicsPage() {
                 If you're based in Thailand, scan the QR code below to pay via PromptPay — standard Thai bank transfer, zero international fees. Screenshot it and go.
               </p>
               <p className="text-sm font-semibold text-[#1D2D44]">
-                ฿5,000 per session &nbsp;·&nbsp; ฿16,270 for the Clinic Pass (all 4 sessions)
+                ฿4,000 per session &nbsp;·&nbsp; ฿16,270 for the Clinic Pass (all 4 sessions)
               </p>
             </div>
           </div>
