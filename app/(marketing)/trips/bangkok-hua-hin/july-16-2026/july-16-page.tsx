@@ -96,25 +96,20 @@ export function July16Page() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href={reserveHref}
+                <a
+                  href="#book"
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
                 >
-                  Meet Our Team
+                  Book Your Spot
                   <ArrowRight className="w-4 h-4" />
-                </Link>
-                <a
-                  href="https://thepickleballpassport.net/main-checkout/trip071626-160081"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                </a>
+                <Link
+                  href={reserveHref}
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
                 >
-                  Reserve Your Spot
-                </a>
+                  Have Questions? Message Us
+                </Link>
               </div>
-              <p className="text-xs text-white/40 mt-3">
-                Joining a call before June 1 locks in current pricing.
-              </p>
             </div>
 
             {/* Right column — BK photo */}
@@ -147,6 +142,100 @@ export function July16Page() {
           <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 60L60 55C120 50 240 40 360 35C480 30 600 30 720 32C840 34 960 40 1080 43C1200 46 1320 46 1380 46L1440 46V60H0Z" fill="#FDF8F3" />
           </svg>
+        </div>
+      </section>
+
+      {/* ── Choose How to Join ── */}
+      <section id="book" className="py-12 sm:py-16 bg-white border-b border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-1">
+              Choose How You Want to Join
+            </h2>
+            <p className="text-[#1D2D44]/50 text-sm">
+              Book the full 9-day trip, or join just the Bangkok or Hua Hin leg on its own.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Full Trip — primary */}
+            <div className="sm:col-span-1 bg-[#0F1A2A] rounded-2xl border border-[#B08D55]/40 p-5 flex flex-col">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#B08D55] text-white text-xs font-bold mb-3 self-start">
+                BEST VALUE
+              </div>
+              <p className="font-serif font-bold text-white text-xl mb-1">Full 9-Day Trip</p>
+              <p className="text-white/50 text-sm mb-1">Jul 16–24 · Both cities · 4 sessions with BK</p>
+              <p className="text-white/40 text-xs mb-4">Peninsula Bangkok · Anantara Hua Hin</p>
+              <p className="font-bold text-white text-2xl mb-1">$3,888 <span className="text-base font-normal text-white/40">/person</span></p>
+              <p className="text-[#B08D55] text-xs mb-5">or 3 payments of $1,296</p>
+              <div className="mt-auto space-y-2">
+                <a
+                  href="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm hover:shadow-lg transition-all"
+                >
+                  Book Full Trip — $3,888
+                </a>
+                <a
+                  href="#deposit-fulltrip"
+                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-white/15 text-white/70 text-xs font-medium hover:bg-white/5 transition-colors"
+                >
+                  Reserve with Deposit — $1,296
+                </a>
+              </div>
+            </div>
+
+            {/* Bangkok Weekend */}
+            <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col hover:border-[#B08D55]/30 transition-colors">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-2">3 Nights</p>
+              <p className="font-serif font-bold text-[#1D2D44] text-xl mb-1">Bangkok Weekend</p>
+              <p className="text-[#1D2D44]/50 text-sm mb-1">Jul 16–19 · 2 sessions with BK</p>
+              <p className="text-[#1D2D44]/30 text-xs mb-4">The Peninsula Bangkok</p>
+              <p className="font-bold text-[#1D2D44] text-2xl mb-5">$1,488 <span className="text-base font-normal text-[#1D2D44]/40">/person</span></p>
+              <div className="mt-auto space-y-2">
+                <a
+                  href="#stripe-bkk-1488"
+                  className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
+                >
+                  Book Bangkok — $1,488
+                </a>
+                <a
+                  href="#stripe-bkk-deposit"
+                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
+                >
+                  Reserve with Deposit — $496
+                </a>
+              </div>
+            </div>
+
+            {/* Hua Hin Escape */}
+            <div className="bg-[#FDF8F3] rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col hover:border-[#B08D55]/30 transition-colors">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-2">4 Nights</p>
+              <p className="font-serif font-bold text-[#1D2D44] text-xl mb-1">Hua Hin Escape</p>
+              <p className="text-[#1D2D44]/50 text-sm mb-1">Jul 19–23 · 2 sessions with BK</p>
+              <p className="text-[#1D2D44]/30 text-xs mb-4">Anantara Hua Hin Resort</p>
+              <p className="font-bold text-[#1D2D44] text-2xl mb-5">$2,488 <span className="text-base font-normal text-[#1D2D44]/40">/person</span></p>
+              <div className="mt-auto space-y-2">
+                <a
+                  href="#stripe-hh-2488"
+                  className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
+                >
+                  Book Hua Hin — $2,488
+                </a>
+                <a
+                  href="#stripe-hh-deposit"
+                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
+                >
+                  Reserve with Deposit — $830
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-[#1D2D44]/35 mt-4 text-center">
+            Bangkok ($1,488) + Hua Hin ($2,488) booked separately = $3,976. The full 9-day trip is $3,888 and includes more. Deposit links for segment products activate once Stripe products are created.
+          </p>
         </div>
       </section>
 

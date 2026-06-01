@@ -167,6 +167,48 @@ export function BangkokHuaHinPage() {
         </div>
       </section>
 
+      {/* ── Value comparison + segment upsells ── */}
+      <section className="py-8 bg-[#FDF8F3] border-t border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+          {/* Value banner */}
+          <div className="bg-[#1D2D44] rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-white/70 text-sm">
+              Bangkok Weekend ($1,488) + Hua Hin Escape ($2,488) separately = <span className="line-through text-white/30">$3,976</span>.{' '}
+              <span className="text-white font-semibold">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span> — less money, both cities, more included.</span>
+            </p>
+          </div>
+          {/* Segment cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Bangkok</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Bangkok Weekend — $1,488</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">3 nights · Peninsula Bangkok · 2 sessions</p>
+              </div>
+              <Link
+                href="/trips/bangkok-weekend"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors whitespace-nowrap shrink-0"
+              >
+                View details <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Hua Hin</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Hua Hin Escape — $2,488</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">4 nights · Anantara Hua Hin · 2 sessions + ProAM</p>
+              </div>
+              <Link
+                href="/trips/hua-hin-escape"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors whitespace-nowrap shrink-0"
+              >
+                View details <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin"

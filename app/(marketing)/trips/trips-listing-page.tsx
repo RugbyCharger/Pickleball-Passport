@@ -6,12 +6,56 @@ import { Sparkles, Calendar, Clock, ArrowRight, Plane, Heart, Users, MapPin } fr
 import { ComingSoonCard } from '@/components/trips/coming-soon-card';
 import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 
+/* ─────────────────────── PRODUCTS ─────────────────────── */
+
+const products = [
+  {
+    label: 'Day Clinic',
+    price: '$100',
+    duration: '3 hours',
+    description: 'Coaching, drills, and you play alongside BK. Drop in — no trip required.',
+    badge: null,
+    href: '/clinics',
+    dark: false,
+  },
+  {
+    label: 'Bangkok Weekend',
+    price: '$1,488',
+    duration: '3 nights / 4 days',
+    description: 'The Peninsula Bangkok. 2 sessions with BK. Boat cruise. Temples. Street food.',
+    badge: null,
+    href: '/trips/bangkok-weekend',
+    dark: false,
+  },
+  {
+    label: 'Hua Hin Escape',
+    price: '$2,488',
+    duration: '4 nights / 5 days',
+    description: 'Anantara Hua Hin. 2 sessions with BK. Beach, culture, ProAM tournament.',
+    badge: null,
+    href: '/trips/hua-hin-escape',
+    dark: false,
+  },
+  {
+    label: 'Full 9-Day Trip',
+    price: '$3,888',
+    duration: '9 days / 8 nights',
+    description: 'Both cities. 4 sessions with BK. Peninsula Bangkok + Anantara Hua Hin.',
+    badge: 'BEST VALUE',
+    href: '/trips/bangkok-hua-hin',
+    dark: true,
+  },
+];
+
 /* ─────────────────────── TRIP SCHEDULE ─────────────────────── */
 
 const upcomingDepartures = [
+  { route: 'Bangkok + Hua Hin', startDate: 'Jun 18', endDate: 'Jun 26', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Jul 2', endDate: 'Jul 10', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Jul 16', endDate: 'Jul 24', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin/july-16-2026' },
   { route: 'Bangkok + Chiang Mai', startDate: 'Jul 30', endDate: 'Aug 7', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
-  { route: 'Bangkok + Hua Hin', startDate: 'Aug 13', endDate: 'Aug 21', status: 'coming_soon' as const, detailHref: '/trips/bangkok-hua-hin' },
-  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 27', endDate: 'Sep 4', status: 'coming_soon' as const, detailHref: '/trips/bangkok-chiang-mai' },
+  { route: 'Bangkok + Hua Hin', startDate: 'Aug 13', endDate: 'Aug 21', status: 'live' as const, detailHref: '/trips/bangkok-hua-hin' },
+  { route: 'Bangkok + Chiang Mai', startDate: 'Aug 27', endDate: 'Sep 4', status: 'live' as const, detailHref: '/trips/bangkok-chiang-mai' },
 ];
 
 /* ─────────────────────── COMING SOON ─────────────────────── */
@@ -261,21 +305,91 @@ export function TripsListingPage() {
         </div>
       </section>
 
-      {/* ── Upcoming Departures ── */}
+      {/* ── Products ── */}
       <section className="py-14 sm:py-20 bg-[#FDF8F3]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-1">
-              More 2026 Departures
+              Choose Your Experience
             </h2>
             <p className="text-[#1D2D44]/50 text-sm">
-              New departures every two weeks, alternating between routes.
+              Drop-in clinic to full immersion. Bangkok. Hua Hin. Your call.
             </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {products.map((p) => (
+              <Link
+                key={p.label}
+                href={p.href}
+                className={`rounded-2xl border p-5 flex flex-col hover:shadow-md transition-all group ${
+                  p.dark
+                    ? 'bg-[#0F1A2A] border-[#B08D55]/40 hover:border-[#B08D55]/70'
+                    : 'bg-white border-[#B08D55]/10 hover:border-[#B08D55]/30'
+                }`}
+              >
+                {p.badge && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#B08D55] text-white text-xs font-bold mb-3 self-start">
+                    {p.badge}
+                  </span>
+                )}
+                <p className={`text-xs font-bold tracking-widest uppercase mb-1 ${p.dark ? 'text-[#B08D55]' : 'text-[#B08D55]'}`}>
+                  {p.duration}
+                </p>
+                <p className={`font-serif font-bold text-lg mb-2 ${p.dark ? 'text-white' : 'text-[#1D2D44]'}`}>
+                  {p.label}
+                </p>
+                <p className={`text-sm leading-relaxed mb-4 flex-1 ${p.dark ? 'text-white/50' : 'text-[#1D2D44]/50'}`}>
+                  {p.description}
+                </p>
+                <div className="flex items-center justify-between mt-auto">
+                  <span className={`font-bold text-xl ${p.dark ? 'text-white' : 'text-[#1D2D44]'}`}>
+                    {p.price}
+                  </span>
+                  <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform ${p.dark ? 'text-[#B08D55]' : 'text-[#B08D55]'}`} />
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Value comparison */}
+          <div className="mt-5 bg-[#1D2D44] rounded-xl px-5 py-4">
+            <p className="text-white/60 text-sm text-center">
+              Bangkok ($1,488) + Hua Hin ($2,488) booked separately = <span className="line-through text-white/30">$3,976</span>.{' '}
+              <span className="text-white font-semibold">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span> and includes more.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Upcoming Departures ── */}
+      <section className="py-10 sm:py-14 bg-white border-t border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44] mb-0.5">
+                Upcoming Departures
+              </h2>
+              <p className="text-[#1D2D44]/50 text-sm">Alternating routes every two weeks.</p>
+            </div>
+            <Link
+              href="/trips/calendar"
+              className="text-sm font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors hidden sm:flex items-center gap-1"
+            >
+              Full calendar <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {upcomingDepartures.map((d) => (
               <UpcomingDepartureCard key={`${d.route}-${d.startDate}`} {...d} />
             ))}
+          </div>
+          <div className="mt-4 sm:hidden">
+            <Link
+              href="/trips/calendar"
+              className="text-sm font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors flex items-center gap-1"
+            >
+              See full calendar <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>
