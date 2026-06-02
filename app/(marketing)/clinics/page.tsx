@@ -15,7 +15,7 @@ const venues = [
     courts: '3 courts',
     capacity: '12 spots per session',
     note: 'Small-group coaching at a five-star hotel.',
-    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80',
+    image: '/images/sterling-pickleball.jpg',
   },
   {
     name: 'Sterling / Papaya',
@@ -23,7 +23,7 @@ const venues = [
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
-    image: '/images/sterling-pickleball.jpg',
+    image: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=800&q=80',
   },
   {
     name: 'Sports Life Hua Hin',
@@ -117,7 +117,7 @@ export default function ClinicsPage() {
                   src="/bk-karunakaran-action-2.jpeg"
                   alt="BK Karunakaran pickleball coaching"
                   fill
-                  className="object-cover object-[center_35%]"
+                  className="object-cover object-[center_65%]"
                   sizes="(max-width: 1024px) 0px, 500px"
                   priority
                 />
@@ -311,8 +311,8 @@ export default function ClinicsPage() {
       {/* ── Social photo ── */}
       <section className="relative h-64 sm:h-80 overflow-hidden">
         <Image
-          src="/images/sterling-pickleball.jpg"
-          alt="Pickleball at Sterling Sport and Wellness Bangkok"
+          src="/bk-karunakaran-action-1.jpeg"
+          alt="BK Karunakaran in action"
           fill
           className="object-cover object-center"
           sizes="100vw"

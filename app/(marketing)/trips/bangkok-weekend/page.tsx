@@ -17,7 +17,7 @@ const itinerary = [
     day: 'Day 2',
     label: 'Friday',
     title: 'Pickleball + Sunset Cruise',
-    details: 'Pickleball Session 1 with BK  ·  drills, strategy, and match play. Sunset long-tail boat cruise on the Chao Phraya. Riverside dinner.',
+    details: 'Pickleball Session 1 with BK: drills, strategy, and match play. Sunset long-tail boat cruise on the Chao Phraya. Riverside dinner.',
   },
   {
     day: 'Day 3',
@@ -29,7 +29,7 @@ const itinerary = [
     day: 'Day 4',
     label: 'Sunday',
     title: 'Breakfast & Check Out',
-    details: 'Breakfast at the hotel. Check out. Fly home, or continue to Hua Hin  ·  van transfer is included if you\'ve booked the Hua Hin Escape.',
+    details: 'Breakfast at the hotel. Check out. Fly home, or continue to Hua Hin. Van transfer is included if you\'ve booked the Hua Hin Escape.',
   },
 ];
 
@@ -112,17 +112,21 @@ export default function BangkokWeekendPage() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <a
-              href="#stripe-bkk-1488"
+              href="https://link.fastpaydirect.com/payment-link/6a1ed4c203b17c94f5714207"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
             >
-              Book Bangkok  ·  $1,488
+              Book Bangkok · $1,488
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="#stripe-bkk-deposit"
+              href="https://wa.me/15125648522"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
-              Reserve with Deposit  ·  $496
+              Have Questions? Message Us
             </a>
           </div>
         </div>
@@ -259,24 +263,15 @@ export default function BangkokWeekendPage() {
       <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-6">Book Your Spot</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-            <a
-              href="#stripe-bkk-1488"
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#B08D55] p-6 text-center hover:bg-[#B08D55]/5 transition-colors"
-            >
-              <span className="text-xs font-bold uppercase tracking-widest text-[#1D2D44]/50 mb-1">Pay in Full</span>
-              <span className="text-2xl font-bold text-[#1D2D44]">$1,488</span>
-              <span className="text-sm text-[#1D2D44]/50 mt-1">One payment</span>
-            </a>
-            <a
-              href="#stripe-bkk-deposit"
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#1D2D44]/15 p-6 text-center hover:border-[#1D2D44]/30 hover:bg-[#1D2D44]/5 transition-colors"
-            >
-              <span className="text-xs font-bold uppercase tracking-widest text-[#1D2D44]/50 mb-1">Payment Plan</span>
-              <span className="text-2xl font-bold text-[#1D2D44]">3 × $496</span>
-              <span className="text-sm text-[#1D2D44]/50 mt-1">Deposit to reserve</span>
-            </a>
-          </div>
+          <a
+            href="https://link.fastpaydirect.com/payment-link/6a1ed4c203b17c94f5714207"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-base shadow-lg shadow-[#B08D55]/25 hover:shadow-xl transition-all"
+          >
+            Book Bangkok · $1,488
+            <ArrowRight className="w-4 h-4" />
+          </a>
           <p className="text-xs text-[#1D2D44]/35 mt-4">
             Questions? <a href="https://wa.me/15125648522" className="text-[#B08D55] hover:underline">Message us on WhatsApp</a>.
           </p>
