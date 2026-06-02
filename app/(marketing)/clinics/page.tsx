@@ -293,16 +293,18 @@ export default function ClinicsPage() {
             </div>
           </div>
 
-          {/* QR placeholder  ·  swap with real image once provided */}
-          <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 text-center">
-            <div className="inline-flex items-center justify-center w-40 h-40 rounded-xl bg-[#FDF8F3] border-2 border-dashed border-[#B08D55]/20 mx-auto mb-4">
-              <div className="text-center">
-                <QrCode className="w-12 h-12 text-[#B08D55]/30 mx-auto mb-1" />
-                <p className="text-xs text-[#1D2D44]/30">QR code<br/>coming soon</p>
-              </div>
+          <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 flex flex-col items-center">
+            <div className="relative w-56 h-56 sm:w-64 sm:h-64">
+              <Image
+                src="/images/promptpay-qr.jpg"
+                alt="PromptPay QR code — Jaron Dhillon Shoptaugh"
+                fill
+                className="object-contain"
+                sizes="256px"
+              />
             </div>
-            <p className="text-xs text-[#1D2D44]/40">
-              PromptPay QR · The Pickleball Passport
+            <p className="text-xs text-[#1D2D44]/40 mt-3">
+              PromptPay · Jaron Dhillon Shoptaugh · Screenshot and scan in any Thai banking app
             </p>
           </div>
         </div>

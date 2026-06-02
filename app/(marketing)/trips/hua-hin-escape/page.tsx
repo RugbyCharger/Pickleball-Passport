@@ -23,13 +23,13 @@ const itinerary = [
     day: 'Day 3',
     label: 'Tuesday',
     title: 'Free Day',
-    details: 'Beach, spa, explore Hua Hin, or visit the night market. No agenda  ·  make it your own.',
+    details: 'Beach, spa, explore Hua Hin, or visit the night market. No agenda, make it your own.',
   },
   {
     day: 'Day 4',
     label: 'Wednesday',
     title: 'ProAM + Farewell Dinner',
-    details: 'Pickleball Session 2 with BK, including the ProAM  ·  you play doubles alongside the pro. Farewell group dinner.',
+    details: 'Pickleball Session 2 with BK, including the ProAM: you play doubles alongside the pro. Farewell group dinner.',
   },
   {
     day: 'Day 5',
@@ -117,17 +117,21 @@ export default function HuaHinEscapePage() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <a
-              href="#stripe-hh-2488"
+              href="https://link.fastpaydirect.com/payment-link/6a1ed4e503b17c94f5714208"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
             >
-              Book Hua Hin  ·  $2,488
+              Book Hua Hin · $2,488
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="#stripe-hh-deposit"
+              href="https://wa.me/15125648522"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
-              Reserve with Deposit  ·  $830
+              Have Questions? Message Us
             </a>
           </div>
         </div>
@@ -255,24 +259,15 @@ export default function HuaHinEscapePage() {
       <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-6">Book Your Spot</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-            <a
-              href="#stripe-hh-2488"
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#B08D55] p-6 text-center hover:bg-[#B08D55]/5 transition-colors"
-            >
-              <span className="text-xs font-bold uppercase tracking-widest text-[#1D2D44]/50 mb-1">Pay in Full</span>
-              <span className="text-2xl font-bold text-[#1D2D44]">$2,488</span>
-              <span className="text-sm text-[#1D2D44]/50 mt-1">One payment</span>
-            </a>
-            <a
-              href="#stripe-hh-deposit"
-              className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#1D2D44]/15 p-6 text-center hover:border-[#1D2D44]/30 hover:bg-[#1D2D44]/5 transition-colors"
-            >
-              <span className="text-xs font-bold uppercase tracking-widest text-[#1D2D44]/50 mb-1">Payment Plan</span>
-              <span className="text-2xl font-bold text-[#1D2D44]">3 × $830</span>
-              <span className="text-sm text-[#1D2D44]/50 mt-1">Deposit to reserve</span>
-            </a>
-          </div>
+          <a
+            href="https://link.fastpaydirect.com/payment-link/6a1ed4e503b17c94f5714208"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-base shadow-lg shadow-[#B08D55]/25 hover:shadow-xl transition-all"
+          >
+            Book Hua Hin · $2,488
+            <ArrowRight className="w-4 h-4" />
+          </a>
           <p className="text-xs text-[#1D2D44]/35 mt-4">
             Questions? <a href="https://wa.me/15125648522" className="text-[#B08D55] hover:underline">Message us on WhatsApp</a>.
           </p>
