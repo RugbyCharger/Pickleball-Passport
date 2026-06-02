@@ -118,7 +118,7 @@ export function July16Page() {
               <div className="relative w-full max-w-sm mx-auto">
                 <div className="relative h-[480px] rounded-2xl overflow-hidden">
                   <Image
-                    src="/bk-karunakaran-action-1.jpeg"
+                    src="/images/bk1.jpg"
                     alt='Bharat "BK" Karunakaran'
                     fill
                     className="object-cover object-top"

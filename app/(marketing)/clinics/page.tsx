@@ -23,7 +23,7 @@ const venues = [
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
-    image: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=800&q=80',
+    image: '/images/jaron-sterling.jpg',
   },
   {
     name: 'Sports Life Hua Hin',
@@ -114,10 +114,10 @@ export default function ClinicsPage() {
             <div className="relative hidden lg:block">
               <div className="relative h-[480px] rounded-2xl overflow-hidden">
                 <Image
-                  src="/bk-karunakaran-action-2.jpeg"
+                  src="/images/bk1.jpg"
                   alt="BK Karunakaran pickleball coaching"
                   fill
-                  className="object-cover object-[center_65%]"
+                  className="object-cover object-center"
                   sizes="(max-width: 1024px) 0px, 500px"
                   priority
                 />
@@ -313,7 +313,7 @@ export default function ClinicsPage() {
       {/* ── Social photo ── */}
       <section className="relative h-64 sm:h-80 overflow-hidden">
         <Image
-          src="/bk-karunakaran-action-1.jpeg"
+          src="/images/bk2.jpg"
           alt="BK Karunakaran in action"
           fill
           className="object-cover object-center"
