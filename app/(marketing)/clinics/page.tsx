@@ -314,7 +314,7 @@ export default function ClinicsPage() {
           src="/images/pickleball-social-1.jpg"
           alt="Pickleball players at the net"
           fill
-          className="object-cover object-center"
+          className="object-cover object-top"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
