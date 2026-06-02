@@ -38,10 +38,10 @@ const venues = [
 /* ─────────────────────── JULY DATES ─────────────────────── */
 
 const julyDates = [
-  { date: 'Fri Jul 17', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 12 },
-  { date: 'Sat Jul 18', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 12 },
-  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 12 },
-  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 12 },
+  { date: 'Fri Jul 17', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
+  { date: 'Sat Jul 18', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
+  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
 ];
 
 /* ─────────────────────── WHAT'S INCLUDED ─────────────────────── */
@@ -60,49 +60,72 @@ export default function ClinicsPage() {
     <main className="min-h-screen bg-[#FDF8F3]">
 
       {/* ── Hero ── */}
-      <section className="bg-[#0F1A2A] text-white py-16 sm:py-24">
+      <section className="bg-[#0F1A2A] text-white py-16 sm:py-20 overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-3">
-            Day Clinics · Bangkok & Hua Hin
-          </p>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
-            Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
-          </h1>
-          <p className="text-xl text-white/70 mb-8 max-w-2xl">
-            3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
-          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-          <div className="flex flex-wrap gap-3 mb-10">
-            <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
-              <Clock className="h-4 w-4 text-[#B08D55]" />
-              3 hours per session
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
-              <MapPin className="h-4 w-4 text-[#B08D55]" />
-              Bangkok &amp; Hua Hin
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
-              <Users className="h-4 w-4 text-[#B08D55]" />
-              Limited spots
-            </div>
-          </div>
+            {/* Left — copy */}
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-3">
+                Day Clinics · Bangkok & Hua Hin
+              </p>
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+                Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
+              </h1>
+              <p className="text-xl text-white/70 mb-8 max-w-2xl">
+                3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
+              </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href="#dates"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
-            >
-              See July Dates
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="https://wa.me/15125648522"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
-            >
-              Have Questions? Message Us
-            </a>
+              <div className="flex flex-wrap gap-3 mb-10">
+                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                  <Clock className="h-4 w-4 text-[#B08D55]" />
+                  3 hours per session
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                  <MapPin className="h-4 w-4 text-[#B08D55]" />
+                  Bangkok &amp; Hua Hin
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                  <Users className="h-4 w-4 text-[#B08D55]" />
+                  12 spots per session
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="#dates"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
+                >
+                  See July Dates
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://wa.me/15125648522"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/20 text-white font-semibold text-sm hover:bg-white/10 transition-all"
+                >
+                  Have Questions? Message Us
+                </a>
+              </div>
+            </div>
+
+            {/* Right — BK action photo */}
+            <div className="relative hidden lg:block">
+              <div className="relative h-[480px] rounded-2xl overflow-hidden">
+                <Image
+                  src="/bk-karunakaran-action-2.jpeg"
+                  alt="BK Karunakaran pickleball coaching"
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 1024px) 0px, 500px"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F1A2A]/60 via-transparent to-transparent" />
+              </div>
+              <p className="mt-2 text-xs text-white/30 text-center">Bharat "BK" Karunakaran · PPR Certified Pro Coach</p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -196,7 +219,9 @@ export default function ClinicsPage() {
                     </div>
                     <div className="flex flex-col items-end gap-1 self-start sm:self-auto">
                       <a
-                        href="#book"
+                        href={d.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap"
                       >
                         Book · $125
@@ -234,7 +259,9 @@ export default function ClinicsPage() {
               <p className="text-white/60 text-sm mt-1">All four July clinics for $400. Save $100 vs. booking individually.</p>
             </div>
             <a
-              href="#book-pass"
+              href="https://link.fastpaydirect.com/payment-link/6a1e830d5a9093aac76c58f0"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm whitespace-nowrap shrink-0"
             >
               Get the Clinic Pass · $400
