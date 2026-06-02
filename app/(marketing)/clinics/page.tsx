@@ -117,7 +117,7 @@ export default function ClinicsPage() {
                   src="/bk-karunakaran-action-2.jpeg"
                   alt="BK Karunakaran pickleball coaching"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-[center_35%]"
                   sizes="(max-width: 1024px) 0px, 500px"
                   priority
                 />
@@ -311,10 +311,10 @@ export default function ClinicsPage() {
       {/* ── Social photo ── */}
       <section className="relative h-64 sm:h-80 overflow-hidden">
         <Image
-          src="/images/pickleball-social-1.jpg"
-          alt="Pickleball players at the net"
+          src="/images/sterling-pickleball.jpg"
+          alt="Pickleball at Sterling Sport and Wellness Bangkok"
           fill
-          className="object-cover object-top"
+          className="object-cover object-center"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
