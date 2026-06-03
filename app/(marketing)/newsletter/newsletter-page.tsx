@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Sun, Palmtree, ArrowRight, Mail, Globe, Calendar, Sparkles } from 'lucide-react';
 import { trpc } from '@/lib/trpc/client';
 import { toast } from 'sonner';
@@ -66,14 +67,16 @@ export function NewsletterPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
-        <div className="absolute top-8 left-8 opacity-10">
-          <Palmtree className="w-32 h-32" />
-        </div>
-        <div className="absolute bottom-8 right-8 opacity-10">
-          <Sun className="w-24 h-24 text-[#B08D55]" />
-        </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden text-white py-20 sm:py-28">
+        <Image
+          src="/images/bangkok-skyline.jpg"
+          alt="Bangkok skyline"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
@@ -84,7 +87,7 @@ export function NewsletterPage() {
             Stay in the Loop
           </h1>
           <p className="text-xl sm:text-2xl text-white/80">
-            Trip updates, new destinations, and stories from the road  ·  delivered to your inbox.
+            Trip updates, new destinations, and stories from the road. Delivered to your inbox.
           </p>
         </div>
 

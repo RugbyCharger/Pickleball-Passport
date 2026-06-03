@@ -156,8 +156,16 @@ export default function PartnersPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0F1A2A] text-white py-16 sm:py-20">
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden text-white py-16 sm:py-20">
+        <Image
+          src="/images/jaron-ryan-chinatown-6.jpg"
+          alt="Jaron and Ryan in Bangkok's Chinatown"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center">

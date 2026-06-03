@@ -147,6 +147,18 @@ export default function ClinicsPage() {
         </div>
       </section>
 
+      {/* ── Wat Pho photo strip ── */}
+      <section className="relative h-56 sm:h-72 overflow-hidden">
+        <Image
+          src="/images/jaron-ryan-wat-pho-1.jpg"
+          alt="Jaron and Ryan at Wat Pho, Bangkok"
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      </section>
+
       {/* ── Venues ── */}
       <section className="py-12 sm:py-16 bg-[#FDF8F3]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

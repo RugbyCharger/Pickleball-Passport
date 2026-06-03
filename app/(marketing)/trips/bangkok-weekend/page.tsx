@@ -187,8 +187,8 @@ export default function BangkokWeekendPage() {
       <section className="grid grid-cols-2 h-56 sm:h-72">
         <div className="relative overflow-hidden">
           <Image
-            src="/images/ryan-wat-pho.jpg"
-            alt="Wat Pho temple, Bangkok"
+            src="/images/jaron-ryan-wat-pho-6.jpg"
+            alt="Jaron and Ryan at Wat Pho, Bangkok"
             fill
             className="object-cover object-center"
             sizes="50vw"
