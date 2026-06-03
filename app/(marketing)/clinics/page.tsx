@@ -69,7 +69,7 @@ export default function ClinicsPage() {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-black/60" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
@@ -81,7 +81,7 @@ export default function ClinicsPage() {
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
                 Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
               </h1>
-              <p className="text-xl text-white/70 mb-8 max-w-2xl">
+              <p className="text-xl text-white mb-8 max-w-2xl">
                 9 AM – 12 PM. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
               </p>
 
