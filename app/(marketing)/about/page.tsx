@@ -52,16 +52,16 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#FDF8F3] to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 opacity-10">
-          <Palmtree className="w-32 h-32" />
-        </div>
-        <div className="absolute bottom-10 right-10 opacity-10">
-          <Waves className="w-40 h-40" />
-        </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
+      <section className="relative overflow-hidden text-white py-20 sm:py-28">
+        <Image
+          src="/images/chinatown-jaron-ryan.jpg"
+          alt="Jaron and Ryan in Bangkok's Chinatown"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/75" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -100,10 +100,10 @@ export default function AboutPage() {
             <div className="flex flex-col gap-4 w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
                 <Image
-                  src="/IMG_5818.JPG"
-                  alt="Jaron Shoptaugh and Ryan Magill, co-founders of The Pickleball Passport"
+                  src="/images/ryan-wat-pho.jpg"
+                  alt="Jaron and Ryan at Wat Pho, Bangkok"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-center"
                   priority
                 />
               </div>

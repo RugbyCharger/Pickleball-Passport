@@ -18,8 +18,8 @@ const venues = [
     image: '/images/sterling-pickleball.jpg',
   },
   {
-    name: 'Sterling / Papaya',
-    subtitle: 'Pick-a-Court Bangkok',
+    name: 'Sterling Sport and Wellness',
+    subtitle: 'Bangkok',
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
@@ -39,7 +39,7 @@ const venues = [
 
 const julyDates = [
   { date: 'Fri Jul 17', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
-  { date: 'Sat Jul 18', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
+  { date: 'Sat Jul 18', venue: 'Sterling Sport and Wellness, Bangkok', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
   { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
   { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
 ];
@@ -73,13 +73,13 @@ export default function ClinicsPage() {
                 Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
               </h1>
               <p className="text-xl text-white/70 mb-8 max-w-2xl">
-                3 hours. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
+                9 AM – 12 PM. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-10">
                 <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
                   <Clock className="h-4 w-4 text-[#B08D55]" />
-                  3 hours per session
+                  9 AM – 12 PM
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
                   <MapPin className="h-4 w-4 text-[#B08D55]" />
