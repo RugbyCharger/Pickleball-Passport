@@ -166,22 +166,15 @@ export function July16Page() {
               <p className="font-serif font-bold text-white text-xl mb-1">Full 9-Day Trip</p>
               <p className="text-white/50 text-sm mb-1">Jul 16–24 · Both cities · 4 sessions with BK</p>
               <p className="text-white/40 text-xs mb-4">Peninsula Bangkok · Anantara Hua Hin</p>
-              <p className="font-bold text-white text-2xl mb-1">$3,888 <span className="text-base font-normal text-white/40">/person</span></p>
-              <p className="text-[#B08D55] text-xs mb-5">or 3 payments of $1,296</p>
-              <div className="mt-auto space-y-2">
+              <p className="font-bold text-white text-2xl mb-5">$3,888 <span className="text-base font-normal text-white/40">/person</span></p>
+              <div className="mt-auto">
                 <a
                   href="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm hover:shadow-lg transition-all"
                 >
-                  Book Full Trip  ·  $3,888
-                </a>
-                <a
-                  href="#deposit-fulltrip"
-                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-white/15 text-white/70 text-xs font-medium hover:bg-white/5 transition-colors"
-                >
-                  Reserve with Deposit  ·  $1,296
+                  Book Full Trip · $3,888
                 </a>
               </div>
             </div>
@@ -193,18 +186,14 @@ export function July16Page() {
               <p className="text-[#1D2D44]/50 text-sm mb-1">Jul 16–19 · 2 sessions with BK</p>
               <p className="text-[#1D2D44]/30 text-xs mb-4">The Peninsula Bangkok</p>
               <p className="font-bold text-[#1D2D44] text-2xl mb-5">$1,488 <span className="text-base font-normal text-[#1D2D44]/40">/person</span></p>
-              <div className="mt-auto space-y-2">
+              <div className="mt-auto">
                 <a
-                  href="#stripe-bkk-1488"
+                  href="https://link.fastpaydirect.com/payment-link/6a1ed4c203b17c94f5714207"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
                 >
-                  Book Bangkok  ·  $1,488
-                </a>
-                <a
-                  href="#stripe-bkk-deposit"
-                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
-                >
-                  Reserve with Deposit  ·  $496
+                  Book Bangkok · $1,488
                 </a>
               </div>
             </div>
@@ -216,25 +205,21 @@ export function July16Page() {
               <p className="text-[#1D2D44]/50 text-sm mb-1">Jul 19–23 · 2 sessions with BK</p>
               <p className="text-[#1D2D44]/30 text-xs mb-4">Anantara Hua Hin Resort</p>
               <p className="font-bold text-[#1D2D44] text-2xl mb-5">$2,488 <span className="text-base font-normal text-[#1D2D44]/40">/person</span></p>
-              <div className="mt-auto space-y-2">
+              <div className="mt-auto">
                 <a
-                  href="#stripe-hh-2488"
+                  href="https://link.fastpaydirect.com/payment-link/6a1ed4e503b17c94f5714208"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex w-full items-center justify-center py-3 rounded-xl bg-[#1D2D44] text-white font-bold text-sm hover:bg-[#1D2D44]/80 transition-colors"
                 >
-                  Book Hua Hin  ·  $2,488
-                </a>
-                <a
-                  href="#stripe-hh-deposit"
-                  className="flex w-full items-center justify-center py-2.5 rounded-xl border border-[#1D2D44]/15 text-[#1D2D44]/60 text-xs font-medium hover:bg-[#1D2D44]/5 transition-colors"
-                >
-                  Reserve with Deposit  ·  $830
+                  Book Hua Hin · $2,488
                 </a>
               </div>
             </div>
           </div>
 
           <p className="text-xs text-[#1D2D44]/35 mt-4 text-center">
-            Bangkok ($1,488) + Hua Hin ($2,488) booked separately = $3,976. The full 9-day trip is $3,888 and includes more. Deposit links for segment products activate once Stripe products are created.
+            Bangkok ($1,488) + Hua Hin ($2,488) booked separately = $3,976. The full 9-day trip is $3,888 and includes more. All products are pay in full.
           </p>
         </div>
       </section>
