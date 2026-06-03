@@ -60,7 +60,16 @@ export default function ClinicsPage() {
     <main className="min-h-screen bg-[#FDF8F3]">
 
       {/* ── Hero ── */}
-      <section className="bg-[#0F1A2A] text-white py-16 sm:py-20 overflow-hidden">
+      <section className="relative overflow-hidden text-white py-16 sm:py-20">
+        <Image
+          src="/images/jaron-ryan-wat-pho-6.jpg"
+          alt="Wat Pho temple, Bangkok"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-black/40" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
