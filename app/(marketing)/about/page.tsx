@@ -100,7 +100,7 @@ export default function AboutPage() {
             <div className="flex flex-col gap-4 w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
                 <Image
-                  src="/images/ryan-wat-pho.jpg"
+                  src="/images/jaron-ryan-wat-pho.jpg"
                   alt="Jaron and Ryan at Wat Pho, Bangkok"
                   fill
                   className="object-cover object-center"
