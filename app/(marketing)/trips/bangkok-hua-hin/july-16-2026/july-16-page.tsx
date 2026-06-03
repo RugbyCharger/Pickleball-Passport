@@ -86,7 +86,7 @@ export function July16Page() {
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
                   <Users className="h-4 w-4 text-[#B08D55]" />
-                  16 Spaces Available
+                  14 of 16 Spaces Available
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
                   <Trophy className="h-4 w-4 text-[#B08D55]" />
@@ -295,7 +295,7 @@ export function July16Page() {
         price={3888}
         fullLink="https://thepickleballpassport.net/main-checkout/trip071626-160081"
         hidePaymentPlan
-        spotsLeft={16}
+        spotsLeft={14}
         totalSpots={16}
         ContentComponent={TripSectionContentHuaHin}
       />

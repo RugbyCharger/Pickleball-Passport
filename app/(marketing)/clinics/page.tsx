@@ -38,10 +38,10 @@ const venues = [
 /* ─────────────────────── JULY DATES ─────────────────────── */
 
 const julyDates = [
-  { date: 'Fri Jul 17', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
-  { date: 'Sat Jul 18', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
-  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
-  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 12, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Fri Jul 17', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
+  { date: 'Sat Jul 18', venue: 'Sterling / Papaya, Bangkok', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
+  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
 ];
 
 /* ─────────────────────── WHAT'S INCLUDED ─────────────────────── */
