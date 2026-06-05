@@ -41,13 +41,28 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const existingCookie = request.cookies.get(REFERRAL_COOKIE_NAME);
   const shouldSetCookie = !existingCookie;
 
-  // Create the redirect response with ref param for client-side attribution
-  const redirectUrl = new URL('/', request.url);
-  redirectUrl.searchParams.set('ref', code);
+  // Route-specific landing pages (BK's code goes straight to clinics)
+  const DESTINATIONS: Record<string, string> = {
+    BK100: '/clinics',
+  };
+  const destination = DESTINATIONS[code] ?? '/trips';
+  const redirectUrl = new URL(destination, request.url);
   const response = NextResponse.redirect(redirectUrl);
 
+  // Set the cookie immediately regardless of DB validation so all 13 partner
+  // codes work sticky even before they exist in the database
+  if (shouldSetCookie) {
+    response.cookies.set(REFERRAL_COOKIE_NAME, code, {
+      maxAge: REFERRAL_COOKIE_MAX_AGE,
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+  }
+
   try {
-    // Validate the referral code - check both partner profiles and user referral codes
+    // Attempt DB tracking for codes that exist as partner/user profiles
     const [partnerProfile, userWithReferralCode] = await Promise.all([
       prisma.partnerProfile.findUnique({
         where: { referralCode: code },
@@ -61,53 +76,31 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const isValidCode = partnerProfile !== null || userWithReferralCode !== null;
 
-    if (!isValidCode) {
-      // Invalid code - redirect to homepage without setting cookie or tracking
-      console.log(`[Referral] Invalid referral code: ${code}`);
-      return response;
-    }
-
-    // Record the click event in ReferralEvent table
-    await prisma.referralEvent.create({
-      data: {
-        referralCode: code,
-        eventType: ReferralEventType.CLICK,
-        ipAddress,
-        userAgent,
-        utmSource,
-        utmMedium,
-        utmCampaign,
-      },
-    });
-
-    // Increment click count on the appropriate profile
-    if (partnerProfile) {
-      await prisma.partnerProfile.update({
-        where: { id: partnerProfile.id },
+    if (isValidCode) {
+      await prisma.referralEvent.create({
         data: {
-          referralCodeClickCount: { increment: 1 },
+          referralCode: code,
+          eventType: ReferralEventType.CLICK,
+          ipAddress,
+          userAgent,
+          utmSource,
+          utmMedium,
+          utmCampaign,
         },
       });
-    }
-    // Note: User referral codes don't have a dedicated click count field,
-    // but the ReferralEvent table tracks all clicks
 
-    // Set cookie only if first-click attribution (no existing cookie)
-    if (shouldSetCookie) {
-      response.cookies.set(REFERRAL_COOKIE_NAME, code, {
-        maxAge: REFERRAL_COOKIE_MAX_AGE,
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-      });
-    }
+      if (partnerProfile) {
+        await prisma.partnerProfile.update({
+          where: { id: partnerProfile.id },
+          data: { referralCodeClickCount: { increment: 1 } },
+        });
+      }
 
-    console.log(
-      `[Referral] Click tracked for code: ${code}, cookie set: ${shouldSetCookie}`
-    );
+      console.log(`[Referral] Click tracked for code: ${code}, cookie set: ${shouldSetCookie}`);
+    } else {
+      console.log(`[Referral] Unknown code (cookie still set): ${code}`);
+    }
   } catch (error) {
-    // Log error but don't fail the redirect - graceful degradation
     console.error(`[Referral] Error processing referral code ${code}:`, error);
   }
 

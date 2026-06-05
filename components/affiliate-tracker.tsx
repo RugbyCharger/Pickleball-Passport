@@ -12,7 +12,7 @@ function getCookie(name: string): string | null {
 // when a tpp_ref affiliate cookie is present. Runs once on mount.
 export function AffiliateTracker() {
   useEffect(() => {
-    const ref = getCookie('tpp_ref');
+    const ref = getCookie('referral_code');
     if (!ref) return;
 
     const links = document.querySelectorAll<HTMLAnchorElement>(
