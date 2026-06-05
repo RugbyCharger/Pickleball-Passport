@@ -41,11 +41,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const existingCookie = request.cookies.get(REFERRAL_COOKIE_NAME);
   const shouldSetCookie = !existingCookie;
 
-  // Route-specific landing pages (BK's code goes straight to clinics)
-  const DESTINATIONS: Record<string, string> = {
-    BK100: '/clinics',
-  };
-  const destination = DESTINATIONS[code] ?? '/trips';
+  const destination = '/trips';
   const redirectUrl = new URL(destination, request.url);
   const response = NextResponse.redirect(redirectUrl);
 
