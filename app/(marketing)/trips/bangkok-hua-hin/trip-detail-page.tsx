@@ -1,19 +1,38 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight, Sun } from 'lucide-react';
+import { Sparkles, MapPin, Calendar, Trophy, ArrowRight, Sun, Star } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
 import { TripSectionContentHuaHin } from '@/components/trips/trip-section-content-hua-hin';
 import { FeaturedPartnerSection } from '@/components/trips/featured-partner-section';
+
+/* ─────────────────────── DEPARTURE DATA ─────────────────────── */
+
+const departures = [
+  { month: 'July 2026', price: 3888, featured: true, featuredLabel: 'With BK Karunakaran', href: '/trips/bangkok-hua-hin/july-16-2026', confirmed: true },
+  { month: 'August 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'September 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'October 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'November 2026', price: 3888, featured: false, href: null, confirmed: false },
+  { month: 'December 2026', price: 3888, featured: false, href: null, confirmed: false },
+];
 
 export function BangkokHuaHinPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Trip Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-20">
-        {/* Decorative orbs */}
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
+      <section className="relative overflow-hidden text-white py-16 sm:py-20">
+        {/* Background photo */}
+        <Image
+          src="/images/peninsula-pool.jpg"
+          alt="The Peninsula Bangkok pool"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
@@ -25,7 +44,7 @@ export function BangkokHuaHinPage() {
               </div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#B08D55]/30 backdrop-blur-sm text-white text-sm font-semibold">
                 <Sparkles className="w-4 h-4 text-[#CFB78D]" />
-                Featuring BK
+                July 16  ·  Featuring BK Karunakaran
               </div>
             </div>
 
@@ -46,15 +65,11 @@ export function BangkokHuaHinPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 16 – Jul 24, 2026
+                Departures Jun–Jan
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
                 2 Cities, 2 Five-Star Hotels
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
-                <Users className="h-4 w-4 text-[#B08D55]" />
-                16 Spots Available
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
@@ -84,18 +99,129 @@ export function BangkokHuaHinPage() {
       <FeaturedPartnerSection
         name='Bharat "BK" Karunakaran'
         title="Pro Pickleball Player & Content Creator · @bk_pickleball"
-        bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators — he'll be on the court with you every day in Bangkok and Hua Hin."
+        bio="BK joins the July 16 departure as our featured partner. An APP/PPA circuit pro, inaugural All Florida Pro League champion, and one of pickleball's top instructional creators  ·  he'll be on the court with you every day in Bangkok and Hua Hin."
         siteUrl="https://www.bk-pickleball.com"
         siteName="bk-pickleball.com"
         photoSrc="/bk-karunakaran.jpeg"
         photoAlt="Bharat BK Karunakaran"
       />
 
+      {/* Upcoming Departures */}
+      <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-1">
+              2026 Departures
+            </h2>
+            <p className="text-sm text-[#1D2D44]/50">
+              From $3,888/person, double occupancy. Single supplement $600. Available year-round  ·  including February through April when Chiang Mai trips are paused for smoke season.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {departures.map((dep) => (
+              <div
+                key={dep.month}
+                className={`rounded-2xl border p-5 flex flex-col gap-3 ${
+                  dep.featured
+                    ? 'bg-[#0F1A2A] border-[#B08D55]/40'
+                    : 'bg-[#FDF8F3] border-[#B08D55]/10'
+                }`}
+              >
+                <div>
+                  {dep.featured && (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#B08D55] text-white text-xs font-semibold mb-2">
+                      <Star className="w-3 h-3" />
+                      Featured
+                    </div>
+                  )}
+                  <div className={`text-base font-serif font-bold ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+                    {dep.month}
+                  </div>
+                  {dep.featuredLabel && (
+                    <div className="text-xs text-[#B08D55] font-medium mt-0.5">{dep.featuredLabel}</div>
+                  )}
+                  {!dep.confirmed && (
+                    <div className={`text-xs mt-0.5 ${dep.featured ? 'text-white/40' : 'text-[#1D2D44]/35'}`}>
+                      Dates set once your spot is reserved
+                    </div>
+                  )}
+                </div>
+                <div className={`text-sm font-bold mt-auto ${dep.featured ? 'text-white' : 'text-[#1D2D44]'}`}>
+                  ${dep.price.toLocaleString()}<span className={`font-normal text-xs ml-1 ${dep.featured ? 'text-white/50' : 'text-[#1D2D44]/40'}`}>/person</span>
+                </div>
+                {dep.href ? (
+                  <Link
+                    href={dep.href}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] text-xs font-bold transition-all hover:shadow-md"
+                  >
+                    View this departure
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <a
+                    href="https://wa.me/15125648522"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
+                  >
+                    I'm interested
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Value comparison + segment upsells ── */}
+      <section className="py-8 bg-[#FDF8F3] border-t border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+          {/* Value banner */}
+          <div className="bg-[#1D2D44] rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-white/70 text-sm">
+              Bangkok Weekend ($1,488) + Hua Hin Escape ($2,488) separately = <span className="line-through text-white/30">$3,976</span>.{' '}
+              <span className="text-white font-semibold">The full 9-day trip is <span className="text-[#B08D55] font-bold">$3,888</span>  ·  less money, both cities, more included.</span>
+            </p>
+          </div>
+          {/* Segment cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Bangkok</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Bangkok Weekend  ·  $1,488</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">3 nights · Peninsula Bangkok · 2 sessions</p>
+              </div>
+              <Link
+                href="/trips/bangkok-weekend"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors whitespace-nowrap shrink-0"
+              >
+                View details <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Hua Hin</p>
+                <p className="font-serif font-bold text-[#1D2D44]">Hua Hin Escape  ·  $2,488</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">4 nights · Anantara Hua Hin · 2 sessions + ProAM</p>
+              </div>
+              <Link
+                href="/trips/hua-hin-escape"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors whitespace-nowrap shrink-0"
+              >
+                View details <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Hua Hin (Jul 16 - Jul 24)"
+        tripName="Bangkok + Hua Hin"
         cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
-        dates="Jul 16 – Jul 24, 2026"
+        dates="Multiple 2026 departures"
         price={3888}
         hidePaymentPlan={true}
         fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
@@ -105,15 +231,15 @@ export function BangkokHuaHinPage() {
       />
 
       {/* Cross-link to Chiang Mai route */}
-      <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">
+      <section className="py-12 bg-[#0F1A2A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80 text-lg mb-3">Want to extend your trip? Add extra days in Chiang Mai after your 9-day experience. Contact us for add-on pricing.</p>
+          <p className="text-white/70 text-base mb-3">Prefer a mountain city over the coast? Explore our Chiang Mai route  ·  same format, ancient temples and elephants instead of beaches.</p>
           <Link
             href="/trips/bangkok-chiang-mai"
-            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold text-xl transition-colors"
+            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold transition-colors"
           >
             Explore the Bangkok + Chiang Mai Route
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

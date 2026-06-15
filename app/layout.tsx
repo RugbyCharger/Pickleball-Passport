@@ -10,6 +10,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
 import { Footer } from "@/components/marketing/footer";
+import { AffiliateTracker } from "@/components/affiliate-tracker";
 
 /**
  * Pickleball Passport - Official Brand Fonts
@@ -86,6 +87,7 @@ export default function RootLayout({
           className={`${montserrat.variable} ${nunitoSans.variable} font-sans antialiased`}
         >
           <Providers>
+            <AffiliateTracker />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex-1">{children}</main>

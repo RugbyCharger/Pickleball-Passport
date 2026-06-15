@@ -1,19 +1,40 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, MapPin, Calendar, Users, Trophy, ArrowRight } from 'lucide-react';
+import { MapPin, Calendar, Trophy, ArrowRight, Leaf, ExternalLink } from 'lucide-react';
 import { TripDetailLayout } from '@/components/trips/trip-detail-layout';
 import { TripSectionContentChiangMai } from '@/components/trips/trip-section-content-chiang-mai';
+
+/* ─────────────────────── DEPARTURE DATA ─────────────────────── */
+
+type DepartureStatus = 'live' | 'open' | 'special';
+
+interface Departure {
+  month: string;
+  price: number | null;
+  season: string;
+  status: DepartureStatus;
+  note?: string;
+  phuket?: boolean;
+  specialHref?: string;
+  dedicatedHref?: string;
+}
+
+const departures: Departure[] = [
+  { month: 'July 2026', price: 3888, season: 'Standard Season', status: 'live', note: 'Jul 2–10 confirmed' },
+  { month: 'August 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'September 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'October 2026', price: 3888, season: 'Standard Season', status: 'open' },
+  { month: 'November 2026', price: 5688, season: 'Loy Krathong Festival', status: 'special', specialHref: '/trips/loy-krathong', note: 'Nov 19–27 confirmed' },
+  { month: 'December 2026', price: 4860, season: 'High Season', status: 'open', note: 'Dec 17–25 confirmed' },
+  { month: 'January 2027', price: 4860, season: 'High Season', status: 'open', phuket: true, dedicatedHref: '/trips/bangkok-chiang-mai/january-14-2027', note: 'Jan 14–22 confirmed' },
+];
 
 export function BangkokChiangMaiPage() {
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
       {/* Trip Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-16 sm:py-20">
-        {/* Decorative orbs */}
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-[#7587A5]/20 rounded-full blur-2xl" />
-
+      <section className="relative overflow-hidden bg-[#0F1A2A] text-white py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
             {/* Tag pill */}
@@ -39,15 +60,11 @@ export function BangkokChiangMaiPage() {
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 30 – Aug 7, 2026
+                Multiple 2026 Departures
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
                 2 Cities, 2 Five-Star Hotels
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
-                <Users className="h-4 w-4 text-[#B08D55]" />
-                16 Spots Available
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Trophy className="h-4 w-4 text-[#B08D55]" />
@@ -73,11 +90,130 @@ export function BangkokChiangMaiPage() {
         </div>
       </section>
 
+      {/* Seasonal Pricing */}
+      <section className="py-10 sm:py-14 bg-[#FDF8F3] border-b border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44] mb-1">Pricing by Season</h2>
+            <p className="text-sm text-[#1D2D44]/50">All prices per person, double occupancy. Single supplement $600.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
+            <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5 shadow-sm">
+              <div className="text-xs font-bold tracking-[0.15em] uppercase text-[#1D2D44]/40 mb-1">Standard Season</div>
+              <div className="text-xs text-[#1D2D44]/50 mb-3">May – October</div>
+              <div className="text-3xl font-bold text-[#1D2D44]">$3,888<span className="text-sm font-normal text-[#1D2D44]/40 ml-1">/person</span></div>
+            </div>
+            <div className="bg-white rounded-2xl border border-[#B08D55]/20 p-5 shadow-sm">
+              <div className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">High Season</div>
+              <div className="text-xs text-[#1D2D44]/50 mb-3">November – January</div>
+              <div className="text-3xl font-bold text-[#1D2D44]">$4,860<span className="text-sm font-normal text-[#1D2D44]/40 ml-1">/person</span></div>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-[#1D2D44]/40 max-w-xl">
+            For our special Loy Krathong Festival departure (Nov 22–26), see{' '}
+            <Link href="/loy-krathong" className="text-[#B08D55] hover:underline font-medium inline-flex items-center gap-0.5">
+              our dedicated event page <ExternalLink className="w-3 h-3" />
+            </Link>.
+          </p>
+        </div>
+      </section>
+
+      {/* Upcoming Departures */}
+      <section className="py-10 sm:py-14 bg-white border-b border-[#B08D55]/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44] mb-1">2026–27 Departures</h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {departures.map((dep) => (
+              <div
+                key={dep.month}
+                className={`rounded-2xl border p-5 flex flex-col gap-3 ${
+                  dep.status === 'special'
+                    ? 'bg-[#FDF8F3] border-[#B08D55]/30'
+                    : 'bg-[#FDF8F3] border-[#B08D55]/10'
+                }`}
+              >
+                <div>
+                  <div className={`text-xs font-semibold uppercase tracking-wide mb-1 ${
+                    dep.season === 'High Season' ? 'text-[#B08D55]' :
+                    dep.season === 'Loy Krathong Festival' ? 'text-[#8D7144]' :
+                    'text-[#1D2D44]/40'
+                  }`}>
+                    {dep.season}
+                  </div>
+                  <div className="text-base font-serif font-bold text-[#1D2D44]">
+                    {dep.month}
+                  </div>
+                  {dep.note && (
+                    <div className="text-xs text-[#1D2D44]/40 mt-0.5">{dep.note}</div>
+                  )}
+                  {dep.phuket && (
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2D5A3D]/10 text-[#2D5A3D] text-xs font-semibold mt-1.5">
+                      + Phuket Extension available
+                    </div>
+                  )}
+                </div>
+                <div className="mt-auto">
+                  {dep.price ? (
+                    <div className="text-sm font-bold text-[#1D2D44]">
+                      ${dep.price.toLocaleString()}<span className="font-normal text-xs text-[#1D2D44]/40 ml-1">/person</span>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-[#1D2D44]/50 italic">See dedicated event page</div>
+                  )}
+                </div>
+                {dep.status === 'special' && dep.specialHref ? (
+                  <Link
+                    href={dep.specialHref}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
+                  >
+                    View Loy Krathong departure
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                ) : dep.dedicatedHref ? (
+                  <Link
+                    href={dep.dedicatedHref}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors"
+                  >
+                    View this departure
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <a
+                    href="https://wa.me/15125648522"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#B08D55]/30 text-[#B08D55] text-xs font-semibold hover:bg-[#B08D55]/5 transition-colors"
+                  >
+                    I'm interested
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Smoke season note */}
+          <div className="mt-6 flex items-start gap-3 p-4 bg-[#FDF8F3] rounded-xl border border-[#B08D55]/10">
+            <Leaf className="w-4 h-4 text-[#2D5A3D] flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-[#1D2D44]/60 leading-relaxed">
+              Chiang Mai trips run May through January. February–April departures are not available due to regional air quality during the dry season burning period. For travel during those months, consider{' '}
+              <Link href="/trips/bangkok-hua-hin" className="text-[#B08D55] hover:underline font-medium">
+                Route A: Bangkok + Hua Hin
+              </Link>{' '}
+              which operates year-round.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
-        tripName="Bangkok + Chiang Mai (Jul 30 - Aug 7)"
+        tripName="Bangkok + Chiang Mai"
         cities="The Peninsula Bangkok · Anantara Chiang Mai Resort"
-        dates="Jul 30 – Aug 7, 2026"
+        dates="Multiple 2026–27 departures"
         price={3888}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
         fullLink="https://buy.stripe.com/eVq5kD1K33435i5fQN2cg09"
@@ -87,15 +223,15 @@ export function BangkokChiangMaiPage() {
       />
 
       {/* Cross-link to Hua Hin route */}
-      <section className="py-12 bg-gradient-to-br from-[#1D2D44] to-[#495F87]">
+      <section className="py-12 bg-[#0F1A2A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80 text-lg mb-3">Want to extend your trip? Add extra days in Hua Hin after your 9-day experience. Contact us for add-on pricing.</p>
+          <p className="text-white/70 text-base mb-3">Prefer the beach over the mountains? Route A visits Hua Hin on Thailand's Gulf Coast and runs year-round, including February through April.</p>
           <Link
             href="/trips/bangkok-hua-hin"
-            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold text-xl transition-colors"
+            className="inline-flex items-center gap-2 text-[#B08D55] hover:text-[#CFB78D] font-semibold transition-colors"
           >
             Explore the Bangkok + Hua Hin Route
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

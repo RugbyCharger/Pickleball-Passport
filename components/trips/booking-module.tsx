@@ -64,51 +64,43 @@ export function BookingModule({
 
         {/* Spots Counter */}
         {spotsLeft !== undefined && totalSpots !== undefined && (
-          <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold ${
-            spotsLeft <= 4
-              ? 'bg-red-50 text-red-700 border border-red-200'
-              : spotsLeft <= 8
-                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-          }`}>
-            <Users className="w-4 h-4" />
+          <div className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold bg-[#1D2D44]/5 text-[#1D2D44] border border-[#1D2D44]/10">
+            <Users className="w-4 h-4 text-[#B08D55]" />
             {spotsLeft === 0
-              ? 'Sold Out'
-              : spotsLeft <= 4
-                ? `Only ${spotsLeft} Spots Left!`
-                : `${spotsLeft} of ${totalSpots} Spots Available`
+              ? 'Fully Reserved'
+              : `${spotsLeft} of ${totalSpots} spaces available`
             }
           </div>
         )}
 
         {/* Dual CTA Buttons */}
         <div className="space-y-3">
-          {/* Reserve Your Spot — outline */}
+          {/* Primary  ·  talk to team (gold) */}
           <Link
             href={reserveHref}
-            className="flex w-full h-12 items-center justify-center rounded-xl border-2 border-[#1D2D44] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider hover:bg-[#1D2D44] hover:text-white transition-all"
+            className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
           >
-            Reserve Your Spot
+            Meet Our Team
           </Link>
 
-          {/* Book Now — gold filled */}
+          {/* Secondary  ·  direct payment (outline) */}
           {hidePaymentPlan && fullLink ? (
             <a
               href={fullLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+              className="flex w-full h-12 items-center justify-center rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-semibold text-sm hover:border-[#1D2D44]/40 hover:text-[#1D2D44] transition-all"
             >
-              Book Now — ${price.toLocaleString()}
+              Reserve Your Spot
             </a>
           ) : depositLink && fullLink ? (
             <>
               <button
                 type="button"
                 onClick={() => setShowPaymentOptions(!showPaymentOptions)}
-                className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
+                className="flex w-full h-12 items-center justify-center rounded-xl border border-[#1D2D44]/20 text-[#1D2D44]/70 font-semibold text-sm hover:border-[#1D2D44]/40 hover:text-[#1D2D44] transition-all"
               >
-                Book Now
+                Reserve your place
               </button>
 
               {showPaymentOptions && (
@@ -136,14 +128,7 @@ export function BookingModule({
                 </div>
               )}
             </>
-          ) : (
-            <Link
-              href={reserveHref}
-              className="flex w-full h-12 items-center justify-center rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-semibold text-sm uppercase tracking-wider shadow-lg shadow-[#B08D55]/25 hover:shadow-xl hover:shadow-[#B08D55]/30 transition-all hover:-translate-y-0.5"
-            >
-              Book Now
-            </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

@@ -1,12 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Sun, Palmtree, ArrowRight, Mail, Globe, Calendar, Sparkles } from 'lucide-react';
-import { trpc } from '@/lib/trpc/client';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-const emailSchema = z.string().email('Please enter a valid email address');
+import Image from 'next/image';
+import Script from 'next/script';
+import { Sun, Calendar, Sparkles, Globe, Mail } from 'lucide-react';
 
 const benefits = [
   {
@@ -32,48 +28,20 @@ const benefits = [
 ];
 
 export function NewsletterPage() {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-      setEmail('');
-      setEmailError('');
-      setSubmitted(true);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      setEmailError(error.message);
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailError('');
-
-    const result = emailSchema.safeParse(email);
-    if (!result.success) {
-      const error = result.error.issues[0]?.message ?? 'Invalid email';
-      setEmailError(error);
-      return;
-    }
-
-    subscribeMutation.mutate({ email });
-  };
-
   return (
     <main className="min-h-screen bg-[#FDF8F3]">
+
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1D2D44] via-[#495F87] to-[#7587A5] text-white py-20 sm:py-28">
-        <div className="absolute top-8 left-8 opacity-10">
-          <Palmtree className="w-32 h-32" />
-        </div>
-        <div className="absolute bottom-8 right-8 opacity-10">
-          <Sun className="w-24 h-24 text-[#B08D55]" />
-        </div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-[#B08D55]/10 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden text-white py-20 sm:py-28">
+        <Image
+          src="/images/bangkok-skyline.jpg"
+          alt="Bangkok skyline"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium mb-6">
@@ -84,7 +52,7 @@ export function NewsletterPage() {
             Stay in the Loop
           </h1>
           <p className="text-xl sm:text-2xl text-white/80">
-            Trip updates, new destinations, and stories from the road — delivered to your inbox.
+            Trip updates, new destinations, and stories from the road. Delivered to your inbox.
           </p>
         </div>
 
@@ -98,73 +66,35 @@ export function NewsletterPage() {
         </div>
       </section>
 
-      {/* Signup form */}
+      {/* GHL Form */}
       <section className="py-16 sm:py-20">
-        <div className="max-w-xl mx-auto px-4 sm:px-6">
-          {submitted ? (
-            <div className="text-center bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 p-10">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
-                <Mail className="w-8 h-8 text-emerald-600" />
-              </div>
-              <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-2">Check your inbox</h2>
-              <p className="text-[#1D2D44]/70">
-                We sent a confirmation link to <strong>{email || 'your email'}</strong>. Click it to complete your subscription.
-              </p>
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 p-8 sm:p-10">
-              <h2 className="text-2xl font-serif font-bold text-[#1D2D44] mb-2 text-center">Sign Up</h2>
-              <p className="text-[#1D2D44]/60 text-center mb-8">No spam. Unsubscribe anytime.</p>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="newsletter-email" className="block text-sm font-medium text-[#1D2D44] mb-1.5">
-                    Email Address
-                  </label>
-                  <input
-                    id="newsletter-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setEmailError('');
-                    }}
-                    placeholder="you@example.com"
-                    className={`w-full px-4 py-3.5 rounded-xl bg-white border-2 ${
-                      emailError
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-[#B08D55]/30 focus:border-[#B08D55]'
-                    } text-[#1D2D44] placeholder-[#1D2D44]/40 focus:outline-none focus:ring-4 focus:ring-[#B08D55]/20 transition-all`}
-                    disabled={subscribeMutation.isPending}
-                    aria-invalid={!!emailError}
-                    aria-describedby={emailError ? 'email-error' : undefined}
-                  />
-                  {emailError && (
-                    <p id="email-error" className="mt-1.5 text-sm text-red-500" aria-live="polite">
-                      {emailError}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={subscribeMutation.isPending}
-                  className="w-full py-4 bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#1D2D44] font-bold rounded-xl transition-all shadow-lg shadow-[#B08D55]/30 hover:shadow-xl hover:shadow-[#B08D55]/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {subscribeMutation.isPending ? (
-                    'Subscribing...'
-                  ) : (
-                    <>
-                      Subscribe
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-2xl shadow-xl shadow-[#1D2D44]/10 border border-[#B08D55]/10 overflow-hidden">
+            <iframe
+              src="https://api.leadconnectorhq.com/widget/form/vkJ4qmu5BNpd2FgpGy0O"
+              style={{ width: '100%', height: '100%', border: 'none', minHeight: '480px' }}
+              id="inline-vkJ4qmu5BNpd2FgpGy0O"
+              data-layout="{'id':'INLINE'}"
+              data-trigger-type="alwaysShow"
+              data-trigger-value=""
+              data-activation-type="alwaysActivated"
+              data-activation-value=""
+              data-deactivation-type="neverDeactivate"
+              data-deactivation-value=""
+              data-form-name="Newsletter Signup"
+              data-height="480"
+              data-layout-iframe-id="inline-vkJ4qmu5BNpd2FgpGy0O"
+              data-form-id="vkJ4qmu5BNpd2FgpGy0O"
+              title="Newsletter Signup"
+            />
+          </div>
         </div>
       </section>
+
+      <Script
+        src="https://link.msgsndr.com/js/form_embed.js"
+        strategy="lazyOnload"
+      />
 
       {/* What you'll get */}
       <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
@@ -190,6 +120,7 @@ export function NewsletterPage() {
           </div>
         </div>
       </section>
+
     </main>
   );
 }

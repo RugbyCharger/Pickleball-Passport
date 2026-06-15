@@ -11,6 +11,7 @@ import { useLeadModal } from '@/components/providers/lead-modal-provider';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Trips', href: '/trips' },
+  { name: 'Clinics', href: '/clinics' },
   { name: 'Partners', href: '/partners' },
   { name: 'About Us', href: '/about' },
   { name: 'Newsletter', href: '/newsletter' },
