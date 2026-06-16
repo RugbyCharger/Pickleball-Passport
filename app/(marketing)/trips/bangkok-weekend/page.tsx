@@ -38,7 +38,7 @@ const itinerary = [
 const included = [
   '3 nights at our 5-star Bangkok riverside hotel (Deluxe Room, daily breakfast)',
   '2 pickleball sessions with BK',
-  'Welcome dinner at the hotel's riverside restaurant',
+  'Welcome dinner at the riverside restaurant',
   'Sunset long-tail boat cruise on the Chao Phraya',
   'Guided Wat Pho temple tour',
   'Chinatown street food walk',
