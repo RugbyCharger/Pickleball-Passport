@@ -11,7 +11,7 @@ const itinerary = [
     day: 'Day 1',
     label: 'Thursday',
     title: 'Arrive Bangkok',
-    details: 'Check in to our 5-star Bangkok riverside hotel. Welcome dinner at the riverside restaurant.',
+    details: 'Check in to Our 5-Star Bangkok riverside hotel. Welcome dinner at the riverside restaurant.',
   },
   {
     day: 'Day 2',
@@ -36,7 +36,7 @@ const itinerary = [
 /* ─────────────────────── INCLUDED ─────────────────────── */
 
 const included = [
-  '3 nights at our 5-star Bangkok riverside hotel (Deluxe Room, daily breakfast)',
+  '3 nights at Our 5-Star Bangkok riverside hotel (Deluxe Room, daily breakfast)',
   '2 pickleball sessions with BK',
   'Welcome dinner at the riverside restaurant',
   'Sunset long-tail boat cruise on the Chao Phraya',
@@ -75,7 +75,7 @@ export default function BangkokWeekendPage() {
       <section className="relative overflow-hidden text-white">
         <Image
           src="/images/river-cruise-wat-arun.jpg"
-          alt="our 5-star Bangkok riverside hotel"
+          alt="Our 5-Star Bangkok riverside hotel"
           fill
           className="object-cover object-center"
           priority
@@ -90,7 +90,7 @@ export default function BangkokWeekendPage() {
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
             Bangkok Pickleball<br className="hidden sm:block" /> Weekend
           </h1>
-          <p className="text-xl text-white/75 mb-2">our 5-star Bangkok riverside hotel · 2 Sessions with BK</p>
+          <p className="text-xl text-white/75 mb-2">Our 5-Star Bangkok riverside hotel · 2 Sessions with BK</p>
           <p className="text-3xl font-bold text-white mb-8">
             $1,488 <span className="text-lg font-normal text-white/50">/person</span>
           </p>
@@ -102,7 +102,7 @@ export default function BangkokWeekendPage() {
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
               <MapPin className="h-4 w-4 text-[#B08D55]" />
-              our 5-star Bangkok riverside hotel
+              Our 5-Star Bangkok riverside hotel
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
               <Users className="h-4 w-4 text-[#B08D55]" />

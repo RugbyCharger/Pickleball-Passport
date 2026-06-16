@@ -2,5 +2,6 @@
     "editor.fontSize": 14,
     "claudeCode.allowDangerouslySkipPermissions": true,
     "claudeCode.initialPermissionMode": "bypassPermissions",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "claudeCode.useTerminal": true
 }

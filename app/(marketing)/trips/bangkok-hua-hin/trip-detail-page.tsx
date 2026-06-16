@@ -26,7 +26,7 @@ export function BangkokHuaHinPage() {
         {/* Background photo */}
         <Image
           src="/images/anantara-hua-hin-aerial.jpg"
-          alt="our 5-star Bangkok riverside hotel pool"
+          alt="Our 5-Star Bangkok riverside hotel pool"
           fill
           className="object-cover object-center"
           priority
@@ -58,7 +58,7 @@ export function BangkokHuaHinPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              our 5-star Bangkok riverside hotel &middot; Anantara Hua Hin Resort &middot; our 5-star Bangkok riverside hotel
+              Our 5-Star Bangkok riverside hotel &middot; Anantara Hua Hin Resort &middot; Our 5-Star Bangkok riverside hotel
             </p>
 
             {/* Trip summary badges */}
@@ -220,7 +220,7 @@ export function BangkokHuaHinPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin"
-        cities="our 5-star Bangkok riverside hotel · Anantara Hua Hin Resort"
+        cities="Our 5-Star Bangkok riverside hotel · Anantara Hua Hin Resort"
         dates="Multiple 2026 departures"
         price={3888}
         hidePaymentPlan={true}

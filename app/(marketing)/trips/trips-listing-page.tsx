@@ -22,7 +22,7 @@ const products = [
     label: 'Bangkok Weekend',
     price: '$1,488',
     duration: '3 nights / 4 days',
-    description: 'our 5-star Bangkok riverside hotel. 2 sessions with BK. Boat cruise. Temples. Street food.',
+    description: 'Our 5-Star Bangkok riverside hotel. 2 sessions with BK. Boat cruise. Temples. Street food.',
     badge: null,
     href: '/trips/bangkok-weekend',
     dark: false,
@@ -189,7 +189,7 @@ export function TripsListingPage() {
         {/* Background photo */}
         <Image
           src="/images/bangkok-skyline.jpg"
-          alt="our 5-star Bangkok riverside hotel"
+          alt="Our 5-Star Bangkok riverside hotel"
           fill
           className="object-cover object-center"
           priority
@@ -213,7 +213,7 @@ export function TripsListingPage() {
 
             <p className="text-xl sm:text-2xl text-white/75 mb-1">9 Days / 8 Nights</p>
             <p className="text-base text-white/50 mb-8">
-              our 5-star Bangkok riverside hotel · Anantara Hua Hin Resort
+              Our 5-Star Bangkok riverside hotel · Anantara Hua Hin Resort
             </p>
 
             {/* Stat pills */}

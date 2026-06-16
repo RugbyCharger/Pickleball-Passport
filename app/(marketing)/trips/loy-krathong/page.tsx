@@ -46,7 +46,7 @@ export default function LoyKrathongPage() {
             Loy Krathong<br className="hidden sm:block" /> Thailand Camp
           </h1>
           <p className="text-xl text-white/75 mb-2">Bangkok + Chiang Mai · 9 Days / 8 Nights</p>
-          <p className="text-white/50 mb-6">our 5-star Bangkok riverside hotel · Anantara Chiang Mai Resort</p>
+          <p className="text-white/50 mb-6">Our 5-Star Bangkok riverside hotel · Anantara Chiang Mai Resort</p>
 
           <p className="text-lg text-white/70 max-w-2xl mb-8 leading-relaxed">
             One night a year, thousands of candlelit lanterns rise over the Mae Ping River in Chiang Mai.

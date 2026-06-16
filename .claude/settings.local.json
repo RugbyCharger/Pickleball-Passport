@@ -2,7 +2,22 @@
   "permissions": {
     "allow": [
       "Read(//Users/ryanmagill/Downloads/**)",
-      "Read(//Users/ryanmagill/**)"
+      "Read(//Users/ryanmagill/**)",
+      "Bash(curl -s -w \"\\\\nHTTP Status: %{http_code}\" -X POST \"https://hooks.zapier.com/hooks/catch/26558696/u0m7s4m/\" -H \"Content-Type: application/json\" -d '{\"\"name\"\":\"\"Test User\"\",\"\"email\"\":\"\"test@pickleballpassport.com\"\",\"\"phone\"\":\"\"+15125551234\"\",\"\"preferred_trip\"\":\"\"Thailand Trip\"\",\"\"how_heard\"\":\"\"Website Test\"\",\"\"referred_by\"\":\"\"\"\"}')",
+      "Bash(git add lib/trpc/server/routers/waitlist.ts)",
+      "Bash(git push origin main)",
+      "Bash(npx tsc --noEmit --pretty)",
+      "Bash(npx next build)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(node_modules/.bin/next build)",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" \"https://images.unsplash.com/photo-q6WAZcQk2nk?w=800&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" \"https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80\")",
+      "Bash(curl -s \"https://unsplash.com/photos/a-waiter-presents-a-dish-of-prepared-food-q6WAZcQk2nk\")",
+      "Bash(curl -s \"https://unsplash.com/photos/elegant-restaurant-interior-with-dining-tables-and-people-tkfV4_59gxw\")",
+      "Bash(curl -s \"https://unsplash.com/photos/KDMBSLcDfy8\")",
+      "Bash(curl -s \"https://unsplash.com/photos/james-bond-island-in-phang-nga-thailand-soH32BfLLdg\")",
+      "Bash(git add *)"
     ]
   }
 }

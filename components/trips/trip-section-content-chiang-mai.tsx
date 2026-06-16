@@ -36,7 +36,7 @@ const statItems = [
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (our 5-star Bangkok riverside hotel + Anantara Chiang Mai Resort)',
+  '8 nights at two five-star hotels (Our 5-Star Bangkok riverside hotel + Anantara Chiang Mai Resort)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Domestic flights Bangkok to Chiang Mai and Chiang Mai to Bangkok',
@@ -94,7 +94,7 @@ const days: ItineraryDay[] = [
     day: 1,
     title: 'Arrival Day',
     city: 'Bangkok',
-    hotel: 'our 5-star Bangkok riverside hotel',
+    hotel: 'Our 5-Star Bangkok riverside hotel',
     vibe: 'Land, breathe, bond',
     icon: 'sparkles',
     slots: [
@@ -105,7 +105,7 @@ const days: ItineraryDay[] = [
     day: 2,
     title: 'Pickleball + River Cruise',
     city: 'Bangkok',
-    hotel: 'our 5-star Bangkok riverside hotel',
+    hotel: 'Our 5-Star Bangkok riverside hotel',
     vibe: 'Shake off the rust, then cruise the river',
     icon: 'trophy',
     slots: [
@@ -116,7 +116,7 @@ const days: ItineraryDay[] = [
     day: 3,
     title: 'Temples, Street Food + Pickleball',
     city: 'Bangkok',
-    hotel: 'our 5-star Bangkok riverside hotel',
+    hotel: 'Our 5-Star Bangkok riverside hotel',
     vibe: 'One temple done right, eat everything, then play',
     icon: 'landmark',
     slots: [
@@ -171,7 +171,7 @@ const days: ItineraryDay[] = [
     day: 8,
     title: 'Fly Back to Bangkok + Farewell',
     city: 'Bangkok',
-    hotel: 'our 5-star Bangkok riverside hotel',
+    hotel: 'Our 5-Star Bangkok riverside hotel',
     vibe: 'One last night together',
     icon: 'plane',
     slots: [
@@ -182,7 +182,7 @@ const days: ItineraryDay[] = [
     day: 9,
     title: 'Departure Day',
     city: 'Bangkok',
-    hotel: 'our 5-star Bangkok riverside hotel',
+    hotel: 'Our 5-Star Bangkok riverside hotel',
     vibe: 'Hugs, promises to come back',
     icon: 'plane',
     slots: [
@@ -232,7 +232,7 @@ const pickleballSessions = [
 
 const hotels = [
   {
-    name: 'our 5-star Bangkok riverside hotel',
+    name: 'Our 5-Star Bangkok riverside hotel',
     city: 'Bangkok',
     location: 'Riverside, Charoenkrung Road',
     duration: '3 Nights + 1 Farewell Night',
@@ -309,7 +309,7 @@ function TripDetailsChiangMai() {
       <div className="bg-gradient-to-r from-[#1D2D44] to-[#495F87] rounded-2xl p-6 text-white">
         <h3 className="font-serif text-lg font-bold mb-4">The Bookend Experience</h3>
         <div className="flex items-center gap-3 text-sm flex-wrap">
-          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">our 5-star Bangkok 5-Star Hotel (3 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">Our 5-Star Bangkok 5-Star Hotel (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Anantara Chiang Mai Resort (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>

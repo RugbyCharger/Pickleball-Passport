@@ -193,7 +193,7 @@ export function January14Page() {
       {/* ── Standard Route B Details ── */}
       <TripDetailLayout
         tripName="Bangkok + Chiang Mai (Jan 14–22)"
-        cities="our 5-star Bangkok riverside hotel · Anantara Chiang Mai Resort"
+        cities="Our 5-Star Bangkok riverside hotel · Anantara Chiang Mai Resort"
         dates="Jan 14 – Jan 22, 2027"
         price={4860}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"
