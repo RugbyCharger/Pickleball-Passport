@@ -25,8 +25,8 @@ const routeB = [
 ];
 
 const clinicDates = [
-  { date: 'Fri Jul 17', venue: 'Sterling / Papaya, Bangkok', spots: 12 },
-  { date: 'Sat Jul 18', venue: 'Peninsula Bangkok (Arise)', spots: 12 },
+  { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spots: 12 },
+  { date: 'Sat Jul 18', venue: 'Sterling Sport and Wellness, Bangkok', spots: 12 },
   { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spots: 12 },
   { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spots: 12 },
 ];
@@ -92,7 +92,7 @@ export default function CalendarPage() {
         <div>
           <div className="mb-5">
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route A: Bangkok + Hua Hin</h2>
-            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Peninsula Bangkok + Anantara Hua Hin · $3,888/person</p>
+            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Anantara Hua Hin · $3,888/person</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {routeA.map((row) => <MonthCard key={row.month} {...row} />)}
@@ -103,7 +103,7 @@ export default function CalendarPage() {
         <div>
           <div className="mb-5">
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route B: Bangkok + Chiang Mai</h2>
-            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Peninsula Bangkok + Anantara Chiang Mai · price varies by season</p>
+            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Anantara Chiang Mai · price varies by season</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {routeB.map((row) => <MonthCard key={row.month} {...row} />)}
@@ -120,7 +120,7 @@ export default function CalendarPage() {
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5">
               <p className="font-serif font-bold text-[#1D2D44] text-lg mb-1">Bangkok Weekend</p>
               <p className="text-2xl font-bold text-[#1D2D44] mb-1">$1,488 <span className="text-sm font-normal text-[#1D2D44]/40">/person</span></p>
-              <p className="text-xs text-[#1D2D44]/40 mb-4">3 nights · Peninsula Bangkok · Available July–December</p>
+              <p className="text-xs text-[#1D2D44]/40 mb-4">3 nights · Bangkok riverside hotel · Available July–December</p>
               <Link href="/trips/bangkok-weekend" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors">
                 View details <ArrowRight className="w-3.5 h-3.5" />
               </Link>

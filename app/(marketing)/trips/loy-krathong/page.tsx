@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { CheckCircle, ArrowRight, Calendar, MapPin, Sparkles, Star } from 'lucide-react';
 
 const included = [
-  '8 nights accommodation (Peninsula Bangkok 3+1 nights · Anantara Chiang Mai 4 nights)',
+  '8 nights accommodation (Bangkok riverside hotel 3+1 nights · Anantara Chiang Mai 4 nights)',
   'Daily breakfast',
   '4 pickleball sessions with BK (~8–10 hrs total)',
   'Private van and driver for the full trip',
-  'Welcome dinner at Thiptara',
+  'Welcome dinner at the hotel's riverside restaurant',
   '3–4 curated group dinners',
   'Spa session (60 min)',
   'Sunset long-tail boat cruise on the Chao Phraya',
@@ -46,7 +46,7 @@ export default function LoyKrathongPage() {
             Loy Krathong<br className="hidden sm:block" /> Thailand Camp
           </h1>
           <p className="text-xl text-white/75 mb-2">Bangkok + Chiang Mai · 9 Days / 8 Nights</p>
-          <p className="text-white/50 mb-6">The Peninsula Bangkok · Anantara Chiang Mai Resort</p>
+          <p className="text-white/50 mb-6">our 5-star Bangkok riverside hotel · Anantara Chiang Mai Resort</p>
 
           <p className="text-lg text-white/70 max-w-2xl mb-8 leading-relaxed">
             One night a year, thousands of candlelit lanterns rise over the Mae Ping River in Chiang Mai.

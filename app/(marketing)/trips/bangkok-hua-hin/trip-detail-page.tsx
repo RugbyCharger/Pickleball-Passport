@@ -25,8 +25,8 @@ export function BangkokHuaHinPage() {
       <section className="relative overflow-hidden text-white py-16 sm:py-20">
         {/* Background photo */}
         <Image
-          src="/images/peninsula-pool.jpg"
-          alt="The Peninsula Bangkok pool"
+          src="/images/anantara-hua-hin-aerial.jpg"
+          alt="our 5-star Bangkok riverside hotel pool"
           fill
           className="object-cover object-center"
           priority
@@ -58,7 +58,7 @@ export function BangkokHuaHinPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Anantara Hua Hin Resort &middot; The Peninsula Bangkok
+              our 5-star Bangkok riverside hotel &middot; Anantara Hua Hin Resort &middot; our 5-star Bangkok riverside hotel
             </p>
 
             {/* Trip summary badges */}
@@ -191,7 +191,7 @@ export function BangkokHuaHinPage() {
               <div>
                 <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Bangkok</p>
                 <p className="font-serif font-bold text-[#1D2D44]">Bangkok Weekend  ·  $1,488</p>
-                <p className="text-[#1D2D44]/50 text-xs mt-0.5">3 nights · Peninsula Bangkok · 2 sessions</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">3 nights · Bangkok riverside hotel · 2 sessions</p>
               </div>
               <Link
                 href="/trips/bangkok-weekend"
@@ -220,7 +220,7 @@ export function BangkokHuaHinPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin"
-        cities="The Peninsula Bangkok · Anantara Hua Hin Resort"
+        cities="our 5-star Bangkok riverside hotel · Anantara Hua Hin Resort"
         dates="Multiple 2026 departures"
         price={3888}
         hidePaymentPlan={true}

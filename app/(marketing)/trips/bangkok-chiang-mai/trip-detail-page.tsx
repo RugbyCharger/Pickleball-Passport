@@ -53,7 +53,7 @@ export function BangkokChiangMaiPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              The Peninsula Bangkok &middot; Anantara Chiang Mai Resort &middot; The Peninsula Bangkok
+              our 5-star Bangkok riverside hotel &middot; Anantara Chiang Mai Resort &middot; our 5-star Bangkok riverside hotel
             </p>
 
             {/* Trip summary badges */}
@@ -212,7 +212,7 @@ export function BangkokChiangMaiPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Chiang Mai"
-        cities="The Peninsula Bangkok · Anantara Chiang Mai Resort"
+        cities="our 5-star Bangkok riverside hotel · Anantara Chiang Mai Resort"
         dates="Multiple 2026–27 departures"
         price={3888}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"

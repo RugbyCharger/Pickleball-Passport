@@ -10,8 +10,8 @@ const TOTAL_SPOTS = 12;
 
 const venues = [
   {
-    name: 'The Peninsula Bangkok',
-    subtitle: 'Arise Pickleball',
+    name: 'Arise Pickleball',
+    subtitle: 'Bangkok 5-Star Riverside Hotel',
     courts: '3 courts',
     capacity: '12 spots per session',
     note: 'Small-group coaching at a five-star hotel.',
@@ -38,7 +38,7 @@ const venues = [
 /* ─────────────────────── JULY DATES ─────────────────────── */
 
 const julyDates = [
-  { date: 'Fri Jul 17', venue: 'Peninsula Bangkok (Arise)', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
+  { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
   { date: 'Sat Jul 18', venue: 'Sterling Sport and Wellness, Bangkok', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
   { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
   { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
@@ -360,7 +360,7 @@ export default function ClinicsPage() {
             >
               <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-1">3 Nights</p>
               <p className="font-serif font-bold text-[#1D2D44] text-lg mb-1">Bangkok Weekend</p>
-              <p className="text-[#1D2D44]/50 text-sm mb-3">Peninsula Bangkok · 2 sessions with BK</p>
+              <p className="text-[#1D2D44]/50 text-sm mb-3">Bangkok riverside hotel · 2 sessions with BK</p>
               <p className="font-bold text-[#1D2D44]">$1,488 <span className="text-sm font-normal text-[#1D2D44]/40">/person</span></p>
               <div className="flex items-center gap-1 mt-3 text-[#B08D55] text-sm font-semibold group-hover:gap-2 transition-all">
                 View details <ArrowRight className="w-4 h-4" />

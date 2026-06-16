@@ -280,7 +280,7 @@ export default function HuaHinEscapePage() {
           <div>
             <p className="text-white/50 text-sm mb-1">Haven't booked Bangkok yet?</p>
             <p className="text-white font-serif font-bold text-xl">Add the Bangkok Weekend  ·  $1,488</p>
-            <p className="text-white/40 text-sm">3 nights at The Peninsula · 2 more sessions with BK</p>
+            <p className="text-white/40 text-sm">3 nights at the hotel · 2 more sessions with BK</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <Link

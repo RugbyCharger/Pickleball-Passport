@@ -36,7 +36,7 @@ const statItems = [
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (The Peninsula Bangkok + Anantara Chiang Mai Resort)',
+  '8 nights at two five-star hotels (our 5-star Bangkok riverside hotel + Anantara Chiang Mai Resort)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Domestic flights Bangkok to Chiang Mai and Chiang Mai to Bangkok',
@@ -94,33 +94,33 @@ const days: ItineraryDay[] = [
     day: 1,
     title: 'Arrival Day',
     city: 'Bangkok',
-    hotel: 'The Peninsula Bangkok',
+    hotel: 'our 5-star Bangkok riverside hotel',
     vibe: 'Land, breathe, bond',
     icon: 'sparkles',
     slots: [
-      { label: 'Highlights', description: 'Land in Bangkok, settle into The Peninsula, wellness session, welcome dinner on the river.' },
+      { label: 'Highlights', description: 'Land in Bangkok, settle into our hotel, wellness session, welcome dinner on the river.' },
     ],
   },
   {
     day: 2,
     title: 'Pickleball + River Cruise',
     city: 'Bangkok',
-    hotel: 'The Peninsula Bangkok',
+    hotel: 'our 5-star Bangkok riverside hotel',
     vibe: 'Shake off the rust, then cruise the river',
     icon: 'trophy',
     slots: [
-      { label: 'Highlights', description: 'Morning session on court at Peninsula Bangkok. Afternoon long-tail boat cruise through Bangkok\u2019s canals past the Grand Palace and Wat Arun at sunset. Group dinner on the river.' },
+      { label: 'Highlights', description: 'Morning session on court at Bangkok riverside hotel. Afternoon long-tail boat cruise through Bangkok\u2019s canals past the Grand Palace and Wat Arun at sunset. Group dinner on the river.' },
     ],
   },
   {
     day: 3,
     title: 'Temples, Street Food + Pickleball',
     city: 'Bangkok',
-    hotel: 'The Peninsula Bangkok',
+    hotel: 'our 5-star Bangkok riverside hotel',
     vibe: 'One temple done right, eat everything, then play',
     icon: 'landmark',
     slots: [
-      { label: 'Highlights', description: 'Guided tour of Wat Pho (Reclining Buddha), street food walk through Chinatown, afternoon pickleball session at Peninsula Bangkok. Free evening to explore.' },
+      { label: 'Highlights', description: 'Guided tour of Wat Pho (Reclining Buddha), street food walk through Chinatown, afternoon pickleball session at Bangkok riverside hotel. Free evening to explore.' },
     ],
   },
   {
@@ -171,22 +171,22 @@ const days: ItineraryDay[] = [
     day: 8,
     title: 'Fly Back to Bangkok + Farewell',
     city: 'Bangkok',
-    hotel: 'The Peninsula Bangkok',
+    hotel: 'our 5-star Bangkok riverside hotel',
     vibe: 'One last night together',
     icon: 'plane',
     slots: [
-      { label: 'Highlights', description: 'Flight back to Bangkok, check into The Peninsula for one last night. Free afternoon to explore. Bangkok farewell dinner. Trip recap and toasts.' },
+      { label: 'Highlights', description: 'Flight back to Bangkok, check into our hotel for one last night. Free afternoon to explore. Bangkok farewell dinner. Trip recap and toasts.' },
     ],
   },
   {
     day: 9,
     title: 'Departure Day',
     city: 'Bangkok',
-    hotel: 'The Peninsula Bangkok',
+    hotel: 'our 5-star Bangkok riverside hotel',
     vibe: 'Hugs, promises to come back',
     icon: 'plane',
     slots: [
-      { label: 'Highlights', description: 'Final breakfast at The Peninsula. Private transfer to the airport. Head home with new friends and plans to come back.' },
+      { label: 'Highlights', description: 'Final breakfast at the hotel. Private transfer to the airport. Head home with new friends and plans to come back.' },
     ],
   },
 ];
@@ -197,7 +197,7 @@ const pickleballSessions = [
   {
     number: 1,
     city: 'Bangkok',
-    venue: 'Peninsula Bangkok',
+    venue: 'Bangkok riverside hotel',
     day: 'Day 2',
     time: 'Morning',
     focus: 'Assessment, warm-up, coaching + round-robin',
@@ -205,7 +205,7 @@ const pickleballSessions = [
   {
     number: 2,
     city: 'Bangkok',
-    venue: 'Peninsula Bangkok',
+    venue: 'Bangkok riverside hotel',
     day: 'Day 3',
     time: 'Afternoon',
     focus: 'Coaching clinic + doubles play',
@@ -232,7 +232,7 @@ const pickleballSessions = [
 
 const hotels = [
   {
-    name: 'The Peninsula Bangkok',
+    name: 'our 5-star Bangkok riverside hotel',
     city: 'Bangkok',
     location: 'Riverside, Charoenkrung Road',
     duration: '3 Nights + 1 Farewell Night',
@@ -262,7 +262,7 @@ const groupDinners = [
     city: 'Bangkok',
     label: 'Welcome Dinner',
     restaurant: 'Riverside dining',
-    description: 'Welcome dinner on the river at The Peninsula',
+    description: 'Welcome dinner on the river at the hotel',
   },
   {
     city: 'Bangkok',
@@ -309,11 +309,11 @@ function TripDetailsChiangMai() {
       <div className="bg-gradient-to-r from-[#1D2D44] to-[#495F87] rounded-2xl p-6 text-white">
         <h3 className="font-serif text-lg font-bold mb-4">The Bookend Experience</h3>
         <div className="flex items-center gap-3 text-sm flex-wrap">
-          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (3 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">our 5-star Bangkok 5-Star Hotel (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Anantara Chiang Mai Resort (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
-          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">The Peninsula Bangkok (1 farewell night)</span>
+          <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">Bangkok 5-Star Hotel (1 farewell night)</span>
         </div>
       </div>
 
@@ -358,7 +358,7 @@ function ItineraryAccordion() {
           Day-by-Day Itinerary
         </h2>
         <p className="text-[#1D2D44]/60 text-sm">
-          9 days across Bangkok and Chiang Mai, with a farewell night back at The Peninsula. Click any day to see the highlights.
+          9 days across Bangkok and Chiang Mai, with a farewell night back at our Bangkok hotel. Click any day to see the highlights.
         </p>
       </div>
 
@@ -449,7 +449,7 @@ function AccommodationsChiangMai() {
     <div className="space-y-8">
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         Two five-star properties selected for their location, wellness amenities, and proximity
-        to our pickleball venues. You start and finish at The Peninsula Bangkok, with
+        to our pickleball venues. You start and finish at our Bangkok 5-star hotel, with
         Anantara Chiang Mai Resort as your Chiang Mai destination in between.
       </p>
 
