@@ -165,7 +165,7 @@ export function July16Page() {
               </div>
               <p className="font-serif font-bold text-white text-xl mb-1">Full 9-Day Trip</p>
               <p className="text-white/50 text-sm mb-1">Jul 16–24 · Both cities · 4 sessions with BK</p>
-              <p className="text-white/40 text-xs mb-4">Bangkok riverside hotel · Anantara Hua Hin</p>
+              <p className="text-white/40 text-xs mb-4">Bangkok riverside hotel · Our 5-Star Hua Hin Resort</p>
               <p className="font-bold text-white text-2xl mb-5">$3,888 <span className="text-base font-normal text-white/40">/person</span></p>
               <div className="mt-auto">
                 <a
@@ -203,7 +203,7 @@ export function July16Page() {
               <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-2">4 Nights</p>
               <p className="font-serif font-bold text-[#1D2D44] text-xl mb-1">Hua Hin Escape</p>
               <p className="text-[#1D2D44]/50 text-sm mb-1">Jul 19–23 · 2 sessions with BK</p>
-              <p className="text-[#1D2D44]/30 text-xs mb-4">Anantara Hua Hin Resort</p>
+              <p className="text-[#1D2D44]/30 text-xs mb-4">Our 5-Star Hua Hin Beachfront Resort</p>
               <p className="font-bold text-[#1D2D44] text-2xl mb-5">$2,488 <span className="text-base font-normal text-[#1D2D44]/40">/person</span></p>
               <div className="mt-auto">
                 <a
@@ -275,7 +275,7 @@ export function July16Page() {
       {/* ── Standard Route A Trip Details ── */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin (Jul 16–24)"
-        cities="Our 5-Star Bangkok riverside hotel · Anantara Hua Hin Resort"
+        cities="Our 5-Star Bangkok riverside hotel · Our 5-Star Hua Hin Beachfront Resort"
         dates="Jul 16–24, 2026"
         price={3888}
         fullLink="https://thepickleballpassport.net/main-checkout/trip071626-160081"

@@ -11,7 +11,7 @@ const itinerary = [
     day: 'Day 1',
     label: 'Sunday',
     title: 'Bangkok → Hua Hin',
-    details: 'Private van transfer from Bangkok (~3 hours). Check in to Anantara Hua Hin Resort. Afternoon at the beach.',
+    details: 'Private van transfer from Bangkok (~3 hours). Check in to Our 5-Star Hua Hin Beachfront Resort. Afternoon at the beach.',
   },
   {
     day: 'Day 2',
@@ -42,7 +42,7 @@ const itinerary = [
 /* ─────────────────────── INCLUDED ─────────────────────── */
 
 const included = [
-  '4 nights at Anantara Hua Hin Resort (Garden View Room, daily breakfast)',
+  '4 nights at Our 5-Star Hua Hin Beachfront Resort (Garden View Room, daily breakfast)',
   '2 pickleball sessions with BK at Sports Life Hua Hin',
   'Private van transfer Bangkok → Hua Hin and return',
   'Cultural program',
@@ -80,7 +80,7 @@ export default function HuaHinEscapePage() {
       <section className="relative overflow-hidden text-white">
         <Image
           src="/images/anantara-hua-hin.jpg"
-          alt="Anantara Hua Hin Resort"
+          alt="Our 5-Star Hua Hin Beachfront Resort"
           fill
           className="object-cover object-center"
           priority
@@ -95,7 +95,7 @@ export default function HuaHinEscapePage() {
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
             Hua Hin Pickleball<br className="hidden sm:block" /> Escape
           </h1>
-          <p className="text-xl text-white/75 mb-2">Anantara Hua Hin Resort · 2 Sessions with BK</p>
+          <p className="text-xl text-white/75 mb-2">Our 5-Star Hua Hin Beachfront Resort · 2 Sessions with BK</p>
           <p className="text-3xl font-bold text-white mb-8">
             $2,488 <span className="text-lg font-normal text-white/50">/person</span>
           </p>
@@ -107,7 +107,7 @@ export default function HuaHinEscapePage() {
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
               <MapPin className="h-4 w-4 text-[#B08D55]" />
-              Anantara Hua Hin Resort
+              Our 5-Star Hua Hin Beachfront Resort
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
               <Users className="h-4 w-4 text-[#B08D55]" />

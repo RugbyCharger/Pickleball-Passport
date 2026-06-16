@@ -92,7 +92,7 @@ export default function CalendarPage() {
         <div>
           <div className="mb-5">
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route A: Bangkok + Hua Hin</h2>
-            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Anantara Hua Hin · $3,888/person</p>
+            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Our 5-Star Hua Hin Resort · $3,888/person</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {routeA.map((row) => <MonthCard key={row.month} {...row} />)}
@@ -103,7 +103,7 @@ export default function CalendarPage() {
         <div>
           <div className="mb-5">
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Route B: Bangkok + Chiang Mai</h2>
-            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Anantara Chiang Mai · price varies by season</p>
+            <p className="text-[#1D2D44]/50 text-sm mt-0.5">9 days / 8 nights · Bangkok riverside hotel + Our 5-Star Chiang Mai Resort · price varies by season</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {routeB.map((row) => <MonthCard key={row.month} {...row} />)}
@@ -128,7 +128,7 @@ export default function CalendarPage() {
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-5">
               <p className="font-serif font-bold text-[#1D2D44] text-lg mb-1">Hua Hin Escape</p>
               <p className="text-2xl font-bold text-[#1D2D44] mb-1">$2,488 <span className="text-sm font-normal text-[#1D2D44]/40">/person</span></p>
-              <p className="text-xs text-[#1D2D44]/40 mb-4">4 nights · Anantara Hua Hin · Available July–December</p>
+              <p className="text-xs text-[#1D2D44]/40 mb-4">4 nights · Our 5-Star Hua Hin Resort · Available July–December</p>
               <Link href="/trips/hua-hin-escape" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors">
                 View details <ArrowRight className="w-3.5 h-3.5" />
               </Link>

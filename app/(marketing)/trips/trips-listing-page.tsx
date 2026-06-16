@@ -31,7 +31,7 @@ const products = [
     label: 'Hua Hin Escape',
     price: '$2,488',
     duration: '4 nights / 5 days',
-    description: 'Anantara Hua Hin. 2 sessions with BK. Beach, culture, ProAM tournament.',
+    description: 'Our 5-Star Hua Hin Resort. 2 sessions with BK. Beach, culture, ProAM tournament.',
     badge: null,
     href: '/trips/hua-hin-escape',
     dark: false,
@@ -40,7 +40,7 @@ const products = [
     label: 'Full 9-Day Trip',
     price: '$3,888',
     duration: '9 days / 8 nights',
-    description: 'Both cities. 4 sessions with BK. Bangkok riverside hotel + Anantara Hua Hin.',
+    description: 'Both cities. 4 sessions with BK. Bangkok riverside hotel + Our 5-Star Hua Hin Resort.',
     badge: 'BEST VALUE',
     href: '/trips/bangkok-hua-hin',
     dark: true,
@@ -213,7 +213,7 @@ export function TripsListingPage() {
 
             <p className="text-xl sm:text-2xl text-white/75 mb-1">9 Days / 8 Nights</p>
             <p className="text-base text-white/50 mb-8">
-              Our 5-Star Bangkok riverside hotel · Anantara Hua Hin Resort
+              Our 5-Star Bangkok riverside hotel · Our 5-Star Hua Hin Beachfront Resort
             </p>
 
             {/* Stat pills */}

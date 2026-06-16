@@ -53,7 +53,7 @@ export function BangkokChiangMaiPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              Our 5-Star Bangkok riverside hotel &middot; Anantara Chiang Mai Resort &middot; Our 5-Star Bangkok riverside hotel
+              Our 5-Star Bangkok riverside hotel &middot; Our 5-Star Chiang Mai Riverside Resort &middot; Our 5-Star Bangkok riverside hotel
             </p>
 
             {/* Trip summary badges */}
@@ -212,7 +212,7 @@ export function BangkokChiangMaiPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Chiang Mai"
-        cities="Our 5-Star Bangkok riverside hotel · Anantara Chiang Mai Resort"
+        cities="Our 5-Star Bangkok riverside hotel · Our 5-Star Chiang Mai Riverside Resort"
         dates="Multiple 2026–27 departures"
         price={3888}
         depositLink="https://buy.stripe.com/eVqbJ12O7fQPh0N1ZX2cg06"

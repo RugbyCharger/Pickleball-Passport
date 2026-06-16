@@ -284,7 +284,7 @@ export default function BangkokWeekendPage() {
           <div>
             <p className="text-white/50 text-sm mb-1">Going further?</p>
             <p className="text-white font-serif font-bold text-xl">Add the Hua Hin Escape  ·  $2,488</p>
-            <p className="text-white/40 text-sm">4 nights at Anantara Hua Hin · 2 more sessions with BK</p>
+            <p className="text-white/40 text-sm">4 nights at Our 5-Star Hua Hin Resort · 2 more sessions with BK</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <Link

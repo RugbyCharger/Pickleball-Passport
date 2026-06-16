@@ -36,7 +36,7 @@ const statItems = [
 ];
 
 const includedItems = [
-  '8 nights at two five-star hotels (Our 5-Star Bangkok riverside hotel + Anantara Hua Hin Resort)',
+  '8 nights at two five-star hotels (Our 5-Star Bangkok riverside hotel + Our 5-Star Hua Hin Beachfront Resort)',
   'Daily breakfast at both properties (8 breakfasts)',
   '4-5 group dinners: welcome, farewell, and 2-3 curated group dinners',
   'Private ground transfer Bangkok to Hua Hin (3-hr scenic drive)',
@@ -127,18 +127,18 @@ const days: ItineraryDay[] = [
     day: 4,
     title: 'Scenic Drive to Hua Hin',
     city: 'Hua Hin',
-    hotel: 'Anantara Hua Hin Resort',
+    hotel: 'Our 5-Star Hua Hin Beachfront Resort',
     vibe: 'Road trip, beach, settle in',
     icon: 'ship',
     slots: [
-      { label: 'Highlights', description: 'Scenic drive to Hua Hin. Check into Anantara, explore the beachfront resort. Welcome dinner with fresh seafood by the ocean.' },
+      { label: 'Highlights', description: 'Scenic drive to Hua Hin. Check into our beachfront resort, explore the beachfront resort. Welcome dinner with fresh seafood by the ocean.' },
     ],
   },
   {
     day: 5,
     title: 'Pickleball + Night Market',
     city: 'Hua Hin',
-    hotel: 'Anantara Hua Hin Resort',
+    hotel: 'Our 5-Star Hua Hin Beachfront Resort',
     vibe: 'Play hard, explore harder',
     icon: 'trophy',
     slots: [
@@ -149,7 +149,7 @@ const days: ItineraryDay[] = [
     day: 6,
     title: 'National Park + Final Pickleball',
     city: 'Hua Hin',
-    hotel: 'Anantara Hua Hin Resort',
+    hotel: 'Our 5-Star Hua Hin Beachfront Resort',
     vibe: 'Explore nature, then compete',
     icon: 'landmark',
     slots: [
@@ -160,7 +160,7 @@ const days: ItineraryDay[] = [
     day: 7,
     title: 'Free Day',
     city: 'Hua Hin',
-    hotel: 'Anantara Hua Hin Resort',
+    hotel: 'Our 5-Star Hua Hin Beachfront Resort',
     vibe: 'Choose your own adventure',
     icon: 'sparkles',
     slots: [
@@ -243,7 +243,7 @@ const hotels = [
     ],
   },
   {
-    name: 'Anantara Hua Hin Resort',
+    name: 'Our 5-Star Hua Hin Beachfront Resort',
     city: 'Hua Hin',
     location: 'Beachfront, Hua Hin',
     duration: '4 Nights',
@@ -311,7 +311,7 @@ function TripDetailsEssential() {
         <div className="flex items-center gap-3 text-sm flex-wrap">
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">Our 5-Star Bangkok 5-Star Hotel (3 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
-          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Anantara Hua Hin Resort (4 nights)</span>
+          <span className="px-3 py-1.5 rounded-full bg-[#B08D55]/30 font-medium">Our 5-Star Hua Hin Beachfront Resort (4 nights)</span>
           <span className="text-[#B08D55]">&rarr;</span>
           <span className="px-3 py-1.5 rounded-full bg-white/20 font-medium">Bangkok 5-Star Hotel (1 farewell night)</span>
         </div>
@@ -450,7 +450,7 @@ function AccommodationsEssential() {
       <p className="text-[#1D2D44]/70 text-base leading-relaxed max-w-3xl">
         Two five-star properties selected for their location, wellness amenities, and proximity
         to our pickleball venues. You start and finish at our Bangkok 5-star hotel, with
-        Anantara Hua Hin Resort as your beachfront destination in between.
+        our 5-Star Hua Hin beachfront resort as your destination in between.
       </p>
 
       <div className="space-y-6">

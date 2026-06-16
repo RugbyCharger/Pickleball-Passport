@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CheckCircle, ArrowRight, Calendar, MapPin, Sparkles, Star } from 'lucide-react';
 
 const included = [
-  '8 nights accommodation (Bangkok riverside hotel 3+1 nights · Anantara Chiang Mai 4 nights)',
+  '8 nights accommodation (Bangkok riverside hotel 3+1 nights · Our 5-Star Chiang Mai Resort 4 nights)',
   'Daily breakfast',
   '4 pickleball sessions with BK (~8–10 hrs total)',
   'Private van and driver for the full trip',
@@ -46,7 +46,7 @@ export default function LoyKrathongPage() {
             Loy Krathong<br className="hidden sm:block" /> Thailand Camp
           </h1>
           <p className="text-xl text-white/75 mb-2">Bangkok + Chiang Mai · 9 Days / 8 Nights</p>
-          <p className="text-white/50 mb-6">Our 5-Star Bangkok riverside hotel · Anantara Chiang Mai Resort</p>
+          <p className="text-white/50 mb-6">Our 5-Star Bangkok riverside hotel · Our 5-Star Chiang Mai Riverside Resort</p>
 
           <p className="text-lg text-white/70 max-w-2xl mb-8 leading-relaxed">
             One night a year, thousands of candlelit lanterns rise over the Mae Ping River in Chiang Mai.
@@ -120,7 +120,7 @@ export default function LoyKrathongPage() {
               </div>
               <h3 className="font-serif font-bold text-[#1D2D44] mb-2">The Location</h3>
               <p className="text-[#1D2D44]/60 text-sm leading-relaxed">
-                You'll be staying at Anantara Chiang Mai Resort on the Mae Ping River, the same river the lanterns float down. Front-row seat without planning anything yourself.
+                You'll be staying at our 5-Star Chiang Mai riverside resort on the Mae Ping River, the same river the lanterns float down. Front-row seat without planning anything yourself.
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-[#B08D55]/10 p-6">

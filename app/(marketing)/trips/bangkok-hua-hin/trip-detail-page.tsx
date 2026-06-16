@@ -58,7 +58,7 @@ export function BangkokHuaHinPage() {
               9 Days / 8 Nights
             </p>
             <p className="text-lg text-white/60 mb-6">
-              Our 5-Star Bangkok riverside hotel &middot; Anantara Hua Hin Resort &middot; Our 5-Star Bangkok riverside hotel
+              Our 5-Star Bangkok riverside hotel &middot; Our 5-Star Hua Hin Beachfront Resort &middot; Our 5-Star Bangkok riverside hotel
             </p>
 
             {/* Trip summary badges */}
@@ -204,7 +204,7 @@ export function BangkokHuaHinPage() {
               <div>
                 <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-0.5">Just Hua Hin</p>
                 <p className="font-serif font-bold text-[#1D2D44]">Hua Hin Escape  ·  $2,488</p>
-                <p className="text-[#1D2D44]/50 text-xs mt-0.5">4 nights · Anantara Hua Hin · 2 sessions + ProAM</p>
+                <p className="text-[#1D2D44]/50 text-xs mt-0.5">4 nights · Our 5-Star Hua Hin Resort · 2 sessions + ProAM</p>
               </div>
               <Link
                 href="/trips/hua-hin-escape"
@@ -220,7 +220,7 @@ export function BangkokHuaHinPage() {
       {/* Main content with sidebar navigation */}
       <TripDetailLayout
         tripName="Bangkok + Hua Hin"
-        cities="Our 5-Star Bangkok riverside hotel · Anantara Hua Hin Resort"
+        cities="Our 5-Star Bangkok riverside hotel · Our 5-Star Hua Hin Beachfront Resort"
         dates="Multiple 2026 departures"
         price={3888}
         hidePaymentPlan={true}
