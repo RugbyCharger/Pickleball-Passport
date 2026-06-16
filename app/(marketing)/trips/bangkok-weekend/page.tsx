@@ -11,7 +11,7 @@ const itinerary = [
     day: 'Day 1',
     label: 'Thursday',
     title: 'Arrive Bangkok',
-    details: 'Check in to our 5-star Bangkok riverside hotel. Welcome dinner at the hotel's riverside restaurant, the hotel\'s riverside Thai restaurant.',
+    details: 'Check in to our 5-star Bangkok riverside hotel. Welcome dinner at the riverside restaurant.',
   },
   {
     day: 'Day 2',

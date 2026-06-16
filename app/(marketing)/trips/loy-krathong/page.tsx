@@ -9,7 +9,7 @@ const included = [
   'Daily breakfast',
   '4 pickleball sessions with BK (~8–10 hrs total)',
   'Private van and driver for the full trip',
-  'Welcome dinner at the hotel's riverside restaurant',
+  'Welcome dinner at the riverside restaurant',
   '3–4 curated group dinners',
   'Spa session (60 min)',
   'Sunset long-tail boat cruise on the Chao Phraya',
