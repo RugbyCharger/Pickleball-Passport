@@ -3,7 +3,6 @@ import { BrandPillars } from '@/components/marketing/brand-pillars';
 import { FeaturedDeparture } from '@/components/marketing/featured-departure';
 import { WhyThailand } from '@/components/marketing/why-thailand';
 import { SafetySection } from '@/components/marketing/safety-section';
-import { HealthWellnessSection } from '@/components/marketing/health-wellness-section';
 import { ConciergeSection } from '@/components/marketing/concierge-section';
 import type { Metadata } from 'next';
 
@@ -63,7 +62,6 @@ export default function Home() {
       <FeaturedDeparture />
       <WhyThailand />
       <SafetySection />
-      <HealthWellnessSection />
       <ConciergeSection />
     </>
   );
