@@ -17,13 +17,13 @@ const reasons = [
     icon: Sun,
     title: 'A genuine racket sport culture',
     description:
-      "Thailand takes racket sports seriously — badminton, tennis, padel, and now pickleball. The courts are built for it. The coaches understand the game. You'll end up playing alongside Thais who can beat you, which is exactly the kind of match you came here for.",
+      "Thailand takes racket sports seriously: badminton, tennis, padel, and now pickleball. The courts are built for it. The coaches understand the game. You'll end up playing alongside Thais who can beat you, which is exactly the kind of match you came here for.",
   },
   {
     icon: Utensils,
     title: 'The food alone is worth it',
     description:
-      "Fresh, flavorful, and everywhere. Eating well on this trip is not an afterthought — it's part of the experience.",
+      "Fresh, flavorful, and everywhere. Eating well on this trip is not an afterthought. It's part of the experience.",
   },
   {
     icon: ShieldCheck,

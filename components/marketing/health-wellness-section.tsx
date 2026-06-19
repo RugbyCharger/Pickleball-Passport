@@ -5,7 +5,7 @@ const dimensions = [
     icon: Activity,
     title: 'Physical',
     description:
-      'Movement, recovery, and play schedules designed around how your body actually feels — not a one-size-fits-all plan.',
+      'Movement, recovery, and play schedules designed around how your body actually feels, not a one-size-fits-all plan.',
   },
   {
     icon: Apple,
@@ -38,7 +38,7 @@ export function HealthWellnessSection() {
               A real wellness program. Not a gimmick.
             </h2>
             <p className="text-lg text-[#1D2D44]/70 max-w-2xl mx-auto">
-              Our certified health coach runs a structured program across four dimensions — starting with a welcome wellness session on arrival, followed by evening workshops throughout the trip.
+              Our certified health coach runs a structured program across four dimensions, starting with a welcome wellness session on arrival, followed by evening workshops throughout the trip.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">

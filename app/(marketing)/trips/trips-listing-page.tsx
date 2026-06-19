@@ -23,9 +23,9 @@ const products = [
     price: '$1,488',
     duration: '3 nights / 4 days',
     description: 'Our 5-Star Bangkok riverside hotel. 2 sessions with BK. Boat cruise. Temples. Street food.',
-    badge: null,
+    badge: 'START HERE',
     href: '/trips/bangkok-weekend',
-    dark: false,
+    dark: true,
   },
   {
     label: 'Hua Hin Escape',
@@ -43,7 +43,7 @@ const products = [
     description: 'Both cities. 4 sessions with BK. Bangkok riverside hotel + Our 5-Star Hua Hin Resort.',
     badge: 'BEST VALUE',
     href: '/trips/bangkok-hua-hin',
-    dark: true,
+    dark: false,
   },
 ];
 
@@ -204,57 +204,57 @@ export function TripsListingPage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#B08D55] text-white text-xs font-semibold mb-5">
               <Sparkles className="w-3.5 h-3.5" />
-              FEATURED DEPARTURE · JULY 16 – 24, 2026
+              START HERE · BANGKOK WEEKEND
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-white mb-3 leading-tight">
-              Bangkok + Hua Hin
+              Bangkok Weekend
             </h1>
 
-            <p className="text-xl sm:text-2xl text-white/75 mb-1">9 Days / 8 Nights</p>
+            <p className="text-xl sm:text-2xl text-white/75 mb-1">3 Nights / 4 Days</p>
             <p className="text-base text-white/50 mb-8">
-              Our 5-Star Bangkok riverside hotel · Our 5-Star Hua Hin Beachfront Resort
+              Our 5-Star Bangkok Riverside Hotel
             </p>
 
             {/* Stat pills */}
             <div className="flex flex-wrap gap-3 mb-10">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-white">
                 <Calendar className="h-4 w-4 text-[#B08D55]" />
-                Jul 16 – Jul 24, 2026
+                3 Nights · 4 Days
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-white">
                 <MapPin className="h-4 w-4 text-[#B08D55]" />
-                2 Cities · 2 Five-Star Hotels
+                Bangkok · 5-Star Riverside Hotel
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-white">
                 <Users className="h-4 w-4 text-[#B08D55]" />
-                14 of 16 Spots Available
+                2 Sessions with BK
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-white">
                 <Clock className="h-4 w-4 text-[#B08D55]" />
-                Daily Pickleball
+                Boat Cruise + Street Food
               </div>
             </div>
 
             {/* Price + CTAs */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
               <div className="text-white">
-                <span className="text-4xl font-bold">$3,888</span>
+                <span className="text-4xl font-bold">$1,488</span>
                 <span className="text-white/60 text-lg ml-1">/person</span>
               </div>
               <div className="flex gap-3">
                 <Link
-                  href={reserveHref}
+                  href="/trips/bangkok-weekend"
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
                 >
-                  Talk to our team
+                  View Bangkok Weekend
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/trips/bangkok-hua-hin/july-16-2026"
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border-2 border-white/30 text-white font-bold text-sm backdrop-blur-sm hover:border-white/60 hover:bg-white/10 transition-all"
                 >
-                  View trip details
+                  See July 16 departure
                 </Link>
               </div>
             </div>

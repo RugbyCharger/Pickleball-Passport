@@ -34,7 +34,7 @@ export function ConciergeSection() {
           {/* Real story */}
           <div className="bg-[#F5E6D3] rounded-2xl p-7 border border-[#B08D55]/20 mb-14">
             <p className="text-[#1D2D44] text-base leading-relaxed">
-              One Bangkok trip, half the group's partners didn't play. Their wives were on court for three hours. We had Chinatown organized for the morning — river boat to get there, tuk-tuk back, cold beer at a spot that's been there for decades. They didn't want to come back for lunch.
+              One Bangkok trip, half the group's partners didn't play. Their wives were on court for three hours. We had Chinatown organized for the morning: river boat to get there, tuk-tuk back, cold beer at a spot that's been there for decades. They didn't want to come back for lunch.
             </p>
             <p className="text-[#B08D55] text-sm font-medium mt-4">
               That's the job: not just the players, everyone.
@@ -72,7 +72,7 @@ export function ConciergeSection() {
 
           <div className="bg-[#F5E6D3] rounded-2xl p-8 text-center border border-[#B08D55]/20">
             <p className="text-[#1D2D44] text-lg leading-relaxed max-w-2xl mx-auto font-medium">
-              "Compare it to the cost of planning this yourself — the bad courts, the wasted days, the what-ifs. This is your money and your time, handled."
+              "Compare it to the cost of planning this yourself: the bad courts, the wasted days, the what-ifs. This is your money and your time, handled."
             </p>
           </div>
         </div>

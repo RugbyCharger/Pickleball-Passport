@@ -30,7 +30,7 @@ export function HeroSection() {
 
           {/* Main Headline */}
           <h1 className="text-4xl font-serif font-bold tracking-tight sm:text-5xl md:text-6xl text-white leading-tight">
-            You're not 30 anymore —{' '}
+            You're not 30 anymore,{' '}
             <span className="text-[#CFB78D]">but your game doesn't have to suffer for it.</span>
           </h1>
 

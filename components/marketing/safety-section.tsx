@@ -39,7 +39,7 @@ export function SafetySection() {
           {/* Real story */}
           <div className="bg-white/5 rounded-2xl p-7 border border-[#CFB78D]/20 mb-10">
             <p className="text-white/90 text-base leading-relaxed">
-              It rained on day two of our last Bangkok trip. The outdoor courts flooded before the morning session. We'd already moved the group to Sterling — five-star indoor courts, fully air-conditioned — before anyone had finished their coffee. Nobody waited in the rain. Nobody missed a session.
+              It rained on day two of our last Bangkok trip. The outdoor courts flooded before the morning session. We'd already moved the group to Sterling, five-star indoor courts, fully air-conditioned, before anyone had finished their coffee. Nobody waited in the rain. Nobody missed a session.
             </p>
             <p className="text-[#B08D55] text-sm font-medium mt-4">
               That's what a backup plan looks like when it's real.
