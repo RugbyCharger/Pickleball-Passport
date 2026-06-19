@@ -61,14 +61,16 @@ export default function ClinicsPage() {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden text-white py-16 sm:py-20">
-        <Image
-          src="/images/phuket-sunset.jpg"
-          alt="Phuket sunset"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/phuket-sunset.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        >
+          <source src="/tpp-aerial-0467.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-black/35" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
