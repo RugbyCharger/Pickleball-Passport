@@ -72,6 +72,14 @@ export default function ClinicsPage() {
           <source src="/tpp-aerial-0467.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-black/35" />
+        <a
+          href="https://www.instagram.com/micahphotography1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-4 right-4 z-10 text-white/40 hover:text-white/70 transition-colors text-xs tracking-wide"
+        >
+          Aerial footage: @micahphotography1
+        </a>
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 

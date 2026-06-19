@@ -199,6 +199,14 @@ export function TripsListingPage() {
         </video>
         {/* Overlay gradient  ·  dark at bottom for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+        <a
+          href="https://www.instagram.com/micahphotography1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-4 right-4 z-10 text-white/40 hover:text-white/70 transition-colors text-xs tracking-wide"
+        >
+          Aerial footage: @micahphotography1
+        </a>
 
         {/* Content */}
         <div className="relative z-10 w-full pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8">
