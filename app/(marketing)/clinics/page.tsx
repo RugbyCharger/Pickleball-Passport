@@ -373,7 +373,7 @@ export default function ClinicsPage() {
             >
               <p className="text-xs font-bold tracking-widest uppercase text-[#B08D55] mb-1">4 Nights</p>
               <p className="font-serif font-bold text-[#1D2D44] text-lg mb-1">Hua Hin Escape</p>
-              <p className="text-[#1D2D44]/50 text-sm mb-3">Anantara Hua Hin · 2 sessions with BK</p>
+              <p className="text-[#1D2D44]/50 text-sm mb-3">Our 5-Star Hua Hin Resort · 2 sessions with BK</p>
               <p className="font-bold text-[#1D2D44]">$2,488 <span className="text-sm font-normal text-[#1D2D44]/40">/person</span></p>
               <div className="flex items-center gap-1 mt-3 text-[#B08D55] text-sm font-semibold group-hover:gap-2 transition-all">
                 View details <ArrowRight className="w-4 h-4" />

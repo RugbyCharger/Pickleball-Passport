@@ -1,14 +1,29 @@
 import { HeroSection } from '@/components/marketing/hero-section';
+import { BrandPillars } from '@/components/marketing/brand-pillars';
 import { FeaturedDeparture } from '@/components/marketing/featured-departure';
+import { WhyThailand } from '@/components/marketing/why-thailand';
+import { SafetySection } from '@/components/marketing/safety-section';
+import { HealthWellnessSection } from '@/components/marketing/health-wellness-section';
+import { ConciergeSection } from '@/components/marketing/concierge-section';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Premier Pickleball Travel Experiences | The Pickleball Passport',
-  description: 'Elite pickleball travel experiences in Thailand. Boutique hotels, outstanding courts, cultural immersion, and unforgettable destinations. Launching May 2026.',
-  keywords: ['pickleball', 'pickleball travel', 'Thailand', 'pickleball retreat', 'pickleball vacation', 'boutique hotels', 'cultural immersion'],
+  title: 'Your Personal Pickleball Concierge in Thailand | The Pickleball Passport',
+  description:
+    'We vet every court, handle every detail, and make sure you show up, play safe, and actually enjoy it. Pickleball travel to Thailand from $1,488.',
+  keywords: [
+    'pickleball',
+    'pickleball travel',
+    'Thailand',
+    'pickleball retreat',
+    'pickleball vacation',
+    'pickleball concierge',
+    'pickleball trips Thailand',
+  ],
   openGraph: {
-    title: 'The Pickleball Passport - Play the World',
-    description: 'Elite pickleball travel experiences. Boutique hotels, outstanding courts, and cultural immersion in Thailand.',
+    title: 'The Pickleball Passport — Your Personal Pickleball Concierge in Thailand',
+    description:
+      'We vet every court, handle every detail, and make sure you show up, play safe, and actually enjoy it.',
     url: 'https://www.thepickleballpassport.org',
     siteName: 'The Pickleball Passport',
     images: [
@@ -16,7 +31,7 @@ export const metadata: Metadata = {
         url: '/og-images/homepage.jpg',
         width: 1200,
         height: 630,
-        alt: 'The Pickleball Passport - Play the World',
+        alt: 'The Pickleball Passport — Pickleball Concierge in Thailand',
       },
     ],
     locale: 'en_US',
@@ -24,8 +39,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Pickleball Passport - Play the World',
-    description: 'Elite pickleball travel experiences. Boutique hotels, outstanding courts, and cultural immersion in Thailand.',
+    title: 'The Pickleball Passport — Your Personal Pickleball Concierge in Thailand',
+    description:
+      'We vet every court, handle every detail, and make sure you show up, play safe, and actually enjoy it.',
     images: ['/og-images/homepage.jpg'],
     site: '@PickleballPass',
     creator: '@PickleballPass',
@@ -43,7 +59,12 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <BrandPillars />
       <FeaturedDeparture />
+      <WhyThailand />
+      <SafetySection />
+      <HealthWellnessSection />
+      <ConciergeSection />
     </>
   );
 }
