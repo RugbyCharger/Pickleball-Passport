@@ -8,15 +8,17 @@ import { ArrowRight, ShieldCheck } from 'lucide-react';
 export function HeroSection() {
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
-      {/* Background photo */}
-      <Image
-        src="/images/anantara-hua-hin.jpg"
-        alt="Anantara Hua Hin Resort"
-        fill
-        className="object-cover object-center"
-        priority
-        sizes="100vw"
-      />
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/images/anantara-hua-hin.jpg"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src="/tpp-aerial-0453.mp4" type="video/mp4" />
+      </video>
       {/* Dark overlay for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
 
