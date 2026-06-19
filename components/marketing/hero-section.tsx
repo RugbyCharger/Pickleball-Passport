@@ -109,6 +109,16 @@ export function HeroSection() {
         </div>
       </div>
 
+      {/* Drone footage credit */}
+      <a
+        href="https://www.instagram.com/micahphotography1"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute bottom-20 right-4 z-10 text-white/40 hover:text-white/70 transition-colors text-xs tracking-wide"
+      >
+        Aerial footage: @micahphotography1
+      </a>
+
       {/* Bottom wave decoration */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
