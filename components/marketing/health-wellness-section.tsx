@@ -11,7 +11,7 @@ const dimensions = [
     icon: Apple,
     title: 'Nutritional',
     description:
-      'Guidance on eating well in Thailand, adapted to your dietary habits, so you're fueled to play your best.',
+      "Guidance on eating well in Thailand, adapted to your dietary habits, so you're fueled to play your best.",
   },
   {
     icon: Brain,

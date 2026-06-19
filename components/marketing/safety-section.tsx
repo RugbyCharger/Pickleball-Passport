@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 const points = [
   {
     icon: MapPin,
-    text: 'Every court personally inspected before it's on your schedule.',
+    text: "Every court personally inspected before it's on your schedule.",
   },
   {
     icon: Calendar,

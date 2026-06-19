@@ -5,25 +5,25 @@ const reasons = [
     icon: DollarSign,
     title: 'World-class value',
     description:
-      'Five-star resorts, private coaching, and curated experiences at a fraction of what you'd pay in the US or Europe.',
+      "Five-star resorts, private coaching, and curated experiences at a fraction of what you'd pay in the US or Europe.",
   },
   {
     icon: Heart,
     title: 'The people mean it',
     description:
-      'Staff at our partner hotels have remembered guests\' names after one introduction and had their coffee order ready the next morning without being asked. That isn't exceptional service in Thailand. It's just how people operate here.',
+      "Staff at our partner hotels have remembered guests' names after one introduction and had their coffee order ready the next morning without being asked. That isn't exceptional service in Thailand. It's just how people operate here.",
   },
   {
     icon: Sun,
     title: 'A genuine racket sport culture',
     description:
-      'Thailand takes racket sports seriously — badminton, tennis, padel, and now pickleball. The courts are built for it. The coaches understand the game. You'll end up playing alongside Thais who can beat you, which is exactly the kind of match you came here for.',
+      "Thailand takes racket sports seriously — badminton, tennis, padel, and now pickleball. The courts are built for it. The coaches understand the game. You'll end up playing alongside Thais who can beat you, which is exactly the kind of match you came here for.",
   },
   {
     icon: Utensils,
     title: 'The food alone is worth it',
     description:
-      'Fresh, flavorful, and everywhere. Eating well on this trip is not an afterthought — it's part of the experience.',
+      "Fresh, flavorful, and everywhere. Eating well on this trip is not an afterthought — it's part of the experience.",
   },
   {
     icon: ShieldCheck,
