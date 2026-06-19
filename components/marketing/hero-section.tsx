@@ -17,7 +17,7 @@ export function HeroSection() {
         poster="/images/anantara-hua-hin.jpg"
         className="absolute inset-0 w-full h-full object-cover object-center"
       >
-        <source src="/tpp-aerial-0453.mp4" type="video/mp4" />
+        <source src="/hero-drone.mp4" type="video/mp4" />
       </video>
       {/* Dark overlay for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
