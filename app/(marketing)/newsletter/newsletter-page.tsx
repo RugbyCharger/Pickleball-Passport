@@ -33,14 +33,16 @@ export function NewsletterPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden text-white py-20 sm:py-28">
-        <Image
-          src="/images/bangkok-skyline.jpg"
-          alt="Bangkok skyline"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/bangkok-skyline.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        >
+          <source src="/tpp-aerial-0450.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
