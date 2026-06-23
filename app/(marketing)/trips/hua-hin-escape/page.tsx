@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle, X, ArrowRight, Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { DroneStrip } from '@/components/marketing/drone-strip';
 
 /* ─────────────────────── ITINERARY ─────────────────────── */
 
@@ -62,7 +63,7 @@ const notIncluded = [
 /* ─────────────────────── DEPARTURES ─────────────────────── */
 
 const departures = [
-  { month: 'July 2026', note: 'With BK Karunakaran', featured: true },
+  { month: 'July 19–24, 2026', note: 'With BK Karunakaran', featured: true },
   { month: 'August 2026', note: null, featured: false },
   { month: 'September 2026', note: null, featured: false },
   { month: 'October 2026', note: null, featured: false },
@@ -99,6 +100,9 @@ export default function HuaHinEscapePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/50 to-black/80" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#B08D55]/90 text-white text-xs font-semibold mb-4">
+            Next departure: July 19–24, 2026 · With BK Karunakaran
+          </div>
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#B08D55] mb-3">
             Hua Hin · 4 Nights / 5 Days
           </p>
@@ -211,6 +215,9 @@ export default function HuaHinEscapePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Drone strip ── */}
+      <DroneStrip src="/tpp-aerial-0467.mp4" poster="/images/phuket-sunset.jpg" />
 
       {/* ── Included / Not Included ── */}
       <section className="py-12 sm:py-16 bg-white border-t border-[#B08D55]/10">
