@@ -186,15 +186,17 @@ export function TripsListingPage() {
 
       {/* ── Featured Trip Hero ── */}
       <section className="relative min-h-[88vh] flex items-end overflow-hidden">
-        {/* Background photo */}
-        <Image
-          src="/images/bangkok-skyline.jpg"
-          alt="Bangkok skyline"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+        {/* Background drone footage */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/bangkok-skyline.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        >
+          <source src="/tpp-aerial-0453.mp4" type="video/mp4" />
+        </video>
         {/* Overlay gradient  ·  dark at bottom for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
         <a

@@ -78,14 +78,24 @@ export default function HuaHinEscapePage() {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden text-white">
-        <Image
-          src="/images/anantara-hua-hin.jpg"
-          alt="Our 5-Star Hua Hin Beachfront Resort"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/anantara-hua-hin.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        >
+          <source src="/tpp-aerial-0453b.mp4" type="video/mp4" />
+        </video>
+        <a
+          href="https://www.instagram.com/micahphotography1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-4 right-4 z-10 text-white/40 hover:text-white/70 transition-colors text-xs tracking-wide"
+        >
+          Aerial footage: @micahphotography1
+        </a>
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/50 to-black/80" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
@@ -116,24 +126,25 @@ export default function HuaHinEscapePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="#itinerary"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
+            >
+              See What's Included
+              <ArrowRight className="w-4 h-4" />
+            </Link>
             <a
               href="https://link.fastpaydirect.com/payment-link/6a1ed4e503b17c94f5714208"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm shadow-lg shadow-[#B08D55]/30 hover:shadow-xl transition-all"
-            >
-              Book Hua Hin · $2,488
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="https://wa.me/15125648522"
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
-              Have Questions? Message Us
+              Book Hua Hin · $2,488
             </a>
           </div>
+          <p className="text-xs text-white/40 mt-3">
+            Questions? <a href="https://wa.me/15125648522" target="_blank" rel="noopener noreferrer" className="text-[#B08D55] hover:underline">Message us on WhatsApp</a>
+          </p>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 z-10">
@@ -176,7 +187,7 @@ export default function HuaHinEscapePage() {
       </section>
 
       {/* ── Itinerary ── */}
-      <section className="py-12 sm:py-16 bg-[#FDF8F3]">
+      <section id="itinerary" className="py-12 sm:py-16 bg-[#FDF8F3]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1D2D44] mb-8">
             Day by Day
