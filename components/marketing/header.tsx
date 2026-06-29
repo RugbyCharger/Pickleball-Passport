@@ -123,8 +123,8 @@ export function Header() {
 
         {/* Mobile menu */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          className={`lg:hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? 'max-h-[600px] opacity-100 overflow-visible' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
         >
           <div className="border-t border-[#B08D55]/20 py-4">

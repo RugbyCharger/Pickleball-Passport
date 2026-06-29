@@ -37,23 +37,17 @@ export function LanguageSwitcher() {
     setCurrent(lang);
 
     if (!lang.code) {
-      // Reset to English: clear Google Translate cookie and reload
+      // Clear Google Translate cookie and reload to restore English
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
       window.location.reload();
       return;
     }
 
-    const tryChange = (attempts = 0) => {
-      const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
-      if (combo) {
-        combo.value = lang.code;
-        combo.dispatchEvent(new Event('change', { bubbles: true }));
-      } else if (attempts < 10) {
-        setTimeout(() => tryChange(attempts + 1), 300);
-      }
-    };
-    tryChange();
+    // Set the googtrans cookie that Google Translate reads on load, then reload
+    document.cookie = `googtrans=/en/${lang.code}; path=/;`;
+    document.cookie = `googtrans=/en/${lang.code}; path=/; domain=.${window.location.hostname}`;
+    window.location.reload();
   }
 
   return (
