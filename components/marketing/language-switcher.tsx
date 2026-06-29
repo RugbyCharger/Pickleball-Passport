@@ -44,8 +44,11 @@ export function LanguageSwitcher() {
       return;
     }
 
-    // Build the Google Translate proxy URL for this domain
-    const translateHost = window.location.hostname.replace(/\./g, '-') + '.translate.goog';
+    // If already on translate.goog, reuse the hostname directly — don't re-mangle it
+    const hostname = window.location.hostname;
+    const translateHost = hostname.endsWith('.translate.goog')
+      ? hostname
+      : hostname.replace(/\./g, '-') + '.translate.goog';
     window.location.href = `https://${translateHost}${path}?_x_tr_sl=en&_x_tr_tl=${lang.code}&_x_tr_hl=en`;
   }
 
