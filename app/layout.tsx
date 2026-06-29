@@ -3,6 +3,7 @@ import { Montserrat, Nunito_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import "./globals.css";
 
 // ClerkProvider works with static pages when NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
@@ -82,6 +83,17 @@ export default function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
           />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'th,zh-CN,zh-TW,id,ms,ja,ko,es,fr,de',
+    autoDisplay: false
+  }, 'google_translate_element');
+}`,
+            }}
+          />
         </head>
         <body
           className={`${montserrat.variable} ${nunitoSans.variable} font-sans antialiased`}
@@ -94,6 +106,11 @@ export default function RootLayout({
               <Footer />
             </div>
           </Providers>
+          <div id="google_translate_element" className="hidden" />
+          <Script
+            src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            strategy="afterInteractive"
+          />
           <Analytics />
           <SpeedInsights />
         </body>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Menu, X, Sparkles } from 'lucide-react';
 import { LogoIcon } from '@/components/ui/logo';
 import { useLeadModal } from '@/components/providers/lead-modal-provider';
+import { LanguageSwitcher } from '@/components/marketing/language-switcher';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -90,8 +91,9 @@ export function Header() {
             ))}
           </div>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA + Language */}
           <div className="hidden lg:flex lg:items-center lg:space-x-3">
+            <LanguageSwitcher />
             <Button
               onClick={() => openLeadModal()}
               className="bg-gradient-to-r from-[#B08D55] to-[#CFB78D] hover:from-[#8D7144] hover:to-[#B08D55] text-[#1D2D44] font-semibold shadow-lg shadow-[#B08D55]/30 transition-all hover:shadow-xl hover:shadow-[#B08D55]/40"
@@ -154,6 +156,9 @@ export function Header() {
                 <Sparkles className="mr-2 h-5 w-5" />
                 Start Your Journey
               </Button>
+              <div className="flex justify-center pt-1">
+                <LanguageSwitcher />
+              </div>
             </div>
           </div>
         </div>

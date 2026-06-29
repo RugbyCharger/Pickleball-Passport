@@ -559,6 +559,26 @@
      STAGGERED ANIMATIONS
      ========================================================================== */
 
+  /* ==========================================================================
+     GOOGLE TRANSLATE — suppress default UI chrome
+     ========================================================================== */
+
+  .goog-te-banner-frame,
+  .goog-te-balloon-frame,
+  #goog-gt-tt,
+  .goog-te-balloon-frame,
+  .skiptranslate {
+    display: none !important;
+  }
+
+  body {
+    top: 0 !important;
+  }
+
+  .goog-te-gadget {
+    display: none !important;
+  }
+
   .stagger-1 { animation-delay: 0.1s; }
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
