@@ -10,11 +10,16 @@ const languages = [
   { code: 'zh-TW',label: '中文 (繁體)',          short: '繁中' },
   { code: 'id',   label: 'Bahasa Indonesia',   short: 'ID' },
   { code: 'ms',   label: 'Bahasa Melayu',      short: 'MY' },
+  { code: 'tl',   label: 'Filipino',           short: 'FIL' },
   { code: 'ja',   label: '日本語',              short: 'JA' },
   { code: 'ko',   label: '한국어',              short: 'KO' },
+  { code: 'hi',   label: 'हिन्दी',               short: 'HI' },
+  { code: 'ta',   label: 'தமிழ்',               short: 'TA' },
   { code: 'es',   label: 'Español',            short: 'ES' },
   { code: 'fr',   label: 'Français',           short: 'FR' },
   { code: 'de',   label: 'Deutsch',            short: 'DE' },
+  { code: 'pt',   label: 'Português',          short: 'PT' },
+  { code: 'ar',   label: 'العربية',             short: 'AR' },
 ];
 
 export function LanguageSwitcher() {
