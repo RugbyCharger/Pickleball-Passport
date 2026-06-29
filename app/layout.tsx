@@ -106,7 +106,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </Providers>
-          <div id="google_translate_element" className="hidden" />
+          <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', top: '-9999px' }} />
           <Script
             src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
             strategy="afterInteractive"

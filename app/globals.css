@@ -560,23 +560,15 @@
      ========================================================================== */
 
   /* ==========================================================================
-     GOOGLE TRANSLATE — suppress default UI chrome
+     GOOGLE TRANSLATE — suppress only the top banner bar
      ========================================================================== */
 
-  .goog-te-banner-frame,
-  .goog-te-balloon-frame,
-  #goog-gt-tt,
-  .goog-te-balloon-frame,
-  .skiptranslate {
+  .goog-te-banner-frame {
     display: none !important;
   }
 
   body {
     top: 0 !important;
-  }
-
-  .goog-te-gadget {
-    display: none !important;
   }
 
   .stagger-1 { animation-delay: 0.1s; }

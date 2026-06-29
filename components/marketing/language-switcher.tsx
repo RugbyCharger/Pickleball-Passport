@@ -48,7 +48,7 @@ export function LanguageSwitcher() {
       const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
       if (combo) {
         combo.value = lang.code;
-        combo.dispatchEvent(new Event('change'));
+        combo.dispatchEvent(new Event('change', { bubbles: true }));
       } else if (attempts < 10) {
         setTimeout(() => tryChange(attempts + 1), 300);
       }
