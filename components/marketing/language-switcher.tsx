@@ -36,18 +36,17 @@ export function LanguageSwitcher() {
     setOpen(false);
     setCurrent(lang);
 
+    const path = window.location.pathname;
+
     if (!lang.code) {
-      // Clear Google Translate cookie and reload to restore English
-      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
-      window.location.reload();
+      // Navigate back to the original domain
+      window.location.href = `https://www.thepickleballpassport.org${path}`;
       return;
     }
 
-    // Set the googtrans cookie that Google Translate reads on load, then reload
-    document.cookie = `googtrans=/en/${lang.code}; path=/;`;
-    document.cookie = `googtrans=/en/${lang.code}; path=/; domain=.${window.location.hostname}`;
-    window.location.reload();
+    // Build the Google Translate proxy URL for this domain
+    const translateHost = window.location.hostname.replace(/\./g, '-') + '.translate.goog';
+    window.location.href = `https://${translateHost}${path}?_x_tr_sl=en&_x_tr_tl=${lang.code}&_x_tr_hl=en&_x_tr_pto=wapp`;
   }
 
   return (

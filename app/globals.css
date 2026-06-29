@@ -559,19 +559,7 @@
      STAGGERED ANIMATIONS
      ========================================================================== */
 
-  /* ==========================================================================
-     GOOGLE TRANSLATE — suppress only the top banner bar
-     ========================================================================== */
-
-  .goog-te-banner-frame {
-    display: none !important;
-  }
-
-  body {
-    top: 0 !important;
-  }
-
-  .stagger-1 { animation-delay: 0.1s; }
+.stagger-1 { animation-delay: 0.1s; }
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
