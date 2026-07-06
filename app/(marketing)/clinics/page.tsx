@@ -16,6 +16,7 @@ const venues = [
     capacity: '12 spots per session',
     note: 'Small-group coaching at a five-star hotel.',
     image: '/images/sterling-pickleball.jpg',
+    logo: false,
   },
   {
     name: 'Papaya Pickleball',
@@ -23,7 +24,8 @@ const venues = [
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
-    image: '/Papaya_Pickleball_Group.jpg',
+    image: '/papayalogo.png',
+    logo: true,
   },
   {
     name: 'Sports Life Hua Hin',
@@ -32,6 +34,7 @@ const venues = [
     capacity: '12 spots per session',
     note: "Right in the expat hub. Thailand's best pickleball setup.",
     image: '/sportlifecourts.png',
+    logo: false,
   },
 ];
 
@@ -190,21 +193,36 @@ export default function ClinicsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {venues.map((v) => (
               <div key={v.name} className="bg-white rounded-2xl border border-[#B08D55]/10 overflow-hidden shadow-sm">
-                <div className="relative h-44">
-                  <Image
-                    src={v.image}
-                    alt={v.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-3 left-4">
-                    <p className="text-white font-serif font-bold text-base leading-tight">{v.name}</p>
-                    <p className="text-white/70 text-xs">{v.subtitle}</p>
+                {v.logo ? (
+                  <div className="relative h-44 bg-[#FDF8F3] flex items-center justify-center p-8">
+                    <Image
+                      src={v.image}
+                      alt={v.name}
+                      fill
+                      className="object-contain p-8"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="relative h-44">
+                    <Image
+                      src={v.image}
+                      alt={v.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-3 left-4">
+                      <p className="text-white font-serif font-bold text-base leading-tight">{v.name}</p>
+                      <p className="text-white/70 text-xs">{v.subtitle}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="p-4 space-y-2">
+                  {v.logo && (
+                    <p className="font-serif font-bold text-[#1D2D44] text-base leading-tight">{v.name}</p>
+                  )}
                   <div className="flex items-center gap-2 text-sm text-[#1D2D44]/70">
                     <MapPin className="w-3.5 h-3.5 text-[#B08D55]" />
                     {v.courts}
