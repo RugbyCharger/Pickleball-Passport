@@ -11,9 +11,9 @@ import { useReserveHref } from '@/lib/hooks/use-reserve-href';
 const products = [
   {
     label: 'Day Clinic',
-    price: '$125',
+    price: '$60',
     duration: '3 hours',
-    description: 'Coaching, drills, and you play alongside BK. Drop in, no trip required.',
+    description: '2 hours of coaching, then 1 hour of open play with BK. Drop in, no trip required.',
     badge: null,
     href: '/clinics',
     dark: false,
