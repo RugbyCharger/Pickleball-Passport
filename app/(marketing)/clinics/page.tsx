@@ -23,7 +23,7 @@ const venues = [
     courts: 'Multiple courts',
     capacity: '12 spots per session',
     note: 'Coaching clinic in the heart of Bangkok.',
-    image: '/images/jaron-sterling.jpg',
+    image: '/Papaya_Pickleball_Group.jpg',
   },
   {
     name: 'Sports Life Hua Hin',
@@ -31,7 +31,7 @@ const venues = [
     courts: '13 courts (8 new)',
     capacity: '12 spots per session',
     note: "Right in the expat hub. Thailand's best pickleball setup.",
-    image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&q=80',
+    image: '/sportlifecourts.png',
   },
 ];
 
