@@ -7,8 +7,9 @@ export function TranslateGuard() {
     if (!window.location.hostname.endsWith('.translate.goog')) return;
 
     const params = new URLSearchParams(window.location.search);
-    const tl = params.get('_x_tr_tl');
-    if (!tl) return;
+    const tlParam = params.get('_x_tr_tl');
+    if (!tlParam) return;
+    const tl: string = tlParam;
 
     const sl = params.get('_x_tr_sl') || 'en';
     const hl = params.get('_x_tr_hl') || 'en';
