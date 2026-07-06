@@ -18,7 +18,7 @@ const venues = [
     image: '/images/sterling-pickleball.jpg',
   },
   {
-    name: 'Sterling Sport and Wellness',
+    name: 'Papaya Pickleball',
     subtitle: 'Bangkok',
     courts: 'Multiple courts',
     capacity: '12 spots per session',
@@ -38,18 +38,18 @@ const venues = [
 /* ─────────────────────── JULY DATES ─────────────────────── */
 
 const julyDates = [
-  { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
-  { date: 'Sat Jul 18', venue: 'Sterling Sport and Wellness, Bangkok', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
-  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 11, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
-  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 10, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
+  { date: 'Sat Jul 18', venue: 'Papaya Pickleball, Bangkok', spotsLeft: 9, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
+  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 9, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a48fe4da655fa0b802a2af4' },
 ];
 
 /* ─────────────────────── WHAT'S INCLUDED ─────────────────────── */
 
 const included = [
-  'Coaching clinic: technique, strategy, and game sense',
+  '2 hours coaching: technique, strategy, and game sense',
   'Structured drills and match play',
-  'ProAM: play doubles alongside BK',
+  '1 hour open play alongside BK',
   'Water and refreshments',
 ];
 
@@ -92,7 +92,7 @@ export default function ClinicsPage() {
                 Drop-In Pickleball<br className="hidden sm:block" /> Clinics with BK
               </h1>
               <p className="text-xl text-white mb-8 max-w-2xl">
-                9 AM – 12 PM. Coaching, drills, and you play alongside a PPR Certified Pro. $125 · 12 spots per session.
+                9 AM – 12 PM. 2 hours of coaching with a PPR Certified Pro, then 1 hour of open play. $60 USD · 12 spots per session.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-10">
@@ -255,9 +255,9 @@ export default function ClinicsPage() {
                         rel="noopener noreferrer"
                         className="px-4 py-2 rounded-lg bg-[#1D2D44] text-white text-xs font-semibold hover:bg-[#1D2D44]/80 transition-colors whitespace-nowrap"
                       >
-                        Book · $125
+                        Book · $60 USD
                       </a>
-                      <span className="text-xs text-[#1D2D44]/40">฿4,000 via PromptPay</span>
+                      <span className="text-xs text-[#1D2D44]/40">฿2,000 via PromptPay</span>
                     </div>
                   </div>
                   {/* Availability bar */}
@@ -281,23 +281,6 @@ export default function ClinicsPage() {
               );
             })}
           </div>
-
-          {/* Clinic Pass upsell */}
-          <div className="bg-[#0F1A2A] rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">Better value</p>
-              <p className="text-white font-serif font-bold text-xl">Clinic Pass: All 4 Sessions</p>
-              <p className="text-white/60 text-sm mt-1">All four July clinics for $400. Save $100 vs. booking individually.</p>
-            </div>
-            <a
-              href="https://link.fastpaydirect.com/payment-link/6a1e830d5a9093aac76c58f0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#B08D55] to-[#CFB78D] text-[#0F1A2A] font-bold text-sm whitespace-nowrap shrink-0"
-            >
-              Get the Clinic Pass · $400
-            </a>
-          </div>
         </div>
       </section>
 
@@ -319,7 +302,7 @@ export default function ClinicsPage() {
                 If you're based in Thailand, scan the QR code below to pay via PromptPay, standard Thai bank transfer, zero international fees. Screenshot it and go.
               </p>
               <p className="text-sm font-semibold text-[#1D2D44]">
-                ฿4,000 per session &nbsp;·&nbsp; ฿13,000 for the Clinic Pass (all 4 sessions)
+                ฿2,000 per session
               </p>
             </div>
           </div>

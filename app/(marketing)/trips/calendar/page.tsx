@@ -26,7 +26,7 @@ const routeB = [
 
 const clinicDates = [
   { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spots: 12 },
-  { date: 'Sat Jul 18', venue: 'Sterling Sport and Wellness, Bangkok', spots: 12 },
+  { date: 'Sat Jul 18', venue: 'Papaya Pickleball, Bangkok', spots: 12 },
   { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spots: 12 },
   { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spots: 12 },
 ];
@@ -143,7 +143,7 @@ export default function CalendarPage() {
         <div>
           <div className="mb-5">
             <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#1D2D44]">Day Clinics: July 2026</h2>
-            <p className="text-[#1D2D44]/50 text-sm mt-0.5">Drop-in sessions with BK. $125 per session. No trip required.</p>
+            <p className="text-[#1D2D44]/50 text-sm mt-0.5">Drop-in sessions with BK. $60 per session. No trip required.</p>
           </div>
           <div className="space-y-3">
             {clinicDates.map((c) => (
@@ -158,7 +158,7 @@ export default function CalendarPage() {
                 <div className="flex items-center gap-4">
                   <span className="text-xs text-[#1D2D44]/40">{c.spots} spots</span>
                   <Link href="/clinics" className="text-xs font-semibold text-[#B08D55] hover:text-[#8D7144] transition-colors">
-                    Book · $125 →
+                    Book · $60 →
                   </Link>
                 </div>
               </div>
