@@ -4,22 +4,23 @@ import { useState, useEffect, useRef } from 'react';
 import { Globe, ChevronDown } from 'lucide-react';
 
 const languages = [
-  { code: '',      label: 'English',           short: 'EN' },
-  { code: 'th',   label: 'ภาษาไทย',            short: 'TH' },
-  { code: 'zh-CN',label: '中文 (简体)',          short: '中文' },
-  { code: 'zh-TW',label: '中文 (繁體)',          short: '繁中' },
-  { code: 'id',   label: 'Bahasa Indonesia',   short: 'ID' },
-  { code: 'ms',   label: 'Bahasa Melayu',      short: 'MY' },
-  { code: 'tl',   label: 'Filipino',           short: 'FIL' },
-  { code: 'ja',   label: '日本語',              short: 'JA' },
-  { code: 'ko',   label: '한국어',              short: 'KO' },
-  { code: 'hi',   label: 'हिन्दी',               short: 'HI' },
-  { code: 'ta',   label: 'தமிழ்',               short: 'TA' },
-  { code: 'es',   label: 'Español',            short: 'ES' },
-  { code: 'fr',   label: 'Français',           short: 'FR' },
-  { code: 'de',   label: 'Deutsch',            short: 'DE' },
-  { code: 'pt',   label: 'Português',          short: 'PT' },
-  { code: 'ar',   label: 'العربية',             short: 'AR' },
+  { code: '',      label: 'English',           short: 'EN',  flag: '🇺🇸' },
+  { code: 'th',   label: 'ภาษาไทย',            short: 'TH',  flag: '🇹🇭' },
+  { code: 'zh-CN',label: '中文 (简体)',          short: '中文', flag: '🇨🇳' },
+  { code: 'zh-TW',label: '中文 (繁體)',          short: '繁中', flag: '🇹🇼' },
+  { code: 'id',   label: 'Bahasa Indonesia',   short: 'ID',  flag: '🇮🇩' },
+  { code: 'ms',   label: 'Bahasa Melayu',      short: 'MY',  flag: '🇲🇾' },
+  { code: 'tl',   label: 'Filipino',           short: 'FIL', flag: '🇵🇭' },
+  { code: 'vi',   label: 'Tiếng Việt',         short: 'VI',  flag: '🇻🇳' },
+  { code: 'ja',   label: '日本語',              short: 'JA',  flag: '🇯🇵' },
+  { code: 'ko',   label: '한국어',              short: 'KO',  flag: '🇰🇷' },
+  { code: 'hi',   label: 'हिन्दी',               short: 'HI',  flag: '🇮🇳' },
+  { code: 'ta',   label: 'தமிழ்',               short: 'TA',  flag: '🇮🇳' },
+  { code: 'es',   label: 'Español',            short: 'ES',  flag: '🇪🇸' },
+  { code: 'fr',   label: 'Français',           short: 'FR',  flag: '🇫🇷' },
+  { code: 'de',   label: 'Deutsch',            short: 'DE',  flag: '🇩🇪' },
+  { code: 'pt',   label: 'Português',          short: 'PT',  flag: '🇧🇷' },
+  { code: 'ar',   label: 'العربية',             short: 'AR',  flag: '🇸🇦' },
 ];
 
 export function LanguageSwitcher() {
@@ -66,22 +67,24 @@ export function LanguageSwitcher() {
         aria-expanded={open}
       >
         <Globe className="w-4 h-4 shrink-0" />
+        <span className="text-base leading-none">{current.flag}</span>
         <span className="text-xs font-semibold tracking-wide">{current.short}</span>
         <ChevronDown className={`w-3 h-3 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#B08D55]/15 py-1.5 z-[200] max-h-80 overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-[#B08D55]/15 py-1.5 z-[200] max-h-80 overflow-y-auto">
           {languages.map((lang) => (
             <button
               key={lang.code || 'en'}
               onClick={() => switchLanguage(lang)}
-              className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+              className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors ${
                 current.code === lang.code
                   ? 'text-[#B08D55] font-semibold bg-[#F5E6D3]/30'
                   : 'text-[#1D2D44]/80 hover:bg-[#F5E6D3]/40 hover:text-[#1D2D44]'
               }`}
             >
+              <span className="text-base w-6 shrink-0">{lang.flag}</span>
               {lang.label}
             </button>
           ))}
