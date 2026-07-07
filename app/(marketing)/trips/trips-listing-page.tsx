@@ -328,6 +328,7 @@ export function TripsListingPage() {
             <p className="text-[#1D2D44]/50 text-sm">
               Drop-in clinic to full immersion. Bangkok. Hua Hin. Your call.
             </p>
+            <p className="text-[#1D2D44]/35 text-xs mt-1">All prices in USD</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {products.map((p) => (

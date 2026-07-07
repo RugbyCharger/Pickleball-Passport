@@ -77,7 +77,7 @@ export function January14Page() {
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Users className="h-4 w-4 text-[#B08D55]" />
-                8 of 16 spaces remaining
+                6 of 16 spaces remaining
               </div>
               <div className="flex items-center gap-2 bg-[#B08D55]/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold">
                 <TreePalm className="h-4 w-4 text-[#B08D55]" />
@@ -88,7 +88,7 @@ export function January14Page() {
             {/* Price */}
             <div className="mb-8">
               <span className="text-4xl font-bold text-white">$4,860</span>
-              <span className="text-white/50 text-lg ml-2">/person</span>
+              <span className="text-white/50 text-lg ml-2">USD / person</span>
               <p className="text-white/40 text-xs mt-1">Double occupancy · Single supplement $600</p>
             </div>
 

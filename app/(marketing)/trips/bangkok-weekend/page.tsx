@@ -96,7 +96,7 @@ export default function BangkokWeekendPage() {
           </h1>
           <p className="text-xl text-white/75 mb-2">Our 5-Star Bangkok riverside hotel · 2 Sessions with BK</p>
           <p className="text-3xl font-bold text-white mb-8">
-            $1,488 <span className="text-lg font-normal text-white/50">/person</span>
+            $1,488 <span className="text-lg font-normal text-white/50">USD / person</span>
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10">

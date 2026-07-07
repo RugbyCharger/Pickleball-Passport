@@ -111,7 +111,7 @@ export default function HuaHinEscapePage() {
           </h1>
           <p className="text-xl text-white/75 mb-2">Our 5-Star Hua Hin Beachfront Resort · 2 Sessions with BK</p>
           <p className="text-3xl font-bold text-white mb-8">
-            $2,488 <span className="text-lg font-normal text-white/50">/person</span>
+            $2,488 <span className="text-lg font-normal text-white/50">USD / person</span>
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10">
