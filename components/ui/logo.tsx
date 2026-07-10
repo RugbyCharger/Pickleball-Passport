@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   className?: string;
   showText?: boolean;
 }
@@ -11,6 +11,7 @@ const sizeMap = {
   md: 32,
   lg: 48,
   xl: 64,
+  '2xl': 80,
 };
 
 export function Logo({ size = 'md', className = '' }: LogoProps) {
@@ -28,17 +29,20 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
   );
 }
 
-// Image-based logo icon using the official TPP logo
+// Image-based logo icon using the official TPP logo — cropped to just the
+// monogram + ball so it stays centered and legible at small sizes (the full
+// logo.png includes the wordmark below the mark, which throws off centering
+// once shrunk into a compact badge).
 export function LogoIcon({ size = 'md', className = '' }: LogoProps) {
   const dimension = sizeMap[size];
 
   return (
     <Image
-      src="/logo.png"
+      src="/logo-mark.png"
       alt="The Pickleball Passport"
       width={dimension}
       height={dimension}
-      className={className}
+      className={`object-contain ${className}`}
       priority
     />
   );

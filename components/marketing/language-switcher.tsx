@@ -23,10 +23,24 @@ const languages = [
   { code: 'ar',   label: 'العربية',             short: 'AR',  flag: '🇸🇦' },
 ];
 
+// Google's in-page widget stores the active language in a `googtrans`
+// cookie shaped like `/en/th` (source/target). Reading it back lets the
+// switcher show the right selection after a reload or on a fresh page.
+function currentLanguageFromCookie() {
+  const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]*)/);
+  if (!match) return languages[0];
+  const code = decodeURIComponent(match[1]).split('/')[2];
+  return languages.find((l) => l.code === code) || languages[0];
+}
+
 export function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(languages[0]);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setCurrent(currentLanguageFromCookie());
+  }, []);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -42,20 +56,12 @@ export function LanguageSwitcher() {
     setOpen(false);
     setCurrent(lang);
 
-    const path = window.location.pathname;
-
     if (!lang.code) {
-      // Navigate back to the original domain
-      window.location.href = `https://www.thepickleballpassport.org${path}`;
-      return;
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    } else {
+      document.cookie = `googtrans=/en/${lang.code};path=/`;
     }
-
-    // If already on translate.goog, reuse the hostname directly — don't re-mangle it
-    const hostname = window.location.hostname;
-    const translateHost = hostname.endsWith('.translate.goog')
-      ? hostname
-      : hostname.replace(/\./g, '-') + '.translate.goog';
-    window.location.href = `https://${translateHost}${path}?_x_tr_sl=en&_x_tr_tl=${lang.code}&_x_tr_hl=en`;
+    window.location.reload();
   }
 
   return (

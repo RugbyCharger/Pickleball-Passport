@@ -29,6 +29,10 @@ const SUPABASE_DOMAINS = [
 const GOOGLE_DOMAINS = [
   'https://www.google.com', // reCAPTCHA
   'https://www.gstatic.com', // reCAPTCHA assets
+  'https://fonts.gstatic.com', // Google Translate icon assets
+  'https://translate.google.com', // Google Translate widget
+  'https://translate.googleapis.com', // Google Translate API calls
+  'https://translate-pa.googleapis.com', // Google Translate supported-languages call (JSONP, needs script-src)
 ];
 
 const MUX_DOMAINS = [
@@ -57,6 +61,7 @@ const cspDirectives = {
     "'self'",
     "'unsafe-inline'", // Required for Tailwind, component libraries
     ...CLERK_DOMAINS,
+    ...GOOGLE_DOMAINS,
   ],
   'img-src': [
     "'self'",
@@ -65,6 +70,7 @@ const cspDirectives = {
     ...CLERK_DOMAINS,
     ...SUPABASE_DOMAINS,
     ...MUX_DOMAINS,
+    ...GOOGLE_DOMAINS,
     'https://*.googleusercontent.com', // Google profile images
     'https://images.unsplash.com', // Destination photography
   ],

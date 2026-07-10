@@ -56,8 +56,8 @@ export function Header() {
             <Link href="/" className="group flex items-center space-x-3">
               {/* Logo mark */}
               <div className="relative">
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-[#1D2D44]/20 transition-transform group-hover:scale-105">
-                  <LogoIcon size="lg" />
+                <div className="flex items-center justify-center w-16 h-16 rounded-xl overflow-hidden shadow-lg shadow-[#1D2D44]/20 transition-transform group-hover:scale-105">
+                  <LogoIcon size="xl" />
                 </div>
               </div>
               <div className="hidden sm:flex flex-col">

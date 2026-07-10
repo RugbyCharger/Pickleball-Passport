@@ -578,3 +578,18 @@
     font-family: var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
   }
 }
+
+/* ==========================================================================
+   GOOGLE TRANSLATE WIDGET OVERRIDES
+   Suppress the default banner iframe and body offset Google injects so the
+   in-page translator stays invisible — translation is triggered from our own
+   language switcher, not Google's UI.
+   ========================================================================== */
+.goog-te-banner-frame,
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}

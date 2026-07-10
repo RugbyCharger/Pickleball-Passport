@@ -11,7 +11,7 @@ import { Providers } from "./providers";
 import { Header } from "@/components/marketing/header";
 import { Footer } from "@/components/marketing/footer";
 import { AffiliateTracker } from "@/components/affiliate-tracker";
-import { TranslateGuard } from "@/components/marketing/translate-guard";
+import { GoogleTranslateWidget } from "@/components/marketing/google-translate-widget";
 
 /**
  * Pickleball Passport - Official Brand Fonts
@@ -89,7 +89,7 @@ export default function RootLayout({
         >
           <Providers>
             <AffiliateTracker />
-            <TranslateGuard />
+            <GoogleTranslateWidget />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="flex-1">{children}</main>

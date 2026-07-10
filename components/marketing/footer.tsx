@@ -188,8 +188,8 @@ export function Footer() {
             <div className="lg:col-span-2">
               <Link href="/" className="flex items-center space-x-3 mb-6 group">
                 <div className="relative">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-xl overflow-hidden shadow-xl transition-transform group-hover:scale-105">
-                    <LogoIcon size="xl" />
+                  <div className="flex items-center justify-center w-20 h-20 rounded-xl overflow-hidden shadow-xl transition-transform group-hover:scale-105">
+                    <LogoIcon size="2xl" />
                   </div>
                 </div>
                 <div className="flex flex-col">
