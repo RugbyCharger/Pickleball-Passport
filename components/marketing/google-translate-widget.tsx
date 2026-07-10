@@ -34,12 +34,12 @@ export function GoogleTranslateWidget() {
       const originalRemoveChild = nodeProto.removeChild;
       nodeProto.removeChild = function <T extends Node>(this: Node, child: T): T {
         if (child.parentNode !== this) return child;
-        return originalRemoveChild.call(this, child);
+        return originalRemoveChild.call(this, child) as unknown as T;
       };
       const originalInsertBefore = nodeProto.insertBefore;
       nodeProto.insertBefore = function <T extends Node>(this: Node, newNode: T, referenceNode: Node | null): T {
         if (referenceNode && referenceNode.parentNode !== this) return newNode;
-        return originalInsertBefore.call(this, newNode, referenceNode);
+        return originalInsertBefore.call(this, newNode, referenceNode) as unknown as T;
       };
       nodeProto.__ptpPatchedForTranslate = true;
     }
