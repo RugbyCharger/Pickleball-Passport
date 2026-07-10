@@ -33,6 +33,29 @@ function currentLanguageFromCookie() {
   return languages.find((l) => l.code === code) || languages[0];
 }
 
+// Google's own script sets this cookie scoped to the parent domain
+// (`domain=.example.com`) so translation persists across subdomains. If we
+// only ever write a host-only cookie, that wider-scoped one never gets
+// overwritten or cleared, so the page keeps reading the stale language and
+// switching (or resetting to English) appears to silently fail. Write and
+// clear both scopes to make sure whichever one Google reads is current.
+function parentCookieDomain() {
+  const host = window.location.hostname;
+  if (host === 'localhost' || /^[\d.]+$/.test(host)) return null;
+  return `.${host.replace(/^www\./, '')}`;
+}
+
+function setTranslateCookie(value: string | null) {
+  const base = value
+    ? `googtrans=${value}; path=/`
+    : 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+  document.cookie = base;
+  const domain = parentCookieDomain();
+  if (domain) {
+    document.cookie = `${base}; domain=${domain}`;
+  }
+}
+
 export function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(languages[0]);
@@ -56,11 +79,7 @@ export function LanguageSwitcher() {
     setOpen(false);
     setCurrent(lang);
 
-    if (!lang.code) {
-      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    } else {
-      document.cookie = `googtrans=/en/${lang.code};path=/`;
-    }
+    setTranslateCookie(lang.code ? `/en/${lang.code}` : null);
     window.location.reload();
   }
 
