@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { CheckCircle, MapPin, Users, Clock, Calendar, ArrowRight, QrCode } from 'lucide-react';
+import { CheckCircle, MapPin, Users, Clock, Calendar, ArrowRight, QrCode, MessageCircle } from 'lucide-react';
 
 /* ─────────────────────── VENUES ─────────────────────── */
 
@@ -339,6 +339,39 @@ export default function ClinicsPage() {
             <p className="text-xs text-[#1D2D44]/40 mt-3">
               PromptPay · Jaron Dhillon Shoptaugh · Screenshot and scan in any Thai banking app
             </p>
+          </div>
+
+          {/* ── LINE contact (questions before paying) ── */}
+          <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 overflow-hidden rounded-lg border border-[#B08D55]/10">
+              <Image
+                src="/line-qr-jaron.png"
+                alt="Add Jaron on LINE — QR code"
+                fill
+                className="object-cover"
+                sizes="176px"
+              />
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">
+                Questions before you pay?
+              </p>
+              <h3 className="font-serif text-xl font-bold text-[#1D2D44] mb-2">
+                Chat with Jaron on LINE
+              </h3>
+              <p className="text-[#1D2D44]/60 text-sm leading-relaxed mb-4">
+                Scan the QR code or tap below to add Jaron on LINE — ask questions, confirm you're on the list for a specific clinic day, or just say hi before you send a PromptPay payment.
+              </p>
+              <a
+                href="https://line.me/ti/p/-PkfPC68L8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#06C755] text-white font-semibold text-sm hover:bg-[#05a648] transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Add Jaron on LINE
+              </a>
+            </div>
           </div>
         </div>
       </section>
