@@ -373,6 +373,39 @@ export default function ClinicsPage() {
               </a>
             </div>
           </div>
+
+          {/* ── WhatsApp contact (questions before paying) ── */}
+          <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 overflow-hidden rounded-lg border border-[#B08D55]/10">
+              <Image
+                src="/whatsapp-qr-jaron.png"
+                alt="Add Jaron on WhatsApp — QR code"
+                fill
+                className="object-contain bg-[#5CBD6D]"
+                sizes="176px"
+              />
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="text-xs font-bold tracking-[0.15em] uppercase text-[#B08D55] mb-1">
+                Prefer WhatsApp?
+              </p>
+              <h3 className="font-serif text-xl font-bold text-[#1D2D44] mb-2">
+                Chat with Jaron on WhatsApp
+              </h3>
+              <p className="text-[#1D2D44]/60 text-sm leading-relaxed mb-4">
+                Scan the QR code or tap below to add Jaron on WhatsApp — ask questions, confirm you're on the list for a specific clinic day, or just say hi before you send a PromptPay payment.
+              </p>
+              <a
+                href="https://wa.me/qr/GELZNRU2267RE1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] text-white font-semibold text-sm hover:bg-[#1ebe5a] transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Add Jaron on WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
