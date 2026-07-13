@@ -42,8 +42,8 @@ const venues = [
 
 const julyDates = [
   { date: 'Fri Jul 17', venue: 'Arise Pickleball, Bangkok', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a1e819203b17c94f571411a' },
-  { date: 'Sat Jul 18', venue: 'Papaya Pickleball, Bangkok', spotsLeft: 9, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
-  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 9, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
+  { date: 'Sat Jul 18', venue: 'Papaya Pickleball, Bangkok', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a1e80d403b17c94f5714119' },
+  { date: 'Mon Jul 20', venue: 'Sports Life Hua Hin', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a1e81c003b17c94f571411b' },
   { date: 'Wed Jul 22', venue: 'Sports Life Hua Hin', spotsLeft: 8, link: 'https://link.fastpaydirect.com/payment-link/6a48fe4da655fa0b802a2af4' },
 ];
 
