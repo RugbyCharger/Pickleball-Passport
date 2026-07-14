@@ -328,11 +328,10 @@ export default function ClinicsPage() {
           <div className="mt-6 bg-white rounded-2xl border border-[#B08D55]/10 p-6 flex flex-col items-center">
             <div className="relative w-56 h-56 sm:w-64 sm:h-64 overflow-hidden rounded-lg">
               <Image
-                src="/images/promptpay-qr.jpg"
+                src="/images/newpromptpay-qr.png"
                 alt="PromptPay QR code — Jaron Dhillon Shoptaugh"
                 fill
-                className="object-cover"
-                style={{ transform: 'scale(1.85)', transformOrigin: 'center 47%' }}
+                className="object-contain"
                 sizes="256px"
               />
             </div>
